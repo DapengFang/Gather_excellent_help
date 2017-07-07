@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="top_statue_color">#000000</color>
+    <color name="gray_button_color">#55000000</color>
+    <color name="red_content_color">#99ff0000</color>
+</resources>

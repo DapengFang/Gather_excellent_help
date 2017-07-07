@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.gather_excellent_help.ui.widget.NoScrollViewPager
+        android:id="@+id/vp_main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#11000000" />
+
+    <RelativeLayout
+        android:id="@+id/rl_main_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/x5"
+        android:background="#ffffff">
+
+        <RadioGroup
+            android:id="@+id/rg_main"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x58"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_home"
+                style="@style/bottom_tag_style"
+                android:drawableTop="@drawable/rb_home_selector"
+                android:text="首页" />
+
+            <RadioButton
+                android:id="@+id/rb_shaidan"
+                style="@style/bottom_tag_style"
+                android:drawableTop="@drawable/rb_type_selector"
+                android:text="分类" />
+
+            <RadioButton
+                android:id="@+id/rb_type"
+                style="@style/bottom_tag_style"
+                android:drawableTop="@drawable/rb_soutaobao_selector"
+                android:text="专场" />
+
+            <RadioButton
+                android:id="@+id/rb_shopping"
+                style="@style/bottom_tag_style"
+                android:drawableTop="@drawable/rb_goodscart_selector"
+                android:text="购物车" />
+
+            <RadioButton
+                android:id="@+id/rb_me"
+                style="@style/bottom_tag_style"
+                android:drawableTop="@drawable/rb_mine_selector"
+                android:text="我的" />
+
+        </RadioGroup>
+
+    </RelativeLayout>
+
+</LinearLayout>
+
