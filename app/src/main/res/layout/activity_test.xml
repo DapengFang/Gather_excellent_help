@@ -14,5 +14,13 @@
         android:textSize="14sp"
         android:textColor="#99000000"
         android:padding="@dimen/x3"/>
+    <Button
+        android:id="@+id/btn_unbind_taobao"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x60"
+        android:text="解绑"
+        android:textSize="14sp"
+        android:textColor="#99000000"
+        android:padding="@dimen/x3"/>
 
 </LinearLayout>
