@@ -20,8 +20,8 @@
             android:padding="@dimen/x10">
 
             <ImageView
-                android:layout_width="@dimen/x24"
-                android:layout_height="@dimen/x24"
+                android:layout_width="@dimen/x22"
+                android:layout_height="@dimen/x22"
                 android:src="@drawable/user_icon" />
 
             <EditText
@@ -51,8 +51,8 @@
             android:padding="@dimen/x10">
 
             <ImageView
-                android:layout_width="@dimen/x24"
-                android:layout_height="@dimen/x24"
+                android:layout_width="@dimen/x22"
+                android:layout_height="@dimen/x22"
                 android:src="@drawable/psw_icon" />
 
             <EditText
