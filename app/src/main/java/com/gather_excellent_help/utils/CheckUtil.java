@@ -7,7 +7,7 @@ import android.text.TextUtils;
  * 检查手机号、邮箱、密码是否符合正则表达式规则
  */
 
-public class CheckUtils {
+public class CheckUtil {
     /**
      * 检查手机号是否合格
      * @param mobiles

@@ -16,23 +16,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.base.BaseActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".ui.activity.RegisterActivity">
+
+        </activity>
+        <activity android:name=".ui.activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.LoginActivity">
-
-        </activity>
         <activity android:name=".ui.activity.FindPswActivity">
 
         </activity>
-        <activity android:name=".ui.activity.TestActivity">
-
-        </activity>
+        <activity android:name=".ui.activity.TestActivity"></activity>
+        <activity android:name=".ui.activity.SetActivity"></activity>
     </application>
 
 </manifest>

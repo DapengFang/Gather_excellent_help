@@ -8,7 +8,7 @@ import android.util.DisplayMetrics;
  * 获取屏幕宽高的工具类
  */
 
-public class ScreenUtils {
+public class ScreenUtil {
 
     /**
      * @param context

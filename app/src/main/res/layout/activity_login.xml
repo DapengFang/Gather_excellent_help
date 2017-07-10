@@ -31,6 +31,7 @@
                 android:layout_marginLeft="@dimen/x10"
                 android:background="@null"
                 android:hint="手机号"
+                android:inputType="number"
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff"
                 android:textSize="14sp" />

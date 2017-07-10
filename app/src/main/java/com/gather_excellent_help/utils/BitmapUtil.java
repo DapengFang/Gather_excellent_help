@@ -15,7 +15,7 @@ import java.io.InputStream;
  * Created by wuxin on 2017/7/4.
  */
 
-public class BitmapUtils {
+public class BitmapUtil {
     /**
      * @param drawable drawable对象
      * @return bitmap位图对象
