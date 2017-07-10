@@ -6,4 +6,11 @@
     <color name="top_statue_color">#000000</color>
     <color name="gray_button_color">#55000000</color>
     <color name="red_content_color">#99ff0000</color>
+    <color name="white">#ffffff</color>
+    <color name="gray_line_color">#33ffffff</color>
+    <color name="press_gray">#33000000</color>
+    <color name="red_button_color">#99ff0000</color>
+    <color name="white_center_color">#22ffffff</color>
+    <color name="translate">#00000000</color>
+    <color name="white_stroke">#88ffffff</color>
 </resources>

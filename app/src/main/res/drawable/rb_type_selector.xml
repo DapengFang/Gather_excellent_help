@@ -2,5 +2,4 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="false" android:drawable="@drawable/tab_type_n"/>
     <item android:state_checked="true" android:drawable="@drawable/tab_type_s"/>
-
 </selector>
