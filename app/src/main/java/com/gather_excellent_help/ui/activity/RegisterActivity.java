@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeBean;
 import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
 import com.gather_excellent_help.utils.EncryptUtil;
@@ -44,7 +45,7 @@ public class RegisterActivity extends Activity {
     private String password;
     private String smscode;
     private NetUtil netUtils;
-    private String url = "http://192.168.200.100:8080/api/juyoubang/register.aspx";
+    private String url = Url.BASE_URL + "register.aspx";
     private HashMap<String, String> hashMap;
     private CountDownTimer countDownTimer;
 

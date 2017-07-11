@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeBean;
 import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
 import com.gather_excellent_help.utils.EncryptUtil;
@@ -45,7 +46,7 @@ public class FindPswActivity extends Activity {
     private String password;
     private NetUtil netUtils;
     private Map<String,String> map;
-    private String url = "http://192.168.200.100:8080/api/juyoubang/login.aspx";
+    private String url = Url.BASE_URL + "findBack.aspx";
     private CountDownTimer countDownTimer;
 
     @Override
@@ -91,10 +92,10 @@ public class FindPswActivity extends Activity {
         int statusCode = registerBean.getStatusCode();
         switch (statusCode) {
             case 0 :
-                Toast.makeText(FindPswActivity.this, "注册失败！"+registerBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(FindPswActivity.this, "修改失败！"+registerBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
             case 1:
-                Toast.makeText(FindPswActivity.this, "注册成功！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FindPswActivity.this, "修改成功！", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -115,8 +116,8 @@ public class FindPswActivity extends Activity {
         password = password+"@@11fe468";
         password = EncryptUtil.getMd5Value(password);
         map= new HashMap<>();
-        map.put("UserName",user);
-        map.put("Password",password);
+        map.put("userName",user);
+        map.put("newPassword",password);
     }
 
     /**
@@ -155,6 +156,7 @@ public class FindPswActivity extends Activity {
 
             switch (view.getId()) {
               case R.id.tv_update:
+                  getUserInputInfo();
                   netUtils.okHttp2Server2(url,map);
                   break;
               case R.id.tv_findpsw_getSms:

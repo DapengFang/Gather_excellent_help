@@ -11,18 +11,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeBean;
+import com.gather_excellent_help.event.AnyEvent;
+import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
+import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
 public class LoginActivity extends Activity {
@@ -43,7 +49,7 @@ public class LoginActivity extends Activity {
     private String password;
     private NetUtil netUtils;
     private Map<String,String> map;
-    private String url = "http://192.168.200.100:8080/api/juyoubang/login.aspx";
+    private String url = Url.BASE_URL + "login.aspx";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,12 +94,16 @@ public class LoginActivity extends Activity {
         Gson gson = new Gson();
         CodeBean codeBean = gson.fromJson(response, CodeBean.class);
         int statusCode = codeBean.getStatusCode();
+        int id = codeBean.getData().get(0).getId();
         switch (statusCode){
             case 0:
                 Toast.makeText(LoginActivity.this, "登录失败" + codeBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 Toast.makeText(LoginActivity.this, codeBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                CacheUtils.putBoolean(LoginActivity.this,CacheUtils.LOGIN_STATE,true);
+                CacheUtils.putInteger(LoginActivity.this,CacheUtils.LOGIN_VALUE,id);
+                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
                 break;
         }
     }
