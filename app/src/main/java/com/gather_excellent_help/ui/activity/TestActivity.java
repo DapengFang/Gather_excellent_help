@@ -3,6 +3,7 @@ package com.gather_excellent_help.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -40,10 +41,11 @@ public class TestActivity extends AppCompatActivity {
     private NetUtil netUtils;
     private Map<String, String> map;
     private String url = Url.BASE_URL + "bindTaobao.aspx";
+    private String unbind_url = Url.BASE_URL + "UnbundTaobao.aspx";
     private String openId;
     private String avatarUrl;
     private String nick;
-    private Long user_id;
+    private String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +81,8 @@ public class TestActivity extends AppCompatActivity {
     public void getUserInfo(){
         isLogin();
         if(isLogin()) {
-            user_id = CacheUtils.getInteger(TestActivity.this, CacheUtils.LOGIN_VALUE, -1);
-            if(user_id !=-1) {
+            user_id = CacheUtils.getString(TestActivity.this, CacheUtils.LOGIN_VALUE, "");
+            if(!TextUtils.isEmpty(user_id)) {
                 map= new HashMap<>();
                 map.put("Id", user_id +"");
                 map.put("openId",openId);
@@ -89,9 +91,31 @@ public class TestActivity extends AppCompatActivity {
             }
         }
     }
+    /**
+     * 解绑用户信息
+     */
+    public void unBindUserInfo(){
+        isLogin();
+        if(isLogin()) {
+            user_id = CacheUtils.getString(TestActivity.this, CacheUtils.LOGIN_VALUE, "");
+            if(!TextUtils.isEmpty(user_id)) {
+                map= new HashMap<>();
+                map.put("Id", user_id +"");
+            }
+        }
+    }
 
+    /**
+     * @return 是否登录
+     */
     private boolean isLogin() {
         return CacheUtils.getBoolean(TestActivity.this, CacheUtils.LOGIN_STATE, false);
+    }
+    /**
+     * @return 是否绑定淘宝
+     */
+    private boolean isBind() {
+        return CacheUtils.getBoolean(TestActivity.this, CacheUtils.BIND_STATE, false);
     }
 
     /**
@@ -105,10 +129,10 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int i) {
                 Toast.makeText(TestActivity.this, "绑定成功！", Toast.LENGTH_LONG).show();
-
                 //获取淘宝用户信息
                 LogUtil.e("获取淘宝用户信息: " + AlibcLogin.getInstance().getSession());
                 LogUtil.e("代码:" + i);
+                CacheUtils.putBoolean(TestActivity.this,CacheUtils.BIND_STATE,true);
                 openId = AlibcLogin.getInstance().getSession().openId;
                 avatarUrl = AlibcLogin.getInstance().getSession().avatarUrl;
                 nick = AlibcLogin.getInstance().getSession().nick;
@@ -136,14 +160,15 @@ public class TestActivity extends AppCompatActivity {
         alibcLogin.logout(new AlibcLoginCallback() {
             @Override
             public void onSuccess(int i) {
-                Toast.makeText(TestActivity.this, "登出成功 ",
+                Toast.makeText(TestActivity.this, "解绑成功 ",
                         Toast.LENGTH_LONG).show();
-
+                unBindUserInfo();
+                netUtils.okHttp2Server2(unbind_url,map);
             }
 
             @Override
             public void onFailure(int i, String s) {
-                Toast.makeText(TestActivity.this, "登录失败 ",
+                Toast.makeText(TestActivity.this, "解绑失败 ",
                         Toast.LENGTH_LONG).show();
             }
         });
@@ -162,7 +187,11 @@ public class TestActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.btn_unbind_taobao:
-                    unBindTaobao();
+                   if(isBind()) {
+                       unBindTaobao();
+                   }else{
+                     Toast.makeText(TestActivity.this, "请先绑定淘宝，然后再来解绑！", Toast.LENGTH_SHORT).show();
+                   }
                     break;
                 case R.id.btn_toLogin:
                     Intent intent = new Intent(TestActivity.this, LoginActivity.class);
@@ -175,7 +204,7 @@ public class TestActivity extends AppCompatActivity {
     public void onEventMainThread(AnyEvent event) {
         String msg = "onEventMainThread收到了消息：" + event.getMessage();
         LogUtil.e(msg);
-        user_id = CacheUtils.getInteger(TestActivity.this, CacheUtils.LOGIN_VALUE, -1);
+        user_id = CacheUtils.getString(TestActivity.this, CacheUtils.LOGIN_VALUE, "");
         isLogin();
     }
 

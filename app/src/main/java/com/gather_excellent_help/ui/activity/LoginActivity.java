@@ -94,7 +94,7 @@ public class LoginActivity extends Activity {
         Gson gson = new Gson();
         CodeBean codeBean = gson.fromJson(response, CodeBean.class);
         int statusCode = codeBean.getStatusCode();
-        int id = codeBean.getData().get(0).getId();
+        Integer id = codeBean.getData().get(0).getId();
         switch (statusCode){
             case 0:
                 Toast.makeText(LoginActivity.this, "登录失败" + codeBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -102,7 +102,7 @@ public class LoginActivity extends Activity {
             case 1:
                 Toast.makeText(LoginActivity.this, codeBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 CacheUtils.putBoolean(LoginActivity.this,CacheUtils.LOGIN_STATE,true);
-                CacheUtils.putInteger(LoginActivity.this,CacheUtils.LOGIN_VALUE,id);
+                CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_VALUE,id+"");
                 EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
                 break;
         }
