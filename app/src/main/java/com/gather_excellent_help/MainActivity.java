@@ -7,7 +7,7 @@ import android.widget.RadioGroup;
 import android.support.v4.app.FragmentManager;
 
 import com.gather_excellent_help.ui.adapter.CustomPagerAdapter;
-import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.ui.base.BaseFragmentActivity;
 import com.gather_excellent_help.ui.fragment.GoodscartFragment;
 import com.gather_excellent_help.ui.fragment.HomeFragment;
 import com.gather_excellent_help.ui.fragment.MineFragment;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseFragmentActivity {
 
     @Bind(R.id.vp_main)
     NoScrollViewPager vp_main;

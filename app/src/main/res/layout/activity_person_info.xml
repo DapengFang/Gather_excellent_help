@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/x60"
-        android:background="#ffffff"
+        android:background="#eeff0000"
         android:orientation="vertical"
         android:gravity="bottom">
 
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content">
 
             <RelativeLayout
-                android:id="@+id/rl_order_exit"
+                android:id="@+id/rl_person_exit"
                 android:layout_width="@dimen/x40"
                 android:layout_height="@dimen/x40"
                 android:layout_centerVertical="true">
@@ -26,15 +26,15 @@
                     android:layout_height="@dimen/x15"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="7dp"
-                    android:src="@drawable/arraw_left_jiantou" />
+                    android:src="@drawable/white_left_arraw" />
             </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="修改个人资料"
-                android:textColor="#2c2c2c"
+                android:text="个人信息"
+                android:textColor="#ffffff"
                 android:textSize="16sp" />
 
             <TextView
@@ -46,7 +46,7 @@
                 android:layout_marginRight="@dimen/x10"
                 android:gravity="center"
                 android:text="保存"
-                android:textColor="#363636"
+                android:textColor="#ffffff"
                 android:textSize="14sp" />
         </RelativeLayout>
 
@@ -85,51 +85,13 @@
                 android:src="@drawable/right_jiantou" />
 
             <com.gather_excellent_help.ui.widget.CircularImage
-                android:id="@+id/civ_accountSet_head"
+                android:id="@+id/civ_person_head"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/x3"
                 android:layout_toLeftOf="@id/iv_right1"
                 android:src="@drawable/default_person_icon" />
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#e5e5e5" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/x10">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="用户昵称"
-                android:textColor="#000000"
-                android:textSize="14sp" />
-
-            <ImageView
-                android:id="@+id/iv_right2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/right_jiantou" />
-
-            <TextView
-                android:id="@+id/tv_accountSet_nickName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/x3"
-                android:layout_toLeftOf="@id/iv_right2"
-                android:text="请输入昵称"
-                android:textColor="#99000000"
-                android:textSize="12sp" />
         </RelativeLayout>
 
         <View
@@ -159,7 +121,7 @@
                 android:src="@drawable/right_jiantou" />
 
             <TextView
-                android:id="@+id/tv_accountSet_phone"
+                android:id="@+id/tv_person_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -175,48 +137,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#e5e5e5" />
-
         <RelativeLayout
-            android:id="@+id/rl_accountSet_birth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/x10">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="出生日期"
-                android:textColor="#000000"
-                android:textSize="14sp" />
-
-            <ImageView
-                android:id="@+id/iv_right4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/right_jiantou" />
-
-            <TextView
-                android:id="@+id/tv_accountSet_birth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/x3"
-                android:layout_toLeftOf="@id/iv_right4"
-                android:text="1970-1-1"
-                android:textColor="#99000000"
-                android:textSize="12sp" />
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#e5e5e5" />
-
-        <RelativeLayout
-            android:id="@+id/rl_accountSet_sex"
+            android:id="@+id/rl_person_sex"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/x10">
@@ -238,7 +160,7 @@
                 android:src="@drawable/right_jiantou" />
 
             <TextView
-                android:id="@+id/tv_accountSet_sex"
+                android:id="@+id/tv_person_sex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -249,6 +171,74 @@
                 android:textSize="12sp" />
         </RelativeLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#e5e5e5" />
+
+
+        <RelativeLayout
+            android:id="@+id/rl_person_usertype"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="商家类型"
+                android:textColor="#000000"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/iv_right4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/right_jiantou" />
+
+            <TextView
+                android:id="@+id/usertype"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/x3"
+                android:layout_toLeftOf="@id/iv_right4"
+                android:text="实体商家"
+                android:textColor="#99000000"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#e5e5e5" />
+
+        <RelativeLayout
+            android:id="@+id/rl_person_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="我的收货地址"
+                android:textColor="#000000"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/iv_right2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/right_jiantou" />
+
+        </RelativeLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

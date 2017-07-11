@@ -31,5 +31,21 @@
         android:textSize="14sp"
         android:textColor="#99000000"
         android:padding="@dimen/x3"/>
+    <Button
+        android:id="@+id/btn_person_info"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x60"
+        android:text="用户信息"
+        android:textSize="14sp"
+        android:textColor="#99000000"
+        android:padding="@dimen/x3"/>
+    <Button
+        android:id="@+id/btn_mine"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x60"
+        android:text="个人中心"
+        android:textSize="14sp"
+        android:textColor="#99000000"
+        android:padding="@dimen/x3"/>
 
 </LinearLayout>

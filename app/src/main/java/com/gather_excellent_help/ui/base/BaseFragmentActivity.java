@@ -2,21 +2,20 @@ package com.gather_excellent_help.ui.base;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.gather_excellent_help.R;
-import com.gather_excellent_help.utils.StatusBarUtil;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 /**
- * Created by wuxin on 2017/7/11.
+ * Created by wuxin on 2017/7/7.
  */
 
-public class BaseActivity extends Activity {
+public class BaseFragmentActivity extends FragmentActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,8 +25,6 @@ public class BaseActivity extends Activity {
             tintManager.setStatusBarTintEnabled(true);
             tintManager.setStatusBarTintResource(R.color.top_statue_color);//通知栏所需颜色
         }
-         StatusBarUtil.StatusBarLightMode(this);
-
     }
 
     @TargetApi(19)

@@ -44,7 +44,7 @@
                 android:id="@+id/rb_type"
                 style="@style/bottom_tag_style"
                 android:drawableTop="@drawable/rb_soutaobao_selector"
-                android:text="专场" />
+                android:text="搜淘宝" />
 
             <RadioButton
                 android:id="@+id/rb_shopping"

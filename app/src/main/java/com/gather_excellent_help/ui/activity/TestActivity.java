@@ -2,7 +2,6 @@ package com.gather_excellent_help.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -12,9 +11,11 @@ import android.widget.Toast;
 
 import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
 import com.alibaba.baichuan.trade.biz.login.AlibcLoginCallback;
+import com.gather_excellent_help.MainActivity;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.event.AnyEvent;
+import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -27,7 +28,7 @@ import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
-public class TestActivity extends AppCompatActivity {
+public class TestActivity extends BaseActivity {
 
     @Bind(R.id.btn_bind_taobao)
     Button btnBindTaobao;
@@ -37,6 +38,10 @@ public class TestActivity extends AppCompatActivity {
     Button btnUnbindTaobao;
     @Bind(R.id.btn_toLogin)
     Button btnToLogin;
+    @Bind(R.id.btn_person_info)
+    Button btnPersonInfo;
+    @Bind(R.id.btn_mine)
+    Button btnMine;
 
     private NetUtil netUtils;
     private Map<String, String> map;
@@ -61,6 +66,8 @@ public class TestActivity extends AppCompatActivity {
         btnBindTaobao.setOnClickListener(new MyOnClickListener());
         btnUnbindTaobao.setOnClickListener(new MyOnClickListener());
         btnToLogin.setOnClickListener(new MyOnClickListener());
+        btnPersonInfo.setOnClickListener(new MyOnClickListener());
+        btnMine.setOnClickListener(new MyOnClickListener());
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -70,7 +77,7 @@ public class TestActivity extends AppCompatActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-                LogUtil.e(call.toString()+","+e.getMessage());
+                LogUtil.e(call.toString() + "," + e.getMessage());
             }
         });
     }
@@ -78,29 +85,30 @@ public class TestActivity extends AppCompatActivity {
     /**
      * 获取用户信息
      */
-    public void getUserInfo(){
+    public void getUserInfo() {
         isLogin();
-        if(isLogin()) {
+        if (isLogin()) {
             user_id = CacheUtils.getString(TestActivity.this, CacheUtils.LOGIN_VALUE, "");
-            if(!TextUtils.isEmpty(user_id)) {
-                map= new HashMap<>();
-                map.put("Id", user_id +"");
-                map.put("openId",openId);
-                map.put("portrait",avatarUrl);
-                map.put("nickname",nick);
+            if (!TextUtils.isEmpty(user_id)) {
+                map = new HashMap<>();
+                map.put("Id", user_id + "");
+                map.put("openId", openId);
+                map.put("portrait", avatarUrl);
+                map.put("nickname", nick);
             }
         }
     }
+
     /**
      * 解绑用户信息
      */
-    public void unBindUserInfo(){
+    public void unBindUserInfo() {
         isLogin();
-        if(isLogin()) {
+        if (isLogin()) {
             user_id = CacheUtils.getString(TestActivity.this, CacheUtils.LOGIN_VALUE, "");
-            if(!TextUtils.isEmpty(user_id)) {
-                map= new HashMap<>();
-                map.put("Id", user_id +"");
+            if (!TextUtils.isEmpty(user_id)) {
+                map = new HashMap<>();
+                map.put("Id", user_id + "");
             }
         }
     }
@@ -111,6 +119,7 @@ public class TestActivity extends AppCompatActivity {
     private boolean isLogin() {
         return CacheUtils.getBoolean(TestActivity.this, CacheUtils.LOGIN_STATE, false);
     }
+
     /**
      * @return 是否绑定淘宝
      */
@@ -132,12 +141,12 @@ public class TestActivity extends AppCompatActivity {
                 //获取淘宝用户信息
                 LogUtil.e("获取淘宝用户信息: " + AlibcLogin.getInstance().getSession());
                 LogUtil.e("代码:" + i);
-                CacheUtils.putBoolean(TestActivity.this,CacheUtils.BIND_STATE,true);
+                CacheUtils.putBoolean(TestActivity.this, CacheUtils.BIND_STATE, true);
                 openId = AlibcLogin.getInstance().getSession().openId;
                 avatarUrl = AlibcLogin.getInstance().getSession().avatarUrl;
                 nick = AlibcLogin.getInstance().getSession().nick;
                 getUserInfo();
-                netUtils.okHttp2Server2(url,map);
+                netUtils.okHttp2Server2(url, map);
             }
 
             @Override
@@ -163,7 +172,7 @@ public class TestActivity extends AppCompatActivity {
                 Toast.makeText(TestActivity.this, "解绑成功 ",
                         Toast.LENGTH_LONG).show();
                 unBindUserInfo();
-                netUtils.okHttp2Server2(unbind_url,map);
+                netUtils.okHttp2Server2(unbind_url, map);
             }
 
             @Override
@@ -178,23 +187,32 @@ public class TestActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
+            Intent intent = null;
             switch (view.getId()) {
                 case R.id.btn_bind_taobao:
-                    if(isLogin()) {
+                    if (isLogin()) {
                         bindTaobao();
-                    }else{
+                    } else {
                         Toast.makeText(TestActivity.this, "请先登录聚优帮账号！", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.btn_unbind_taobao:
-                   if(isBind()) {
-                       unBindTaobao();
-                   }else{
-                     Toast.makeText(TestActivity.this, "请先绑定淘宝，然后再来解绑！", Toast.LENGTH_SHORT).show();
-                   }
+                    if (isBind()) {
+                        unBindTaobao();
+                    } else {
+                        Toast.makeText(TestActivity.this, "请先绑定淘宝，然后再来解绑！", Toast.LENGTH_SHORT).show();
+                    }
                     break;
                 case R.id.btn_toLogin:
-                    Intent intent = new Intent(TestActivity.this, LoginActivity.class);
+                    intent = new Intent(TestActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.btn_person_info:
+                    intent = new Intent(TestActivity.this, PersonInfoActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.btn_mine:
+                    intent = new Intent(TestActivity.this, MainActivity.class);
                     startActivity(intent);
                     break;
             }
