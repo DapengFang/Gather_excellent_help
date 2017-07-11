@@ -8,14 +8,27 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.api.Url;
+import com.gather_excellent_help.bean.MineBean;
 import com.gather_excellent_help.ui.activity.SetActivity;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.CircularImage;
+import com.gather_excellent_help.utils.LogUtil;
+import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
+import com.gather_excellent_help.utils.imageutils.ImageLoader;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.Call;
 
 /**
  * Created by wuxin on 2017/7/7.
@@ -47,6 +60,13 @@ public class MineFragment extends BaseFragment {
     ImageView ivMeDaishouhuo;
     @Bind(R.id.iv_me_daipinjia)
     ImageView ivMeDaipinjia;
+    @Bind(R.id.tv_mine_mobietype)
+    TextView tvMineMobietype;
+
+    private NetUtil netUtils;
+    private Map<String, String> map;
+    private String url = Url.BASE_URL + "Mine.aspx";
+    private ImageLoader mImageLoader;
 
     @Override
     public View initView() {
@@ -56,7 +76,63 @@ public class MineFragment extends BaseFragment {
 
     @Override
     public void initData() {
+        netUtils = new NetUtil();
+        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        if (Tools.isLogin(getActivity())) {
+            String userLogin = Tools.getUserLogin(getActivity());
+            map = new HashMap<>();
+            map.put("Id", userLogin);
+            netUtils.okHttp2Server2(url, map);
+        }
         rlMineSet.setOnClickListener(new MyOnClickListener());
+        netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
+            @Override
+            public void getSuccessResponse(String response) {
+                LogUtil.e(response);
+                parseData(response);
+            }
+
+            @Override
+            public void getFailResponse(Call call, Exception e) {
+                LogUtil.e(call.toString() + "==" + e.getMessage());
+            }
+        });
+    }
+
+    /**
+     * 解析数据
+     *
+     * @param response
+     */
+    private void parseData(String response) {
+        Gson gson = new Gson();
+        MineBean mineBean = gson.fromJson(response, MineBean.class);
+        int statusCode = mineBean.getStatusCode();
+        List<MineBean.DataBean> data = mineBean.getData();
+        switch (statusCode) {
+            case 0:
+                Toast.makeText(getActivity(), mineBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                loadUserData(data);
+                break;
+        }
+    }
+
+    /**
+     * 导入用户信息
+     *
+     * @param data
+     */
+    private void loadUserData(List<MineBean.DataBean> data) {
+        MineBean.DataBean dataBean = data.get(0);
+        String avatar = dataBean.getAvatar();
+        String group = dataBean.getGroup();
+        String mobile = dataBean.getMobile();
+        String nick_name = dataBean.getNick_name();
+        mImageLoader.loadImage(avatar, civMeHeadIcon, true);
+        tvMeNickname.setText(nick_name);
+        tvMineMobietype.setText(group+"("+mobile+")");
     }
 
     @Override
@@ -73,12 +149,12 @@ public class MineFragment extends BaseFragment {
         ButterKnife.unbind(this);
     }
 
-    public class MyOnClickListener implements View.OnClickListener{
+    public class MyOnClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.rl_mine_set :
+                case R.id.rl_mine_set:
                     Intent intent = new Intent(getActivity(), SetActivity.class);
                     startActivity(intent);
                     break;
