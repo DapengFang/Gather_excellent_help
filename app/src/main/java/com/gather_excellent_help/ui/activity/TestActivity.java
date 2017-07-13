@@ -42,6 +42,8 @@ public class TestActivity extends BaseActivity {
     Button btnPersonInfo;
     @Bind(R.id.btn_mine)
     Button btnMine;
+    @Bind(R.id.btn_home)
+    Button btnHome;
 
     private NetUtil netUtils;
     private Map<String, String> map;
@@ -68,6 +70,7 @@ public class TestActivity extends BaseActivity {
         btnToLogin.setOnClickListener(new MyOnClickListener());
         btnPersonInfo.setOnClickListener(new MyOnClickListener());
         btnMine.setOnClickListener(new MyOnClickListener());
+        btnHome.setOnClickListener(new MyOnClickListener());
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -213,6 +216,10 @@ public class TestActivity extends BaseActivity {
                     break;
                 case R.id.btn_mine:
                     intent = new Intent(TestActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.btn_home:
+                    intent = new Intent(TestActivity.this, TestActivity2.class);
                     startActivity(intent);
                     break;
             }

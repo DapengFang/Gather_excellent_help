@@ -6,10 +6,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x60"
+        android:layout_height="@dimen/x50"
         android:background="#eeff0000"
         android:orientation="vertical"
-        android:gravity="bottom">
+        android:gravity="center">
 
         <RelativeLayout
             android:layout_width="match_parent"

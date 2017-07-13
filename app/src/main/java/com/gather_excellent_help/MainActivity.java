@@ -2,6 +2,7 @@ package com.gather_excellent_help;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.widget.RadioGroup;
 
 import android.support.v4.app.FragmentManager;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseFragmentActivity {
+public class MainActivity extends FragmentActivity {
 
     @Bind(R.id.vp_main)
     NoScrollViewPager vp_main;
