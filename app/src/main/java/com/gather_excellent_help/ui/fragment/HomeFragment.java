@@ -17,7 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by wuxin on 2017/7/7.
+ * Created by Dapeng Fang on 2017/7/7.
  */
 
 public class HomeFragment extends BaseFragment {
@@ -89,6 +89,10 @@ public class HomeFragment extends BaseFragment {
     }
 
 
+    /**
+     * 设置刷新的方法
+     * @param requestDataRefresh 是否需要刷新
+     */
     public void setRefresh(boolean requestDataRefresh) {
         if (swipeRefresh == null) {
             return;

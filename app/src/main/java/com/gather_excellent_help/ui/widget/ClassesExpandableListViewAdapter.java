@@ -126,15 +126,19 @@ public class ClassesExpandableListViewAdapter extends BaseExpandableListAdapter 
         View inflate = View.inflate(activity, R.layout.item_type_second_arraw, null);
         ImageView arrawNavigator = (ImageView) inflate.findViewById(R.id.iv_first_arraw);
         TextView tvNavigator = (TextView) inflate.findViewById(R.id.tv_first_title);
+        arrawSetDirection(isExpanded, arrawNavigator);
+        tvNavigator.setText(string);
+        return inflate;
+    }
+
+    private void arrawSetDirection(boolean isExpanded, ImageView arrawNavigator) {
         if(isExpanded) {
             arrawNavigator.setImageResource(R.drawable.down_red_arraw);
         }else{
             arrawNavigator.setImageResource(R.drawable.left_red_type_arraw);
         }
-
-        tvNavigator.setText(string);
-        return inflate;
     }
+
     private TextView getGenericChildView(String string, int groupPosition,int childPosition) {
 
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(
@@ -144,9 +148,10 @@ public class ClassesExpandableListViewAdapter extends BaseExpandableListAdapter 
         TextView textView = new TextView(activity);
         textView.setLayoutParams(layoutParams);
         textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-        textView.setPadding(80, 30, 0, 30);
+        textView.setPadding(100, 30, 0, 30);
         textView.setText(string);
-        textView.setTextColor(Color.BLACK);
+        textView.setTextColor(Color.parseColor("#99000000"));
+
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -110,13 +110,17 @@ public class SimpleExpandableListViewAdapter extends BaseExpandableListAdapter {
         View inflate = View.inflate(activity, R.layout.item_type_first_arraw, null);
         ImageView arrawNavigator = (ImageView) inflate.findViewById(R.id.iv_first_arraw);
         TextView tvNavigator = (TextView) inflate.findViewById(R.id.tv_first_title);
+        arrawSetDirection(isExpanded, arrawNavigator);
+        tvNavigator.setText(string);
+        return inflate;
+    }
+
+    private void arrawSetDirection(boolean isExpanded, ImageView arrawNavigator) {
         if(isExpanded) {
             arrawNavigator.setImageResource(R.drawable.down_red_arraw);
         }else{
             arrawNavigator.setImageResource(R.drawable.left_red_type_arraw);
         }
-        tvNavigator.setText(string);
-        return inflate;
     }
 
 

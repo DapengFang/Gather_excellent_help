@@ -1,7 +1,6 @@
 package com.gather_excellent_help.ui.fragment;
 
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,7 +18,6 @@ import com.gather_excellent_help.ui.adapter.TypeWareAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.Classes;
 import com.gather_excellent_help.ui.widget.College;
-import com.gather_excellent_help.ui.widget.CustomExpandableListView;
 import com.gather_excellent_help.ui.widget.SimpleExpandableListViewAdapter;
 import com.gather_excellent_help.utils.LogUtil;
 
@@ -29,10 +27,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by wuxin on 2017/7/7.
- */
 
+/**
+ * created by Dapeng Fang
+ */
 public class TypeFragment extends BaseFragment {
     @Bind(R.id.iv_zhuangtai_exit)
     ImageView ivZhuangtaiExit;
@@ -64,7 +62,7 @@ public class TypeFragment extends BaseFragment {
     public void initData() {
         tvTopTitleName.setText("商品分类");
         getNavigatorData();
-        SimpleExpandableListViewAdapter adapter = new SimpleExpandableListViewAdapter(flists,getActivity());
+        final SimpleExpandableListViewAdapter adapter = new SimpleExpandableListViewAdapter(flists,getActivity());
         // 设置适配器
         cusListNavigator.setAdapter(adapter);
         cusListNavigator.setGroupIndicator(null);

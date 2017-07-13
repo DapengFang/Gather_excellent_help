@@ -17,8 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.base.BaseFragmentActivity" />
-        <activity android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.activity.RegisterActivity" />
         <activity android:name=".ui.activity.LoginActivity" />
         <activity android:name=".ui.activity.FindPswActivity" />
@@ -32,7 +33,7 @@
         <activity android:name=".ui.activity.SetActivity" />
         <activity android:name=".ui.activity.PersonInfoActivity" />
         <activity android:name=".ui.activity.TestActivity2" />
-        <activity android:name=".ui.activity.WebActivity"></activity>
+        <activity android:name=".ui.activity.WebActivity" />
     </application>
 
 </manifest>
