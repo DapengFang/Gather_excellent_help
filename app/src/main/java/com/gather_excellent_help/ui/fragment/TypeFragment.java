@@ -48,12 +48,18 @@ public class TypeFragment extends BaseFragment {
     RecyclerView rcvTypeShow;
     private ArrayList<College> flists;
 
+    /**
+     * @return 布局对象
+     */
     @Override
     public View initView() {
         View inflate = View.inflate(getContext(), R.layout.type_fragment, null);
         return inflate;
     }
 
+    /**
+     * 数据初始化
+     */
     @Override
     public void initData() {
         tvTopTitleName.setText("商品分类");
