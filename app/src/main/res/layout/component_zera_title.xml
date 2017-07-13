@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x36"
+    android:paddingLeft="@dimen/x8"
+    android:paddingRight="@dimen/x8">
+
+        <View
+            android:id="@+id/v_type_line"
+            android:layout_width="@dimen/x3"
+            android:layout_height="@dimen/x14"
+            android:layout_centerVertical="true"
+            android:background="#99ff0000" />
+
+        <TextView
+            android:id="@+id/tv_item_home_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x7"
+            android:text="团购区"
+            android:textColor="#E0AE85"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/iv_home_rcv_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x3"
+            android:src="@drawable/red_right_arraw" />
+
+        <TextView
+            android:id="@+id/tv_item_home_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x3"
+            android:layout_toLeftOf="@id/iv_home_rcv_right"
+            android:text="更多"
+            android:textSize="12sp" />
+    </RelativeLayout>
