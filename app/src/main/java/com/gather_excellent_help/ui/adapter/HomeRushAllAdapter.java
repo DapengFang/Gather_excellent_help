@@ -17,6 +17,8 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.HomeData;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.HomeBannerBean;
+import com.gather_excellent_help.bean.HomeRushBean;
+import com.gather_excellent_help.bean.HomeRushChangeBean;
 import com.gather_excellent_help.bean.HomeTypeBean;
 import com.gather_excellent_help.ui.activity.TestActivity2;
 import com.gather_excellent_help.ui.activity.WebActivity;
@@ -56,9 +58,11 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private NetUtil netUtils;
     private Map<String, String> map;
     private String url = Url.BASE_URL + "IndexBanner.aspx";
+    private   List<HomeRushChangeBean> data;
 
-    public HomeRushAllAdapter(Context context) {
+    public HomeRushAllAdapter(Context context,  List<HomeRushChangeBean> data) {
         this.context = context;
+        this.data = data;
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
@@ -117,9 +121,17 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             getBannerData(civHomeGanner);
         } else if (holder instanceof RushWareViewHolder) {
             RushWareViewHolder rushWareViewHolder = (RushWareViewHolder) holder;
-            GridView gvRushZera = rushWareViewHolder.gvRushZera;
-            HomeRushAdapter homeRushAdapter = new HomeRushAdapter(context);
-            gvRushZera.setAdapter(homeRushAdapter);
+            HomeRushChangeBean homeRushChangeBean = data.get(position-4);
+            HomeRushChangeBean.CoverBean cover = homeRushChangeBean.getCover();
+            rushWareViewHolder.tvRushMoreTitle.setText(cover.getTitle());
+            String url = Url.IMG_URL +cover.getImg_url();
+            mImageLoader.loadImage(url,rushWareViewHolder.ivRushMoreBig,true);
+            List<HomeRushChangeBean.ItemBean> itemDatas = homeRushChangeBean.getItem();
+            List<HomeRushChangeBean.ItemBean> nItemDatas =new ArrayList<>();
+           if( itemDatas!= null && itemDatas.size()> 2) {
+               HomeRushAdapter homeRushAdapter = new HomeRushAdapter(context,itemDatas);
+               rushWareViewHolder.gvRushZera.setAdapter(homeRushAdapter);
+           }
         } else if(holder instanceof GroupViewHolder) {
             GroupViewHolder groupViewHolder = (GroupViewHolder) holder;
             TextView tvTitle = groupViewHolder.tvTitle;
@@ -134,7 +146,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return 10;//
+        return data.size()+5;
     }
 
 
@@ -231,6 +243,10 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     class RushWareViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.gv_rush_zera)
         GridView gvRushZera;
+        @Bind(R.id.tv_rush_more_title)
+        TextView tvRushMoreTitle;
+        @Bind(R.id.iv_rush_more_big)
+        ImageView ivRushMoreBig;
         public RushWareViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -295,7 +311,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             @Override
             public void onImageClick(int position, View imageView) {
                 Intent intent = new Intent(context, WebActivity.class);
-                intent.putExtra("url",data.get(position).getLink_url());
+                intent.putExtra("url",data.get(position%data.size()).getLink_url());
                 context.startActivity(intent);
             }
 
