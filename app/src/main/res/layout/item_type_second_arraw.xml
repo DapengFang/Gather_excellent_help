@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="导航"
-        android:textSize="16sp"
+        android:textSize="12sp"
         android:textColor="#99000000"
         android:layout_marginLeft="@dimen/x10"
         android:paddingTop="@dimen/x10"

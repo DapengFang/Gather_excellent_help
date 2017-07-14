@@ -13,7 +13,6 @@ public class HomeBannerBean {
      * statusMessage : 查询成功
      * data : [{"id":57,"site_id":1,"channel_id":4,"category_id":52,"brand_id":0,"call_index":"","title":"banner3","link_url":"https://detail.tmall.com/item.htm?id=535414640225&spm=a219t.7664554.1998457203.95.hjb0P4","img_url":"/upload/201707/10/201707101523119873.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-10T07:22:52Z","update_time":"2017-07-11T07:27:33.39Z"},{"id":56,"site_id":1,"channel_id":4,"category_id":52,"brand_id":0,"call_index":"","title":"banner2","link_url":"https://detail.tmall.com/item.htm?id=535414640225&spm=a219t.7664554.1998457203.95.hjb0P4","img_url":"/upload/201707/10/201707101523047148.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-10T07:22:43Z","update_time":"2017-07-11T07:27:37.73Z"},{"id":55,"site_id":1,"channel_id":4,"category_id":52,"brand_id":0,"call_index":"","title":"banner1","link_url":"https://detail.tmall.com/item.htm?id=535414640225&spm=a219t.7664554.1998457203.95.hjb0P4","img_url":"/upload/201707/10/201707101522130449.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-10T07:22:14Z","update_time":"2017-07-11T07:27:43.747Z"}]
      */
-
     private int statusCode;
     private String statusMessage;
     private List<DataBean> data;
@@ -83,6 +82,7 @@ public class HomeBannerBean {
         private String title;
         private String link_url;
         private String img_url;
+        private String activity_img;
         private String seo_title;
         private String seo_keywords;
         private String seo_description;
@@ -325,6 +325,14 @@ public class HomeBannerBean {
 
         public void setUpdate_time(String update_time) {
             this.update_time = update_time;
+        }
+
+        public String getActivity_img() {
+            return activity_img;
+        }
+
+        public void setActivity_img(String activity_img) {
+            this.activity_img = activity_img;
         }
     }
 }

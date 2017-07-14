@@ -1,5 +1,6 @@
 package com.gather_excellent_help.ui.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,13 +8,20 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.baichuan.android.trade.AlibcTrade;
+import com.alibaba.baichuan.android.trade.model.AlibcShowParams;
+import com.alibaba.baichuan.android.trade.page.AlibcPage;
+import com.alibaba.baichuan.trade.biz.core.taoke.AlibcTaokeParams;
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.aliapi.DemoTradeCallback;
+import com.alibaba.baichuan.android.trade.model.OpenType;
 import com.gather_excellent_help.api.HomeData;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.HomeBannerBean;
@@ -31,6 +39,7 @@ import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +53,7 @@ import okhttp3.Call;
 
 public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
+    private Activity activity;
     private int status = 1;
     public static final int LOAD_MORE = 0;
     public static final int LOAD_PULL_TO = 1;
@@ -58,11 +68,24 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private NetUtil netUtils;
     private Map<String, String> map;
     private String url = Url.BASE_URL + "IndexBanner.aspx";
-    private   List<HomeRushChangeBean> data;
+    private  List<HomeRushChangeBean> data;
 
-    public HomeRushAllAdapter(Context context,  List<HomeRushChangeBean> data) {
+    private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
+    private AlibcTaokeParams alibcTaokeParams = null;//淘客参数，包括pid，unionid，subPid
+    private Boolean isTaoke = false;//是否是淘客商品类型
+    private String itemId = "522166121586";//默认商品id
+    private String shopId = "60552065";//默认店铺id
+    private Map<String, String> exParams;//yhhpass参数
+
+    public HomeRushAllAdapter(Context context, List<HomeRushChangeBean> data , Activity activity) {
         this.context = context;
+        this.activity = activity;
         this.data = data;
+
+        alibcShowParams = new AlibcShowParams(OpenType.H5, false);
+        exParams = new HashMap<>();
+        exParams.put("isv_code", "appisvcode");
+        exParams.put("alibaba", "阿里巴巴");//自定义参数部分，可任意增删改
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
@@ -126,11 +149,18 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             rushWareViewHolder.tvRushMoreTitle.setText(cover.getTitle());
             String url = Url.IMG_URL +cover.getImg_url();
             mImageLoader.loadImage(url,rushWareViewHolder.ivRushMoreBig,true);
-            List<HomeRushChangeBean.ItemBean> itemDatas = homeRushChangeBean.getItem();
+            final List<HomeRushChangeBean.ItemBean> itemDatas = homeRushChangeBean.getItem();
             List<HomeRushChangeBean.ItemBean> nItemDatas =new ArrayList<>();
            if( itemDatas!= null && itemDatas.size()> 2) {
                HomeRushAdapter homeRushAdapter = new HomeRushAdapter(context,itemDatas);
                rushWareViewHolder.gvRushZera.setAdapter(homeRushAdapter);
+               rushWareViewHolder.gvRushZera.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                   @Override
+                   public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                       String link_url = itemDatas.get(i).getLink_url();
+                       AlibcTrade.show(activity, new AlibcPage(link_url), alibcShowParams, null, exParams , new DemoTradeCallback());
+                   }
+               });
            }
         } else if(holder instanceof GroupViewHolder) {
             GroupViewHolder groupViewHolder = (GroupViewHolder) holder;

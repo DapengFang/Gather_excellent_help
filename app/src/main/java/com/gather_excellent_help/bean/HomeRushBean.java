@@ -11,7 +11,7 @@ public class HomeRushBean {
     /**
      * statusCode : 1
      * statusMessage : 查询成功
-     * data : [{"today_New":{"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131719217910.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-13T09:28:20.2Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":null,"total_sales":0},"item":[{"id":37983,"site_id":1,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"KEG/韩电 XQB82-C1528AS 8.2公斤全自动家用波轮洗衣机热烘干杀菌","link_url":"http://item.taobao.com/item.htm?id=543748304516","img_url":"http://img4.tbcdn.cn/tfscom/i2/TB1ZdCTRVXXXXbbXpXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:46:37Z","update_time":"2017-07-12T11:42:18.04Z","total_sales":0,"productId":"543748304516","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":591,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"LDD 便携手持式洗衣机超小型微型洗衣机棒迷你电动洗衣神器局部","link_url":"http://item.taobao.com/item.htm?id=554349329451","img_url":"http://img3.tbcdn.cn/tfscom/http://img.alicdn.com/imgextra/i3/TB1ZpLERVXXXXcUXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554349329451","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":590,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"威力小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童","link_url":"http://item.taobao.com/item.htm?id=551925315380","img_url":"http://img3.tbcdn.cn/tfscom/i1/2972498538/TB2Af5IbpLzQeBjSZJiXXXesFXa_!!2972498538.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"551925315380","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":588,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"迷你洗衣机小型婴儿童单桶筒两用宿舍微型家用宝宝内衣洗袜子尿布","link_url":"http://item.taobao.com/item.htm?id=554091961937","img_url":"http://img3.tbcdn.cn/tfscom/i2/TB136LARVXXXXaQXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554091961937","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":579,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"航天电器T98-988 脱水机甩干机家用单甩单筒大容量脱水机包邮","link_url":"http://item.taobao.com/item.htm?id=546163468248","img_url":"http://img2.tbcdn.cn/tfscom/i1/TB1kQiPPVXXXXcxXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"546163468248","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":2,"site_id":1,"channel_id":7,"category_id":95,"brand_id":0,"call_index":"","title":"Midea/美的 BCD-520WKM(E)对开门电冰箱双开门风冷无霜家用","link_url":"https://detail.tmall.com/item.htm?id=535414640225&spm=a219t.7664554.1998457203.95.hjb0P4","img_url":"/upload/201707/12/201707121401203789.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-12T06:16:46.083Z","update_time":null,"total_sales":0,"productId":"535414640225","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":null,"market_price":null,"sell_price":null,"tkRate":null}]},"silo_Handling":{"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131719217910.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-13T09:28:20.2Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":null,"total_sales":0},"item":[{"id":586,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"威力小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童","link_url":"http://item.taobao.com/item.htm?id=551534325837","img_url":"http://img3.tbcdn.cn/tfscom/i1/2972498538/TB2Af5IbpLzQeBjSZJiXXXesFXa_!!2972498538.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":1,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"551534325837","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":578,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"微型家用迷你半自动小孩儿童洗衣机冼双筒桶同内衣内裤宿舍","link_url":"http://item.taobao.com/item.htm?id=554423830480","img_url":"http://img2.tbcdn.cn/tfscom/i1/TB1CbQwRVXXXXX_XFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":1,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554423830480","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]},"goods_Warmup":{"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131719217910.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-13T09:28:20.2Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":null,"total_sales":0},"item":[{"id":585,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"迷你洗衣机.洗衣机小型单桶半自动洗袜机内衣大容量","link_url":"http://item.taobao.com/item.htm?id=552269829164","img_url":"http://img3.tbcdn.cn/tfscom/i1/3082551897/TB251THrYlmpuFjSZFlXXbdQXXa_!!3082551897.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":1,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"552269829164","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":580,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"迷你洗衣机单筒小型迷你单通半自动洗衣机洗脱一体机带甩干","link_url":"http://item.taobao.com/item.htm?id=554082573662","img_url":"http://img1.tbcdn.cn/tfscom/i4/TB1J1rnRVXXXXaVXVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":1,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554082573662","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]},"hot_Sale":{"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131719217910.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-13T09:28:20.2Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":null,"total_sales":0},"item":[{"id":584,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"婴儿水洗衣机单带迷你牌鸭白色儿童甩干脱水洗衣机小型筒单桶水筒","link_url":"http://item.taobao.com/item.htm?id=553327532896","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1YcIjKXXXXXbLapXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":1,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553327532896","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":581,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"xpb40-288b小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童xyj","link_url":"http://item.taobao.com/item.htm?id=553841607672","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1f4kSKpXXXXb2XVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":1,"is_slide":1,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553841607672","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]}}]
+     * data : [{"today_New":{"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131727074775.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-14T01:38:19.697Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":0,"total_sales":0},"item":[{"id":579,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":119,"call_index":"","title":"航天电器T98-988 脱水机甩干机家用单甩单筒大容量脱水机包邮","link_url":"http://item.taobao.com/item.htm?id=546163468248","img_url":"http://img2.tbcdn.cn/tfscom/i1/TB1kQiPPVXXXXcxXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"546163468248","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":700,"site_id":1,"channel_id":7,"category_id":53,"brand_id":9,"activity_id":119,"call_index":"","title":"双桶双缸小型迷你洗衣机带脱水甩干半全自动婴儿童内衣洗袜机家用","link_url":"http://item.taobao.com/item.htm?id=553686546767","img_url":"http://img3.tbcdn.cn/tfscom/i2/TB1Mmt0RVXXXXb4XpXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:09Z","update_time":"2017-07-14T05:55:11.913Z","total_sales":0,"productId":"553686546767","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":0},{"id":581,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":119,"call_index":"","title":"xpb40-288b小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童xyj","link_url":"http://item.taobao.com/item.htm?id=553841607672","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1f4kSKpXXXXb2XVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":1,"is_slide":1,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553841607672","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":580,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":119,"call_index":"","title":"迷你洗衣机单筒小型迷你单通半自动洗衣机洗脱一体机带甩干","link_url":"http://item.taobao.com/item.htm?id=554082573662","img_url":"http://img1.tbcdn.cn/tfscom/i4/TB1J1rnRVXXXXaVXVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":1,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554082573662","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":578,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":119,"call_index":"","title":"微型家用迷你半自动小孩儿童洗衣机冼双筒桶同内衣内裤宿舍","link_url":"http://item.taobao.com/item.htm?id=554423830480","img_url":"http://img2.tbcdn.cn/tfscom/i1/TB1CbQwRVXXXXX_XFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":1,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554423830480","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]},"silo_Handling":{"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131727074775.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-14T01:38:19.697Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":0,"total_sales":0},"item":[{"id":585,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":120,"call_index":"","title":"迷你洗衣机.洗衣机小型单桶半自动洗袜机内衣大容量","link_url":"http://item.taobao.com/item.htm?id=552269829164","img_url":"http://img3.tbcdn.cn/tfscom/i1/3082551897/TB251THrYlmpuFjSZFlXXbdQXXa_!!3082551897.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":1,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"552269829164","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":584,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":120,"call_index":"","title":"婴儿水洗衣机单带迷你牌鸭白色儿童甩干脱水洗衣机小型筒单桶水筒","link_url":"http://item.taobao.com/item.htm?id=553327532896","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1YcIjKXXXXXbLapXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":1,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553327532896","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":583,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":120,"call_index":"","title":"脱水机甩干机 家用单甩不锈钢甩干脱水桶单筒小型非迷你洗衣机","link_url":"http://item.taobao.com/item.htm?id=554061185187","img_url":"http://img3.tbcdn.cn/tfscom/i4/TB16X6hRVXXXXXvXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554061185187","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":582,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":120,"call_index":"","title":"韩代T60-128脱水机半自动甩干迷你单桶家用小型筒单甩包邮婴儿","link_url":"http://item.taobao.com/item.htm?id=546237273423","img_url":"http://img3.tbcdn.cn/tfscom/i4/TB193zjKVXXXXa9apXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"546237273423","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]},"goods_Warmup":{"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131727074775.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-14T01:38:19.697Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":0,"total_sales":0},"item":[{"id":588,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"迷你洗衣机小型婴儿童单桶筒两用宿舍微型家用宝宝内衣洗袜子尿布","link_url":"http://item.taobao.com/item.htm?id=554091961937","img_url":"http://img3.tbcdn.cn/tfscom/i2/TB136LARVXXXXaQXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554091961937","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":591,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"LDD 便携手持式洗衣机超小型微型洗衣机棒迷你电动洗衣神器局部","link_url":"http://item.taobao.com/item.htm?id=554349329451","img_url":"http://img3.tbcdn.cn/tfscom/http://img.alicdn.com/imgextra/i3/TB1ZpLERVXXXXcUXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554349329451","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":589,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"威力小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童","link_url":"http://item.taobao.com/item.htm?id=551545979569","img_url":"http://img3.tbcdn.cn/tfscom/i1/2972498538/TB2Af5IbpLzQeBjSZJiXXXesFXa_!!2972498538.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"551545979569","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":587,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"半自动洗衣机半自动洗衣机威力家用小型婴儿单迷你儿童单桶宝宝","link_url":"http://item.taobao.com/item.htm?id=553387309944","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1f4kSKpXXXXb2XVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553387309944","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":586,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"威力小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童","link_url":"http://item.taobao.com/item.htm?id=551534325837","img_url":"http://img3.tbcdn.cn/tfscom/i1/2972498538/TB2Af5IbpLzQeBjSZJiXXXesFXa_!!2972498538.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":1,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"551534325837","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]},"hot_Sale":{"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131727074775.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-14T01:38:19.697Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":0,"total_sales":0},"item":[{"id":595,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":122,"call_index":"","title":"单筒桶迷你洗衣机半自动家用宿舍个人宝宝专用洗脱一体大容量","link_url":"http://item.taobao.com/item.htm?id=554082217079","img_url":"http://img1.tbcdn.cn/tfscom/i4/TB1J1rnRVXXXXaVXVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554082217079","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":594,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":122,"call_index":"","title":"中山小鸭46-28 4.6小型迷你洗衣机甩干脱水半自动可洗可脱","link_url":"http://item.taobao.com/item.htm?id=552533759892","img_url":"http://img3.tbcdn.cn/tfscom/i4/0/TB1jIOGNVXXXXXPXXXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"552533759892","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":593,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":122,"call_index":"","title":"xpb25-268d迷你洗衣机洗脱半自动带甩干脱水单筒","link_url":"http://item.taobao.com/item.htm?id=548658792439","img_url":"http://img1.tbcdn.cn/tfscom/i3/TB1y04PKpXXXXajXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"548658792439","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":592,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":122,"call_index":"","title":"单桶洗衣机小型迷你半自动洗衣机洗脱一体带甩干洗袜子宝宝内衣","link_url":"http://item.taobao.com/item.htm?id=552425747997","img_url":"http://img1.tbcdn.cn/tfscom/i4/3082551897/TB2W0kXr04opuFjSZFLXXX8mXXa_!!3082551897.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"552425747997","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]}}]
      */
 
     private int statusCode;
@@ -44,10 +44,10 @@ public class HomeRushBean {
 
     public static class DataBean {
         /**
-         * today_New : {"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131719217910.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-13T09:28:20.2Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":null,"total_sales":0},"item":[{"id":37983,"site_id":1,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"KEG/韩电 XQB82-C1528AS 8.2公斤全自动家用波轮洗衣机热烘干杀菌","link_url":"http://item.taobao.com/item.htm?id=543748304516","img_url":"http://img4.tbcdn.cn/tfscom/i2/TB1ZdCTRVXXXXbbXpXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:46:37Z","update_time":"2017-07-12T11:42:18.04Z","total_sales":0,"productId":"543748304516","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":591,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"LDD 便携手持式洗衣机超小型微型洗衣机棒迷你电动洗衣神器局部","link_url":"http://item.taobao.com/item.htm?id=554349329451","img_url":"http://img3.tbcdn.cn/tfscom/http://img.alicdn.com/imgextra/i3/TB1ZpLERVXXXXcUXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554349329451","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":590,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"威力小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童","link_url":"http://item.taobao.com/item.htm?id=551925315380","img_url":"http://img3.tbcdn.cn/tfscom/i1/2972498538/TB2Af5IbpLzQeBjSZJiXXXesFXa_!!2972498538.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"551925315380","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":588,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"迷你洗衣机小型婴儿童单桶筒两用宿舍微型家用宝宝内衣洗袜子尿布","link_url":"http://item.taobao.com/item.htm?id=554091961937","img_url":"http://img3.tbcdn.cn/tfscom/i2/TB136LARVXXXXaQXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554091961937","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":579,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"航天电器T98-988 脱水机甩干机家用单甩单筒大容量脱水机包邮","link_url":"http://item.taobao.com/item.htm?id=546163468248","img_url":"http://img2.tbcdn.cn/tfscom/i1/TB1kQiPPVXXXXcxXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"546163468248","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":2,"site_id":1,"channel_id":7,"category_id":95,"brand_id":0,"call_index":"","title":"Midea/美的 BCD-520WKM(E)对开门电冰箱双开门风冷无霜家用","link_url":"https://detail.tmall.com/item.htm?id=535414640225&spm=a219t.7664554.1998457203.95.hjb0P4","img_url":"/upload/201707/12/201707121401203789.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-12T06:16:46.083Z","update_time":null,"total_sales":0,"productId":"535414640225","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":null,"market_price":null,"sell_price":null,"tkRate":null}]}
-         * silo_Handling : {"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131719217910.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-13T09:28:20.2Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":null,"total_sales":0},"item":[{"id":586,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"威力小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童","link_url":"http://item.taobao.com/item.htm?id=551534325837","img_url":"http://img3.tbcdn.cn/tfscom/i1/2972498538/TB2Af5IbpLzQeBjSZJiXXXesFXa_!!2972498538.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":1,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"551534325837","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":578,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"微型家用迷你半自动小孩儿童洗衣机冼双筒桶同内衣内裤宿舍","link_url":"http://item.taobao.com/item.htm?id=554423830480","img_url":"http://img2.tbcdn.cn/tfscom/i1/TB1CbQwRVXXXXX_XFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":1,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554423830480","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]}
-         * goods_Warmup : {"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131719217910.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-13T09:28:20.2Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":null,"total_sales":0},"item":[{"id":585,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"迷你洗衣机.洗衣机小型单桶半自动洗袜机内衣大容量","link_url":"http://item.taobao.com/item.htm?id=552269829164","img_url":"http://img3.tbcdn.cn/tfscom/i1/3082551897/TB251THrYlmpuFjSZFlXXbdQXXa_!!3082551897.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":1,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"552269829164","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":580,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"迷你洗衣机单筒小型迷你单通半自动洗衣机洗脱一体机带甩干","link_url":"http://item.taobao.com/item.htm?id=554082573662","img_url":"http://img1.tbcdn.cn/tfscom/i4/TB1J1rnRVXXXXaVXVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":1,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554082573662","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]}
-         * hot_Sale : {"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131719217910.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-13T09:28:20.2Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":null,"total_sales":0},"item":[{"id":584,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"婴儿水洗衣机单带迷你牌鸭白色儿童甩干脱水洗衣机小型筒单桶水筒","link_url":"http://item.taobao.com/item.htm?id=553327532896","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1YcIjKXXXXXbLapXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":1,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553327532896","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":581,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"xpb40-288b小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童xyj","link_url":"http://item.taobao.com/item.htm?id=553841607672","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1f4kSKpXXXXb2XVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":1,"is_slide":1,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553841607672","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]}
+         * today_New : {"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131727074775.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-14T01:38:19.697Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":0,"total_sales":0},"item":[{"id":579,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":119,"call_index":"","title":"航天电器T98-988 脱水机甩干机家用单甩单筒大容量脱水机包邮","link_url":"http://item.taobao.com/item.htm?id=546163468248","img_url":"http://img2.tbcdn.cn/tfscom/i1/TB1kQiPPVXXXXcxXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"546163468248","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":700,"site_id":1,"channel_id":7,"category_id":53,"brand_id":9,"activity_id":119,"call_index":"","title":"双桶双缸小型迷你洗衣机带脱水甩干半全自动婴儿童内衣洗袜机家用","link_url":"http://item.taobao.com/item.htm?id=553686546767","img_url":"http://img3.tbcdn.cn/tfscom/i2/TB1Mmt0RVXXXXb4XpXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:09Z","update_time":"2017-07-14T05:55:11.913Z","total_sales":0,"productId":"553686546767","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":0},{"id":581,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":119,"call_index":"","title":"xpb40-288b小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童xyj","link_url":"http://item.taobao.com/item.htm?id=553841607672","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1f4kSKpXXXXb2XVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":1,"is_slide":1,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553841607672","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":580,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":119,"call_index":"","title":"迷你洗衣机单筒小型迷你单通半自动洗衣机洗脱一体机带甩干","link_url":"http://item.taobao.com/item.htm?id=554082573662","img_url":"http://img1.tbcdn.cn/tfscom/i4/TB1J1rnRVXXXXaVXVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":1,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554082573662","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":578,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":119,"call_index":"","title":"微型家用迷你半自动小孩儿童洗衣机冼双筒桶同内衣内裤宿舍","link_url":"http://item.taobao.com/item.htm?id=554423830480","img_url":"http://img2.tbcdn.cn/tfscom/i1/TB1CbQwRVXXXXX_XFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":1,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554423830480","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]}
+         * silo_Handling : {"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131727074775.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-14T01:38:19.697Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":0,"total_sales":0},"item":[{"id":585,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":120,"call_index":"","title":"迷你洗衣机.洗衣机小型单桶半自动洗袜机内衣大容量","link_url":"http://item.taobao.com/item.htm?id=552269829164","img_url":"http://img3.tbcdn.cn/tfscom/i1/3082551897/TB251THrYlmpuFjSZFlXXbdQXXa_!!3082551897.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":1,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"552269829164","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":584,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":120,"call_index":"","title":"婴儿水洗衣机单带迷你牌鸭白色儿童甩干脱水洗衣机小型筒单桶水筒","link_url":"http://item.taobao.com/item.htm?id=553327532896","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1YcIjKXXXXXbLapXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":1,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553327532896","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":583,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":120,"call_index":"","title":"脱水机甩干机 家用单甩不锈钢甩干脱水桶单筒小型非迷你洗衣机","link_url":"http://item.taobao.com/item.htm?id=554061185187","img_url":"http://img3.tbcdn.cn/tfscom/i4/TB16X6hRVXXXXXvXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554061185187","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":582,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":120,"call_index":"","title":"韩代T60-128脱水机半自动甩干迷你单桶家用小型筒单甩包邮婴儿","link_url":"http://item.taobao.com/item.htm?id=546237273423","img_url":"http://img3.tbcdn.cn/tfscom/i4/TB193zjKVXXXXa9apXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"546237273423","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]}
+         * goods_Warmup : {"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131727074775.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-14T01:38:19.697Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":0,"total_sales":0},"item":[{"id":588,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"迷你洗衣机小型婴儿童单桶筒两用宿舍微型家用宝宝内衣洗袜子尿布","link_url":"http://item.taobao.com/item.htm?id=554091961937","img_url":"http://img3.tbcdn.cn/tfscom/i2/TB136LARVXXXXaQXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554091961937","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":591,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"LDD 便携手持式洗衣机超小型微型洗衣机棒迷你电动洗衣神器局部","link_url":"http://item.taobao.com/item.htm?id=554349329451","img_url":"http://img3.tbcdn.cn/tfscom/http://img.alicdn.com/imgextra/i3/TB1ZpLERVXXXXcUXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554349329451","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":589,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"威力小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童","link_url":"http://item.taobao.com/item.htm?id=551545979569","img_url":"http://img3.tbcdn.cn/tfscom/i1/2972498538/TB2Af5IbpLzQeBjSZJiXXXesFXa_!!2972498538.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"551545979569","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":587,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"半自动洗衣机半自动洗衣机威力家用小型婴儿单迷你儿童单桶宝宝","link_url":"http://item.taobao.com/item.htm?id=553387309944","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1f4kSKpXXXXb2XVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553387309944","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":586,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"威力小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童","link_url":"http://item.taobao.com/item.htm?id=551534325837","img_url":"http://img3.tbcdn.cn/tfscom/i1/2972498538/TB2Af5IbpLzQeBjSZJiXXXesFXa_!!2972498538.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":1,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"551534325837","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]}
+         * hot_Sale : {"cover":{"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131727074775.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-14T01:38:19.697Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":0,"total_sales":0},"item":[{"id":595,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":122,"call_index":"","title":"单筒桶迷你洗衣机半自动家用宿舍个人宝宝专用洗脱一体大容量","link_url":"http://item.taobao.com/item.htm?id=554082217079","img_url":"http://img1.tbcdn.cn/tfscom/i4/TB1J1rnRVXXXXaVXVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554082217079","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":594,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":122,"call_index":"","title":"中山小鸭46-28 4.6小型迷你洗衣机甩干脱水半自动可洗可脱","link_url":"http://item.taobao.com/item.htm?id=552533759892","img_url":"http://img3.tbcdn.cn/tfscom/i4/0/TB1jIOGNVXXXXXPXXXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"552533759892","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":593,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":122,"call_index":"","title":"xpb25-268d迷你洗衣机洗脱半自动带甩干脱水单筒","link_url":"http://item.taobao.com/item.htm?id=548658792439","img_url":"http://img1.tbcdn.cn/tfscom/i3/TB1y04PKpXXXXajXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"548658792439","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":592,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":122,"call_index":"","title":"单桶洗衣机小型迷你半自动洗衣机洗脱一体带甩干洗袜子宝宝内衣","link_url":"http://item.taobao.com/item.htm?id=552425747997","img_url":"http://img1.tbcdn.cn/tfscom/i4/3082551897/TB2W0kXr04opuFjSZFLXXX8mXXa_!!3082551897.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"552425747997","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]}
          */
 
         private TodayNewBean today_New;
@@ -89,8 +89,8 @@ public class HomeRushBean {
 
         public static class TodayNewBean {
             /**
-             * cover : {"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131719217910.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-13T09:28:20.2Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":null,"total_sales":0}
-             * item : [{"id":37983,"site_id":1,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"KEG/韩电 XQB82-C1528AS 8.2公斤全自动家用波轮洗衣机热烘干杀菌","link_url":"http://item.taobao.com/item.htm?id=543748304516","img_url":"http://img4.tbcdn.cn/tfscom/i2/TB1ZdCTRVXXXXbbXpXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:46:37Z","update_time":"2017-07-12T11:42:18.04Z","total_sales":0,"productId":"543748304516","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":591,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"LDD 便携手持式洗衣机超小型微型洗衣机棒迷你电动洗衣神器局部","link_url":"http://item.taobao.com/item.htm?id=554349329451","img_url":"http://img3.tbcdn.cn/tfscom/http://img.alicdn.com/imgextra/i3/TB1ZpLERVXXXXcUXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554349329451","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":590,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"威力小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童","link_url":"http://item.taobao.com/item.htm?id=551925315380","img_url":"http://img3.tbcdn.cn/tfscom/i1/2972498538/TB2Af5IbpLzQeBjSZJiXXXesFXa_!!2972498538.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"551925315380","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":588,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"迷你洗衣机小型婴儿童单桶筒两用宿舍微型家用宝宝内衣洗袜子尿布","link_url":"http://item.taobao.com/item.htm?id=554091961937","img_url":"http://img3.tbcdn.cn/tfscom/i2/TB136LARVXXXXaQXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554091961937","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":579,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"航天电器T98-988 脱水机甩干机家用单甩单筒大容量脱水机包邮","link_url":"http://item.taobao.com/item.htm?id=546163468248","img_url":"http://img2.tbcdn.cn/tfscom/i1/TB1kQiPPVXXXXcxXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"546163468248","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":2,"site_id":1,"channel_id":7,"category_id":95,"brand_id":0,"call_index":"","title":"Midea/美的 BCD-520WKM(E)对开门电冰箱双开门风冷无霜家用","link_url":"https://detail.tmall.com/item.htm?id=535414640225&spm=a219t.7664554.1998457203.95.hjb0P4","img_url":"/upload/201707/12/201707121401203789.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-12T06:16:46.083Z","update_time":null,"total_sales":0,"productId":"535414640225","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":null,"market_price":null,"sell_price":null,"tkRate":null}]
+             * cover : {"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131727074775.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-14T01:38:19.697Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":0,"total_sales":0}
+             * item : [{"id":579,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":119,"call_index":"","title":"航天电器T98-988 脱水机甩干机家用单甩单筒大容量脱水机包邮","link_url":"http://item.taobao.com/item.htm?id=546163468248","img_url":"http://img2.tbcdn.cn/tfscom/i1/TB1kQiPPVXXXXcxXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"546163468248","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":700,"site_id":1,"channel_id":7,"category_id":53,"brand_id":9,"activity_id":119,"call_index":"","title":"双桶双缸小型迷你洗衣机带脱水甩干半全自动婴儿童内衣洗袜机家用","link_url":"http://item.taobao.com/item.htm?id=553686546767","img_url":"http://img3.tbcdn.cn/tfscom/i2/TB1Mmt0RVXXXXb4XpXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:09Z","update_time":"2017-07-14T05:55:11.913Z","total_sales":0,"productId":"553686546767","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":0},{"id":581,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":119,"call_index":"","title":"xpb40-288b小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童xyj","link_url":"http://item.taobao.com/item.htm?id=553841607672","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1f4kSKpXXXXb2XVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":1,"is_slide":1,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553841607672","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":580,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":119,"call_index":"","title":"迷你洗衣机单筒小型迷你单通半自动洗衣机洗脱一体机带甩干","link_url":"http://item.taobao.com/item.htm?id=554082573662","img_url":"http://img1.tbcdn.cn/tfscom/i4/TB1J1rnRVXXXXaVXVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":1,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554082573662","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":578,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":119,"call_index":"","title":"微型家用迷你半自动小孩儿童洗衣机冼双筒桶同内衣内裤宿舍","link_url":"http://item.taobao.com/item.htm?id=554423830480","img_url":"http://img2.tbcdn.cn/tfscom/i1/TB1CbQwRVXXXXX_XFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":1,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554423830480","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]
              */
 
             private CoverBean cover;
@@ -122,7 +122,7 @@ public class HomeRushBean {
                  * call_index :
                  * title : 今日新品banner
                  * link_url :
-                 * img_url : /upload/201707/13/201707131719217910.png
+                 * img_url : /upload/201707/13/201707131727074775.png
                  * seo_title :
                  * seo_keywords :
                  * seo_description :
@@ -141,7 +141,7 @@ public class HomeRushBean {
                  * user_name : admin
                  * like_count : 0
                  * add_time : 2017-07-13T09:19:23Z
-                 * update_time : 2017-07-13T09:28:20.2Z
+                 * update_time : 2017-07-14T01:38:19.697Z
                  * productId :
                  * couponsUrl :
                  * couponsGet : 0
@@ -152,7 +152,7 @@ public class HomeRushBean {
                  * stock_quantity : 0
                  * market_price : 0
                  * sell_price : 0
-                 * tkRate : null
+                 * tkRate : 0
                  * total_sales : 0
                  */
 
@@ -194,7 +194,7 @@ public class HomeRushBean {
                 private int stock_quantity;
                 private int market_price;
                 private int sell_price;
-                private Object tkRate;
+                private int tkRate;
                 private int total_sales;
 
                 public int getId() {
@@ -501,11 +501,11 @@ public class HomeRushBean {
                     this.sell_price = sell_price;
                 }
 
-                public Object getTkRate() {
+                public int getTkRate() {
                     return tkRate;
                 }
 
-                public void setTkRate(Object tkRate) {
+                public void setTkRate(int tkRate) {
                     this.tkRate = tkRate;
                 }
 
@@ -520,21 +520,22 @@ public class HomeRushBean {
 
             public static class ItemBean {
                 /**
-                 * id : 37983
-                 * site_id : 1
+                 * id : 579
+                 * site_id : 0
                  * channel_id : 7
                  * category_id : 53
                  * brand_id : 0
+                 * activity_id : 119
                  * call_index :
-                 * title : KEG/韩电 XQB82-C1528AS 8.2公斤全自动家用波轮洗衣机热烘干杀菌
-                 * link_url : http://item.taobao.com/item.htm?id=543748304516
-                 * img_url : http://img4.tbcdn.cn/tfscom/i2/TB1ZdCTRVXXXXbbXpXXXXXXXXXX_!!0-item_pic.jpg
+                 * title : 航天电器T98-988 脱水机甩干机家用单甩单筒大容量脱水机包邮
+                 * link_url : http://item.taobao.com/item.htm?id=546163468248
+                 * img_url : http://img2.tbcdn.cn/tfscom/i1/TB1kQiPPVXXXXcxXFXXXXXXXXXX_!!0-item_pic.jpg
                  * seo_title :
                  * seo_keywords :
                  * seo_description :
                  * tags :
                  * zhaiyao :
-                 * content :
+                 * content : null
                  * sort_id : 99
                  * click : 0
                  * status : 0
@@ -546,10 +547,10 @@ public class HomeRushBean {
                  * is_sys : 0
                  * user_name : null
                  * like_count : 0
-                 * add_time : 2017-07-12T09:46:37Z
-                 * update_time : 2017-07-12T11:42:18.04Z
+                 * add_time : 2017-07-12T09:08:08.66Z
+                 * update_time : null
                  * total_sales : 0
-                 * productId : 543748304516
+                 * productId : 546163468248
                  * couponsId :
                  * couponsPrice : 0
                  * couponsCondition : 0
@@ -567,6 +568,7 @@ public class HomeRushBean {
                 private int channel_id;
                 private int category_id;
                 private int brand_id;
+                private int activity_id;
                 private String call_index;
                 private String title;
                 private String link_url;
@@ -576,7 +578,7 @@ public class HomeRushBean {
                 private String seo_description;
                 private String tags;
                 private String zhaiyao;
-                private String content;
+                private Object content;
                 private int sort_id;
                 private int click;
                 private int status;
@@ -589,7 +591,7 @@ public class HomeRushBean {
                 private Object user_name;
                 private int like_count;
                 private String add_time;
-                private String update_time;
+                private Object update_time;
                 private int total_sales;
                 private String productId;
                 private String couponsId;
@@ -641,6 +643,14 @@ public class HomeRushBean {
 
                 public void setBrand_id(int brand_id) {
                     this.brand_id = brand_id;
+                }
+
+                public int getActivity_id() {
+                    return activity_id;
+                }
+
+                public void setActivity_id(int activity_id) {
+                    this.activity_id = activity_id;
                 }
 
                 public String getCall_index() {
@@ -715,11 +725,11 @@ public class HomeRushBean {
                     this.zhaiyao = zhaiyao;
                 }
 
-                public String getContent() {
+                public Object getContent() {
                     return content;
                 }
 
-                public void setContent(String content) {
+                public void setContent(Object content) {
                     this.content = content;
                 }
 
@@ -819,11 +829,11 @@ public class HomeRushBean {
                     this.add_time = add_time;
                 }
 
-                public String getUpdate_time() {
+                public Object getUpdate_time() {
                     return update_time;
                 }
 
-                public void setUpdate_time(String update_time) {
+                public void setUpdate_time(Object update_time) {
                     this.update_time = update_time;
                 }
 
@@ -927,8 +937,8 @@ public class HomeRushBean {
 
         public static class SiloHandlingBean {
             /**
-             * cover : {"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131719217910.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-13T09:28:20.2Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":null,"total_sales":0}
-             * item : [{"id":586,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"威力小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童","link_url":"http://item.taobao.com/item.htm?id=551534325837","img_url":"http://img3.tbcdn.cn/tfscom/i1/2972498538/TB2Af5IbpLzQeBjSZJiXXXesFXa_!!2972498538.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":1,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"551534325837","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":578,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"微型家用迷你半自动小孩儿童洗衣机冼双筒桶同内衣内裤宿舍","link_url":"http://item.taobao.com/item.htm?id=554423830480","img_url":"http://img2.tbcdn.cn/tfscom/i1/TB1CbQwRVXXXXX_XFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":1,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554423830480","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]
+             * cover : {"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131727074775.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-14T01:38:19.697Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":0,"total_sales":0}
+             * item : [{"id":585,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":120,"call_index":"","title":"迷你洗衣机.洗衣机小型单桶半自动洗袜机内衣大容量","link_url":"http://item.taobao.com/item.htm?id=552269829164","img_url":"http://img3.tbcdn.cn/tfscom/i1/3082551897/TB251THrYlmpuFjSZFlXXbdQXXa_!!3082551897.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":1,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"552269829164","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":584,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":120,"call_index":"","title":"婴儿水洗衣机单带迷你牌鸭白色儿童甩干脱水洗衣机小型筒单桶水筒","link_url":"http://item.taobao.com/item.htm?id=553327532896","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1YcIjKXXXXXbLapXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":1,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553327532896","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":583,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":120,"call_index":"","title":"脱水机甩干机 家用单甩不锈钢甩干脱水桶单筒小型非迷你洗衣机","link_url":"http://item.taobao.com/item.htm?id=554061185187","img_url":"http://img3.tbcdn.cn/tfscom/i4/TB16X6hRVXXXXXvXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554061185187","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":582,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":120,"call_index":"","title":"韩代T60-128脱水机半自动甩干迷你单桶家用小型筒单甩包邮婴儿","link_url":"http://item.taobao.com/item.htm?id=546237273423","img_url":"http://img3.tbcdn.cn/tfscom/i4/TB193zjKVXXXXa9apXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"546237273423","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]
              */
 
             private CoverBeanX cover;
@@ -960,7 +970,7 @@ public class HomeRushBean {
                  * call_index :
                  * title : 今日新品banner
                  * link_url :
-                 * img_url : /upload/201707/13/201707131719217910.png
+                 * img_url : /upload/201707/13/201707131727074775.png
                  * seo_title :
                  * seo_keywords :
                  * seo_description :
@@ -979,7 +989,7 @@ public class HomeRushBean {
                  * user_name : admin
                  * like_count : 0
                  * add_time : 2017-07-13T09:19:23Z
-                 * update_time : 2017-07-13T09:28:20.2Z
+                 * update_time : 2017-07-14T01:38:19.697Z
                  * productId :
                  * couponsUrl :
                  * couponsGet : 0
@@ -990,7 +1000,7 @@ public class HomeRushBean {
                  * stock_quantity : 0
                  * market_price : 0
                  * sell_price : 0
-                 * tkRate : null
+                 * tkRate : 0
                  * total_sales : 0
                  */
 
@@ -1032,7 +1042,7 @@ public class HomeRushBean {
                 private int stock_quantity;
                 private int market_price;
                 private int sell_price;
-                private Object tkRate;
+                private int tkRate;
                 private int total_sales;
 
                 public int getId() {
@@ -1339,11 +1349,11 @@ public class HomeRushBean {
                     this.sell_price = sell_price;
                 }
 
-                public Object getTkRate() {
+                public int getTkRate() {
                     return tkRate;
                 }
 
-                public void setTkRate(Object tkRate) {
+                public void setTkRate(int tkRate) {
                     this.tkRate = tkRate;
                 }
 
@@ -1358,15 +1368,16 @@ public class HomeRushBean {
 
             public static class ItemBeanX {
                 /**
-                 * id : 586
+                 * id : 585
                  * site_id : 0
                  * channel_id : 7
                  * category_id : 53
                  * brand_id : 0
+                 * activity_id : 120
                  * call_index :
-                 * title : 威力小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童
-                 * link_url : http://item.taobao.com/item.htm?id=551534325837
-                 * img_url : http://img3.tbcdn.cn/tfscom/i1/2972498538/TB2Af5IbpLzQeBjSZJiXXXesFXa_!!2972498538.jpg
+                 * title : 迷你洗衣机.洗衣机小型单桶半自动洗袜机内衣大容量
+                 * link_url : http://item.taobao.com/item.htm?id=552269829164
+                 * img_url : http://img3.tbcdn.cn/tfscom/i1/3082551897/TB251THrYlmpuFjSZFlXXbdQXXa_!!3082551897.jpg
                  * seo_title :
                  * seo_keywords :
                  * seo_description :
@@ -1377,8 +1388,8 @@ public class HomeRushBean {
                  * click : 0
                  * status : 0
                  * is_msg : 0
-                 * is_top : 1
-                 * is_red : 0
+                 * is_top : 0
+                 * is_red : 1
                  * is_hot : 0
                  * is_slide : 0
                  * is_sys : 0
@@ -1387,7 +1398,7 @@ public class HomeRushBean {
                  * add_time : 2017-07-12T09:08:08.66Z
                  * update_time : null
                  * total_sales : 0
-                 * productId : 551534325837
+                 * productId : 552269829164
                  * couponsId :
                  * couponsPrice : 0
                  * couponsCondition : 0
@@ -1405,6 +1416,7 @@ public class HomeRushBean {
                 private int channel_id;
                 private int category_id;
                 private int brand_id;
+                private int activity_id;
                 private String call_index;
                 private String title;
                 private String link_url;
@@ -1479,6 +1491,14 @@ public class HomeRushBean {
 
                 public void setBrand_id(int brand_id) {
                     this.brand_id = brand_id;
+                }
+
+                public int getActivity_id() {
+                    return activity_id;
+                }
+
+                public void setActivity_id(int activity_id) {
+                    this.activity_id = activity_id;
                 }
 
                 public String getCall_index() {
@@ -1765,8 +1785,8 @@ public class HomeRushBean {
 
         public static class GoodsWarmupBean {
             /**
-             * cover : {"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131719217910.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-13T09:28:20.2Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":null,"total_sales":0}
-             * item : [{"id":585,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"迷你洗衣机.洗衣机小型单桶半自动洗袜机内衣大容量","link_url":"http://item.taobao.com/item.htm?id=552269829164","img_url":"http://img3.tbcdn.cn/tfscom/i1/3082551897/TB251THrYlmpuFjSZFlXXbdQXXa_!!3082551897.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":1,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"552269829164","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":580,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"迷你洗衣机单筒小型迷你单通半自动洗衣机洗脱一体机带甩干","link_url":"http://item.taobao.com/item.htm?id=554082573662","img_url":"http://img1.tbcdn.cn/tfscom/i4/TB1J1rnRVXXXXaVXVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":1,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554082573662","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]
+             * cover : {"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131727074775.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-14T01:38:19.697Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":0,"total_sales":0}
+             * item : [{"id":588,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"迷你洗衣机小型婴儿童单桶筒两用宿舍微型家用宝宝内衣洗袜子尿布","link_url":"http://item.taobao.com/item.htm?id=554091961937","img_url":"http://img3.tbcdn.cn/tfscom/i2/TB136LARVXXXXaQXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554091961937","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":591,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"LDD 便携手持式洗衣机超小型微型洗衣机棒迷你电动洗衣神器局部","link_url":"http://item.taobao.com/item.htm?id=554349329451","img_url":"http://img3.tbcdn.cn/tfscom/http://img.alicdn.com/imgextra/i3/TB1ZpLERVXXXXcUXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":1,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554349329451","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":589,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"威力小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童","link_url":"http://item.taobao.com/item.htm?id=551545979569","img_url":"http://img3.tbcdn.cn/tfscom/i1/2972498538/TB2Af5IbpLzQeBjSZJiXXXesFXa_!!2972498538.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"551545979569","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":587,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"半自动洗衣机半自动洗衣机威力家用小型婴儿单迷你儿童单桶宝宝","link_url":"http://item.taobao.com/item.htm?id=553387309944","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1f4kSKpXXXXb2XVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553387309944","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":586,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":121,"call_index":"","title":"威力小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童","link_url":"http://item.taobao.com/item.htm?id=551534325837","img_url":"http://img3.tbcdn.cn/tfscom/i1/2972498538/TB2Af5IbpLzQeBjSZJiXXXesFXa_!!2972498538.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":1,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"551534325837","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]
              */
 
             private CoverBeanXX cover;
@@ -1798,7 +1818,7 @@ public class HomeRushBean {
                  * call_index :
                  * title : 今日新品banner
                  * link_url :
-                 * img_url : /upload/201707/13/201707131719217910.png
+                 * img_url : /upload/201707/13/201707131727074775.png
                  * seo_title :
                  * seo_keywords :
                  * seo_description :
@@ -1817,7 +1837,7 @@ public class HomeRushBean {
                  * user_name : admin
                  * like_count : 0
                  * add_time : 2017-07-13T09:19:23Z
-                 * update_time : 2017-07-13T09:28:20.2Z
+                 * update_time : 2017-07-14T01:38:19.697Z
                  * productId :
                  * couponsUrl :
                  * couponsGet : 0
@@ -1828,7 +1848,7 @@ public class HomeRushBean {
                  * stock_quantity : 0
                  * market_price : 0
                  * sell_price : 0
-                 * tkRate : null
+                 * tkRate : 0
                  * total_sales : 0
                  */
 
@@ -1870,7 +1890,7 @@ public class HomeRushBean {
                 private int stock_quantity;
                 private int market_price;
                 private int sell_price;
-                private Object tkRate;
+                private int tkRate;
                 private int total_sales;
 
                 public int getId() {
@@ -2177,11 +2197,11 @@ public class HomeRushBean {
                     this.sell_price = sell_price;
                 }
 
-                public Object getTkRate() {
+                public int getTkRate() {
                     return tkRate;
                 }
 
-                public void setTkRate(Object tkRate) {
+                public void setTkRate(int tkRate) {
                     this.tkRate = tkRate;
                 }
 
@@ -2196,15 +2216,16 @@ public class HomeRushBean {
 
             public static class ItemBeanXX {
                 /**
-                 * id : 585
+                 * id : 588
                  * site_id : 0
                  * channel_id : 7
                  * category_id : 53
                  * brand_id : 0
+                 * activity_id : 121
                  * call_index :
-                 * title : 迷你洗衣机.洗衣机小型单桶半自动洗袜机内衣大容量
-                 * link_url : http://item.taobao.com/item.htm?id=552269829164
-                 * img_url : http://img3.tbcdn.cn/tfscom/i1/3082551897/TB251THrYlmpuFjSZFlXXbdQXXa_!!3082551897.jpg
+                 * title : 迷你洗衣机小型婴儿童单桶筒两用宿舍微型家用宝宝内衣洗袜子尿布
+                 * link_url : http://item.taobao.com/item.htm?id=554091961937
+                 * img_url : http://img3.tbcdn.cn/tfscom/i2/TB136LARVXXXXaQXFXXXXXXXXXX_!!0-item_pic.jpg
                  * seo_title :
                  * seo_keywords :
                  * seo_description :
@@ -2214,9 +2235,9 @@ public class HomeRushBean {
                  * sort_id : 99
                  * click : 0
                  * status : 0
-                 * is_msg : 0
+                 * is_msg : 1
                  * is_top : 0
-                 * is_red : 1
+                 * is_red : 0
                  * is_hot : 0
                  * is_slide : 0
                  * is_sys : 0
@@ -2225,7 +2246,7 @@ public class HomeRushBean {
                  * add_time : 2017-07-12T09:08:08.66Z
                  * update_time : null
                  * total_sales : 0
-                 * productId : 552269829164
+                 * productId : 554091961937
                  * couponsId :
                  * couponsPrice : 0
                  * couponsCondition : 0
@@ -2243,6 +2264,7 @@ public class HomeRushBean {
                 private int channel_id;
                 private int category_id;
                 private int brand_id;
+                private int activity_id;
                 private String call_index;
                 private String title;
                 private String link_url;
@@ -2317,6 +2339,14 @@ public class HomeRushBean {
 
                 public void setBrand_id(int brand_id) {
                     this.brand_id = brand_id;
+                }
+
+                public int getActivity_id() {
+                    return activity_id;
+                }
+
+                public void setActivity_id(int activity_id) {
+                    this.activity_id = activity_id;
                 }
 
                 public String getCall_index() {
@@ -2603,8 +2633,8 @@ public class HomeRushBean {
 
         public static class HotSaleBean {
             /**
-             * cover : {"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131719217910.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-13T09:28:20.2Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":null,"total_sales":0}
-             * item : [{"id":584,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"婴儿水洗衣机单带迷你牌鸭白色儿童甩干脱水洗衣机小型筒单桶水筒","link_url":"http://item.taobao.com/item.htm?id=553327532896","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1YcIjKXXXXXbLapXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":1,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553327532896","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":581,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"call_index":"","title":"xpb40-288b小型迷你半自动洗衣机家用单桶 婴儿宝宝儿童xyj","link_url":"http://item.taobao.com/item.htm?id=553841607672","img_url":"http://img1.tbcdn.cn/tfscom/i1/TB1f4kSKpXXXXb2XVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":1,"is_slide":1,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"553841607672","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]
+             * cover : {"id":98,"site_id":1,"channel_id":4,"category_id":119,"brand_id":0,"call_index":"","title":"今日新品banner","link_url":"","img_url":"/upload/201707/13/201707131727074775.png","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":"","sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":1,"user_name":"admin","like_count":0,"add_time":"2017-07-13T09:19:23Z","update_time":"2017-07-14T01:38:19.697Z","productId":"","couponsUrl":"","couponsGet":0,"couponsSurplus":0,"couponsId":"","couponsPrice":0,"couponsCondition":0,"stock_quantity":0,"market_price":0,"sell_price":0,"tkRate":0,"total_sales":0}
+             * item : [{"id":595,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":122,"call_index":"","title":"单筒桶迷你洗衣机半自动家用宿舍个人宝宝专用洗脱一体大容量","link_url":"http://item.taobao.com/item.htm?id=554082217079","img_url":"http://img1.tbcdn.cn/tfscom/i4/TB1J1rnRVXXXXaVXVXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"554082217079","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":594,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":122,"call_index":"","title":"中山小鸭46-28 4.6小型迷你洗衣机甩干脱水半自动可洗可脱","link_url":"http://item.taobao.com/item.htm?id=552533759892","img_url":"http://img3.tbcdn.cn/tfscom/i4/0/TB1jIOGNVXXXXXPXXXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"552533759892","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":593,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":122,"call_index":"","title":"xpb25-268d迷你洗衣机洗脱半自动带甩干脱水单筒","link_url":"http://item.taobao.com/item.htm?id=548658792439","img_url":"http://img1.tbcdn.cn/tfscom/i3/TB1y04PKpXXXXajXFXXXXXXXXXX_!!0-item_pic.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"548658792439","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null},{"id":592,"site_id":0,"channel_id":7,"category_id":53,"brand_id":0,"activity_id":122,"call_index":"","title":"单桶洗衣机小型迷你半自动洗衣机洗脱一体带甩干洗袜子宝宝内衣","link_url":"http://item.taobao.com/item.htm?id=552425747997","img_url":"http://img1.tbcdn.cn/tfscom/i4/3082551897/TB2W0kXr04opuFjSZFLXXX8mXXa_!!3082551897.jpg","seo_title":"","seo_keywords":"","seo_description":"","tags":"","zhaiyao":"","content":null,"sort_id":99,"click":0,"status":0,"is_msg":0,"is_top":0,"is_red":0,"is_hot":0,"is_slide":0,"is_sys":0,"user_name":null,"like_count":0,"add_time":"2017-07-12T09:08:08.66Z","update_time":null,"total_sales":0,"productId":"552425747997","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":null}]
              */
 
             private CoverBeanXXX cover;
@@ -2636,7 +2666,7 @@ public class HomeRushBean {
                  * call_index :
                  * title : 今日新品banner
                  * link_url :
-                 * img_url : /upload/201707/13/201707131719217910.png
+                 * img_url : /upload/201707/13/201707131727074775.png
                  * seo_title :
                  * seo_keywords :
                  * seo_description :
@@ -2655,7 +2685,7 @@ public class HomeRushBean {
                  * user_name : admin
                  * like_count : 0
                  * add_time : 2017-07-13T09:19:23Z
-                 * update_time : 2017-07-13T09:28:20.2Z
+                 * update_time : 2017-07-14T01:38:19.697Z
                  * productId :
                  * couponsUrl :
                  * couponsGet : 0
@@ -2666,7 +2696,7 @@ public class HomeRushBean {
                  * stock_quantity : 0
                  * market_price : 0
                  * sell_price : 0
-                 * tkRate : null
+                 * tkRate : 0
                  * total_sales : 0
                  */
 
@@ -2708,7 +2738,7 @@ public class HomeRushBean {
                 private int stock_quantity;
                 private int market_price;
                 private int sell_price;
-                private Object tkRate;
+                private int tkRate;
                 private int total_sales;
 
                 public int getId() {
@@ -3015,11 +3045,11 @@ public class HomeRushBean {
                     this.sell_price = sell_price;
                 }
 
-                public Object getTkRate() {
+                public int getTkRate() {
                     return tkRate;
                 }
 
-                public void setTkRate(Object tkRate) {
+                public void setTkRate(int tkRate) {
                     this.tkRate = tkRate;
                 }
 
@@ -3034,15 +3064,16 @@ public class HomeRushBean {
 
             public static class ItemBeanXXX {
                 /**
-                 * id : 584
+                 * id : 595
                  * site_id : 0
                  * channel_id : 7
                  * category_id : 53
                  * brand_id : 0
+                 * activity_id : 122
                  * call_index :
-                 * title : 婴儿水洗衣机单带迷你牌鸭白色儿童甩干脱水洗衣机小型筒单桶水筒
-                 * link_url : http://item.taobao.com/item.htm?id=553327532896
-                 * img_url : http://img1.tbcdn.cn/tfscom/i1/TB1YcIjKXXXXXbLapXXXXXXXXXX_!!0-item_pic.jpg
+                 * title : 单筒桶迷你洗衣机半自动家用宿舍个人宝宝专用洗脱一体大容量
+                 * link_url : http://item.taobao.com/item.htm?id=554082217079
+                 * img_url : http://img1.tbcdn.cn/tfscom/i4/TB1J1rnRVXXXXaVXVXXXXXXXXXX_!!0-item_pic.jpg
                  * seo_title :
                  * seo_keywords :
                  * seo_description :
@@ -3055,7 +3086,7 @@ public class HomeRushBean {
                  * is_msg : 0
                  * is_top : 0
                  * is_red : 0
-                 * is_hot : 1
+                 * is_hot : 0
                  * is_slide : 0
                  * is_sys : 0
                  * user_name : null
@@ -3063,7 +3094,7 @@ public class HomeRushBean {
                  * add_time : 2017-07-12T09:08:08.66Z
                  * update_time : null
                  * total_sales : 0
-                 * productId : 553327532896
+                 * productId : 554082217079
                  * couponsId :
                  * couponsPrice : 0
                  * couponsCondition : 0
@@ -3081,6 +3112,7 @@ public class HomeRushBean {
                 private int channel_id;
                 private int category_id;
                 private int brand_id;
+                private int activity_id;
                 private String call_index;
                 private String title;
                 private String link_url;
@@ -3155,6 +3187,14 @@ public class HomeRushBean {
 
                 public void setBrand_id(int brand_id) {
                     this.brand_id = brand_id;
+                }
+
+                public int getActivity_id() {
+                    return activity_id;
+                }
+
+                public void setActivity_id(int activity_id) {
+                    this.activity_id = activity_id;
                 }
 
                 public String getCall_index() {

@@ -41,7 +41,6 @@ public class HomeFragment extends BaseFragment {
     SwipeRefreshLayout swipeRefresh;
 
     private boolean mIsRequestDataRefresh = false;
-
     private NetUtil netUtils;
     private String url = Url.BASE_URL + "IndexGoods.aspx";
     private HomeRushAllAdapter homeRushAllAdapter;
@@ -94,6 +93,7 @@ public class HomeFragment extends BaseFragment {
 
                     HomeRushBean.DataBean.TodayNewBean.CoverBean cover1 = today_new.getCover();
                     List<HomeRushBean.DataBean.TodayNewBean.ItemBean> oitem1 = today_new.getItem();
+                    LogUtil.e("oitem1.size() = " + oitem1.size());
                     List<HomeRushChangeBean.ItemBean> items1 = new ArrayList<>();
                     for (int j=0;j<oitem1.size();j++){
                         HomeRushChangeBean.ItemBean itemBean1 = new HomeRushChangeBean.ItemBean();
@@ -119,7 +119,7 @@ public class HomeFragment extends BaseFragment {
                     coverBean1.setTitle(cover1.getTitle());
                     coverBean1.setLink_url(cover1.getLink_url());
                     coverBean1.setImg_url(cover1.getImg_url());
-
+                    LogUtil.e("items1.size() == " +items1.size());
                     homeRushChangeBean1.setCover(coverBean1);
                     homeRushChangeBean1.setItem(items1);
 
@@ -127,6 +127,7 @@ public class HomeFragment extends BaseFragment {
                     HomeRushChangeBean.CoverBean coverBean2 = new HomeRushChangeBean.CoverBean();
                     HomeRushBean.DataBean.SiloHandlingBean.CoverBeanX cover2 = silo_handling.getCover();
                     List<HomeRushBean.DataBean.SiloHandlingBean.ItemBeanX> oitem2 = silo_handling.getItem();
+                    LogUtil.e("oitem2.size() = " + oitem2.size());
                     List<HomeRushChangeBean.ItemBean> items2 = new ArrayList<>();
                     for (int j=0;j<oitem2.size();j++){
                         HomeRushChangeBean.ItemBean itemBean2 = new HomeRushChangeBean.ItemBean();
@@ -152,7 +153,7 @@ public class HomeFragment extends BaseFragment {
                     coverBean2.setTitle(cover2.getTitle());
                     coverBean2.setLink_url(cover2.getLink_url());
                     coverBean2.setImg_url(cover2.getImg_url());
-
+                    LogUtil.e("items2.size() == " +items2.size());
                     homeRushChangeBean2.setCover(coverBean2);
                     homeRushChangeBean2.setItem(items2);
 
@@ -160,6 +161,7 @@ public class HomeFragment extends BaseFragment {
                     HomeRushChangeBean.CoverBean coverBean3 = new HomeRushChangeBean.CoverBean();
                     HomeRushBean.DataBean.GoodsWarmupBean.CoverBeanXX cover3 = goods_warmup.getCover();
                     List<HomeRushBean.DataBean.GoodsWarmupBean.ItemBeanXX> oitem3 = goods_warmup.getItem();
+                    LogUtil.e("oitem3.size() = " + oitem3.size());
                     List<HomeRushChangeBean.ItemBean> items3 = new ArrayList<>();
                     for (int j=0;j<oitem3.size();j++){
                         HomeRushChangeBean.ItemBean itemBean3 = new HomeRushChangeBean.ItemBean();
@@ -177,6 +179,7 @@ public class HomeFragment extends BaseFragment {
                         itemBean3.setMarket_price(oitemBean3.getMarket_price());
                         itemBean3.setSell_price(oitemBean3.getSell_price());
                         items3.add(itemBean3);
+
                     }
                     coverBean3.setAdd_time(cover3.getAdd_time());
                     coverBean3.setBrand_id(cover3.getBrand_id());
@@ -187,11 +190,13 @@ public class HomeFragment extends BaseFragment {
                     coverBean3.setImg_url(cover3.getImg_url());
                     homeRushChangeBean3.setCover(coverBean3);
                     homeRushChangeBean3.setItem(items3);
+                    LogUtil.e("items3.size() == " +items3.size());
 
                     HomeRushChangeBean homeRushChangeBean4 = new HomeRushChangeBean();
                     HomeRushChangeBean.CoverBean coverBean4 = new HomeRushChangeBean.CoverBean();
                     HomeRushBean.DataBean.HotSaleBean.CoverBeanXXX cover4 = hot_sale.getCover();
                     List<HomeRushBean.DataBean.HotSaleBean.ItemBeanXXX> oitem4 = hot_sale.getItem();
+                    LogUtil.e("oitem4.size() = " + oitem4.size());
                     List<HomeRushChangeBean.ItemBean> items4 = new ArrayList<>();
                     for (int j=0;j<oitem4.size();j++){
                         HomeRushChangeBean.ItemBean itemBean4 = new HomeRushChangeBean.ItemBean();
@@ -208,7 +213,7 @@ public class HomeFragment extends BaseFragment {
                         itemBean4.setStock_quantity(oitemBean4.getStock_quantity());
                         itemBean4.setMarket_price(oitemBean4.getMarket_price());
                         itemBean4.setSell_price(oitemBean4.getSell_price());
-                        items3.add(itemBean4);
+                        items4.add(itemBean4);
                     }
                     coverBean4.setAdd_time(cover4.getAdd_time());
                     coverBean4.setBrand_id(cover4.getBrand_id());
@@ -219,18 +224,23 @@ public class HomeFragment extends BaseFragment {
                     coverBean4.setImg_url(cover4.getImg_url());
                     homeRushChangeBean4.setCover(coverBean4);
                     homeRushChangeBean4.setItem(items4);
+                    LogUtil.e("items4.size() == " +items4.size());
                     homeChangeDatas.add(homeRushChangeBean1);
                     homeChangeDatas.add(homeRushChangeBean2);
                     homeChangeDatas.add(homeRushChangeBean3);
                     homeChangeDatas.add(homeRushChangeBean4);
                 }
+                LogUtil.e("homeChangeDatas.size() == "+homeChangeDatas.size());
+                for (int i=0;i<homeChangeDatas.size();i++){
+                    HomeRushChangeBean homeRushChangeBean = homeChangeDatas.get(i);
+                    List<HomeRushChangeBean.ItemBean> item = homeRushChangeBean.getItem();
+                    LogUtil.e("item.size() == " + item.size());
+                }
                 if(mIsRequestDataRefresh ==true) {
-                    homeRushAllAdapter.notifyDataSetChanged();
                     stopDataRefresh();
                     setRefresh(mIsRequestDataRefresh);
-                }else{
-                    loadRecyclerData(homeChangeDatas);
                 }
+                loadRecyclerData(homeChangeDatas);
                 break;
             case 0:
                 Toast.makeText(getContext(), homeRushBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -241,7 +251,7 @@ public class HomeFragment extends BaseFragment {
     private void loadRecyclerData(List<HomeRushChangeBean> homeChangeDatas) {
         FullyLinearLayoutManager layoutManager = new FullyLinearLayoutManager(getContext());
         rcvHomeFragment.setLayoutManager(layoutManager);
-        homeRushAllAdapter = new HomeRushAllAdapter(getContext(),homeChangeDatas);
+        homeRushAllAdapter = new HomeRushAllAdapter(getContext(),homeChangeDatas,getActivity());
         rcvHomeFragment.setAdapter(homeRushAllAdapter);
     }
 
