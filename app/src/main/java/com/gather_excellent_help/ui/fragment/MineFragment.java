@@ -1,7 +1,11 @@
 package com.gather_excellent_help.ui.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +80,7 @@ public class MineFragment extends BaseFragment {
 
     @Override
     public void initData() {
+        setPartTextColor();
         netUtils = new NetUtil();
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         if (Tools.isLogin(getActivity())) {
@@ -97,6 +102,17 @@ public class MineFragment extends BaseFragment {
                 LogUtil.e(call.toString() + "==" + e.getMessage());
             }
         });
+    }
+
+    /**
+     * 设置部分字体颜色为红色
+     */
+    private void setPartTextColor() {
+        String str = "0.00/0.00";
+        int end = str.indexOf("/");
+        SpannableStringBuilder style=new SpannableStringBuilder(str);
+        style.setSpan(new ForegroundColorSpan(Color.RED),0,end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        tvAccountMoney.setText(style);
     }
 
     /**

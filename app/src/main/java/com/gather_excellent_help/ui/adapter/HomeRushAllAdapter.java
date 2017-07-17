@@ -28,6 +28,7 @@ import com.gather_excellent_help.bean.HomeBannerBean;
 import com.gather_excellent_help.bean.HomeRushBean;
 import com.gather_excellent_help.bean.HomeRushChangeBean;
 import com.gather_excellent_help.bean.HomeTypeBean;
+import com.gather_excellent_help.bean.HomeWareBean;
 import com.gather_excellent_help.ui.activity.TestActivity2;
 import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.widget.CarouselImageView;
@@ -68,7 +69,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private NetUtil netUtils;
     private Map<String, String> map;
     private String url = Url.BASE_URL + "IndexBanner.aspx";
-    private  List<HomeRushChangeBean> data;
+    private List<HomeWareBean.DataBean> data;
+    private int extraCount = 4;
 
     private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
     private AlibcTaokeParams alibcTaokeParams = null;//淘客参数，包括pid，unionid，subPid
@@ -77,7 +79,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private String shopId = "60552065";//默认店铺id
     private Map<String, String> exParams;//yhhpass参数
 
-    public HomeRushAllAdapter(Context context, List<HomeRushChangeBean> data , Activity activity) {
+    public HomeRushAllAdapter(Context context, List<HomeWareBean.DataBean> data , Activity activity) {
         this.context = context;
         this.activity = activity;
         this.data = data;
@@ -99,11 +101,13 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 return TYPE_FIRSTBUY;
             }else if(position == 3) {
                 return TYPE_GROUP;
-            } else if (position + 1 == getItemCount()) {
-                return TYPE_FOOTER;
-            } else {
+            }  else {
                 return position;
             }
+
+//        else if (position + 1 == getItemCount()) {
+//            return TYPE_FOOTER;
+//        }
     }
 
     @Override
@@ -144,20 +148,19 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             getBannerData(civHomeGanner);
         } else if (holder instanceof RushWareViewHolder) {
             RushWareViewHolder rushWareViewHolder = (RushWareViewHolder) holder;
-            HomeRushChangeBean homeRushChangeBean = data.get(position-4);
-            HomeRushChangeBean.CoverBean cover = homeRushChangeBean.getCover();
-            rushWareViewHolder.tvRushMoreTitle.setText(cover.getTitle());
-            String url = Url.IMG_URL +cover.getImg_url();
+            HomeWareBean.DataBean dataBean = data.get(position - extraCount);
+            rushWareViewHolder.tvRushMoreTitle.setText(dataBean.getTitle());
+            String url = Url.IMG_URL +dataBean.getImg_url();
             mImageLoader.loadImage(url,rushWareViewHolder.ivRushMoreBig,true);
-            final List<HomeRushChangeBean.ItemBean> itemDatas = homeRushChangeBean.getItem();
+            final List<HomeWareBean.DataBean.ItemBean> itemData = dataBean.getItem();
             List<HomeRushChangeBean.ItemBean> nItemDatas =new ArrayList<>();
-           if( itemDatas!= null && itemDatas.size()> 2) {
-               HomeRushAdapter homeRushAdapter = new HomeRushAdapter(context,itemDatas);
+           if( itemData!= null && itemData.size()> 2) {
+               HomeRushAdapter homeRushAdapter = new HomeRushAdapter(context,itemData);
                rushWareViewHolder.gvRushZera.setAdapter(homeRushAdapter);
                rushWareViewHolder.gvRushZera.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                    @Override
                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                       String link_url = itemDatas.get(i).getLink_url();
+                       String link_url = itemData.get(i).getLink_url();
                        AlibcTrade.show(activity, new AlibcPage(link_url), alibcShowParams, null, exParams , new DemoTradeCallback());
                    }
                });
@@ -176,7 +179,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return data.size()+5;
+        return data.size()+extraCount;
     }
 
 

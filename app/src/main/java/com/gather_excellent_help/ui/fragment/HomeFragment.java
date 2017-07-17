@@ -1,6 +1,7 @@
 package com.gather_excellent_help.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.HomeRushBean;
 import com.gather_excellent_help.bean.HomeRushChangeBean;
+import com.gather_excellent_help.bean.HomeWareBean;
 import com.gather_excellent_help.ui.adapter.HomeRushAllAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
@@ -75,180 +77,186 @@ public class HomeFragment extends BaseFragment {
      * @param response
      */
     private void parseData(String response) {
-        HomeRushBean homeRushBean = new Gson().fromJson(response, HomeRushBean.class);
-        int statusCode = homeRushBean.getStatusCode();
+        HomeWareBean homeWareBean = new Gson().fromJson(response, HomeWareBean.class);
+        int statusCode = homeWareBean.getStatusCode();
         switch (statusCode) {
             case 1 :
-                List<HomeRushBean.DataBean> data = homeRushBean.getData();
-                List<HomeRushChangeBean> homeChangeDatas = new ArrayList<>();
-                for (int i=0;i<data.size();i++){
-                    HomeRushBean.DataBean dataBean = data.get(i);
-                    HomeRushBean.DataBean.TodayNewBean today_new = dataBean.getToday_New();
-                    HomeRushBean.DataBean.SiloHandlingBean silo_handling = dataBean.getSilo_Handling();
-                    HomeRushBean.DataBean.GoodsWarmupBean goods_warmup = dataBean.getGoods_Warmup();
-                    HomeRushBean.DataBean.HotSaleBean hot_sale = dataBean.getHot_Sale();
-
-                    HomeRushChangeBean homeRushChangeBean1 = new HomeRushChangeBean();
-                    HomeRushChangeBean.CoverBean coverBean1 = new HomeRushChangeBean.CoverBean();
-
-                    HomeRushBean.DataBean.TodayNewBean.CoverBean cover1 = today_new.getCover();
-                    List<HomeRushBean.DataBean.TodayNewBean.ItemBean> oitem1 = today_new.getItem();
-                    LogUtil.e("oitem1.size() = " + oitem1.size());
-                    List<HomeRushChangeBean.ItemBean> items1 = new ArrayList<>();
-                    for (int j=0;j<oitem1.size();j++){
-                        HomeRushChangeBean.ItemBean itemBean1 = new HomeRushChangeBean.ItemBean();
-                        HomeRushBean.DataBean.TodayNewBean.ItemBean oitemBean1 = oitem1.get(j);
-                        itemBean1.setId(oitemBean1.getId());
-                        itemBean1.setCategory_id(oitemBean1.getCategory_id());
-                        itemBean1.setSite_id(oitemBean1.getSite_id());
-                        itemBean1.setChannel_id(oitemBean1.getChannel_id());
-                        itemBean1.setBrand_id(oitemBean1.getBrand_id());
-                        itemBean1.setCall_index(oitemBean1.getCall_index());
-                        itemBean1.setTitle(oitemBean1.getTitle());
-                        itemBean1.setLink_url(oitemBean1.getLink_url());
-                        itemBean1.setImg_url(oitemBean1.getImg_url());
-                        itemBean1.setStock_quantity(oitemBean1.getStock_quantity());
-                        itemBean1.setMarket_price(oitemBean1.getMarket_price());
-                        itemBean1.setSell_price(oitemBean1.getSell_price());
-                        items1.add(itemBean1);
-                    }
-                    coverBean1.setAdd_time(cover1.getAdd_time());
-                    coverBean1.setBrand_id(cover1.getBrand_id());
-                    coverBean1.setCall_index(cover1.getCall_index());
-                    coverBean1.setCategory_id(cover1.getCategory_id());
-                    coverBean1.setTitle(cover1.getTitle());
-                    coverBean1.setLink_url(cover1.getLink_url());
-                    coverBean1.setImg_url(cover1.getImg_url());
-                    LogUtil.e("items1.size() == " +items1.size());
-                    homeRushChangeBean1.setCover(coverBean1);
-                    homeRushChangeBean1.setItem(items1);
-
-                    HomeRushChangeBean homeRushChangeBean2 = new HomeRushChangeBean();
-                    HomeRushChangeBean.CoverBean coverBean2 = new HomeRushChangeBean.CoverBean();
-                    HomeRushBean.DataBean.SiloHandlingBean.CoverBeanX cover2 = silo_handling.getCover();
-                    List<HomeRushBean.DataBean.SiloHandlingBean.ItemBeanX> oitem2 = silo_handling.getItem();
-                    LogUtil.e("oitem2.size() = " + oitem2.size());
-                    List<HomeRushChangeBean.ItemBean> items2 = new ArrayList<>();
-                    for (int j=0;j<oitem2.size();j++){
-                        HomeRushChangeBean.ItemBean itemBean2 = new HomeRushChangeBean.ItemBean();
-                        HomeRushBean.DataBean.SiloHandlingBean.ItemBeanX oitemBean2 = oitem2.get(j);
-                        itemBean2.setId(oitemBean2.getId());
-                        itemBean2.setCategory_id(oitemBean2.getCategory_id());
-                        itemBean2.setSite_id(oitemBean2.getSite_id());
-                        itemBean2.setChannel_id(oitemBean2.getChannel_id());
-                        itemBean2.setBrand_id(oitemBean2.getBrand_id());
-                        itemBean2.setCall_index(oitemBean2.getCall_index());
-                        itemBean2.setTitle(oitemBean2.getTitle());
-                        itemBean2.setLink_url(oitemBean2.getLink_url());
-                        itemBean2.setImg_url(oitemBean2.getImg_url());
-                        itemBean2.setStock_quantity(oitemBean2.getStock_quantity());
-                        itemBean2.setMarket_price(oitemBean2.getMarket_price());
-                        itemBean2.setSell_price(oitemBean2.getSell_price());
-                        items2.add(itemBean2);
-                    }
-                    coverBean2.setAdd_time(cover2.getAdd_time());
-                    coverBean2.setBrand_id(cover2.getBrand_id());
-                    coverBean2.setCall_index(cover2.getCall_index());
-                    coverBean2.setCategory_id(cover2.getCategory_id());
-                    coverBean2.setTitle(cover2.getTitle());
-                    coverBean2.setLink_url(cover2.getLink_url());
-                    coverBean2.setImg_url(cover2.getImg_url());
-                    LogUtil.e("items2.size() == " +items2.size());
-                    homeRushChangeBean2.setCover(coverBean2);
-                    homeRushChangeBean2.setItem(items2);
-
-                    HomeRushChangeBean homeRushChangeBean3 = new HomeRushChangeBean();
-                    HomeRushChangeBean.CoverBean coverBean3 = new HomeRushChangeBean.CoverBean();
-                    HomeRushBean.DataBean.GoodsWarmupBean.CoverBeanXX cover3 = goods_warmup.getCover();
-                    List<HomeRushBean.DataBean.GoodsWarmupBean.ItemBeanXX> oitem3 = goods_warmup.getItem();
-                    LogUtil.e("oitem3.size() = " + oitem3.size());
-                    List<HomeRushChangeBean.ItemBean> items3 = new ArrayList<>();
-                    for (int j=0;j<oitem3.size();j++){
-                        HomeRushChangeBean.ItemBean itemBean3 = new HomeRushChangeBean.ItemBean();
-                        HomeRushBean.DataBean.GoodsWarmupBean.ItemBeanXX oitemBean3 = oitem3.get(j);
-                        itemBean3.setId(oitemBean3.getId());
-                        itemBean3.setCategory_id(oitemBean3.getCategory_id());
-                        itemBean3.setSite_id(oitemBean3.getSite_id());
-                        itemBean3.setChannel_id(oitemBean3.getChannel_id());
-                        itemBean3.setBrand_id(oitemBean3.getBrand_id());
-                        itemBean3.setCall_index(oitemBean3.getCall_index());
-                        itemBean3.setTitle(oitemBean3.getTitle());
-                        itemBean3.setLink_url(oitemBean3.getLink_url());
-                        itemBean3.setImg_url(oitemBean3.getImg_url());
-                        itemBean3.setStock_quantity(oitemBean3.getStock_quantity());
-                        itemBean3.setMarket_price(oitemBean3.getMarket_price());
-                        itemBean3.setSell_price(oitemBean3.getSell_price());
-                        items3.add(itemBean3);
-
-                    }
-                    coverBean3.setAdd_time(cover3.getAdd_time());
-                    coverBean3.setBrand_id(cover3.getBrand_id());
-                    coverBean3.setCall_index(cover3.getCall_index());
-                    coverBean3.setCategory_id(cover3.getCategory_id());
-                    coverBean3.setTitle(cover3.getTitle());
-                    coverBean3.setLink_url(cover3.getLink_url());
-                    coverBean3.setImg_url(cover3.getImg_url());
-                    homeRushChangeBean3.setCover(coverBean3);
-                    homeRushChangeBean3.setItem(items3);
-                    LogUtil.e("items3.size() == " +items3.size());
-
-                    HomeRushChangeBean homeRushChangeBean4 = new HomeRushChangeBean();
-                    HomeRushChangeBean.CoverBean coverBean4 = new HomeRushChangeBean.CoverBean();
-                    HomeRushBean.DataBean.HotSaleBean.CoverBeanXXX cover4 = hot_sale.getCover();
-                    List<HomeRushBean.DataBean.HotSaleBean.ItemBeanXXX> oitem4 = hot_sale.getItem();
-                    LogUtil.e("oitem4.size() = " + oitem4.size());
-                    List<HomeRushChangeBean.ItemBean> items4 = new ArrayList<>();
-                    for (int j=0;j<oitem4.size();j++){
-                        HomeRushChangeBean.ItemBean itemBean4 = new HomeRushChangeBean.ItemBean();
-                        HomeRushBean.DataBean.HotSaleBean.ItemBeanXXX oitemBean4 = oitem4.get(j);
-                        itemBean4.setId(oitemBean4.getId());
-                        itemBean4.setCategory_id(oitemBean4.getCategory_id());
-                        itemBean4.setSite_id(oitemBean4.getSite_id());
-                        itemBean4.setChannel_id(oitemBean4.getChannel_id());
-                        itemBean4.setBrand_id(oitemBean4.getBrand_id());
-                        itemBean4.setCall_index(oitemBean4.getCall_index());
-                        itemBean4.setTitle(oitemBean4.getTitle());
-                        itemBean4.setLink_url(oitemBean4.getLink_url());
-                        itemBean4.setImg_url(oitemBean4.getImg_url());
-                        itemBean4.setStock_quantity(oitemBean4.getStock_quantity());
-                        itemBean4.setMarket_price(oitemBean4.getMarket_price());
-                        itemBean4.setSell_price(oitemBean4.getSell_price());
-                        items4.add(itemBean4);
-                    }
-                    coverBean4.setAdd_time(cover4.getAdd_time());
-                    coverBean4.setBrand_id(cover4.getBrand_id());
-                    coverBean4.setCall_index(cover4.getCall_index());
-                    coverBean4.setCategory_id(cover4.getCategory_id());
-                    coverBean4.setTitle(cover4.getTitle());
-                    coverBean4.setLink_url(cover4.getLink_url());
-                    coverBean4.setImg_url(cover4.getImg_url());
-                    homeRushChangeBean4.setCover(coverBean4);
-                    homeRushChangeBean4.setItem(items4);
-                    LogUtil.e("items4.size() == " +items4.size());
-                    homeChangeDatas.add(homeRushChangeBean1);
-                    homeChangeDatas.add(homeRushChangeBean2);
-                    homeChangeDatas.add(homeRushChangeBean3);
-                    homeChangeDatas.add(homeRushChangeBean4);
-                }
-                LogUtil.e("homeChangeDatas.size() == "+homeChangeDatas.size());
-                for (int i=0;i<homeChangeDatas.size();i++){
-                    HomeRushChangeBean homeRushChangeBean = homeChangeDatas.get(i);
-                    List<HomeRushChangeBean.ItemBean> item = homeRushChangeBean.getItem();
-                    LogUtil.e("item.size() == " + item.size());
-                }
+                List<HomeWareBean.DataBean> data = homeWareBean.getData();
                 if(mIsRequestDataRefresh ==true) {
                     stopDataRefresh();
                     setRefresh(mIsRequestDataRefresh);
                 }
-                loadRecyclerData(homeChangeDatas);
+                loadRecyclerData(data);
                 break;
             case 0:
-                Toast.makeText(getContext(), homeRushBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), homeWareBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
-    private void loadRecyclerData(List<HomeRushChangeBean> homeChangeDatas) {
+//    @NonNull
+//    private List<HomeRushChangeBean> oldRushWareData(HomeRushBean homeRushBean) {
+//        List<HomeRushBean.DataBean> data = homeRushBean.getData();
+//        List<HomeRushChangeBean> homeChangeDatas = new ArrayList<>();
+//        for (int i=0;i<data.size();i++){
+//            HomeRushBean.DataBean dataBean = data.get(i);
+//            HomeRushBean.DataBean.TodayNewBean today_new = dataBean.getToday_New();
+//            HomeRushBean.DataBean.SiloHandlingBean silo_handling = dataBean.getSilo_Handling();
+//            HomeRushBean.DataBean.GoodsWarmupBean goods_warmup = dataBean.getGoods_Warmup();
+//            HomeRushBean.DataBean.HotSaleBean hot_sale = dataBean.getHot_Sale();
+//
+//            HomeRushChangeBean homeRushChangeBean1 = new HomeRushChangeBean();
+//            HomeRushChangeBean.CoverBean coverBean1 = new HomeRushChangeBean.CoverBean();
+//
+//            HomeRushBean.DataBean.TodayNewBean.CoverBean cover1 = today_new.getCover();
+//            List<HomeRushBean.DataBean.TodayNewBean.ItemBean> oitem1 = today_new.getItem();
+//            LogUtil.e("oitem1.size() = " + oitem1.size());
+//            List<HomeRushChangeBean.ItemBean> items1 = new ArrayList<>();
+//            for (int j=0;j<oitem1.size();j++){
+//                HomeRushChangeBean.ItemBean itemBean1 = new HomeRushChangeBean.ItemBean();
+//                HomeRushBean.DataBean.TodayNewBean.ItemBean oitemBean1 = oitem1.get(j);
+//                itemBean1.setId(oitemBean1.getId());
+//                itemBean1.setCategory_id(oitemBean1.getCategory_id());
+//                itemBean1.setSite_id(oitemBean1.getSite_id());
+//                itemBean1.setChannel_id(oitemBean1.getChannel_id());
+//                itemBean1.setBrand_id(oitemBean1.getBrand_id());
+//                itemBean1.setCall_index(oitemBean1.getCall_index());
+//                itemBean1.setTitle(oitemBean1.getTitle());
+//                itemBean1.setLink_url(oitemBean1.getLink_url());
+//                itemBean1.setImg_url(oitemBean1.getImg_url());
+//                itemBean1.setStock_quantity(oitemBean1.getStock_quantity());
+//                itemBean1.setMarket_price(oitemBean1.getMarket_price());
+//                itemBean1.setSell_price(oitemBean1.getSell_price());
+//                items1.add(itemBean1);
+//            }
+//            coverBean1.setAdd_time(cover1.getAdd_time());
+//            coverBean1.setBrand_id(cover1.getBrand_id());
+//            coverBean1.setCall_index(cover1.getCall_index());
+//            coverBean1.setCategory_id(cover1.getCategory_id());
+//            coverBean1.setTitle(cover1.getTitle());
+//            coverBean1.setLink_url(cover1.getLink_url());
+//            coverBean1.setImg_url(cover1.getImg_url());
+//            LogUtil.e("items1.size() == " +items1.size());
+//            homeRushChangeBean1.setCover(coverBean1);
+//            homeRushChangeBean1.setItem(items1);
+//
+//            HomeRushChangeBean homeRushChangeBean2 = new HomeRushChangeBean();
+//            HomeRushChangeBean.CoverBean coverBean2 = new HomeRushChangeBean.CoverBean();
+//            HomeRushBean.DataBean.SiloHandlingBean.CoverBeanX cover2 = silo_handling.getCover();
+//            List<HomeRushBean.DataBean.SiloHandlingBean.ItemBeanX> oitem2 = silo_handling.getItem();
+//            LogUtil.e("oitem2.size() = " + oitem2.size());
+//            List<HomeRushChangeBean.ItemBean> items2 = new ArrayList<>();
+//            for (int j=0;j<oitem2.size();j++){
+//                HomeRushChangeBean.ItemBean itemBean2 = new HomeRushChangeBean.ItemBean();
+//                HomeRushBean.DataBean.SiloHandlingBean.ItemBeanX oitemBean2 = oitem2.get(j);
+//                itemBean2.setId(oitemBean2.getId());
+//                itemBean2.setCategory_id(oitemBean2.getCategory_id());
+//                itemBean2.setSite_id(oitemBean2.getSite_id());
+//                itemBean2.setChannel_id(oitemBean2.getChannel_id());
+//                itemBean2.setBrand_id(oitemBean2.getBrand_id());
+//                itemBean2.setCall_index(oitemBean2.getCall_index());
+//                itemBean2.setTitle(oitemBean2.getTitle());
+//                itemBean2.setLink_url(oitemBean2.getLink_url());
+//                itemBean2.setImg_url(oitemBean2.getImg_url());
+//                itemBean2.setStock_quantity(oitemBean2.getStock_quantity());
+//                itemBean2.setMarket_price(oitemBean2.getMarket_price());
+//                itemBean2.setSell_price(oitemBean2.getSell_price());
+//                items2.add(itemBean2);
+//            }
+//            coverBean2.setAdd_time(cover2.getAdd_time());
+//            coverBean2.setBrand_id(cover2.getBrand_id());
+//            coverBean2.setCall_index(cover2.getCall_index());
+//            coverBean2.setCategory_id(cover2.getCategory_id());
+//            coverBean2.setTitle(cover2.getTitle());
+//            coverBean2.setLink_url(cover2.getLink_url());
+//            coverBean2.setImg_url(cover2.getImg_url());
+//            LogUtil.e("items2.size() == " +items2.size());
+//            homeRushChangeBean2.setCover(coverBean2);
+//            homeRushChangeBean2.setItem(items2);
+//
+//            HomeRushChangeBean homeRushChangeBean3 = new HomeRushChangeBean();
+//            HomeRushChangeBean.CoverBean coverBean3 = new HomeRushChangeBean.CoverBean();
+//            HomeRushBean.DataBean.GoodsWarmupBean.CoverBeanXX cover3 = goods_warmup.getCover();
+//            List<HomeRushBean.DataBean.GoodsWarmupBean.ItemBeanXX> oitem3 = goods_warmup.getItem();
+//            LogUtil.e("oitem3.size() = " + oitem3.size());
+//            List<HomeRushChangeBean.ItemBean> items3 = new ArrayList<>();
+//            for (int j=0;j<oitem3.size();j++){
+//                HomeRushChangeBean.ItemBean itemBean3 = new HomeRushChangeBean.ItemBean();
+//                HomeRushBean.DataBean.GoodsWarmupBean.ItemBeanXX oitemBean3 = oitem3.get(j);
+//                itemBean3.setId(oitemBean3.getId());
+//                itemBean3.setCategory_id(oitemBean3.getCategory_id());
+//                itemBean3.setSite_id(oitemBean3.getSite_id());
+//                itemBean3.setChannel_id(oitemBean3.getChannel_id());
+//                itemBean3.setBrand_id(oitemBean3.getBrand_id());
+//                itemBean3.setCall_index(oitemBean3.getCall_index());
+//                itemBean3.setTitle(oitemBean3.getTitle());
+//                itemBean3.setLink_url(oitemBean3.getLink_url());
+//                itemBean3.setImg_url(oitemBean3.getImg_url());
+//                itemBean3.setStock_quantity(oitemBean3.getStock_quantity());
+//                itemBean3.setMarket_price(oitemBean3.getMarket_price());
+//                itemBean3.setSell_price(oitemBean3.getSell_price());
+//                items3.add(itemBean3);
+//
+//            }
+//            coverBean3.setAdd_time(cover3.getAdd_time());
+//            coverBean3.setBrand_id(cover3.getBrand_id());
+//            coverBean3.setCall_index(cover3.getCall_index());
+//            coverBean3.setCategory_id(cover3.getCategory_id());
+//            coverBean3.setTitle(cover3.getTitle());
+//            coverBean3.setLink_url(cover3.getLink_url());
+//            coverBean3.setImg_url(cover3.getImg_url());
+//            homeRushChangeBean3.setCover(coverBean3);
+//            homeRushChangeBean3.setItem(items3);
+//            LogUtil.e("items3.size() == " +items3.size());
+//
+//            HomeRushChangeBean homeRushChangeBean4 = new HomeRushChangeBean();
+//            HomeRushChangeBean.CoverBean coverBean4 = new HomeRushChangeBean.CoverBean();
+//            HomeRushBean.DataBean.HotSaleBean.CoverBeanXXX cover4 = hot_sale.getCover();
+//            List<HomeRushBean.DataBean.HotSaleBean.ItemBeanXXX> oitem4 = hot_sale.getItem();
+//            LogUtil.e("oitem4.size() = " + oitem4.size());
+//            List<HomeRushChangeBean.ItemBean> items4 = new ArrayList<>();
+//            for (int j=0;j<oitem4.size();j++){
+//                HomeRushChangeBean.ItemBean itemBean4 = new HomeRushChangeBean.ItemBean();
+//                HomeRushBean.DataBean.HotSaleBean.ItemBeanXXX oitemBean4 = oitem4.get(j);
+//                itemBean4.setId(oitemBean4.getId());
+//                itemBean4.setCategory_id(oitemBean4.getCategory_id());
+//                itemBean4.setSite_id(oitemBean4.getSite_id());
+//                itemBean4.setChannel_id(oitemBean4.getChannel_id());
+//                itemBean4.setBrand_id(oitemBean4.getBrand_id());
+//                itemBean4.setCall_index(oitemBean4.getCall_index());
+//                itemBean4.setTitle(oitemBean4.getTitle());
+//                itemBean4.setLink_url(oitemBean4.getLink_url());
+//                itemBean4.setImg_url(oitemBean4.getImg_url());
+//                itemBean4.setStock_quantity(oitemBean4.getStock_quantity());
+//                itemBean4.setMarket_price(oitemBean4.getMarket_price());
+//                itemBean4.setSell_price(oitemBean4.getSell_price());
+//                items4.add(itemBean4);
+//            }
+//            coverBean4.setAdd_time(cover4.getAdd_time());
+//            coverBean4.setBrand_id(cover4.getBrand_id());
+//            coverBean4.setCall_index(cover4.getCall_index());
+//            coverBean4.setCategory_id(cover4.getCategory_id());
+//            coverBean4.setTitle(cover4.getTitle());
+//            coverBean4.setLink_url(cover4.getLink_url());
+//            coverBean4.setImg_url(cover4.getImg_url());
+//            homeRushChangeBean4.setCover(coverBean4);
+//            homeRushChangeBean4.setItem(items4);
+//            LogUtil.e("items4.size() == " +items4.size());
+//            homeChangeDatas.add(homeRushChangeBean1);
+//            homeChangeDatas.add(homeRushChangeBean2);
+//            homeChangeDatas.add(homeRushChangeBean3);
+//            homeChangeDatas.add(homeRushChangeBean4);
+//        }
+//        LogUtil.e("homeChangeDatas.size() == "+homeChangeDatas.size());
+//        for (int i=0;i<homeChangeDatas.size();i++){
+//            HomeRushChangeBean homeRushChangeBean = homeChangeDatas.get(i);
+//            List<HomeRushChangeBean.ItemBean> item = homeRushChangeBean.getItem();
+//            LogUtil.e("item.size() == " + item.size());
+//        }
+//        return homeChangeDatas;
+//    }
+
+    private void loadRecyclerData(List<HomeWareBean.DataBean> homeChangeDatas) {
         FullyLinearLayoutManager layoutManager = new FullyLinearLayoutManager(getContext());
         rcvHomeFragment.setLayoutManager(layoutManager);
         homeRushAllAdapter = new HomeRushAllAdapter(getContext(),homeChangeDatas,getActivity());
