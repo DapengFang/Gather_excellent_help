@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,17 +20,21 @@ import com.alibaba.baichuan.android.trade.AlibcTrade;
 import com.alibaba.baichuan.android.trade.model.AlibcShowParams;
 import com.alibaba.baichuan.android.trade.page.AlibcPage;
 import com.alibaba.baichuan.trade.biz.core.taoke.AlibcTaokeParams;
+import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.aliapi.DemoTradeCallback;
 import com.alibaba.baichuan.android.trade.model.OpenType;
 import com.gather_excellent_help.api.HomeData;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.HomeBannerBean;
+import com.gather_excellent_help.bean.HomeGroupBean;
 import com.gather_excellent_help.bean.HomeRushBean;
 import com.gather_excellent_help.bean.HomeRushChangeBean;
 import com.gather_excellent_help.bean.HomeTypeBean;
 import com.gather_excellent_help.bean.HomeWareBean;
+import com.gather_excellent_help.bean.TyepIndexBean;
 import com.gather_excellent_help.ui.activity.TestActivity2;
+import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.widget.CarouselImageView;
 import com.gather_excellent_help.ui.widget.MyGridView;
@@ -70,6 +75,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Map<String, String> map;
     private String url = Url.BASE_URL + "IndexBanner.aspx";
     private List<HomeWareBean.DataBean> data;
+    private List<HomeGroupBean.DataBean> groupData;
+    private List<TyepIndexBean.DataBean> typeData;
     private int extraCount = 4;
 
     private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
@@ -79,11 +86,12 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private String shopId = "60552065";//默认店铺id
     private Map<String, String> exParams;//yhhpass参数
 
-    public HomeRushAllAdapter(Context context, List<HomeWareBean.DataBean> data , Activity activity) {
+    public HomeRushAllAdapter(Context context, List<HomeWareBean.DataBean> data , Activity activity,List<HomeGroupBean.DataBean> groupData,List<TyepIndexBean.DataBean> typeData) {
         this.context = context;
         this.activity = activity;
         this.data = data;
-
+        this.groupData = groupData;
+        this.typeData = typeData;
         alibcShowParams = new AlibcShowParams(OpenType.H5, false);
         exParams = new HashMap<>();
         exParams.put("isv_code", "appisvcode");
@@ -142,6 +150,15 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             TypeViewHolder typeViewHolder = (TypeViewHolder) holder;
             GridView gvHomeType = typeViewHolder.gvHomeType;
             loadTypeData(gvHomeType);
+            gvHomeType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    int id = typeData.get(i).getId();
+                    Intent intent = new Intent(context, WareListActivity.class);
+                    intent.putExtra("type_id",String.valueOf(id));
+                    context.startActivity(intent);
+                }
+            });
         }else if (holder instanceof BannerViewHolder) {
             BannerViewHolder bannerViewHolder = (BannerViewHolder) holder;
             CarouselImageView civHomeGanner = bannerViewHolder.civHomeGanner;
@@ -169,6 +186,54 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             GroupViewHolder groupViewHolder = (GroupViewHolder) holder;
             TextView tvTitle = groupViewHolder.tvTitle;
             tvTitle.setText("团购区");
+            final HomeGroupBean.DataBean dataBean = groupData.get(0);
+            String sTitle0 = dataBean.getTitle().substring(0, 16) + "...";
+            groupViewHolder.tv_group_big_title.setText(sTitle0);
+            groupViewHolder.tv_group_big_price.setText("今日特价：￥"+dataBean.getMarket_price());
+            mImageLoader.loadImage(dataBean.getImg_url(),groupViewHolder.iv_group_big_pic,true);
+            groupViewHolder.ll_group_big.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String link_url = dataBean.getLink_url();
+                    AlibcTrade.show(activity, new AlibcPage(link_url), alibcShowParams, null, exParams , new DemoTradeCallback());
+                }
+            });
+            LinearLayout childLeft = (LinearLayout) groupViewHolder.rl_group_left.getChildAt(0);
+            TextView tvMallTitle = (TextView) childLeft.findViewById(R.id.tv_group_mall_title);
+            TextView tvMallPrice = (TextView) childLeft.findViewById(R.id.tv_group_mall_price);
+            ImageView ivMallPic = (ImageView) childLeft.findViewById(R.id.iv_group_mall_pic);
+            final HomeGroupBean.DataBean groupBean1 = groupData.get(1);
+            String sTitle = groupBean1.getTitle().substring(0, 16) + "...";
+            tvMallPrice.setText("今日特价：￥"+groupBean1.getMarket_price());
+            tvMallTitle.setText(sTitle);
+            mImageLoader.loadImage(groupBean1.getImg_url(),ivMallPic,true);
+            childLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String link_url = groupBean1.getLink_url();
+                    AlibcTrade.show(activity, new AlibcPage(link_url), alibcShowParams, null, exParams , new DemoTradeCallback());
+                }
+            });
+            int j=-1;
+            for (int i=2;i<groupData.size();i++){
+                LinearLayout childRight = (LinearLayout) groupViewHolder.ll_group_right.getChildAt(i + j - 1);
+                TextView tvMallTitle2 = (TextView) childRight.findViewById(R.id.tv_group_mall_title);
+                TextView tvMallPrice2 = (TextView) childRight.findViewById(R.id.tv_group_mall_price);
+                ImageView ivMallPic2 = (ImageView) childRight.findViewById(R.id.iv_group_mall_pic);
+                final HomeGroupBean.DataBean groupBean2 = groupData.get(i);
+                String sTitle2 = groupBean2.getTitle().substring(0, 16) + "...";
+                tvMallPrice2.setText("今日特价：￥"+groupBean2.getMarket_price());
+                tvMallTitle2.setText(sTitle2);
+                mImageLoader.loadImage(groupBean2.getImg_url(),ivMallPic2,true);
+                childRight.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String link_url = groupBean2.getLink_url();
+                        AlibcTrade.show(activity, new AlibcPage(link_url), alibcShowParams, null, exParams , new DemoTradeCallback());
+                    }
+                });
+                j++;
+            }
         }else if(holder instanceof FirstBuyViewHolder) {
             FirstBuyViewHolder firstBuyViewHoldre = (FirstBuyViewHolder) holder;
             TextView tvTitle = firstBuyViewHoldre.tvTitle;
@@ -252,6 +317,18 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     class GroupViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.tv_item_home_title)
         TextView tvTitle;
+        @Bind(R.id.rl_group_left)
+        RelativeLayout rl_group_left;
+        @Bind(R.id.ll_group_right)
+        LinearLayout ll_group_right;
+        @Bind(R.id.iv_group_big_pic)
+        ImageView iv_group_big_pic;
+        @Bind(R.id.tv_group_big_title)
+        TextView tv_group_big_title;
+        @Bind(R.id.tv_group_big_price)
+        TextView tv_group_big_price;
+        @Bind(R.id.ll_group_big)
+        LinearLayout ll_group_big;
         public GroupViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

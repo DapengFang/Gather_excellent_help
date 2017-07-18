@@ -34,6 +34,7 @@
         <activity android:name=".ui.activity.PersonInfoActivity" />
         <activity android:name=".ui.activity.TestActivity2" />
         <activity android:name=".ui.activity.WebActivity" />
+        <activity android:name=".ui.activity.WareListActivity"></activity>
     </application>
 
 </manifest>

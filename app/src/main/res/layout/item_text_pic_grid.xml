@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="@dimen/x5"
+    android:background="#ffffff">
+    <ImageView
+        android:id="@+id/iv_home_type_photo"
+        android:layout_width="@dimen/x120"
+        android:layout_height="@dimen/x120" />
+    <TextView
+        android:id="@+id/tv_home_type_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#66000000"
+        android:layout_marginTop="@dimen/x3"
+        android:paddingLeft="@dimen/x10"
+        android:paddingRight="@dimen/x10"/>
+    <TextView
+        android:id="@+id/tv_home_type_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:textColor="#99ff0000"
+        android:layout_marginTop="@dimen/x3"
+        android:paddingTop="@dimen/x5"
+        android:paddingLeft="@dimen/x10"
+        android:paddingRight="@dimen/x10"/>
+    <TextView
+        android:id="@+id/tv_home_type_allprice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:textColor="#99ff0000"
+        android:layout_marginTop="@dimen/x3"
+        android:paddingTop="@dimen/x5"
+        android:paddingLeft="@dimen/x10"
+        android:paddingRight="@dimen/x10"
+        android:paddingBottom="@dimen/x5"/>
+
+</LinearLayout>

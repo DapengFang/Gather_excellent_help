@@ -13,9 +13,11 @@ import android.widget.Toast;
 
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
+import com.gather_excellent_help.bean.HomeGroupBean;
 import com.gather_excellent_help.bean.HomeRushBean;
 import com.gather_excellent_help.bean.HomeRushChangeBean;
 import com.gather_excellent_help.bean.HomeWareBean;
+import com.gather_excellent_help.bean.TyepIndexBean;
 import com.gather_excellent_help.ui.adapter.HomeRushAllAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
@@ -43,9 +45,16 @@ public class HomeFragment extends BaseFragment {
     SwipeRefreshLayout swipeRefresh;
 
     private boolean mIsRequestDataRefresh = false;
-    private NetUtil netUtils;
+    private NetUtil netUtils;//热销区域的联网接口
+    private NetUtil netUtils2;//团购区的商品联网接口
+    private NetUtil netUtils3;//分类区的商品联网接口
     private String url = Url.BASE_URL + "IndexGoods.aspx";
+    private String group_url = Url.BASE_URL + "GroupBuy.aspx";
+    private String type_url = Url.BASE_URL + "IndexCategory.aspx";
     private HomeRushAllAdapter homeRushAllAdapter;
+    private List<HomeWareBean.DataBean> rushData;
+    private List<HomeGroupBean.DataBean> groupData;
+    private List<TyepIndexBean.DataBean> typeData;
 
     @Override
     public View initView() {
@@ -56,6 +65,10 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void initData() {
         netUtils = new NetUtil();
+        netUtils2 = new NetUtil();
+        netUtils3 = new NetUtil();
+        requestDataRefresh();
+        setRefresh(mIsRequestDataRefresh);
         netUtils.okHttp2Server2(url, null);
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
@@ -66,10 +79,74 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-                 stopDataRefresh();
+                stopDataRefresh();
                 setRefresh(mIsRequestDataRefresh);
             }
         });
+        netUtils2.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
+            @Override
+            public void getSuccessResponse(String response) {
+                LogUtil.e(response);
+                parseData2(response);
+            }
+
+            @Override
+            public void getFailResponse(Call call, Exception e) {
+
+            }
+        });
+        netUtils3.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
+            @Override
+            public void getSuccessResponse(String response) {
+                LogUtil.e(response);
+                parseData3(response);
+            }
+
+            @Override
+            public void getFailResponse(Call call, Exception e) {
+
+            }
+        });
+    }
+
+    /**
+     * @param response
+     * 解析首页分类索引
+     */
+    private void parseData3(String response) {
+        TyepIndexBean tyepIndexBean = new Gson().fromJson(response, TyepIndexBean.class);
+        int statusCode = tyepIndexBean.getStatusCode();
+        switch (statusCode) {
+            case 1 :
+                typeData = tyepIndexBean.getData();
+                if(mIsRequestDataRefresh ==true) {
+                    stopDataRefresh();
+                    setRefresh(mIsRequestDataRefresh);
+                }
+                loadRecyclerData(rushData,groupData,typeData);
+                break;
+            case 0:
+                Toast.makeText(getContext(), tyepIndexBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    /**
+     * 解析团购区数据
+     * @param response
+     */
+    private void parseData2(String response) {
+        HomeGroupBean homeGroupBean = new Gson().fromJson(response, HomeGroupBean.class);
+        int statusCode = homeGroupBean.getStatusCode();
+        switch (statusCode) {
+            case 1 :
+                groupData = homeGroupBean.getData();
+                netUtils3.okHttp2Server2(type_url,null);
+                break;
+            case 0:
+                Toast.makeText(getContext(), homeGroupBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     /**
@@ -81,12 +158,13 @@ public class HomeFragment extends BaseFragment {
         int statusCode = homeWareBean.getStatusCode();
         switch (statusCode) {
             case 1 :
-                List<HomeWareBean.DataBean> data = homeWareBean.getData();
-                if(mIsRequestDataRefresh ==true) {
-                    stopDataRefresh();
-                    setRefresh(mIsRequestDataRefresh);
-                }
-                loadRecyclerData(data);
+                rushData = homeWareBean.getData();
+//                if(mIsRequestDataRefresh ==true) {
+//                    stopDataRefresh();
+//                    setRefresh(mIsRequestDataRefresh);
+//                }
+//                loadRecyclerData(rushData);
+                netUtils2.okHttp2Server2(group_url,null);
                 break;
             case 0:
                 Toast.makeText(getContext(), homeWareBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -256,10 +334,10 @@ public class HomeFragment extends BaseFragment {
 //        return homeChangeDatas;
 //    }
 
-    private void loadRecyclerData(List<HomeWareBean.DataBean> homeChangeDatas) {
+    private void loadRecyclerData(List<HomeWareBean.DataBean> homeChangeDatas, List<HomeGroupBean.DataBean> groupData,List<TyepIndexBean.DataBean> typeData) {
         FullyLinearLayoutManager layoutManager = new FullyLinearLayoutManager(getContext());
         rcvHomeFragment.setLayoutManager(layoutManager);
-        homeRushAllAdapter = new HomeRushAllAdapter(getContext(),homeChangeDatas,getActivity());
+        homeRushAllAdapter = new HomeRushAllAdapter(getContext(),homeChangeDatas,getActivity(),groupData,typeData);
         rcvHomeFragment.setAdapter(homeRushAllAdapter);
     }
 

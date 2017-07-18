@@ -1,5 +1,6 @@
 package com.gather_excellent_help.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +27,7 @@ import com.gather_excellent_help.aliapi.DemoTradeCallback;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.TypeNavigatorBean;
 import com.gather_excellent_help.bean.TypeWareBean;
+import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.adapter.TypeWareAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.Classes;
@@ -123,7 +125,9 @@ public class TypeFragment extends BaseFragment {
                 if(TextUtils.isEmpty(content)) {
                     Toast.makeText(getActivity(), "请输入你要搜索商品的名称！", Toast.LENGTH_SHORT).show();
                 }else{
-
+                    Intent intent = new Intent(getActivity(), WareListActivity.class);
+                    intent.putExtra("content",content);
+                    startActivity(intent);
                 }
             }
         });
@@ -193,9 +197,6 @@ public class TypeFragment extends BaseFragment {
         int statusCode = navigatorData.getStatusCode();
         switch (statusCode) {
             case 1 :
-                if(mIsRequestDataRefresh ==true) {
-                    netUtil2.okHttp2Server2(ware_url,null);
-                }
                 final List<TypeNavigatorBean.DataBean> data = navigatorData.getData();
                 final SimpleExpandableListViewAdapter adapter = new SimpleExpandableListViewAdapter(data,getActivity());
                 // 设置适配器
@@ -220,6 +221,10 @@ public class TypeFragment extends BaseFragment {
                         netUtil2.okHttp2Server2(ware_url,map);
                     }
                 });
+
+                if(mIsRequestDataRefresh ==true) {
+                    netUtil2.okHttp2Server2(ware_url,null);
+                }
                 break;
             case 0:
                 if(mIsRequestDataRefresh ==true) {
