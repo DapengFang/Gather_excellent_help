@@ -28,6 +28,7 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.TypeNavigatorBean;
 import com.gather_excellent_help.bean.TypeWareBean;
 import com.gather_excellent_help.ui.activity.WareListActivity;
+import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.adapter.TypeWareAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.Classes;
@@ -68,12 +69,6 @@ public class TypeFragment extends BaseFragment {
     @Bind(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefresh;
 
-    private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
-    private AlibcTaokeParams alibcTaokeParams = null;//淘客参数，包括pid，unionid，subPid
-    private Boolean isTaoke = false;//是否是淘客商品类型
-    private String itemId = "522166121586";//默认商品id
-    private String shopId = "60552065";//默认店铺id
-    private Map<String, String> exParams;//yhhpass参数
 
     private boolean mIsRequestDataRefresh = false;
     private NetUtil netUtil;
@@ -97,10 +92,6 @@ public class TypeFragment extends BaseFragment {
      */
     @Override
     public void initData() {
-        alibcShowParams = new AlibcShowParams(OpenType.H5, false);
-        exParams = new HashMap<>();
-        exParams.put("isv_code", "appisvcode");
-        exParams.put("alibaba", "阿里巴巴");//自定义参数部分，可任意增删改
         netUtil = new NetUtil();
         netUtil2 = new NetUtil();
         tvTopTitleName.setText("商品分类");
@@ -155,7 +146,15 @@ public class TypeFragment extends BaseFragment {
                     @Override
                     public void onItemClick(int position) {
                         String link_url = data.get(position).getLink_url();
-                        AlibcTrade.show(getActivity(), new AlibcPage(link_url), alibcShowParams, null, exParams , new DemoTradeCallback());
+                        String goods_id = data.get(position).getProductId();
+                        String goods_img = Url.IMG_URL + data.get(position).getImg_url();
+                        String goods_title = data.get(position).getTitle();
+                        Intent intent = new Intent(getContext(), WebRecordActivity.class);
+                        intent.putExtra("url",link_url);
+                        intent.putExtra("goods_id",goods_id);
+                        intent.putExtra("goods_img",goods_img);
+                        intent.putExtra("goods_title",goods_title);
+                        getContext().startActivity(intent);
                     }
                 });
                 break;

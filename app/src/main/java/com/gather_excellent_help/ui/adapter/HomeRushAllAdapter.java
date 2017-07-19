@@ -80,12 +80,6 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<TyepIndexBean.DataBean> typeData;
     private int extraCount = 4;
 
-    private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
-    private AlibcTaokeParams alibcTaokeParams = null;//淘客参数，包括pid，unionid，subPid
-    private Boolean isTaoke = false;//是否是淘客商品类型
-    private String itemId = "522166121586";//默认商品id
-    private String shopId = "60552065";//默认店铺id
-    private Map<String, String> exParams;//yhhpass参数
 
     public HomeRushAllAdapter(Context context, List<HomeWareBean.DataBean> data , Activity activity,List<HomeGroupBean.DataBean> groupData,List<TyepIndexBean.DataBean> typeData) {
         this.context = context;
@@ -93,10 +87,6 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.data = data;
         this.groupData = groupData;
         this.typeData = typeData;
-            alibcShowParams = new AlibcShowParams(OpenType.Native, false);
-        exParams = new HashMap<>();
-        exParams.put("isv_code", "appisvcode");
-        exParams.put("alibaba", "阿里巴巴");//自定义参数部分，可任意增删改
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
@@ -179,9 +169,14 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                    @Override
                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                        String link_url = itemData.get(i).getLink_url();
-                       //AlibcTrade.show(activity, new AlibcPage(link_url), alibcShowParams, null, exParams , new DemoTradeCallback());
+                       String goods_id = itemData.get(i).getProductId();
+                       String goods_img = Url.IMG_URL + itemData.get(i).getImg_url();
+                       String goods_title = itemData.get(i).getTitle();
                        Intent intent = new Intent(context, WebRecordActivity.class);
                        intent.putExtra("url",link_url);
+                       intent.putExtra("goods_id",goods_id);
+                       intent.putExtra("goods_img",goods_img);
+                       intent.putExtra("goods_title",goods_title);
                        context.startActivity(intent);
                    }
                });
@@ -199,7 +194,15 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View view) {
                     String link_url = dataBean.getLink_url();
-                    AlibcTrade.show(activity, new AlibcPage(link_url), alibcShowParams, null, exParams , new DemoTradeCallback());
+                    String goods_id = dataBean.getProductId();
+                    String goods_img = Url.IMG_URL + dataBean.getImg_url();
+                    String goods_title = dataBean.getTitle();
+                    Intent intent = new Intent(context, WebRecordActivity.class);
+                    intent.putExtra("url",link_url);
+                    intent.putExtra("goods_id",goods_id);
+                    intent.putExtra("goods_img",goods_img);
+                    intent.putExtra("goods_title",goods_title);
+                    context.startActivity(intent);
                 }
             });
             LinearLayout childLeft = (LinearLayout) groupViewHolder.rl_group_left.getChildAt(0);
@@ -215,7 +218,15 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View view) {
                     String link_url = groupBean1.getLink_url();
-                    AlibcTrade.show(activity, new AlibcPage(link_url), alibcShowParams, null, exParams , new DemoTradeCallback());
+                    String goods_id = groupBean1.getProductId();
+                    String goods_img = Url.IMG_URL + groupBean1.getImg_url();
+                    String goods_title = groupBean1.getTitle();
+                    Intent intent = new Intent(context, WebRecordActivity.class);
+                    intent.putExtra("url",link_url);
+                    intent.putExtra("goods_id",goods_id);
+                    intent.putExtra("goods_img",goods_img);
+                    intent.putExtra("goods_title",goods_title);
+                    context.startActivity(intent);
                 }
             });
             int j=-1;
@@ -233,7 +244,15 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     @Override
                     public void onClick(View view) {
                         String link_url = groupBean2.getLink_url();
-                        AlibcTrade.show(activity, new AlibcPage(link_url), alibcShowParams, null, exParams , new DemoTradeCallback());
+                        String goods_id = groupBean2.getProductId();
+                        String goods_img = Url.IMG_URL + groupBean2.getImg_url();
+                        String goods_title = groupBean2.getTitle();
+                        Intent intent = new Intent(context, WebRecordActivity.class);
+                        intent.putExtra("url",link_url);
+                        intent.putExtra("goods_id",goods_id);
+                        intent.putExtra("goods_img",goods_img);
+                        intent.putExtra("goods_title",goods_title);
+                        context.startActivity(intent);
                     }
                 });
                 j++;

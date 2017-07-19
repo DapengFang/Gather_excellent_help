@@ -71,4 +71,5 @@ dependencies {
     compile 'com.alibaba.sdk.android:alibc_trade_sdk:3.1.1.105'
     compile files('libs/eventbus.jar')
     compile files('libs/jsoup-1.10.3.jar')
+    compile files('libs/MobCommons-2017.0608.1618.jar')
 }

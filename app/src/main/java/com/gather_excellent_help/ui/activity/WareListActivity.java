@@ -204,7 +204,15 @@ public class WareListActivity extends BaseActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         String link_url = wareData.get(i).getLink_url();
-                        AlibcTrade.show(WareListActivity.this, new AlibcPage(link_url), alibcShowParams, null, exParams , new DemoTradeCallback());
+                        String goods_id = wareData.get(i).getProductId();
+                        String goods_img = Url.IMG_URL + wareData.get(i).getImg_url();
+                        String goods_title = wareData.get(i).getTitle();
+                        Intent intent = new Intent(WareListActivity.this, WebRecordActivity.class);
+                        intent.putExtra("url",link_url);
+                        intent.putExtra("goods_id",goods_id);
+                        intent.putExtra("goods_img",goods_img);
+                        intent.putExtra("goods_title",goods_title);
+                        startActivity(intent);
                     }
                 });
                 gvWartList.setOnScrollListener(new AbsListView.OnScrollListener() {
