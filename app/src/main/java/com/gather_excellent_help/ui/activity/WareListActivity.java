@@ -330,7 +330,14 @@ public class WareListActivity extends BaseActivity {
                     showLoadNoMore();
                     searchWareList(keyword);
                 }else{
-                    Toast.makeText(WareListActivity.this, "请输入商品名称！", Toast.LENGTH_SHORT).show();
+                    String et_str = etWareListContent.getText().toString().trim();
+                    if(et_str!=null && !TextUtils.isEmpty(et_str)) {
+                        keyword = et_str;
+                        ll_ware_list_loadmore.setVisibility(View.GONE);
+                        searchWareList(keyword);
+                    }else{
+                        Toast.makeText(WareListActivity.this, "请输入商品名称！", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -379,7 +386,7 @@ public class WareListActivity extends BaseActivity {
                     break;
                 case R.id.rl_sousuo:
                     isLoadmore = -1;
-                    showLoadNoMore();
+                    ll_ware_list_loadmore.setVisibility(View.GONE);
                     String content = etWareListContent.getText().toString().trim();
                     if(sousuoStr!=null && !TextUtils.isEmpty(sousuoStr)) {
                         Toast.makeText(WareListActivity.this, sousuoStr, Toast.LENGTH_SHORT).show();

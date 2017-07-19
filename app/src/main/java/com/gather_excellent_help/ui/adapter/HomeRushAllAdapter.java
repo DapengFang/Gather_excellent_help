@@ -36,6 +36,7 @@ import com.gather_excellent_help.bean.TyepIndexBean;
 import com.gather_excellent_help.ui.activity.TestActivity2;
 import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebActivity;
+import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.widget.CarouselImageView;
 import com.gather_excellent_help.ui.widget.MyGridView;
 import com.gather_excellent_help.utils.DensityUtil;
@@ -92,7 +93,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.data = data;
         this.groupData = groupData;
         this.typeData = typeData;
-        alibcShowParams = new AlibcShowParams(OpenType.H5, false);
+            alibcShowParams = new AlibcShowParams(OpenType.Native, false);
         exParams = new HashMap<>();
         exParams.put("isv_code", "appisvcode");
         exParams.put("alibaba", "阿里巴巴");//自定义参数部分，可任意增删改
@@ -178,7 +179,10 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                    @Override
                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                        String link_url = itemData.get(i).getLink_url();
-                       AlibcTrade.show(activity, new AlibcPage(link_url), alibcShowParams, null, exParams , new DemoTradeCallback());
+                       //AlibcTrade.show(activity, new AlibcPage(link_url), alibcShowParams, null, exParams , new DemoTradeCallback());
+                       Intent intent = new Intent(context, WebRecordActivity.class);
+                       intent.putExtra("url",link_url);
+                       context.startActivity(intent);
                    }
                });
            }

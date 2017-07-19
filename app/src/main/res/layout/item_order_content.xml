@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include layout="@layout/item_order_top_statue"/>
+    <include layout="@layout/item_order_ware"/>
+    <include layout="@layout/item_order_center_total"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:background="#11000000"/>
+    <include layout="@layout/item_order_bottom_operate"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:background="#11000000"/>
+</LinearLayout>

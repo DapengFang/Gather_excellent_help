@@ -2,6 +2,7 @@ package com.gather_excellent_help.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +20,11 @@ import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.downweb.HtmlRequest;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +49,8 @@ public class TestActivity extends BaseActivity {
     Button btnMine;
     @Bind(R.id.btn_home)
     Button btnHome;
+    @Bind(R.id.btn_order)
+    Button btnOrder;
 
     private NetUtil netUtils;
     private Map<String, String> map;
@@ -63,6 +70,8 @@ public class TestActivity extends BaseActivity {
         initData();
     }
 
+
+
     private void initData() {
         netUtils = new NetUtil();
         btnBindTaobao.setOnClickListener(new MyOnClickListener());
@@ -71,6 +80,7 @@ public class TestActivity extends BaseActivity {
         btnPersonInfo.setOnClickListener(new MyOnClickListener());
         btnMine.setOnClickListener(new MyOnClickListener());
         btnHome.setOnClickListener(new MyOnClickListener());
+        btnOrder.setOnClickListener(new MyOnClickListener());
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -220,6 +230,10 @@ public class TestActivity extends BaseActivity {
                     break;
                 case R.id.btn_home:
                     intent = new Intent(TestActivity.this, TestActivity2.class);
+                    startActivity(intent);
+                    break;
+                case R.id.btn_order:
+                    intent = new Intent(TestActivity.this, OrderActivity.class);
                     startActivity(intent);
                     break;
             }

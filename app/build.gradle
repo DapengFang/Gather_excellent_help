@@ -44,7 +44,6 @@ dependencies {
     compile 'com.android.support:design:24.2.0'
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.android.support:cardview-v7:24.2.0'
-
     //    fastjson
     compile 'com.alibaba:fastjson:1.2.9'
     //支付
@@ -71,4 +70,5 @@ dependencies {
     compile 'com.alibaba.sdk.android:alibc_trade_biz:3.1.1.105'
     compile 'com.alibaba.sdk.android:alibc_trade_sdk:3.1.1.105'
     compile files('libs/eventbus.jar')
+    compile files('libs/jsoup-1.10.3.jar')
 }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.MineBean;
+import com.gather_excellent_help.ui.activity.OrderActivity;
 import com.gather_excellent_help.ui.activity.SetActivity;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.CircularImage;
@@ -66,6 +68,16 @@ public class MineFragment extends BaseFragment {
     ImageView ivMeDaipinjia;
     @Bind(R.id.tv_mine_mobietype)
     TextView tvMineMobietype;
+    @Bind(R.id.ll_mine_see_allorder)
+    LinearLayout llMineSeeAllorder;
+    @Bind(R.id.ll_mine_see_daifukuan)
+    LinearLayout llMineSeeDaifukuan;
+    @Bind(R.id.ll_mine_see_yifukuan)
+    LinearLayout llMineSeeYifukuan;
+    @Bind(R.id.ll_mine_see_yiwancheng)
+    LinearLayout llMineSeeYiwancheng;
+    @Bind(R.id.ll_mine_see_shouhou)
+    LinearLayout llMineSeeShouhou;
 
     private NetUtil netUtils;
     private Map<String, String> map;
@@ -90,6 +102,11 @@ public class MineFragment extends BaseFragment {
             netUtils.okHttp2Server2(url, map);
         }
         rlMineSet.setOnClickListener(new MyOnClickListener());
+        llMineSeeAllorder.setOnClickListener(new MyOnClickListener());
+        llMineSeeDaifukuan.setOnClickListener(new MyOnClickListener());
+        llMineSeeYifukuan.setOnClickListener(new MyOnClickListener());
+        llMineSeeYiwancheng.setOnClickListener(new MyOnClickListener());
+        llMineSeeShouhou.setOnClickListener(new MyOnClickListener());
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -110,8 +127,8 @@ public class MineFragment extends BaseFragment {
     private void setPartTextColor() {
         String str = "0.00/0.00";
         int end = str.indexOf("/");
-        SpannableStringBuilder style=new SpannableStringBuilder(str);
-        style.setSpan(new ForegroundColorSpan(Color.RED),0,end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        SpannableStringBuilder style = new SpannableStringBuilder(str);
+        style.setSpan(new ForegroundColorSpan(Color.RED), 0, end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         tvAccountMoney.setText(style);
     }
 
@@ -148,7 +165,7 @@ public class MineFragment extends BaseFragment {
         String nick_name = dataBean.getNick_name();
         mImageLoader.loadImage(avatar, civMeHeadIcon, true);
         tvMeNickname.setText(nick_name);
-        tvMineMobietype.setText(group+"("+mobile+")");
+        tvMineMobietype.setText(group + "(" + mobile + ")");
     }
 
     @Override
@@ -169,9 +186,35 @@ public class MineFragment extends BaseFragment {
 
         @Override
         public void onClick(View v) {
+            Intent intent = null;
             switch (v.getId()) {
                 case R.id.rl_mine_set:
-                    Intent intent = new Intent(getActivity(), SetActivity.class);
+                    intent = new Intent(getActivity(), SetActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.ll_mine_see_allorder:
+                    intent = new Intent(getActivity(), OrderActivity.class);
+                    intent.putExtra("tab_p",0);
+                    startActivity(intent);
+                    break;
+                case R.id.ll_mine_see_daifukuan:
+                    intent = new Intent(getActivity(), OrderActivity.class);
+                    intent.putExtra("tab_p",1);
+                    startActivity(intent);
+                    break;
+                case R.id.ll_mine_see_yifukuan:
+                    intent = new Intent(getActivity(), OrderActivity.class);
+                    intent.putExtra("tab_p",2);
+                    startActivity(intent);
+                    break;
+                case R.id.ll_mine_see_yiwancheng:
+                    intent = new Intent(getActivity(), OrderActivity.class);
+                    intent.putExtra("tab_p",3);
+                    startActivity(intent);
+                    break;
+                case R.id.ll_mine_see_shouhou:
+                    intent = new Intent(getActivity(), OrderActivity.class);
+                    intent.putExtra("tab_p",4);
                     startActivity(intent);
                     break;
             }

@@ -24,8 +24,8 @@ import java.util.List;
 
 public class HomeRushAdapter extends BaseAdapter {
 
-    private Context context;
-    private LayoutInflater inflater;    //布局填充器
+    private Context context; private LayoutInflater inflater;    //布局填充器
+
     private ImageLoader mImageLoader;
     private List<HomeWareBean.DataBean.ItemBean> datas;
 
