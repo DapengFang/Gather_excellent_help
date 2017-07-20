@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +19,14 @@ import android.widget.Toast;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.MineBean;
+import com.gather_excellent_help.event.AnyEvent;
+import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.activity.OrderActivity;
 import com.gather_excellent_help.ui.activity.SetActivity;
+import com.gather_excellent_help.ui.activity.TestActivity;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.CircularImage;
+import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -34,6 +39,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
 /**
@@ -78,6 +84,7 @@ public class MineFragment extends BaseFragment {
     LinearLayout llMineSeeYiwancheng;
     @Bind(R.id.ll_mine_see_shouhou)
     LinearLayout llMineSeeShouhou;
+    private String mseg ="";
 
     private NetUtil netUtils;
     private Map<String, String> map;
@@ -94,12 +101,17 @@ public class MineFragment extends BaseFragment {
     public void initData() {
         setPartTextColor();
         netUtils = new NetUtil();
+        defaultSet();
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         if (Tools.isLogin(getActivity())) {
             String userLogin = Tools.getUserLogin(getActivity());
             map = new HashMap<>();
             map.put("Id", userLogin);
             netUtils.okHttp2Server2(url, map);
+        }else{
+            if(TextUtils.isEmpty(mseg)) {
+               Toast.makeText(getContext(), "请先登录！", Toast.LENGTH_SHORT).show();
+            }
         }
         rlMineSet.setOnClickListener(new MyOnClickListener());
         llMineSeeAllorder.setOnClickListener(new MyOnClickListener());
@@ -163,9 +175,28 @@ public class MineFragment extends BaseFragment {
         String group = dataBean.getGroup();
         String mobile = dataBean.getMobile();
         String nick_name = dataBean.getNick_name();
-        mImageLoader.loadImage(avatar, civMeHeadIcon, true);
-        tvMeNickname.setText(nick_name);
-        tvMineMobietype.setText(group + "(" + mobile + ")");
+        if(avatar !=null && !TextUtils.isEmpty(avatar)) {
+            mImageLoader.loadImage(avatar, civMeHeadIcon, true);
+        }else{
+            civMeHeadIcon.setImageResource(R.drawable.default_person_icon);
+        }
+        if(nick_name !=null && !TextUtils.isEmpty(nick_name)) {
+            tvMeNickname.setText(nick_name);
+        }else{
+            tvMeNickname.setText("聚优帮用户");
+        }
+        if(group!=null && !TextUtils.isEmpty(group) ) {
+            tvMineMobietype.setText(group + "(" + mobile + ")");
+        }else{
+            tvMineMobietype.setText("用户类型 + ("+mobile+")");
+        }
+
+    }
+
+    private void defaultSet(){
+        civMeHeadIcon.setImageResource(R.drawable.default_person_icon);
+        tvMeNickname.setText("聚优帮用户");
+        tvMineMobietype.setText("用户类型 (手机号)");
     }
 
     @Override
@@ -173,6 +204,7 @@ public class MineFragment extends BaseFragment {
         // TODO: inflate a fragment view
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.bind(this, rootView);
+        EventBus.getDefault().register(this);
         return rootView;
     }
 
@@ -180,6 +212,7 @@ public class MineFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        EventBus.getDefault().unregister(this);
     }
 
     public class MyOnClickListener implements View.OnClickListener {
@@ -189,8 +222,14 @@ public class MineFragment extends BaseFragment {
             Intent intent = null;
             switch (v.getId()) {
                 case R.id.rl_mine_set:
-                    intent = new Intent(getActivity(), SetActivity.class);
-                    startActivity(intent);
+                    if (Tools.isLogin(getActivity())) {
+                        intent = new Intent(getActivity(), SetActivity.class);
+                        startActivity(intent);
+                    }else{
+                        intent = new Intent(getActivity(),LoginActivity.class);
+                        startActivity(intent);
+                    }
+
                     break;
                 case R.id.ll_mine_see_allorder:
                     intent = new Intent(getActivity(), OrderActivity.class);
@@ -220,4 +259,13 @@ public class MineFragment extends BaseFragment {
             }
         }
     }
+
+    public void onEvent(AnyEvent event){
+        String msg = "onEventMainThread收到了消息：" + event.getMessage();
+        mseg = msg;
+        LogUtil.e(msg);
+        initData();
+    }
+
+
 }

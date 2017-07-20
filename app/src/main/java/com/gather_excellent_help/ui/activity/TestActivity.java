@@ -20,7 +20,6 @@ import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
-import com.gather_excellent_help.utils.downweb.HtmlRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +65,7 @@ public class TestActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         ButterKnife.bind(this);
-        EventBus.getDefault().register(this);
+        //EventBus.getDefault().register(this);
         initData();
     }
 
@@ -240,16 +239,16 @@ public class TestActivity extends BaseActivity {
         }
     }
 
-    public void onEventMainThread(AnyEvent event) {
-        String msg = "onEventMainThread收到了消息：" + event.getMessage();
-        LogUtil.e(msg);
-        user_id = CacheUtils.getString(TestActivity.this, CacheUtils.LOGIN_VALUE, "");
-        isLogin();
-    }
+//    public void onEventMainThread(AnyEvent event) {
+//        String msg = "onEventMainThread收到了消息：" + event.getMessage();
+//        LogUtil.e(msg);
+//        user_id = CacheUtils.getString(TestActivity.this, CacheUtils.LOGIN_VALUE, "");
+//        isLogin();
+//    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+       // EventBus.getDefault().unregister(this);
     }
 }

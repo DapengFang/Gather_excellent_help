@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <RelativeLayout
+            android:id="@+id/rl_set_userinfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/x10"
@@ -26,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="修改支付宝账号"
+                android:text="用户信息"
                 android:textColor="#99000000"
                 android:textSize="14sp" />
 
@@ -44,6 +45,35 @@
             android:layout_height="1dp"
             android:background="#e5e5e5" />
         <RelativeLayout
+            android:id="@+id/rl_set_payaccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x10"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="绑定/解绑支付宝账号"
+                android:textColor="#99000000"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/right_jiantou" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#e5e5e5" />
+        <RelativeLayout
+            android:id="@+id/rl_set_bindtaobao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/x10"
@@ -71,6 +101,7 @@
             android:layout_height="1dp"
             android:background="#e5e5e5" />
         <RelativeLayout
+            android:id="@+id/rl_set_updatepsw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/x10"
@@ -98,33 +129,7 @@
             android:layout_height="1dp"
             android:background="#e5e5e5" />
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/x10"
-            android:background="@color/white">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="分享聚优帮"
-                android:textColor="#99000000"
-                android:textSize="14sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/right_jiantou" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#e5e5e5" />
-        <RelativeLayout
+            android:id="@+id/rl_set_about"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/x10"
@@ -152,12 +157,14 @@
             android:layout_height="1dp"
             android:background="#e5e5e5" />
         <RelativeLayout
+            android:id="@+id/rl_set_cache"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/x10"
             android:background="@color/white">
 
             <TextView
+                android:id="@+id/tv_set_clear_cache"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -173,6 +180,29 @@
                 android:src="@drawable/right_jiantou" />
 
         </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x60"
+        android:padding="@dimen/x10"
+        android:layout_marginTop="@dimen/x80"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_set_logout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/x5"
+            android:layout_marginRight="@dimen/x5"
+            android:layout_alignParentRight="true"
+            android:text="退出登录"
+            android:textColor="@drawable/register_textcolor_confirm_selector"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:background="@drawable/register_confirm_selector"/>
 
     </LinearLayout>
 

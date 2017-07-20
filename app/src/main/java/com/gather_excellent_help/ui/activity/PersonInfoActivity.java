@@ -2,6 +2,7 @@ package com.gather_excellent_help.ui.activity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -83,6 +84,19 @@ public class PersonInfoActivity extends BaseActivity {
                 LogUtil.e(call.toString()+","+e.getMessage());
             }
         });
+        rlPersonExit.setOnClickListener(new MyOnclickListener());
+    }
+
+    public class MyOnclickListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case  R.id.rl_person_exit:
+                    finish();
+                    break;
+            }
+        }
     }
 
     /**

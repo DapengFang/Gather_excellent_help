@@ -159,6 +159,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             HomeWareBean.DataBean dataBean = data.get(position - extraCount);
             rushWareViewHolder.tvRushMoreTitle.setText(dataBean.getTitle());
             String url = Url.IMG_URL +dataBean.getImg_url();
+            LogUtil.e(url);
             mImageLoader.loadImage(url,rushWareViewHolder.ivRushMoreBig,true);
             final List<HomeWareBean.DataBean.ItemBean> itemData = dataBean.getItem();
             List<HomeRushChangeBean.ItemBean> nItemDatas =new ArrayList<>();

@@ -108,8 +108,7 @@ public class WebRecordActivity extends BaseActivity {
         exParams = new HashMap<>();
         exParams.put("isv_code", "appisvcode");
         exParams.put("alibaba", "阿里巴巴");//自定义参数部分，可任意增删改
-        AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback());
-        rlExit.setOnClickListener(new MyOnclickListener());
+               rlExit.setOnClickListener(new MyOnclickListener());
         rlShare.setOnClickListener(new MyOnclickListener());
         netUtil = new NetUtil();
         map = new HashMap<>();
@@ -142,6 +141,11 @@ public class WebRecordActivity extends BaseActivity {
             case 1 :
                 if(changeUrlBean.getData()!=null && changeUrlBean.getData().size()>0) {
                     click_url = changeUrlBean.getData().get(0).getClick_url();
+                    if(click_url!=null && !TextUtils.isEmpty(click_url)) {
+                        AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(click_url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback());
+                    }else{
+                        AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback());
+                    }
                 }
                 break;
             case 0:

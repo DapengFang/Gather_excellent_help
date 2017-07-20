@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/et_pay_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="输入支付宝账号"
+        android:textSize="14sp"
+        android:textColor="#88000000"
+        android:background="@drawable/gray_cordor_stroke_shape"
+        android:cursorVisible="false"
+        android:layout_marginTop="@dimen/x5"
+        android:layout_marginLeft="@dimen/x5"
+        android:layout_marginRight="@dimen/x5"
+        android:padding="@dimen/x5"/>
+
+    <EditText
+        android:id="@+id/et_pay_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="输入用户名"
+        android:textSize="14sp"
+        android:textColor="#88000000"
+        android:background="@drawable/gray_cordor_stroke_shape"
+        android:cursorVisible="false"
+        android:layout_marginTop="@dimen/x10"
+        android:layout_marginLeft="@dimen/x5"
+        android:layout_marginRight="@dimen/x5"
+        android:padding="@dimen/x5"/>
+
+</LinearLayout>

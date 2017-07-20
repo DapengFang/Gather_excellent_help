@@ -92,6 +92,8 @@ public class TypeFragment extends BaseFragment {
      */
     @Override
     public void initData() {
+        requestDataRefresh();
+        swipeRefresh.setRefreshing(mIsRequestDataRefresh);
         netUtil = new NetUtil();
         netUtil2 = new NetUtil();
         tvTopTitleName.setText("商品分类");
@@ -237,8 +239,8 @@ public class TypeFragment extends BaseFragment {
 
     private void setupSwipeRefresh(View view){
         if(swipeRefresh != null){
-            swipeRefresh.setColorSchemeResources(R.color.colorPrimaryDark,
-                    R.color.white,R.color.red_button_color);
+            swipeRefresh.setColorSchemeResources(R.color.colorFirst,
+                    R.color.colorSecond,R.color.colorThird);
             swipeRefresh.setProgressViewOffset(true, 0, (int) TypedValue
                     .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24,getResources().getDisplayMetrics()));
             swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

@@ -19,8 +19,10 @@ public class CacheUtils {
 	public static final String LOGIN_VALUE = "login_value";
 	//登录状态。
 	public static final String LOGIN_STATE = "Login_State";
-	//绑定状态
+	//绑定淘宝状态
 	public static final String BIND_STATE = "bind_state";
+	//绑定支付宝状态
+	public static final String PAY_STATE = "pay_state";
 
 	private static final String NAME = "login";
 	public static SharedPreferences sp;

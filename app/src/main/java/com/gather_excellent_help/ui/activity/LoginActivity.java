@@ -104,6 +104,7 @@ public class LoginActivity extends Activity {
                 CacheUtils.putBoolean(LoginActivity.this,CacheUtils.LOGIN_STATE,true);
                 CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_VALUE,id+"");
                 EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
+                finish();
                 break;
         }
     }

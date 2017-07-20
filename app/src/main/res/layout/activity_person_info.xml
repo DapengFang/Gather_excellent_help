@@ -47,7 +47,8 @@
                 android:gravity="center"
                 android:text="保存"
                 android:textColor="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="invisible"/>
         </RelativeLayout>
 
     </LinearLayout>
@@ -82,7 +83,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/right_jiantou" />
+                android:src="@drawable/right_jiantou"
+                android:visibility="invisible"/>
 
             <com.gather_excellent_help.ui.widget.CircularImage
                 android:id="@+id/civ_person_head"
@@ -118,7 +120,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/right_jiantou" />
+                android:src="@drawable/right_jiantou"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/tv_person_phone"
@@ -157,7 +160,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/right_jiantou" />
+                android:src="@drawable/right_jiantou"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/tv_person_sex"
@@ -197,7 +201,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/right_jiantou" />
+                android:src="@drawable/right_jiantou"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/usertype"
@@ -236,7 +241,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/right_jiantou" />
+                android:src="@drawable/right_jiantou"
+                android:visibility="invisible"/>
 
         </RelativeLayout>
         <View
