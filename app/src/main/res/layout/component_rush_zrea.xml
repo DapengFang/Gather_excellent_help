@@ -31,7 +31,7 @@
     <ImageView
         android:id="@+id/iv_rush_more_big"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/x121"
         android:background="@drawable/home_rush"/>
     <GridView
         android:id="@+id/gv_rush_zera"
@@ -39,6 +39,5 @@
         android:layout_height="wrap_content"
         android:numColumns="3"
         android:padding="@dimen/x3"></GridView>
-
 
 </LinearLayout>

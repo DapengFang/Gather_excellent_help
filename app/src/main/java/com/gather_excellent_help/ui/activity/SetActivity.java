@@ -202,6 +202,7 @@ public class SetActivity extends BaseActivity {
                             DataCleanManager.cleanApplicationCache(SetActivity.this);
                             String totalCacheSize = DataCleanManager.getTotalCacheSize(SetActivity.this);
                             tvSetClearCache.setText("清理缓存 ("+totalCacheSize+")");
+                            CacheUtils.putBoolean(SetActivity.this,CacheUtils.LOGIN_STATE,false);
                             EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "清理缓存!"));
                         } catch (Exception e) {
                             e.printStackTrace();

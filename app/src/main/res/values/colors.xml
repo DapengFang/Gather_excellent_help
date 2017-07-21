@@ -14,7 +14,7 @@
     <color name="white_center_color">#22ffffff</color>
     <color name="translate">#00000000</color>
     <color name="white_stroke">#88ffffff</color>
-    <color name="colorFirst">#FFDAB9</color>
+    <color name="colorFirst">#FF0000</color>
     <color name="colorSecond">#E066FF</color>
-    <color name="colorThird">#B5B5B5</color>
+    <color name="colorThird">#FFDAB9</color>
 </resources>

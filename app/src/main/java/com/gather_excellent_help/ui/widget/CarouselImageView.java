@@ -273,7 +273,7 @@ public class CarouselImageView extends LinearLayout {
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
 
-            String imageUrl = Url.IMG_URL + mAdList.get(position%mAdList.size()).getImg_url();
+            String imageUrl =mAdList.get(position%mAdList.size()).getActivity_img();
             String img_link = mAdList.get(position % mAdList.size()).getImg_url();
             ImageView imageView;
             if (mImageViewCacheList.isEmpty()) {
@@ -300,9 +300,7 @@ public class CarouselImageView extends LinearLayout {
             ImageView view = (ImageView) object;
             mAdvPager.removeView(view);
             mImageViewCacheList.add(view);
-
         }
-
     }
 
     /**

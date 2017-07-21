@@ -21,6 +21,7 @@ import com.alibaba.baichuan.android.trade.model.AlibcShowParams;
 import com.alibaba.baichuan.android.trade.page.AlibcPage;
 import com.alibaba.baichuan.trade.biz.core.taoke.AlibcTaokeParams;
 import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
+import com.bumptech.glide.Glide;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.aliapi.DemoTradeCallback;
 import com.alibaba.baichuan.android.trade.model.OpenType;

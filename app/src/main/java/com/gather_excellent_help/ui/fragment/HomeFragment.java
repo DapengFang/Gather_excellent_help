@@ -159,10 +159,6 @@ public class HomeFragment extends BaseFragment {
         switch (statusCode) {
             case 1 :
                 rushData = homeWareBean.getData();
-//                if(mIsRequestDataRefresh ==true) {
-//                    stopDataRefresh();
-//                    setRefresh(mIsRequestDataRefresh);
-//                }
                 netUtils2.okHttp2Server2(group_url,null);
                 break;
             case 0:
@@ -177,6 +173,7 @@ public class HomeFragment extends BaseFragment {
         homeRushAllAdapter = new HomeRushAllAdapter(getContext(),homeChangeDatas,getActivity(),groupData,typeData);
         rcvHomeFragment.setAdapter(homeRushAllAdapter);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -240,5 +237,4 @@ public class HomeFragment extends BaseFragment {
             swipeRefresh.setRefreshing(true);
         }
     }
-
 }

@@ -74,7 +74,7 @@ public class HomeRushAdapter extends BaseAdapter {
         holder.home_fanli_price.setText("聚优帮返:￥"+(itemBean.getMarket_price() - itemBean.getSell_price()));
         holder.home_sell_price.setText("到手价:￥"+itemBean.getSell_price());
         if(itemBean.getImg_url()!=null) {
-            mImageLoader.loadImage(Url.IMG_URL+itemBean.getImg_url(),holder.home_rush_photo,true);
+            mImageLoader.loadImage(itemBean.getImg_url(),holder.home_rush_photo,true);
         }
         return convertView;
     }
