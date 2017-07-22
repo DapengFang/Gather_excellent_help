@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_web"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.gather_excellent_help.ui.activity.WebActivity">
+    android:orientation="vertical">
     <include layout="@layout/top_zhuangai_bar"/>
+
     <WebView
         android:id="@+id/wv_banner"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></WebView>
+        android:layout_height="match_parent"
+        android:scrollbars="none"></WebView>
 
 </LinearLayout>

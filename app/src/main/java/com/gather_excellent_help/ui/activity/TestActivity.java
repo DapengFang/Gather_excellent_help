@@ -52,6 +52,7 @@ public class TestActivity extends BaseActivity {
     Button btnOrder;
 
     private NetUtil netUtils;
+    private NetUtil netUtils2;
     private Map<String, String> map;
     private String url = Url.BASE_URL + "bindTaobao.aspx";
     private String unbind_url = Url.BASE_URL + "UnbundTaobao.aspx";
@@ -59,6 +60,7 @@ public class TestActivity extends BaseActivity {
     private String avatarUrl;
     private String nick;
     private String user_id;
+    private String bind_order =Url.BASE_URL + "MatchOrder.aspx";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,31 @@ public class TestActivity extends BaseActivity {
         setContentView(R.layout.activity_test);
         ButterKnife.bind(this);
         //EventBus.getDefault().register(this);
+        netUtils2 = new NetUtil();
+        map = new HashMap<>();
+        String order = "";
+        String[] strs = {"111","222","333"};
+        for (int i=0;i<strs.length;i++){
+            String ord = strs[i];
+            order += ord +"a";
+        }
+        order = order.substring(0,order.length()-1);
+        LogUtil.e(order);
+        String loginId = CacheUtils.getString(this, CacheUtils.LOGIN_VALUE, "");
+        map.put("userId","4");
+        map.put("OrderId",order);
+        netUtils2.okHttp2Server2(bind_order,map);
+        netUtils2.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
+            @Override
+            public void getSuccessResponse(String response) {
+                LogUtil.e(response);
+            }
+
+            @Override
+            public void getFailResponse(Call call, Exception e) {
+               LogUtil.e(call.toString() + "--" + e.getMessage());
+            }
+        });
         initData();
     }
 

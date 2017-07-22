@@ -194,7 +194,7 @@ public class SetActivity extends BaseActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("温馨提示")
-                .setMessage("你确定要执行此操作吗？")
+                .setMessage("你确定要执行此操作吗?")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -212,7 +212,6 @@ public class SetActivity extends BaseActivity {
                 .setNegativeButton("取消", null)
                 .show();
     }
-
 
     /**
      * 绑定淘宝

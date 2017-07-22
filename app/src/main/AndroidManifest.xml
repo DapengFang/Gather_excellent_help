@@ -82,7 +82,9 @@
         <activity android:name=".ui.activity.RegisterActivity" />
         <activity android:name=".ui.activity.LoginActivity" />
         <activity android:name=".ui.activity.FindPswActivity" />
-        <activity android:name=".ui.activity.TestActivity" />
+        <activity android:name=".ui.activity.TestActivity">
+
+        </activity>
         <activity android:name=".ui.activity.SetActivity" />
         <activity android:name=".ui.activity.PersonInfoActivity" />
         <activity android:name=".ui.activity.TestActivity2" />

@@ -74,7 +74,6 @@ public class WebRecordActivity extends BaseActivity {
         initData();
     }
 
-
     /**
      * 初始化数据
      */
@@ -123,7 +122,7 @@ public class WebRecordActivity extends BaseActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-
+                LogUtil.e(call.toString() + "--" +e.getMessage());
             }
         });
 
@@ -142,9 +141,9 @@ public class WebRecordActivity extends BaseActivity {
                 if(changeUrlBean.getData()!=null && changeUrlBean.getData().size()>0) {
                     click_url = changeUrlBean.getData().get(0).getClick_url();
                     if(click_url!=null && !TextUtils.isEmpty(click_url)) {
-                        AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(click_url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback());
+                        AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(click_url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback(WebRecordActivity.this));
                     }else{
-                        AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback());
+                        AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback(WebRecordActivity.this));
                     }
                 }
                 break;
