@@ -4,6 +4,7 @@
     android:layout_height="@dimen/x45"
     android:background="#ffffff">
     <TextView
+        android:id="@+id/tv_order_top_shop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="苏宁易购官方旗舰店"
@@ -14,6 +15,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/x8"/>
     <TextView
+        android:id="@+id/tv_order_top_statue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="等待买家付款"

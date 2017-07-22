@@ -16,27 +16,16 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.alibaba.baichuan.android.trade.AlibcTrade;
-import com.alibaba.baichuan.android.trade.model.AlibcShowParams;
-import com.alibaba.baichuan.android.trade.page.AlibcPage;
-import com.alibaba.baichuan.trade.biz.core.taoke.AlibcTaokeParams;
-import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
-import com.bumptech.glide.Glide;
 import com.gather_excellent_help.R;
-import com.gather_excellent_help.aliapi.DemoTradeCallback;
-import com.alibaba.baichuan.android.trade.model.OpenType;
 import com.gather_excellent_help.api.HomeData;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.HomeBannerBean;
 import com.gather_excellent_help.bean.HomeGroupBean;
-import com.gather_excellent_help.bean.HomeRushBean;
 import com.gather_excellent_help.bean.HomeRushChangeBean;
 import com.gather_excellent_help.bean.HomeTypeBean;
 import com.gather_excellent_help.bean.HomeWareBean;
 import com.gather_excellent_help.bean.TyepIndexBean;
-import com.gather_excellent_help.ui.activity.TestActivity2;
 import com.gather_excellent_help.ui.activity.WareListActivity;
-import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.widget.CarouselImageView;
 import com.gather_excellent_help.ui.widget.MyGridView;
@@ -47,7 +36,6 @@ import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -445,8 +433,15 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         CarouselImageView.ImageCycleViewListener mAdCycleViewListener = new CarouselImageView.ImageCycleViewListener() {
             @Override
             public void onImageClick(int position, View imageView) {
-                Intent intent = new Intent(context, WebActivity.class);
-                intent.putExtra("url",data.get(position%data.size()).getLink_url());
+                String link_url = data.get(position%data.size()).getLink_url();
+                String goods_id = data.get(position%data.size()).getProductId();
+                String goods_img = Url.IMG_URL + data.get(position%data.size()).getImg_url();
+                String goods_title = data.get(position%data.size()).getTitle();
+                Intent intent = new Intent(context, WebRecordActivity.class);
+                intent.putExtra("url",link_url);
+                intent.putExtra("goods_id",goods_id);
+                intent.putExtra("goods_img",goods_img);
+                intent.putExtra("goods_title",goods_title);
                 context.startActivity(intent);
             }
 

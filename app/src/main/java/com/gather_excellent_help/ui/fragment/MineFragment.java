@@ -232,29 +232,59 @@ public class MineFragment extends BaseFragment {
 
                     break;
                 case R.id.ll_mine_see_allorder:
-                    intent = new Intent(getActivity(), OrderActivity.class);
-                    intent.putExtra("tab_p",0);
-                    startActivity(intent);
+                    if(!Tools.isLogin(getContext())) {
+                        Toast.makeText(getContext(), "请先登录账号！", Toast.LENGTH_SHORT).show();
+                        intent = new Intent(getActivity(),LoginActivity.class);
+                        startActivity(intent);
+                    }else{
+                        intent = new Intent(getActivity(), OrderActivity.class);
+                        intent.putExtra("tab_p",0);
+                        startActivity(intent);
+                    }
                     break;
                 case R.id.ll_mine_see_daifukuan:
-                    intent = new Intent(getActivity(), OrderActivity.class);
-                    intent.putExtra("tab_p",1);
-                    startActivity(intent);
+                    if(!Tools.isLogin(getContext())) {
+                        Toast.makeText(getContext(), "请先登录账号！", Toast.LENGTH_SHORT).show();
+                        intent = new Intent(getActivity(),LoginActivity.class);
+                        startActivity(intent);
+                    }else{
+                        intent = new Intent(getActivity(), OrderActivity.class);
+                        intent.putExtra("tab_p",1);
+                        startActivity(intent);
+                    }
                     break;
                 case R.id.ll_mine_see_yifukuan:
-                    intent = new Intent(getActivity(), OrderActivity.class);
-                    intent.putExtra("tab_p",2);
-                    startActivity(intent);
+                    if(!Tools.isLogin(getContext())) {
+                        Toast.makeText(getContext(), "请先登录账号！", Toast.LENGTH_SHORT).show();
+                        intent = new Intent(getActivity(),LoginActivity.class);
+                        startActivity(intent);
+                    }else{
+                        intent = new Intent(getActivity(), OrderActivity.class);
+                        intent.putExtra("tab_p",2);
+                        startActivity(intent);
+                    }
                     break;
                 case R.id.ll_mine_see_yiwancheng:
-                    intent = new Intent(getActivity(), OrderActivity.class);
-                    intent.putExtra("tab_p",3);
-                    startActivity(intent);
+                    if(!Tools.isLogin(getContext())) {
+                        Toast.makeText(getContext(), "请先登录账号！", Toast.LENGTH_SHORT).show();
+                        intent = new Intent(getActivity(),LoginActivity.class);
+                        startActivity(intent);
+                    }else{
+                        intent = new Intent(getActivity(), OrderActivity.class);
+                        intent.putExtra("tab_p",3);
+                        startActivity(intent);
+                    }
                     break;
                 case R.id.ll_mine_see_shouhou:
-                    intent = new Intent(getActivity(), OrderActivity.class);
-                    intent.putExtra("tab_p",4);
-                    startActivity(intent);
+                    if(!Tools.isLogin(getContext())) {
+                        Toast.makeText(getContext(), "请先登录账号！", Toast.LENGTH_SHORT).show();
+                        intent = new Intent(getActivity(),LoginActivity.class);
+                        startActivity(intent);
+                    }else{
+                        intent = new Intent(getActivity(), OrderActivity.class);
+                        intent.putExtra("tab_p",4);
+                        startActivity(intent);
+                    }
                     break;
             }
         }

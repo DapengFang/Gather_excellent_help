@@ -92,8 +92,10 @@ public class TypeFragment extends BaseFragment {
      */
     @Override
     public void initData() {
-        requestDataRefresh();
-        swipeRefresh.setRefreshing(mIsRequestDataRefresh);
+        if(swipeRefresh!=null) {
+            requestDataRefresh();
+            swipeRefresh.setRefreshing(mIsRequestDataRefresh);
+        }
         netUtil = new NetUtil();
         netUtil2 = new NetUtil();
         tvTopTitleName.setText("商品分类");
@@ -108,7 +110,10 @@ public class TypeFragment extends BaseFragment {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-
+                if(swipeRefresh!=null) {
+                    stopDataRefresh();
+                    swipeRefresh.setRefreshing(mIsRequestDataRefresh);
+                }
             }
         });
         tvTypeSearch.setOnClickListener(new View.OnClickListener() {

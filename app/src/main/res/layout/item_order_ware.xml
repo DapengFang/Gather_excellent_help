@@ -6,6 +6,7 @@
     android:gravity="center_vertical"
     android:background="#11000000">
     <ImageView
+        android:id="@+id/iv_order_ware_img"
         android:layout_width="@dimen/x90"
         android:layout_height="@dimen/x90"
         android:src="@drawable/order_ware"
@@ -18,12 +19,14 @@
         android:paddingTop="@dimen/x5"
         android:padding="@dimen/x5">
         <TextView
+            android:id="@+id/tv_order_ware_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sony/索尼KD-55X900E"
             android:textSize="14sp"
             android:textColor="#99000000"/>
         <TextView
+            android:id="@+id/tv_order_ware_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="颜色分类：银色；套餐类型：官方标配"
@@ -38,6 +41,7 @@
         android:paddingTop="@dimen/x5"
         android:paddingRight="@dimen/x5">
         <TextView
+            android:id="@+id/tv_order_ware_oldprice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="￥9388"
@@ -46,6 +50,7 @@
             android:layout_gravity="right"/>
 
         <TextView
+            android:id="@+id/tv_order_ware_newprice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="￥8399"
@@ -54,6 +59,7 @@
             android:layout_gravity="right"/>
 
         <TextView
+            android:id="@+id/tv_order_ware_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="x1"

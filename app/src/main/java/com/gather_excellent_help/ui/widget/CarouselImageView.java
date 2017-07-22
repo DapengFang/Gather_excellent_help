@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.HomeBannerBean;
+import com.gather_excellent_help.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -273,7 +274,8 @@ public class CarouselImageView extends LinearLayout {
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
 
-            String imageUrl =mAdList.get(position%mAdList.size()).getActivity_img();
+            String imageUrl =Url.IMG_URL + mAdList.get(position%mAdList.size()).getActivity_img();
+            LogUtil.e(imageUrl);
             String img_link = mAdList.get(position % mAdList.size()).getImg_url();
             ImageView imageView;
             if (mImageViewCacheList.isEmpty()) {

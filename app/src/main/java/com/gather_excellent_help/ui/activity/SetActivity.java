@@ -194,7 +194,7 @@ public class SetActivity extends BaseActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("温馨提示")
-                .setMessage("此操作将会删除你的登录保存信息以及个人信息,请慎重操作。")
+                .setMessage("你确定要执行此操作吗？")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -207,7 +207,6 @@ public class SetActivity extends BaseActivity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
                     }
                 })
                 .setNegativeButton("取消", null)

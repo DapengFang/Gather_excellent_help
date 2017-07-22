@@ -23,7 +23,8 @@ public class CacheUtils {
 	public static final String BIND_STATE = "bind_state";
 	//绑定支付宝状态
 	public static final String PAY_STATE = "pay_state";
-
+	//第一次打开app
+	public static final String FIRST_STATE = "first_state";
 	private static final String NAME = "login";
 	public static SharedPreferences sp;
 

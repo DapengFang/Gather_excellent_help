@@ -17,4 +17,5 @@
     <color name="colorFirst">#FF0000</color>
     <color name="colorSecond">#E066FF</color>
     <color name="colorThird">#FFDAB9</color>
+    <color name="transparent">#00000000</color>
 </resources>

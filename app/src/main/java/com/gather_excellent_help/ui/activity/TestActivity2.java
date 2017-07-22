@@ -72,9 +72,7 @@ public class TestActivity2 extends BaseActivity {
         CarouselImageView.ImageCycleViewListener mAdCycleViewListener = new CarouselImageView.ImageCycleViewListener() {
             @Override
             public void onImageClick(int position, View imageView) {
-                   Intent intent = new Intent(TestActivity2.this, WebActivity.class);
-                   intent.putExtra("url",data.get(position).getLink_url());
-                   startActivity(intent);
+
             }
 
             @Override
