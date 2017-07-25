@@ -11,7 +11,7 @@ public class MineBean {
     /**
      * statusCode : 1
      * statusMessage : 查询成功
-     * data : [{"avatar":"https://wwc.alicdn.com/avatar/getAvatar.do?userId=2638987498&width=160&height=160&type=sns","nick_name":"呆萌小方","sex":"","group":"普通会员","mobile":"18514792343","amount":0,"frostAmount":0}]
+     * data : [{"avatar":"https://wwc.alicdn.com/avatar/getAvatar.do?userId=2638987498&width=160&height=160&type=sns","nick_name":"呆萌小方","sex":"","group_id":1,"group":"普通会员","mobile":"18514792343"}]
      */
 
     private int statusCode;
@@ -47,19 +47,17 @@ public class MineBean {
          * avatar : https://wwc.alicdn.com/avatar/getAvatar.do?userId=2638987498&width=160&height=160&type=sns
          * nick_name : 呆萌小方
          * sex :
+         * group_id : 1
          * group : 普通会员
          * mobile : 18514792343
-         * amount : 0
-         * frostAmount : 0
          */
 
         private String avatar;
         private String nick_name;
         private String sex;
+        private int group_id;
         private String group;
         private String mobile;
-        private int amount;
-        private int frostAmount;
 
         public String getAvatar() {
             return avatar;
@@ -85,6 +83,14 @@ public class MineBean {
             this.sex = sex;
         }
 
+        public int getGroup_id() {
+            return group_id;
+        }
+
+        public void setGroup_id(int group_id) {
+            this.group_id = group_id;
+        }
+
         public String getGroup() {
             return group;
         }
@@ -99,22 +105,6 @@ public class MineBean {
 
         public void setMobile(String mobile) {
             this.mobile = mobile;
-        }
-
-        public int getAmount() {
-            return amount;
-        }
-
-        public void setAmount(int amount) {
-            this.amount = amount;
-        }
-
-        public int getFrostAmount() {
-            return frostAmount;
-        }
-
-        public void setFrostAmount(int frostAmount) {
-            this.frostAmount = frostAmount;
         }
     }
 }

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#11000000"
+    tools:context="com.gather_excellent_help.ui.activity.credits.ExtractCreditsActivity">
+
+    <include layout="@layout/top_zhuangai_bar"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x5"
+        android:background="#00000000"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x45"
+        android:text="可提取积分宝：3600.00"
+        android:textSize="14sp"
+        android:textColor="#88000000"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/x10"
+        android:background="#ffffff"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:background="#11000000"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x45"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="#ffffff"
+        android:paddingLeft="@dimen/x10">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="提取数量："
+            android:textColor="#88000000"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:paddingLeft="@dimen/x3"/>
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:background="#11000000"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x45"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#ffffff"
+        android:paddingLeft="@dimen/x10">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="注:最小额度为：1000"
+            android:textSize="12sp"
+            android:textColor="#faa755"/>
+
+        <LinearLayout
+            android:layout_width="@dimen/x80"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="提取明细 >"
+                android:textSize="12sp"
+                android:textColor="#b3424a"
+                android:gravity="center"/>
+            <ImageView
+                android:layout_width="@dimen/x60"
+                android:layout_height="@dimen/x1"
+                android:background="@drawable/extract_detail_shape"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="@dimen/x240"
+        android:layout_height="@dimen/x45"
+        android:text="立即提取"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:background="@drawable/register_confirm_selector"
+        android:layout_marginTop="@dimen/x100"
+        android:layout_gravity="center_horizontal"/>
+
+
+</LinearLayout>

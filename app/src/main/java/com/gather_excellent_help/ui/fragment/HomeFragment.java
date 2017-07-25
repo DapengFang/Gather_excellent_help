@@ -1,6 +1,8 @@
 package com.gather_excellent_help.ui.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +11,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gather_excellent_help.R;
@@ -21,10 +24,12 @@ import com.gather_excellent_help.bean.TyepIndexBean;
 import com.gather_excellent_help.ui.adapter.HomeRushAllAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
+import com.gather_excellent_help.ui.widget.RushDownTimer;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.google.gson.Gson;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +60,31 @@ public class HomeFragment extends BaseFragment {
     private List<HomeWareBean.DataBean> rushData;
     private List<HomeGroupBean.DataBean> groupData;
     private List<TyepIndexBean.DataBean> typeData;
+    private RushDownTimer rushDownTimer; //倒计时处理类
+    public static final int TIME_DOWN = 1; //倒计时显示的标识
+    private long time;//倒计时总时长
+    private boolean isFirst;//是否有抢购
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case TIME_DOWN:
+                    time-=1000;
+                    rushDownTimer.calcuteDownTimer(time);
+                    down_timer = "down_timer";
+                    homeRushAllAdapter.setRushDownTimer(rushDownTimer);
+                    if(time<=0) {
+                        handler.removeMessages(TIME_DOWN);
+                        return;
+                    }
+                    handler.sendEmptyMessageDelayed(TIME_DOWN,1000);
+                    break;
+            }
+        }
+    };
+    private WeakReference<Handler> wef =new WeakReference<Handler>(handler);
+    private String down_timer = "";
 
     @Override
     public View initView() {
@@ -81,6 +111,7 @@ public class HomeFragment extends BaseFragment {
             public void getFailResponse(Call call, Exception e) {
                 stopDataRefresh();
                 setRefresh(mIsRequestDataRefresh);
+                Toast.makeText(getContext(), "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
             }
         });
         netUtils2.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
@@ -123,7 +154,14 @@ public class HomeFragment extends BaseFragment {
                     stopDataRefresh();
                     setRefresh(mIsRequestDataRefresh);
                 }
-                loadRecyclerData(rushData,groupData,typeData);
+                isFirst = true;
+                if(isFirst) {
+                    handler.removeMessages(TIME_DOWN);
+                    time = 60000;
+                    rushDownTimer = new RushDownTimer(getContext());
+                    handler.sendEmptyMessage(TIME_DOWN);
+                    loadRecyclerData(rushData,groupData,typeData,rushDownTimer);
+                }
                 break;
             case 0:
                 Toast.makeText(getContext(), tyepIndexBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -167,10 +205,10 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    private void loadRecyclerData(List<HomeWareBean.DataBean> homeChangeDatas, List<HomeGroupBean.DataBean> groupData,List<TyepIndexBean.DataBean> typeData) {
+    private void loadRecyclerData(List<HomeWareBean.DataBean> homeChangeDatas, List<HomeGroupBean.DataBean> groupData, List<TyepIndexBean.DataBean> typeData, RushDownTimer rushDownTimer) {
         FullyLinearLayoutManager layoutManager = new FullyLinearLayoutManager(getContext());
         rcvHomeFragment.setLayoutManager(layoutManager);
-        homeRushAllAdapter = new HomeRushAllAdapter(getContext(),homeChangeDatas,getActivity(),groupData,typeData);
+        homeRushAllAdapter = new HomeRushAllAdapter(getContext(),homeChangeDatas,getActivity(),groupData,typeData,rushDownTimer);
         rcvHomeFragment.setAdapter(homeRushAllAdapter);
     }
 
@@ -188,6 +226,8 @@ public class HomeFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        handler.removeMessages(TIME_DOWN);
+        wef.clear();
     }
 
     private void setupSwipeRefresh(View view){

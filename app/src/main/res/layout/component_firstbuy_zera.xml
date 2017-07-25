@@ -41,6 +41,7 @@
                 android:gravity="center_vertical"
                 android:padding="@dimen/x3">
                 <TextView
+                    android:id="@+id/tv_rush_hour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/x2"
@@ -56,6 +57,7 @@
                     android:textColor="#66000000"
                     android:layout_marginLeft="@dimen/x2"/>
                 <TextView
+                    android:id="@+id/tv_rush_minute"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/x2"
@@ -72,6 +74,7 @@
                     android:textColor="#66000000"
                     android:layout_marginLeft="@dimen/x2"/>
                 <TextView
+                    android:id="@+id/tv_rush_second"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/x2"

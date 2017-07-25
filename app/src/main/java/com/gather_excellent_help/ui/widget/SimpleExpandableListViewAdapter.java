@@ -14,6 +14,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.TypeNavigatorBean;
@@ -81,7 +82,7 @@ public class SimpleExpandableListViewAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 
-        return getGenericView(colleges.get(groupPosition).getTitle(),isExpanded);
+        return getGenericView(colleges.get(groupPosition).getTitle(),isExpanded,groupPosition);
     }
 
     @Override
@@ -98,7 +99,7 @@ public class SimpleExpandableListViewAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    private View getGenericView(String string, boolean isExpanded) {
+    private View getGenericView(String string, boolean isExpanded, int groupPosition) {
 //        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(
 //                ViewGroup.LayoutParams.MATCH_PARENT,
 //                ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -143,13 +144,13 @@ public class SimpleExpandableListViewAdapter extends BaseExpandableListAdapter {
         CustomExpandableListView view = new CustomExpandableListView(activity);
         view.setDividerHeight(0);
         // 加载班级的适配器
-        ClassesExpandableListViewAdapter adapter = new ClassesExpandableListViewAdapter(college.getSubList(),activity);
-        adapter.setOnSecondListClickListener(new ClassesExpandableListViewAdapter.OnSecondListClickListener() {
+        view.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
-            public void onSecondClick(int groupPosition) {
-                onExpandableClickListener.onSecondItemClick(position,groupPosition);
+            public void onGroupExpand(int i) {
+                onExpandableClickListener.onSecondItemClick(position,i);
             }
         });
+        ClassesExpandableListViewAdapter adapter = new ClassesExpandableListViewAdapter(college.getSubList(),activity);
         adapter.setOnThirdListClickListener(new ClassesExpandableListViewAdapter.OnThirdListClickListener() {
             @Override
             public void onThirdClick(int groupPosition, int childPosition) {

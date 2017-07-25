@@ -133,13 +133,13 @@ public class ClassesExpandableListViewAdapter extends BaseExpandableListAdapter 
         int childrenCount = getChildrenCount(groupPosition);
         if(childrenCount == 0) {
             arrawNavigator.setVisibility(View.GONE);
-            inflate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //二级的点击事件
-                    onSecondListClickListener.onSecondClick(groupPosition);
-                }
-            });
+//            inflate.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    //二级的点击事件
+//                    onSecondListClickListener.onSecondClick(groupPosition);
+//                }
+//            });
         }else{
             arrawSetDirection(isExpanded, arrawNavigator);
         }

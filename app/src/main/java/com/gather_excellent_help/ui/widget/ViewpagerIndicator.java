@@ -33,6 +33,8 @@ public class ViewpagerIndicator  extends LinearLayout{
     private static final float RADIO_TRIANGLE_WIDTH = 3/4f;
     private int mMoveTrantCount;//每次点击移动的距离
 
+    private int count = 5;
+
 
     public ViewpagerIndicator(Context context) {
         this(context,null);
@@ -59,11 +61,11 @@ public class ViewpagerIndicator  extends LinearLayout{
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mTrigleWidth = (int) (w/5 * RADIO_TRIANGLE_WIDTH);
+        mTrigleWidth = (int) (w/count * RADIO_TRIANGLE_WIDTH);
 
-        mMoveTriglePosition = w/10 - mTrigleWidth/2;
+        mMoveTriglePosition = w/(2*count) - mTrigleWidth/2;
 
-        mMoveTrantCount = w/5;
+        mMoveTrantCount = w/count;
 
         initTrigle();
     }
@@ -106,4 +108,7 @@ public class ViewpagerIndicator  extends LinearLayout{
         invalidate();
     }
 
+    public void setCount(int count) {
+        this.count = count;
+    }
 }

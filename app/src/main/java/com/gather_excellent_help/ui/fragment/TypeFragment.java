@@ -10,10 +10,12 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +35,10 @@ import com.gather_excellent_help.ui.adapter.TypeWareAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.Classes;
 import com.gather_excellent_help.ui.widget.College;
+import com.gather_excellent_help.ui.widget.CustomExpandableListView;
+import com.gather_excellent_help.ui.widget.MyExpandableListVeiw;
 import com.gather_excellent_help.ui.widget.SimpleExpandableListViewAdapter;
+import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
@@ -113,6 +118,7 @@ public class TypeFragment extends BaseFragment {
                 if(swipeRefresh!=null) {
                     stopDataRefresh();
                     swipeRefresh.setRefreshing(mIsRequestDataRefresh);
+                    Toast.makeText(getContext(), "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -208,6 +214,18 @@ public class TypeFragment extends BaseFragment {
                 // 设置适配器
                 cusListNavigator.setAdapter(adapter);
                 cusListNavigator.setGroupIndicator(null);
+
+                cusListNavigator.setOnScrollListener(new MyOnScrollListener());
+                cusListNavigator.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+                    @Override
+                    public void onGroupExpand(int i) {
+                        TypeNavigatorBean.DataBean dataBean = data.get(i);
+                        int id = dataBean.getId();
+                        Map<String,String> map = new HashMap<>();
+                        map.put("id",String.valueOf(id));
+                        netUtil2.okHttp2Server2(ware_url,map);
+                    }
+                });
                 adapter.setOnExpandableClickListener(new SimpleExpandableListViewAdapter.OnExpandableClickListener() {
                     @Override
                     public void onSecondItemClick(int position, int groupPisition) {
@@ -303,5 +321,25 @@ public class TypeFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    public class MyOnScrollListener implements AbsListView.OnScrollListener{
+
+        @Override
+        public void onScrollStateChanged(AbsListView absListView, int i) {
+            //判断ListView是否滑动到第一个Item的顶部
+            if (swipeRefresh!=null&&cusListNavigator.getChildCount() > 0 && cusListNavigator.getFirstVisiblePosition() == 0
+                    && cusListNavigator.getChildAt(0).getTop() >= cusListNavigator.getPaddingTop()) {
+                //解决滑动冲突，当滑动到第一个item，下拉刷新才起作用
+                swipeRefresh.setEnabled(true);
+            } else {
+                swipeRefresh.setEnabled(false);
+            }
+        }
+
+        @Override
+        public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+        }
     }
 }

@@ -140,6 +140,9 @@ public class SetActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 用来处理监听事件的类
+     */
     public class MyOnClickListener implements View.OnClickListener {
 
         @Override
@@ -285,6 +288,9 @@ public class SetActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 获取用户的登录标识
+     */
     private void getUserLoginId() {
         user_id = CacheUtils.getString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
     }
@@ -323,7 +329,6 @@ public class SetActivity extends BaseActivity {
     private boolean isPay() {
         return CacheUtils.getBoolean(SetActivity.this, CacheUtils.PAY_STATE, false);
     }
-
 
     /**
      * 设置用户支付宝账号

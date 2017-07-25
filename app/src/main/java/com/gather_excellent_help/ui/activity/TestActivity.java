@@ -1,13 +1,18 @@
 package com.gather_excellent_help.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
@@ -17,12 +22,16 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.ui.widget.RushDownTimer;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
+import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,9 +40,17 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class TestActivity extends BaseActivity {
 
+    private static final int TIME_DOWN = 1;
     @Bind(R.id.btn_bind_taobao)
     Button btnBindTaobao;
     @Bind(R.id.activity_test)
@@ -50,6 +67,8 @@ public class TestActivity extends BaseActivity {
     Button btnHome;
     @Bind(R.id.btn_order)
     Button btnOrder;
+    @Bind(R.id.btn_upload)
+    Button btnUpload;
 
     private NetUtil netUtils;
     private NetUtil netUtils2;
@@ -61,6 +80,28 @@ public class TestActivity extends BaseActivity {
     private String nick;
     private String user_id;
     private String bind_order =Url.BASE_URL + "MatchOrder.aspx";
+    private long time = 60000;
+    private String upload_url = Url.BASE_URL + "SellerShow.aspx";
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case TIME_DOWN :
+                    time-=1000;
+                    rushDownTimer.calcuteDownTimer(time);
+                    if(time<=0) {
+                        handler.removeMessages(TIME_DOWN);
+                        return;
+                    }
+                    handler.sendEmptyMessageDelayed(TIME_DOWN,1000);
+                    break;
+            }
+        }
+    };
+    private WeakReference<Handler> wef = new WeakReference<Handler>(handler);
+    private RushDownTimer rushDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +140,7 @@ public class TestActivity extends BaseActivity {
 
 
     private void initData() {
+        downTimer();
         netUtils = new NetUtil();
         btnBindTaobao.setOnClickListener(new MyOnClickListener());
         btnUnbindTaobao.setOnClickListener(new MyOnClickListener());
@@ -107,6 +149,7 @@ public class TestActivity extends BaseActivity {
         btnMine.setOnClickListener(new MyOnClickListener());
         btnHome.setOnClickListener(new MyOnClickListener());
         btnOrder.setOnClickListener(new MyOnClickListener());
+        btnUpload.setOnClickListener(new MyOnClickListener());
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -119,6 +162,12 @@ public class TestActivity extends BaseActivity {
                 LogUtil.e(call.toString() + "," + e.getMessage());
             }
         });
+
+    }
+
+    private void downTimer() {
+        rushDownTimer = new RushDownTimer(this);
+        handler.sendEmptyMessage(TIME_DOWN);
     }
 
     /**
@@ -262,8 +311,39 @@ public class TestActivity extends BaseActivity {
                     intent = new Intent(TestActivity.this, OrderActivity.class);
                     startActivity(intent);
                     break;
+                case R.id.btn_upload:
+                    uploadImg();
+                    break;
             }
         }
+    }
+
+    //参数类型
+    private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+    //创建OkHttpClient实例
+    private final OkHttpClient client = new OkHttpClient();
+
+    /**
+     * 上传图片到服务器
+     */
+    private void uploadImg() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.weixin_orange_icon);
+        String str = Tools.BitmapToBase64(bitmap);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("files",str);
+        NetUtil netUtil4 = new NetUtil();
+        netUtil4.okHttp2Server2(upload_url,map);
+        netUtil4.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
+            @Override
+            public void getSuccessResponse(String response) {
+                LogUtil.e(response);
+            }
+
+            @Override
+            public void getFailResponse(Call call, Exception e) {
+
+            }
+        });
     }
 
 //    public void onEventMainThread(AnyEvent event) {
@@ -277,5 +357,9 @@ public class TestActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
        // EventBus.getDefault().unregister(this);
+        if(handler!=null) {
+            handler.removeMessages(TIME_DOWN);
+        }
+        wef.clear();
     }
 }

@@ -80,7 +80,7 @@ public class OrderActivity extends BaseActivity {
                     TextView tv = (TextView) vid_order_manager.getChildAt(tab_p);
                     tv.setTextColor(Color.RED);
                 }
-            },50);
+            },20);
             if(tab_p==0) {
                   curr_statue = 5;
             }else {
@@ -172,6 +172,7 @@ public class OrderActivity extends BaseActivity {
      * 顶部指示条控制ViewPager
      */
     private void vidacatorControll() {
+        vid_order_manager.setCount(5);
         final int childCount = vid_order_manager.getChildCount();
         for (int i=0;i<childCount;i++){
             View child = vid_order_manager.getChildAt(i);

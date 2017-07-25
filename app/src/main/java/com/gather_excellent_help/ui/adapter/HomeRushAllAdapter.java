@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -29,6 +30,7 @@ import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.widget.CarouselImageView;
 import com.gather_excellent_help.ui.widget.MyGridView;
+import com.gather_excellent_help.ui.widget.RushDownTimer;
 import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -69,18 +71,31 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<TyepIndexBean.DataBean> typeData;
     private int extraCount = 4;
 
+    private RushDownTimer rushDownTimer;
+    private String hour;
+    private String minute;
+    private String second;
+    private TextView tvRushHour;
+    private TextView tvRushMinute;
+    private TextView tvRushSecond;
+    private boolean isFirst = true;
 
-    public HomeRushAllAdapter(Context context, List<HomeWareBean.DataBean> data , Activity activity,List<HomeGroupBean.DataBean> groupData,List<TyepIndexBean.DataBean> typeData) {
+
+    public HomeRushAllAdapter(Context context, List<HomeWareBean.DataBean> data, Activity activity, List<HomeGroupBean.DataBean> groupData, List<TyepIndexBean.DataBean> typeData,
+                              RushDownTimer rushDownTimer) {
         this.context = context;
         this.activity = activity;
         this.data = data;
         this.groupData = groupData;
         this.typeData = typeData;
+        this.rushDownTimer = rushDownTimer;
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
     @Override
     public int getItemViewType(int position) {
+        if(isFirst) {
+            extraCount =4;
             if(position == 0) {
                 return TYPE_TOP;
             }else if(position == 1) {
@@ -92,6 +107,19 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }  else {
                 return position;
             }
+        }else{
+            extraCount = 3;
+            if(position == 0) {
+                return TYPE_TOP;
+            }else if(position == 1) {
+                return TYPE_GRID;
+            }else if(position == 2) {
+                return TYPE_GROUP;
+            }  else {
+                return position;
+            }
+        }
+
 
 //        else if (position + 1 == getItemCount()) {
 //            return TYPE_FOOTER;
@@ -127,6 +155,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
             footerViewHolder.bindItem();
         }else if(holder instanceof TypeViewHolder) {
+
             TypeViewHolder typeViewHolder = (TypeViewHolder) holder;
             GridView gvHomeType = typeViewHolder.gvHomeType;
             loadTypeData(gvHomeType);
@@ -252,6 +281,13 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             TextView tvTitle = firstBuyViewHoldre.tvTitle;
             tvTitle.setText("抢购区");
             tvTitle.setTextColor(Color.parseColor("#32C300"));
+            firstBuyViewHoldre.tvRushHour.setText(rushDownTimer.getHour());
+            firstBuyViewHoldre.tvRushMinute.setText(rushDownTimer.getMinute());
+            firstBuyViewHoldre.tvRushSecond.setText(rushDownTimer.getSecond());
+            LogUtil.e(hour +"--"+ minute + "--" + second);
+            tvRushHour = firstBuyViewHoldre.tvRushHour;
+            tvRushMinute = firstBuyViewHoldre.tvRushMinute;
+            tvRushSecond = firstBuyViewHoldre.tvRushSecond;
         }
     }
 
@@ -259,7 +295,6 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public int getItemCount() {
         return data.size()+extraCount;
     }
-
 
     /**
      * footer view
@@ -319,6 +354,12 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @Bind(R.id.tv_item_home_title)
         TextView tvTitle;
+        @Bind(R.id.tv_rush_hour)
+        TextView tvRushHour;
+        @Bind(R.id.tv_rush_minute)
+        TextView tvRushMinute;
+        @Bind(R.id.tv_rush_second)
+        TextView tvRushSecond;
         public FirstBuyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -467,4 +508,13 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         HomeTypeAdapter homeTypeAdapter = new HomeTypeAdapter(context, lists);
         gvHomeType.setAdapter(homeTypeAdapter);
     }
+
+    public void setRushDownTimer(RushDownTimer rushDownTimer) {
+        this.rushDownTimer = rushDownTimer;
+        tvRushHour.setText(rushDownTimer.getHour());
+        tvRushMinute.setText(rushDownTimer.getMinute());
+        tvRushSecond.setText(rushDownTimer.getSecond());
+    }
+
+
 }

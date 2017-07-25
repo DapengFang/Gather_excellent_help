@@ -78,11 +78,11 @@
         <activity android:name=".ui.base.BaseFragmentActivity" />
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.activity.RegisterActivity" />
         <activity android:name=".ui.activity.LoginActivity" />
         <activity android:name=".ui.activity.FindPswActivity" />
-        <activity android:name=".ui.activity.TestActivity">
+        <activity android:name=".ui.activity.TestActivity" >
 
         </activity>
         <activity android:name=".ui.activity.SetActivity" />
@@ -91,9 +91,7 @@
         <activity android:name=".ui.activity.WareListActivity" />
         <activity android:name=".ui.activity.OrderActivity" />
         <activity android:name=".ui.activity.WebRecordActivity" />
-        <activity android:name=".GuideActivity">
-
-        </activity>
+        <activity android:name=".GuideActivity" />
         <activity android:name=".ui.base.BaseFullScreenActivity" />
         <activity android:name=".SplashActivity">
             <intent-filter>
@@ -102,6 +100,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.activity.credits.ExtractCreditsActivity" />
+        <activity android:name=".ui.activity.credits.AccountDetailAvtivity" />
+        <activity android:name=".ui.activity.credits.InviteFriendsActivity" />
+
+        <receiver
+            android:name=".ui.receiver.AppRegister"
+            android:permission="com.tencent.mm.plugin.permission.SEND">
+            <intent-filter>
+                <action android:name="com.tencent.mm.plugin.openapi.Intent.ACTION_REFRESH_WXAPP" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".ui.activity.credits.ShopDetailActivity" />
+        <activity android:name=".ui.activity.wards.SeeWardsActivity" />
+        <activity android:name=".ui.activity.wards.WardsStatisticsActivity"></activity>
     </application>
 
 </manifest>
