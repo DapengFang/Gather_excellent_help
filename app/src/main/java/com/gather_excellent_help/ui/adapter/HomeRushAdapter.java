@@ -13,6 +13,9 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.HomeRushChangeBean;
 import com.gather_excellent_help.bean.HomeTypeBean;
 import com.gather_excellent_help.bean.HomeWareBean;
+import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.LogUtil;
+import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 
 import java.util.ArrayList;
@@ -60,19 +63,36 @@ public class HomeRushAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.home_rush_photo = (ImageView) convertView.findViewById(R.id.iv_rush_pic);
             holder.home_rush_name = (TextView) convertView.findViewById(R.id.tv_rush_title);
-            holder.home_rush_price = (TextView) convertView.findViewById(R.id.tv_rush_price);
-            holder.home_fanli_price = (TextView) convertView.findViewById(R.id.tv_fanli_price);
-            holder.home_sell_price = (TextView) convertView.findViewById(R.id.tv_sell_price);
+            holder.home_rush_sale = (TextView) convertView.findViewById(R.id.tv_rush_ware_sale);
+            holder.home_rush_coast = (TextView) convertView.findViewById(R.id.tv_rush_ware_coast);
+            holder.home_rush_aprice = (TextView) convertView.findViewById(R.id.tv_rush_ware_aprice);
+            holder.home_rush_coupons = (TextView) convertView.findViewById(R.id.tv_rush_ware_coupons);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         HomeWareBean.DataBean.ItemBean itemBean = datas.get(position);
-        String newTitle = itemBean.getTitle().substring(0, 16) + "...";
+        String newTitle = itemBean.getTitle().substring(0, 10) + "...";
         holder.home_rush_name.setText(newTitle);
-        holder.home_rush_price.setText("页面价:￥"+itemBean.getMarket_price());
-        holder.home_fanli_price.setText("聚优帮返:￥"+(itemBean.getMarket_price() - itemBean.getSell_price()));
-        holder.home_sell_price.setText("到手价:￥"+itemBean.getSell_price());
+        holder.home_rush_sale.setText("赚:￥"+(itemBean.getMarket_price() - itemBean.getSell_price()));
+        holder.home_rush_coast.setText("成本:￥"+itemBean.getMarket_price());
+        Tools.setPartTextColor(holder.home_rush_aprice,"活动价:￥"+itemBean.getSell_price(),":");
+        holder.home_rush_coupons.setText("领券立减"+itemBean.getCouponsPrice());
+        int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
+        if(group_id==4){
+            boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
+            if(toggleShow) {
+                holder.home_rush_sale.setVisibility(View.GONE);
+                holder.home_rush_coast.setVisibility(View.GONE);
+            }else{
+                holder.home_rush_sale.setVisibility(View.VISIBLE);
+                holder.home_rush_coast.setVisibility(View.VISIBLE);
+            }
+        }else{
+                holder.home_rush_sale.setVisibility(View.GONE);
+                holder.home_rush_coast.setVisibility(View.GONE);
+        }
+        holder.home_rush_coupons.setVisibility(View.GONE);
         if(itemBean.getImg_url()!=null) {
             mImageLoader.loadImage(itemBean.getImg_url(),holder.home_rush_photo,true);
         }
@@ -82,8 +102,9 @@ public class HomeRushAdapter extends BaseAdapter {
     class ViewHolder {
         ImageView home_rush_photo;        //商品图片
         TextView home_rush_name;            //商品名称
-        TextView home_rush_price;            //商品价格
-        TextView home_sell_price;            //优惠价格
-        TextView home_fanli_price;            //聚优帮返利
+        TextView home_rush_sale;            //聚优帮赚
+        TextView home_rush_coast;            //聚优帮成本
+        TextView home_rush_aprice;            //聚优帮活动价
+        TextView home_rush_coupons;           //聚优帮优惠券
     }
 }

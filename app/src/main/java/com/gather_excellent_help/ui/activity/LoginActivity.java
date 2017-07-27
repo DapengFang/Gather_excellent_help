@@ -3,6 +3,7 @@ package com.gather_excellent_help.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -115,11 +116,16 @@ public class LoginActivity extends Activity {
     private void getUserInputInfo() {
         user = etLoginUser.getText().toString().trim();
         password = etLoginPsw.getText().toString().trim();
-        password = password+"@@11fe468";
-        password = EncryptUtil.getMd5Value(password);
-        map= new HashMap<>();
-        map.put("UserName",user);
-        map.put("Password",password);
+        if(TextUtils.isEmpty(user) || TextUtils.isEmpty(password)) {
+            Toast.makeText(LoginActivity.this, "用户名和密码不能为空！", Toast.LENGTH_SHORT).show();
+        }else{
+            password = password+"@@11fe468";
+            password = EncryptUtil.getMd5Value(password);
+            map= new HashMap<>();
+            map.put("UserName",user);
+            map.put("Password",password);
+            netUtils.okHttp2Server2(url,map);
+        }
     }
 
     public class MyOnClickListener implements View.OnClickListener{
@@ -130,7 +136,6 @@ public class LoginActivity extends Activity {
             switch (view.getId()) {
                 case R.id.tv_login :
                     getUserInputInfo();
-                    netUtils.okHttp2Server2(url,map);
                     break;
                 case R.id.tv_register :
                     intent = new Intent(LoginActivity.this, RegisterActivity.class);

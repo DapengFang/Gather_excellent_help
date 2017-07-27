@@ -13,6 +13,7 @@
         android:layout_height="@dimen/x5"
         android:background="#00000000"/>
     <TextView
+        android:id="@+id/tv_exteact_account"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x45"
         android:text="可提取积分宝：3600.00"
@@ -38,8 +39,13 @@
             android:text="提取数量："
             android:textColor="#88000000"/>
         <EditText
+            android:id="@+id/et_extract_cash"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="请输入提取数量"
+            android:textSize="12sp"
+            android:inputType="number"
+            android:textColor="#99000000"
             android:background="@null"
             android:paddingLeft="@dimen/x3"/>
 
@@ -64,6 +70,7 @@
             android:textColor="#faa755"/>
 
         <LinearLayout
+            android:id="@+id/ll_extract_rule"
             android:layout_width="@dimen/x80"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -84,6 +91,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tv_extract_credits_commit"
         android:layout_width="@dimen/x240"
         android:layout_height="@dimen/x45"
         android:text="立即提取"

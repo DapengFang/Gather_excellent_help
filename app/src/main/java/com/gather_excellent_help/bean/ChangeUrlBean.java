@@ -68,4 +68,13 @@ public class ChangeUrlBean {
             this.num_iid = num_iid;
         }
     }
+
+    @Override
+    public String toString() {
+        return "ChangeUrlBean{" +
+                "statusCode=" + statusCode +
+                ", statusMessage='" + statusMessage + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

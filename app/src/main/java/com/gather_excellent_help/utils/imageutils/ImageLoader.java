@@ -11,10 +11,13 @@ import android.util.Log;
 import android.util.LruCache;
 import android.widget.ImageView;
 
+import com.gather_excellent_help.utils.LogUtil;
+
 import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -175,12 +178,19 @@ public class ImageLoader {
              }
          };
         }
-
         Bitmap bm = getBitmapFromLruCache(path);
+        bm = null;
         if(bm != null) {
             refreashBitmap(path,imageView,bm);
         }else{
            addTask(buildTask(path,imageView,isFromNet));
+        }
+
+    }
+
+    public void clearBitmapLruCache(List<String> paths){
+        for (int i=0;i<paths.size();i++){
+            mLrucache.remove(paths.get(i));
         }
 
     }
@@ -207,6 +217,8 @@ public class ImageLoader {
     {
         return mLrucache.get(key);
     }
+
+
 
     private class ImgBeanHolder
     {
@@ -261,6 +273,7 @@ public class ImageLoader {
         return sb.toString();
 
     }
+
 
     /**
      * 将图片加入LruCache
@@ -334,8 +347,7 @@ public class ImageLoader {
             public void run()
             {
                 Bitmap bm = null;
-                if (isFromNet)
-                {
+                if (isFromNet) {
                     File file = getDiskCacheDir(imageView.getContext(),
                             md5(path));
                     if (file.exists())// 如果在缓存文件中发现
@@ -365,6 +377,7 @@ public class ImageLoader {
                                     imageView);
                         }
                     }
+
                 } else
                 {
                     bm = loadImageFromLocal(path, imageView);

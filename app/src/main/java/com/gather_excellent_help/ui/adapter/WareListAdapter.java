@@ -63,7 +63,7 @@ public class WareListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        String sTitle = dataBean.getTitle().substring(0, 16) + "...";
+        String sTitle = dataBean.getTitle().substring(0, 12) + "...";
         holder.home_type_name.setText(sTitle);
         mImageLoader.loadImage(dataBean.getImg_url(),holder.home_type_photo,true);
         holder.tv_home_type_price.setText("页面价："+dataBean.getMarket_price());

@@ -8,6 +8,7 @@ import com.zhy.http.okhttp.builder.OkHttpRequestBuilder;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.File;
 import java.util.Map;
 
 import okhttp3.Call;
@@ -33,6 +34,30 @@ public class NetUtil {
         PostFormBuilder builder = OkHttpUtils.post().url(url);
         if(map!=null) {
             builder = addParams2Builder(builder, map);
+        }
+        builder.build()
+                .execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                onServerResponseListener.getFailResponse(call,e);
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                onServerResponseListener.getSuccessResponse(response);
+            }
+        });
+    }
+    /**
+     * 联网请求服务器（post）
+     * 上传文件
+     * @return 参数对象
+     */
+    public void okHttp2Server3(String url, Map<String,String> map,File file){
+        PostFormBuilder builder = OkHttpUtils.post().url(url);
+        if(map!=null) {
+            builder = addParams2Builder(builder, map);
+            builder.addFile("picture","user_shop.png",file);
         }
         builder.build()
                 .execute(new StringCallback() {

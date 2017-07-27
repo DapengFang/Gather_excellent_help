@@ -10,7 +10,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/x220"
+            android:layout_height="@dimen/x180"
             android:background="#eeff0000">
 
             <com.gather_excellent_help.ui.widget.CircularImage
@@ -211,10 +211,191 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/x9"
     android:background="#efefef" />
+
+        <LinearLayout
+            android:id="@+id/ll_mine_taobao_order"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x45"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#ffffff"
+            android:visibility="visible">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/taobao_order_icon"
+                android:layout_marginLeft="@dimen/x10"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="我的淘宝订单"
+                android:textSize="12sp"
+                android:textColor="#55000000"
+                android:layout_marginLeft="@dimen/x3"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查看"
+                android:textSize="12sp"
+                android:textColor="#55000000"
+                android:layout_marginRight="@dimen/x7"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/right_jiantou"
+                android:layout_marginRight="@dimen/x10"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:background="#efefef" />
+        <LinearLayout
+            android:id="@+id/ll_mine_suning_order"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x45"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#ffffff"
+            android:visibility="visible">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/suning_order_icon"
+                android:layout_marginLeft="@dimen/x10"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="我的苏宁订单"
+                android:textSize="12sp"
+                android:textColor="#55000000"
+                android:layout_marginLeft="@dimen/x3"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查看"
+                android:textSize="12sp"
+                android:textColor="#55000000"
+                android:layout_marginRight="@dimen/x7"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/right_jiantou"
+                android:layout_marginRight="@dimen/x10"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:background="#efefef" />
+        <LinearLayout
+            android:id="@+id/ll_mine_juyoubang_order"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x45"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#ffffff"
+            android:visibility="visible">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/juyoubang_order_icon"
+                android:layout_marginLeft="@dimen/x10"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="我的聚优帮订单"
+                android:textSize="12sp"
+                android:textColor="#55000000"
+                android:layout_marginLeft="@dimen/x3"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查看"
+                android:textSize="12sp"
+                android:textColor="#55000000"
+                android:layout_marginRight="@dimen/x7"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/right_jiantou"
+                android:layout_marginRight="@dimen/x10"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:background="#efefef" />
+        <LinearLayout
+            android:id="@+id/ll_mine_zhuan_order"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x45"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#ffffff"
+            android:visibility="visible">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/zhuan_order_icon"
+                android:layout_marginLeft="@dimen/x10"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="我的推广赚订单"
+                android:textSize="12sp"
+                android:textColor="#55000000"
+                android:layout_marginLeft="@dimen/x3"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查看"
+                android:textSize="12sp"
+                android:textColor="#55000000"
+                android:layout_marginRight="@dimen/x7"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/right_jiantou"
+                android:layout_marginRight="@dimen/x10"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:background="#efefef" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/x45"
-            android:background="#fff">
+            android:background="#ffffff">
+            <com.gather_excellent_help.ui.widget.MyToggleButton
+                android:id="@+id/tbn_mine_control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/x10"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="推广赚显示开关"
+                android:textSize="12sp"
+                android:textColor="#55000000"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/tbn_mine_control"
+                android:layout_marginRight="@dimen/x10"/>
+
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:background="#11000000"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x45"
+            android:background="#fff"
+            android:visibility="gone">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -256,7 +437,8 @@
             android:layout_alignParentBottom="true"
             android:background="#fff"
             android:orientation="horizontal"
-            android:padding="@dimen/x5">
+            android:padding="@dimen/x5"
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/ll_mine_see_daifukuan"

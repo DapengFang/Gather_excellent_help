@@ -1,10 +1,8 @@
 package com.gather_excellent_help.ui.activity.credits;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -13,35 +11,43 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.InputFilter;
-import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
+import com.gather_excellent_help.bean.CodeStatueBean;
+import com.gather_excellent_help.bean.ShopDetailBean;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.EditTextPopupwindow;
+import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.DataCleanManager;
 import com.gather_excellent_help.utils.LogUtil;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.Callback;
+import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
+import com.gather_excellent_help.utils.imageutils.ImageLoader;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import okhttp3.Call;
-import okhttp3.Response;
 
+/**
+ *
+ */
 public class ShopDetailActivity extends BaseActivity {
 
     @Bind(R.id.rl_exit)
@@ -54,6 +60,27 @@ public class ShopDetailActivity extends BaseActivity {
     TextView tvShopSelector;
     @Bind(R.id.iv_shop_picture)
     ImageView ivShopPicture;
+    @Bind(R.id.et_shop_detail_tel)
+    EditText etShopDetailTel;
+    @Bind(R.id.et_shop_detail_yewu)
+    EditText etShopDetailYewu;
+    //商家信息展示
+    private String see_shop_url = Url.BASE_URL + "SellerShow.aspx";
+    //商家信息修改
+    private String update_shop_url = Url.BASE_URL + "UpdateSeller.aspx";
+
+    private String seller_id;//商家ID
+    private String name;//店铺名字
+    private String telephone = "";//固定电话
+    private String address = "";//详细地址
+    private String info = "";//详细介绍
+
+    private NetUtil netUtil;
+    private Map<String, String> map;
+    private ImageLoader mImageLoader;
+
+    private int which = 0;//区分展示还是修改
+
 
     /***
      * 使用照相机拍照获取图片
@@ -82,7 +109,7 @@ public class ShopDetailActivity extends BaseActivity {
     /**
      * 获取到的图片路径
      */
-    private String picPath;
+    private String picPath = "";
 
 
     /***
@@ -102,6 +129,49 @@ public class ShopDetailActivity extends BaseActivity {
      * 初始化数据
      */
     public void initData() {
+        netUtil = new NetUtil();
+        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        which = 0;
+        String loginId = Tools.getUserLogin(this);
+        map = new HashMap<>();
+        map.put("seller_id", loginId);
+        netUtil.okHttp2Server2(see_shop_url, map);
+        netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
+            @Override
+            public void getSuccessResponse(String response) {
+                LogUtil.e(response);
+                CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
+                int statusCode = codeStatueBean.getStatusCode();
+                switch (statusCode) {
+                    case 1:
+                        if (which == 0) {
+                            ShopDetailBean shopDetailBean = new Gson().fromJson(response, ShopDetailBean.class);
+                            List<ShopDetailBean.DataBean> data = shopDetailBean.getData();
+                            if(data.size()>0) {
+                                ShopDetailBean.DataBean dataBean = shopDetailBean.getData().get(0);
+                                etShopDetailTel.setText(dataBean.getTelephone());
+                                etShopDetailYewu.setText(dataBean.getName());
+                                tvShopDetailIntroduction.setText(dataBean.getInfo());
+                                tvShopDetailAddress.setText(dataBean.getAddress());
+                                mImageLoader.loadImage(Url.IMG_URL + dataBean.getStore_url(),ivShopPicture,true);
+                            }
+                        }else{
+                             Toast.makeText(ShopDetailActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                             which = 0;
+                             initData();
+                        }
+                        break;
+                    case 0:
+                        Toast.makeText(ShopDetailActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+
+            @Override
+            public void getFailResponse(Call call, Exception e) {
+                LogUtil.e(call.toString() + "--" + e.getMessage());
+            }
+        });
         tvTopTitleName.setText("商家信息");
         rlExit.setOnClickListener(new MyOnClickListener());
         tvShopSelector.setOnClickListener(new MyOnClickListener());
@@ -150,7 +220,19 @@ public class ShopDetailActivity extends BaseActivity {
      * 保存商家信息
      */
     private void confirmShopInfo() {
-
+        String loginId = Tools.getUserLogin(this);
+        telephone = etShopDetailTel.getText().toString().trim();
+        info = tvShopDetailIntroduction.getText().toString().trim();
+        address = tvShopDetailAddress.getText().toString().trim();
+        which = 1;
+        HashMap<String, String> map = new HashMap<>();
+        map.put("seller_id", loginId);
+        map.put("name", "");
+        map.put("telephone", telephone);
+        map.put("address", address);
+        map.put("info", info);
+        File file = new File(picPath);
+        netUtil.okHttp2Server3(update_shop_url, map,file);
     }
 
     /**
@@ -171,6 +253,7 @@ public class ShopDetailActivity extends BaseActivity {
 
     /**
      * 选择时间
+     *
      * @param id
      */
     private void showTimePicker(final int id) {
@@ -271,8 +354,14 @@ public class ShopDetailActivity extends BaseActivity {
         if (picPath != null && (picPath.endsWith(".png") || picPath.endsWith(".PNG") || picPath.endsWith(".jpg") || picPath.endsWith(".JPG"))) {
             Bitmap bm = BitmapFactory.decodeFile(picPath);
             ivShopPicture.setImageBitmap(bm);
+
         } else {
             Toast.makeText(this, "选择图片文件不正确", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

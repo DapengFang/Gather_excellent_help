@@ -97,12 +97,6 @@ public class WareListActivity extends BaseActivity {
     private int page = 1;//显示第几页
     private static Handler handler = new Handler();
 
-    private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
-    private AlibcTaokeParams alibcTaokeParams = null;//淘客参数，包括pid，unionid，subPid
-    private Boolean isTaoke = false;//是否是淘客商品类型
-    private String itemId = "522166121586";//默认商品id
-    private String shopId = "60552065";//默认店铺id
-    private Map<String, String> exParams;//yhhpass参数
     private String type_id;
     private String ware_url = Url.BASE_URL + "CategoryGoodList.aspx";
     private int isLoadmore = -1;
@@ -120,10 +114,6 @@ public class WareListActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
-        alibcShowParams = new AlibcShowParams(OpenType.H5, false);
-        exParams = new HashMap<>();
-        exParams.put("isv_code", "appisvcode");
-        exParams.put("alibaba", "阿里巴巴");//自定义参数部分，可任意增删改
         netUtil = new NetUtil();
         netUtil2 = new NetUtil();
         map = new HashMap<>();

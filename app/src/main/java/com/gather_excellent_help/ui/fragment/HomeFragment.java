@@ -25,6 +25,7 @@ import com.gather_excellent_help.ui.adapter.HomeRushAllAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.RushDownTimer;
+import com.gather_excellent_help.utils.DataCleanManager;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.google.gson.Gson;
@@ -53,7 +54,8 @@ public class HomeFragment extends BaseFragment {
     private NetUtil netUtils;//热销区域的联网接口
     private NetUtil netUtils2;//团购区的商品联网接口
     private NetUtil netUtils3;//分类区的商品联网接口
-    private String url = Url.BASE_URL + "IndexGoods.aspx";
+    private String rush_url = Url.BASE_URL + "IndexGoods.aspx";
+
     private String group_url = Url.BASE_URL + "GroupBuy.aspx";
     private String type_url = Url.BASE_URL + "IndexCategory.aspx";
     private HomeRushAllAdapter homeRushAllAdapter;
@@ -64,6 +66,7 @@ public class HomeFragment extends BaseFragment {
     public static final int TIME_DOWN = 1; //倒计时显示的标识
     private long time;//倒计时总时长
     private boolean isFirst;//是否有抢购
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -94,16 +97,17 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void initData() {
+        cleanCache();
         netUtils = new NetUtil();
         netUtils2 = new NetUtil();
         netUtils3 = new NetUtil();
         requestDataRefresh();
         setRefresh(mIsRequestDataRefresh);
-        netUtils.okHttp2Server2(url, null);
+        netUtils.okHttp2Server2(rush_url, null);
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                LogUtil.e(response);
+                LogUtil.e("--"+response);
                 parseData(response);
             }
 
@@ -159,7 +163,7 @@ public class HomeFragment extends BaseFragment {
                     handler.removeMessages(TIME_DOWN);
                     time = 60000;
                     rushDownTimer = new RushDownTimer(getContext());
-                    handler.sendEmptyMessage(TIME_DOWN);
+                    //handler.sendEmptyMessage(TIME_DOWN);
                     loadRecyclerData(rushData,groupData,typeData,rushDownTimer);
                 }
                 break;
@@ -228,6 +232,15 @@ public class HomeFragment extends BaseFragment {
         ButterKnife.unbind(this);
         handler.removeMessages(TIME_DOWN);
         wef.clear();
+        cleanCache();
+    }
+
+    /**
+     * 清除缓存
+     */
+    private void cleanCache() {
+        DataCleanManager.cleanInternalCache(getContext());
+        DataCleanManager.cleanExternalCache(getContext());
     }
 
     private void setupSwipeRefresh(View view){
@@ -239,9 +252,10 @@ public class HomeFragment extends BaseFragment {
             swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
+                    cleanCache();
                     requestDataRefresh();
                     setRefresh(mIsRequestDataRefresh);
-                    netUtils.okHttp2Server2(url, null);
+                    netUtils.okHttp2Server2(rush_url, null);
                 }
             });
         }
@@ -277,4 +291,5 @@ public class HomeFragment extends BaseFragment {
             swipeRefresh.setRefreshing(true);
         }
     }
+
 }

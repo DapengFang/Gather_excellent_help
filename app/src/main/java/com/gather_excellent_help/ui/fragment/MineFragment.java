@@ -35,6 +35,8 @@ import com.gather_excellent_help.ui.activity.credits.InviteFriendsActivity;
 import com.gather_excellent_help.ui.activity.credits.ShopDetailActivity;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.CircularImage;
+import com.gather_excellent_help.ui.widget.MyToggleButton;
+import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -104,6 +106,16 @@ public class MineFragment extends BaseFragment {
     LinearLayout llMineFanyongRule;
     @Bind(R.id.ll_mine_shop_details)
     LinearLayout llMineShopDetails;
+    @Bind(R.id.ll_mine_taobao_order)
+    LinearLayout llMineTaobaoOrder;
+    @Bind(R.id.ll_mine_suning_order)
+    LinearLayout llMineSuningOrder;
+    @Bind(R.id.ll_mine_juyoubang_order)
+    LinearLayout llMineJuyoubangOrder;
+    @Bind(R.id.ll_mine_zhuan_order)
+    LinearLayout llMineZhuanOrder;
+    @Bind(R.id.tbn_mine_control)
+    MyToggleButton tbnMineControl;
     private String mseg = "";
 
     private NetUtil netUtils;
@@ -118,6 +130,7 @@ public class MineFragment extends BaseFragment {
     private String itemId = "522166121586";//默认商品id
     private String shopId = "60552065";//默认店铺id
     private Map<String, String> exParams;//yhhpass参数
+    private Integer amount;
 
     @Override
     public View initView() {
@@ -127,6 +140,8 @@ public class MineFragment extends BaseFragment {
 
     @Override
     public void initData() {
+        boolean toggle_show = CacheUtils.getBoolean(getContext(), CacheUtils.TOGGLE_SHOW, false);
+        tbnMineControl.setCurrentState(toggle_show);
         alibcShowParams = new AlibcShowParams(OpenType.H5, false);
         exParams = new HashMap<>();
         exParams.put("isv_code", "appisvcode");
@@ -158,6 +173,9 @@ public class MineFragment extends BaseFragment {
         llMineShopDetails.setOnClickListener(new MyOnClickListener());
         llMineHuiyuanStatis.setOnClickListener(new MyOnClickListener());
         llMineFanyongRule.setOnClickListener(new MyOnClickListener());
+
+        llMineTaobaoOrder.setOnClickListener(new MyOnClickListener());
+        llMineJuyoubangOrder.setOnClickListener(new MyOnClickListener());
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -168,6 +186,17 @@ public class MineFragment extends BaseFragment {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "==" + e.getMessage());
+            }
+        });
+        tbnMineControl.setOnStateChangeListener(new MyToggleButton.OnStateChangeListener() {
+            @Override
+            public void isCurrentState(boolean currentState) {
+                CacheUtils.putBoolean(getContext(),CacheUtils.TOGGLE_SHOW,currentState);
+                if(currentState) {
+                    Toast.makeText(getContext(), "推广赚已隐藏！", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getContext(), "推广赚已显示！", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -214,7 +243,9 @@ public class MineFragment extends BaseFragment {
         String group = dataBean.getGroup();
         String mobile = dataBean.getMobile();
         String nick_name = dataBean.getNick_name();
+        amount = dataBean.getAmount();
         group_id = dataBean.getGroup_id();
+        CacheUtils.putInteger(getContext(), CacheUtils.GROUP_TYPE, group_id);
         if (avatar != null && !TextUtils.isEmpty(avatar)) {
             mImageLoader.loadImage(avatar, civMeHeadIcon, true);
         } else {
@@ -319,6 +350,14 @@ public class MineFragment extends BaseFragment {
                     break;
                 case R.id.ll_mine_shop_details:
                     toShopDetail();
+                    break;
+                case R.id.ll_mine_taobao_order:
+                    AlibcTrade.show(getActivity(), new AlibcMyOrdersPage(0, true), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback(getActivity()));
+                    break;
+                case R.id.ll_mine_juyoubang_order:
+                    Intent intent = new Intent(getActivity(), OrderActivity.class);
+                    intent.putExtra("tab_p", 0);
+                    startActivity(intent);
                     break;
             }
         }

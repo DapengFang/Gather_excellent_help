@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.TypeWareBean;
+import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 
 import java.net.URL;
@@ -49,12 +50,12 @@ public class TypeWareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TypeWareBean.DataBean dataBean = data.get(position);
         String url = dataBean.getImg_url();
         mImageLoader.loadImage(url,typeWareViewHolder.ivTypeImg,true);
-        double market_price = dataBean.getMarket_price();
-        typeWareViewHolder.tvTypePrice.setText("页面价：￥"+market_price);
-        String title = dataBean.getTitle().substring(0,18)+"...";
+        String title = dataBean.getTitle().substring(0,10)+"...";
         typeWareViewHolder.tvTypeName.setText(title);
-        double sell_price = dataBean.getSell_price();
-        typeWareViewHolder.tvTypeAllprice.setText("聚优帮返：￥"+sell_price +" 到手价：￥"+(market_price - sell_price));
+        typeWareViewHolder.tvTypeWareSale.setText("赚:￥"+(dataBean.getMarket_price() - dataBean.getSell_price()));
+        typeWareViewHolder.tvTypeWareCoast.setText("成本:￥"+dataBean.getMarket_price());
+        Tools.setPartTextColor(typeWareViewHolder.tvTypeWareAprice,"活动价:￥"+dataBean.getSell_price(),":");
+        typeWareViewHolder.tvTypeWareCoupons.setText("领券立减"+dataBean.getCouponsPrice());
         typeWareViewHolder.ll_type_ware.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,10 +75,14 @@ public class TypeWareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView ivTypeImg;
         @Bind(R.id.tv_type_name)
         TextView tvTypeName;
-        @Bind(R.id.tv_type_price)
-        TextView tvTypePrice;
-        @Bind(R.id.tv_type_allprice)
-        TextView tvTypeAllprice;
+        @Bind(R.id.tv_type_ware_sale)
+        TextView tvTypeWareSale;
+        @Bind(R.id.tv_type_ware_coast)
+        TextView tvTypeWareCoast;
+        @Bind(R.id.tv_type_ware_aprice)
+        TextView tvTypeWareAprice;
+        @Bind(R.id.tv_type_ware_coupons)
+        TextView  tvTypeWareCoupons;
         @Bind(R.id.ll_type_ware)
         LinearLayout ll_type_ware;
 

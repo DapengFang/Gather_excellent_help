@@ -120,6 +120,7 @@ public class MyToggleButton extends View {
                 currentState = !currentState;
                 flushState();
                 flushView();
+                onStateChangeListener.isCurrentState(currentState);
             }
         });
     }
@@ -147,4 +148,22 @@ public class MyToggleButton extends View {
     public boolean isCurrentState() {
         return currentState;
     }
+
+    public void setCurrentState(boolean currentState) {
+        this.currentState = currentState;
+        flushState();
+        flushView();
+    }
+
+    private OnStateChangeListener onStateChangeListener;
+
+    public interface OnStateChangeListener {
+        void isCurrentState(boolean currentState);
+    }
+
+    public void setOnStateChangeListener(OnStateChangeListener onStateChangeListener) {
+        this.onStateChangeListener = onStateChangeListener;
+    }
+
+
 }

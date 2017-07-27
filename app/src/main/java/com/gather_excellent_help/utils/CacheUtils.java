@@ -25,7 +25,13 @@ public class CacheUtils {
 	public static final String PAY_STATE = "pay_state";
 	//第一次打开app
 	public static final String FIRST_STATE = "first_state";
+	//保存用户类型
+	public static final String GROUP_TYPE = "group_type";
+    //保存推广赚开关状态
+	public static final String TOGGLE_SHOW = "toggle_show";
+
 	private static final String NAME = "login";
+
 	public static SharedPreferences sp;
 
 	public static void putBoolean(Context context,String key,boolean value){
@@ -69,18 +75,18 @@ public class CacheUtils {
 		}
 		sp.edit().putLong(key, value).apply();
 	}
-	public static Long getInteger(Context context,String key,Integer defult){
+	public static Integer getInteger(Context context,String key,Integer defult){
 		if(sp == null){
 			sp = context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
 		}
-		return sp.getLong(key, defult);
+		return sp.getInt(key,defult);
 	}
 
 	public static void putInteger(Context context,String key,Integer value){
 		if(sp == null){
 			sp = context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
 		}
-		sp.edit().putLong(key, value).apply();
+		sp.edit().putInt(key, value).apply();
 	}
 
 }

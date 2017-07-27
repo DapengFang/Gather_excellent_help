@@ -30,6 +30,7 @@ import com.gather_excellent_help.utils.NetUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -86,7 +87,8 @@ public class WebRecordActivity extends BaseActivity {
         goods_img = intent.getStringExtra("goods_img");
         goods_title = intent.getStringExtra("goods_title");
         WebSettings webSettings = wvBanner.getSettings();
-        webSettings.setUseWideViewPort(true);//设置此属性，可任意比例缩放
+        //设置此属性，可任意比例缩放
+        webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
         //使页面支持缩放：
         webSettings.setBuiltInZoomControls(true);
@@ -140,33 +142,29 @@ public class WebRecordActivity extends BaseActivity {
         int statusCode = changeUrlBean.getStatusCode();
         switch (statusCode) {
             case 1 :
-                if(changeUrlBean.getData()!=null && changeUrlBean.getData().size()>0) {
-                    click_url = changeUrlBean.getData().get(0).getClick_url();
-                    if(click_url!=null && !TextUtils.isEmpty(click_url)) {
+                    List<ChangeUrlBean.DataBean> data = changeUrlBean.getData();
+                    if(data!=null && data.size()>0) {
+                        click_url = changeUrlBean.getData().get(0).getClick_url();
                         AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(click_url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback(WebRecordActivity.this));
                     }else{
                         AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback(WebRecordActivity.this));
                     }
-                }
                 break;
-            case 0:
-                Toast.makeText(WebRecordActivity.this, changeUrlBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+            case 0 :
+                    Toast.makeText(WebRecordActivity.this, changeUrlBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
-
     //Web视图
     private class MyWebViewClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
             return false;
         }
 
         @Override
         public void onPageFinished(WebView view, final String url) {
             super.onPageFinished(view, url);
-
         }
 
         @Override
@@ -181,6 +179,9 @@ public class WebRecordActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 监听点击事件的类
+     */
     public class MyOnclickListener implements View.OnClickListener {
 
         @Override
@@ -202,13 +203,12 @@ public class WebRecordActivity extends BaseActivity {
     }
 
     /**
-     * 商品转链
+     * 商品转链分享
      */
     private void shareWareUrl() {
         OnekeyShare oks = new OnekeyShare();
         //关闭sso授权
         oks.disableSSOWhenAuthorize();
-
         // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
         //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
         // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用

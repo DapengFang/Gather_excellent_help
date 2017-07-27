@@ -11,7 +11,7 @@ public class MineBean {
     /**
      * statusCode : 1
      * statusMessage : 查询成功
-     * data : [{"avatar":"https://wwc.alicdn.com/avatar/getAvatar.do?userId=2638987498&width=160&height=160&type=sns","nick_name":"呆萌小方","sex":"","group_id":1,"group":"普通会员","mobile":"18514792343"}]
+     * data : [{"avatar":"https://wwc.alicdn.com/avatar/getAvatar.do?userId=2638987498&width=160&height=160&type=sns","nick_name":"呆萌小方","sex":"保密","group_id":4,"group":"实体商家","mobile":"18514792343","amount":0,"frostAmount":0}]
      */
 
     private int statusCode;
@@ -46,10 +46,12 @@ public class MineBean {
         /**
          * avatar : https://wwc.alicdn.com/avatar/getAvatar.do?userId=2638987498&width=160&height=160&type=sns
          * nick_name : 呆萌小方
-         * sex :
-         * group_id : 1
-         * group : 普通会员
+         * sex : 保密
+         * group_id : 4
+         * group : 实体商家
          * mobile : 18514792343
+         * amount : 0
+         * frostAmount : 0
          */
 
         private String avatar;
@@ -58,6 +60,8 @@ public class MineBean {
         private int group_id;
         private String group;
         private String mobile;
+        private Integer amount;
+        private int frostAmount;
 
         public String getAvatar() {
             return avatar;
@@ -105,6 +109,22 @@ public class MineBean {
 
         public void setMobile(String mobile) {
             this.mobile = mobile;
+        }
+
+        public Integer getAmount() {
+            return amount;
+        }
+
+        public void setAmount(Integer amount) {
+            this.amount = amount;
+        }
+
+        public int getFrostAmount() {
+            return frostAmount;
+        }
+
+        public void setFrostAmount(int frostAmount) {
+            this.frostAmount = frostAmount;
         }
     }
 }

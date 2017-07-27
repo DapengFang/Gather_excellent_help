@@ -3,8 +3,13 @@ package com.gather_excellent_help.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Base64;
+import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -87,6 +92,13 @@ public class Tools {
         return result;
     }
 
+    /**
+     * 对图片大小进行压缩
+     * @param bitmap
+     * @param width
+     * @param height
+     * @return
+     */
     public static Bitmap zoomBitmap(Bitmap bitmap, int width, int height) {
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
@@ -96,5 +108,15 @@ public class Tools {
         matrix.postScale(scaleWidth, scaleHeight);
         Bitmap newbmp = Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
         return newbmp;
+    }
+
+    /**
+     * 设置部分字体颜色为红色
+     */
+    public static void setPartTextColor(TextView tv,String str,String s) {
+        int end = str.indexOf(s);
+        SpannableStringBuilder style = new SpannableStringBuilder(str);
+        style.setSpan(new ForegroundColorSpan(Color.RED),end, str.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        tv.setText(style);
     }
 }

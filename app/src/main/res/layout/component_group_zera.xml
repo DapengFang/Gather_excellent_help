@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/x240"
+    android:layout_height="wrap_content"
     android:background="#fff">
     <include layout="@layout/gray_line9"/>
     <include layout="@layout/component_zera_title"/>
@@ -12,7 +12,7 @@
     android:background="#22000000"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x240"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -52,8 +52,23 @@
                     android:background="@drawable/home_price_bg"
                     android:layout_marginTop="@dimen/x3"
                     android:paddingLeft="@dimen/x3"
-                    android:paddingRight="@dimen/x10"
+                    android:paddingRight="@dimen/x7"
                     android:layout_marginLeft="@dimen/x5"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="赚:￥106.89  成本:￥3092.11"
+                    android:textColor="#99ff0000"
+                    android:textSize="10sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="领券立减200"
+                    android:textSize="10sp"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:padding="@dimen/x2"
+                    android:background="@drawable/type_xiadan_bg"/>
 
             </LinearLayout>
             <View

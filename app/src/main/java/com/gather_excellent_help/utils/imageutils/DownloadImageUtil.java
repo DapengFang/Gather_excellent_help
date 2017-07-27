@@ -84,6 +84,7 @@ public class DownloadImageUtil {
             is.mark(is.available());
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
+            is.mark(1024*1024);
             Bitmap bitmap = BitmapFactory.decodeStream(is, null, options);
             ImageSizeUtil.ImageSize imageViewSize = ImageSizeUtil.getImageViewSize(imageView);
             options.inSampleSize = ImageSizeUtil.caculateInSampleSize(options,imageViewSize.width,imageViewSize.height);

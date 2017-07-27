@@ -80,6 +80,7 @@
             android:textColor="#55000000"
             android:paddingLeft="@dimen/x10"/>
         <EditText
+            android:id="@+id/et_shop_detail_tel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
@@ -114,6 +115,7 @@
             android:textColor="#55000000"
             android:paddingLeft="@dimen/x10"/>
         <EditText
+            android:id="@+id/et_shop_detail_yewu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"

@@ -34,6 +34,7 @@ import com.gather_excellent_help.ui.widget.RushDownTimer;
 import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.ScreenUtil;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
 
@@ -79,6 +80,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private TextView tvRushMinute;
     private TextView tvRushSecond;
     private boolean isFirst = true;
+
 
 
     public HomeRushAllAdapter(Context context, List<HomeWareBean.DataBean> data, Activity activity, List<HomeGroupBean.DataBean> groupData, List<TyepIndexBean.DataBean> typeData,
@@ -174,13 +176,21 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             getBannerData(civHomeGanner);
         } else if (holder instanceof RushWareViewHolder) {
             RushWareViewHolder rushWareViewHolder = (RushWareViewHolder) holder;
-            HomeWareBean.DataBean dataBean = data.get(position - extraCount);
+            final HomeWareBean.DataBean dataBean = data.get(position - extraCount);
             rushWareViewHolder.tvRushMoreTitle.setText(dataBean.getTitle());
-            String url = Url.IMG_URL +dataBean.getImg_url();
+            String url = dataBean.getImg_url();
             LogUtil.e(url);
             mImageLoader.loadImage(url,rushWareViewHolder.ivRushMoreBig,true);
+            rushWareViewHolder.ivRushMoreBig.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int id = dataBean.getId();
+                    Intent intent = new Intent(context, WareListActivity.class);
+                    intent.putExtra("type_id",String.valueOf(id));
+                    context.startActivity(intent);
+                }
+            });
             final List<HomeWareBean.DataBean.ItemBean> itemData = dataBean.getItem();
-            List<HomeRushChangeBean.ItemBean> nItemDatas =new ArrayList<>();
            if( itemData!= null && itemData.size()> 2) {
                HomeRushAdapter homeRushAdapter = new HomeRushAdapter(context,itemData);
                rushWareViewHolder.gvRushZera.setAdapter(homeRushAdapter);
@@ -205,7 +215,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             TextView tvTitle = groupViewHolder.tvTitle;
             tvTitle.setText("团购区");
             final HomeGroupBean.DataBean dataBean = groupData.get(0);
-            String sTitle0 = dataBean.getTitle().substring(0, 16) + "...";
+            String sTitle0 = dataBean.getTitle().substring(0, 12) + "...";
             groupViewHolder.tv_group_big_title.setText(sTitle0);
             groupViewHolder.tv_group_big_price.setText("今日特价：￥"+dataBean.getMarket_price());
             mImageLoader.loadImage(dataBean.getImg_url(),groupViewHolder.iv_group_big_pic,true);
@@ -229,7 +239,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             TextView tvMallPrice = (TextView) childLeft.findViewById(R.id.tv_group_mall_price);
             ImageView ivMallPic = (ImageView) childLeft.findViewById(R.id.iv_group_mall_pic);
             final HomeGroupBean.DataBean groupBean1 = groupData.get(1);
-            String sTitle = groupBean1.getTitle().substring(0, 16) + "...";
+            String sTitle = groupBean1.getTitle().substring(0, 12) + "...";
             tvMallPrice.setText("今日特价：￥"+groupBean1.getMarket_price());
             tvMallTitle.setText(sTitle);
             mImageLoader.loadImage(groupBean1.getImg_url(),ivMallPic,true);
@@ -255,7 +265,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 TextView tvMallPrice2 = (TextView) childRight.findViewById(R.id.tv_group_mall_price);
                 ImageView ivMallPic2 = (ImageView) childRight.findViewById(R.id.iv_group_mall_pic);
                 final HomeGroupBean.DataBean groupBean2 = groupData.get(i);
-                String sTitle2 = groupBean2.getTitle().substring(0, 16) + "...";
+                String sTitle2 = groupBean2.getTitle().substring(0, 12) + "...";
                 tvMallPrice2.setText("今日特价：￥"+groupBean2.getMarket_price());
                 tvMallTitle2.setText(sTitle2);
                 mImageLoader.loadImage(groupBean2.getImg_url(),ivMallPic2,true);
@@ -285,6 +295,25 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             firstBuyViewHoldre.tvRushMinute.setText(rushDownTimer.getMinute());
             firstBuyViewHoldre.tvRushSecond.setText(rushDownTimer.getSecond());
             LogUtil.e(hour +"--"+ minute + "--" + second);
+
+            LinearLayout llFirstWareZera = firstBuyViewHoldre.llFirstWareZera;
+            for (int i=0;i<llFirstWareZera.getChildCount();i++){
+                if(i!=1) {
+                    View child = llFirstWareZera.getChildAt(i);
+                    ImageView ivFirstMallBg = (ImageView) child.findViewById(R.id.iv_first_mall_bg);
+                    ImageView ivFirstMallProgress = (ImageView) child.findViewById(R.id.iv_first_mall_progress);
+                    int width = ScreenUtil.getScreenWidth(context)*17/60;
+                    ViewGroup.LayoutParams lp2;
+                    lp2 = ivFirstMallBg.getLayoutParams();
+                    lp2.width =width;
+                    ivFirstMallBg.setLayoutParams(lp2);
+                    ViewGroup.LayoutParams lp;
+                    lp =  ivFirstMallProgress.getLayoutParams();
+                    lp.width = width/6;
+                    ivFirstMallProgress.setLayoutParams(lp);
+                }
+            }
+
             tvRushHour = firstBuyViewHoldre.tvRushHour;
             tvRushMinute = firstBuyViewHoldre.tvRushMinute;
             tvRushSecond = firstBuyViewHoldre.tvRushSecond;
@@ -340,11 +369,11 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      * 轮播图的ViewHoldre
      */
     class BannerViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.civ_home_ganner)
         CarouselImageView civHomeGanner;
         public BannerViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            //ButterKnife.bind(this, itemView);
+            civHomeGanner = (CarouselImageView) itemView.findViewById(R.id.civ_home_ganner);
         }
     }
     /**
@@ -360,6 +389,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView tvRushMinute;
         @Bind(R.id.tv_rush_second)
         TextView tvRushSecond;
+        @Bind(R.id.ll_first_ware_zera)
+        LinearLayout llFirstWareZera;
         public FirstBuyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
