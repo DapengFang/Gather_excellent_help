@@ -25,6 +25,7 @@ import com.gather_excellent_help.bean.HomeGroupBean;
 import com.gather_excellent_help.bean.HomeRushChangeBean;
 import com.gather_excellent_help.bean.HomeTypeBean;
 import com.gather_excellent_help.bean.HomeWareBean;
+import com.gather_excellent_help.bean.QiangTaoBean;
 import com.gather_excellent_help.bean.TyepIndexBean;
 import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
@@ -70,6 +71,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<HomeWareBean.DataBean> data;
     private List<HomeGroupBean.DataBean> groupData;
     private List<TyepIndexBean.DataBean> typeData;
+    private List<QiangTaoBean.DataBean> qiangData;
     private int extraCount = 4;
 
     private RushDownTimer rushDownTimer;
@@ -84,12 +86,13 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     public HomeRushAllAdapter(Context context, List<HomeWareBean.DataBean> data, Activity activity, List<HomeGroupBean.DataBean> groupData, List<TyepIndexBean.DataBean> typeData,
-                              RushDownTimer rushDownTimer) {
+                              RushDownTimer rushDownTimer,List<QiangTaoBean.DataBean> qiangData) {
         this.context = context;
         this.activity = activity;
         this.data = data;
         this.groupData = groupData;
         this.typeData = typeData;
+        this.qiangData = qiangData;
         this.rushDownTimer = rushDownTimer;
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
@@ -287,21 +290,38 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 j++;
             }
         }else if(holder instanceof FirstBuyViewHolder) {
+            QiangTaoBean.DataBean dataBean0 = qiangData.get(0);
             FirstBuyViewHolder firstBuyViewHoldre = (FirstBuyViewHolder) holder;
             TextView tvTitle = firstBuyViewHoldre.tvTitle;
             tvTitle.setText("抢购区");
+            firstBuyViewHoldre.tvItemHomeMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context,WareListActivity.class);
+                    intent.putExtra("content","isQiang");
+                    context.startActivity(intent);
+                }
+            });
+            mImageLoader.loadImage(dataBean0.getImg_url(),((FirstBuyViewHolder) holder).ivFirstbuyBig,true);
             tvTitle.setTextColor(Color.parseColor("#32C300"));
             firstBuyViewHoldre.tvRushHour.setText(rushDownTimer.getHour());
             firstBuyViewHoldre.tvRushMinute.setText(rushDownTimer.getMinute());
             firstBuyViewHoldre.tvRushSecond.setText(rushDownTimer.getSecond());
             LogUtil.e(hour +"--"+ minute + "--" + second);
-
+            QiangTaoBean.DataBean dataBean1 = qiangData.get(1);
+            QiangTaoBean.DataBean dataBean2 = qiangData.get(2);
             LinearLayout llFirstWareZera = firstBuyViewHoldre.llFirstWareZera;
             for (int i=0;i<llFirstWareZera.getChildCount();i++){
                 if(i!=1) {
                     View child = llFirstWareZera.getChildAt(i);
                     ImageView ivFirstMallBg = (ImageView) child.findViewById(R.id.iv_first_mall_bg);
                     ImageView ivFirstMallProgress = (ImageView) child.findViewById(R.id.iv_first_mall_progress);
+                    ImageView ivSmall= (ImageView) child.findViewById(R.id.iv_first_buy_small);
+                    if(i==0) {
+                        mImageLoader.loadImage(dataBean1.getImg_url(),ivSmall,true);
+                    }else if(i==2){
+                        mImageLoader.loadImage(dataBean2.getImg_url(),ivSmall,true);
+                    }
                     int width = ScreenUtil.getScreenWidth(context)*17/60;
                     ViewGroup.LayoutParams lp2;
                     lp2 = ivFirstMallBg.getLayoutParams();
@@ -369,11 +389,11 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      * 轮播图的ViewHoldre
      */
     class BannerViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.civ_home_ganner)
         CarouselImageView civHomeGanner;
         public BannerViewHolder(View itemView) {
             super(itemView);
-            //ButterKnife.bind(this, itemView);
-            civHomeGanner = (CarouselImageView) itemView.findViewById(R.id.civ_home_ganner);
+            ButterKnife.bind(this, itemView);
         }
     }
     /**
@@ -383,6 +403,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @Bind(R.id.tv_item_home_title)
         TextView tvTitle;
+        @Bind(R.id.tv_item_home_more)
+        TextView tvItemHomeMore;
         @Bind(R.id.tv_rush_hour)
         TextView tvRushHour;
         @Bind(R.id.tv_rush_minute)
@@ -391,6 +413,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView tvRushSecond;
         @Bind(R.id.ll_first_ware_zera)
         LinearLayout llFirstWareZera;
+        @Bind(R.id.iv_firstbuy_big)
+        ImageView ivFirstbuyBig;
         public FirstBuyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

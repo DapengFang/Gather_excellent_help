@@ -55,7 +55,7 @@ public class OrderActivity extends BaseActivity {
     private NetUtil netUtil;
     private Map<String,String> map;
     private int curr_statue;//订单类型
-    private String pageSize = "3";
+    private String pageSize = "6";
     private String loginId;
 
     @Override
@@ -101,7 +101,8 @@ public class OrderActivity extends BaseActivity {
                         if(curr_statue == 5) {
                             pareAllData(response);
                         }else{
-                            parseOtherData(response);
+                            //parseOtherData(response);
+                            pareAllData(response);
                         }
                         break;
                     case 0:
@@ -137,7 +138,7 @@ public class OrderActivity extends BaseActivity {
     private void pareAllData(String response) {
         OrderAllBean orderAllBean = new Gson().fromJson(response, OrderAllBean.class);
         List<OrderAllBean.DataBean> allData = orderAllBean.getData();
-        orderAllAdapter = new OrderAllAdapter(OrderActivity.this,allData);
+        orderAllAdapter = new OrderAllAdapter(OrderActivity.this,allData,curr_statue);
         FullyLinearLayoutManager fullyLinearLayoutManager = new FullyLinearLayoutManager(OrderActivity.this);
         rcvOrderManager.setLayoutManager(fullyLinearLayoutManager);
         rcvOrderManager.setAdapter(orderAllAdapter);
@@ -152,7 +153,7 @@ public class OrderActivity extends BaseActivity {
         map = new HashMap<>();
         map.put("Id",loginId);
         map.put("Type",String.valueOf(curr_statue));
-        //map.put("pageSize",pageSize);
+        map.put("pageSize",pageSize);
         netUtil.okHttp2Server2(order_url,map);
     }
 

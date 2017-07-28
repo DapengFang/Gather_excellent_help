@@ -106,6 +106,7 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
             <LinearLayout
+                android:id="@+id/ll_mine_user_salery"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -135,7 +136,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="余额/冻结"
+                            android:text="余额/提现"
                             android:textSize="12sp"
                             android:textColor="#55000000"/>
                         <TextView
@@ -158,6 +159,7 @@
                 android:background="#22000000"/>
 
             <LinearLayout
+                android:id="@+id/ll_mine_user_back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -182,14 +184,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="待返佣"
+                            android:text="赚(冻结期)"
                             android:textSize="12sp"
                             android:textColor="#55000000"/>
                         <TextView
                             android:id="@+id/tv_account_money2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0.00/0.00"
+                            android:text="0.00"
                             android:textSize="12sp"
                             android:textColor="#55000000"/>
                     </LinearLayout>

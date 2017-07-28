@@ -4,13 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.gather_excellent_help.ui.activity.credits.AccountDetailAvtivity">
+    android:background="#11000000">
+
     <include layout="@layout/top_zhuangai_bar"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/x45"
         android:orientation="horizontal"
-        android:background="#ffffff">
+        android:background="#ffffff"
+        android:visibility="gone">
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -41,9 +43,38 @@
         android:layout_height="@dimen/x1"
         android:background="#11000000"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x45"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/tv_account_query_time"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x30"
+            android:text="按时间"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_marginLeft="@dimen/x10"
+            android:textColor="@drawable/amount_text_selector"
+            android:background="@drawable/amount_details_selector"/>
+        <TextView
+            android:id="@+id/tv_account_query_project"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x30"
+            android:text="按项目"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_marginLeft="@dimen/x3"
+            android:textColor="@drawable/amount_text_selector"
+            android:background="@drawable/amount_details_selector"/>
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcv_account_detail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent"
+        android:background="#00000000"
+        android:padding="@dimen/x8"></android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

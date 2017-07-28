@@ -97,12 +97,10 @@ public class TypeFragment extends BaseFragment {
      */
     @Override
     public void initData() {
-        if(swipeRefresh!=null) {
-            requestDataRefresh();
-            swipeRefresh.setRefreshing(mIsRequestDataRefresh);
-        }
         netUtil = new NetUtil();
         netUtil2 = new NetUtil();
+        requestDataRefresh();
+        swipeRefresh.setRefreshing(mIsRequestDataRefresh);
         tvTopTitleName.setText("商品分类");
         ivZhuangtaiExit.setVisibility(View.GONE);
         getNavigatorData();

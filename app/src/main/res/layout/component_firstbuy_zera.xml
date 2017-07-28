@@ -121,6 +121,7 @@
                 android:textColor="#99ff0000"
                 android:padding="@dimen/x3" />
             <ImageView
+                android:id="@+id/iv_firstbuy_big"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ware_rush"

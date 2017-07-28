@@ -127,7 +127,13 @@ public class WareListActivity extends BaseActivity {
             map.put("id",type_id);
             netUtil2.okHttp2Server2(ware_url,map2);
         }else{
-            if(sousuoStr!=null && !TextUtils.isEmpty(sousuoStr)) {
+            if(sousuoStr.equals("isQiang")) {
+                map = new HashMap<>();
+                map.put("pageSize","10");
+                map.put("pageIndex","1");
+                String qiang_url = Url.BASE_URL + "RushBuy.aspx";
+                netUtil2.okHttp2Server2(qiang_url,map);
+            }else if(sousuoStr!=null && !TextUtils.isEmpty(sousuoStr)) {
                 tvWareListOld.setVisibility(View.VISIBLE);
                 tvWareListOld.setText(sousuoStr);
                 etWareListContent.setHint("");

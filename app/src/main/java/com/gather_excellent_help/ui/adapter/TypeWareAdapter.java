@@ -50,8 +50,13 @@ public class TypeWareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TypeWareBean.DataBean dataBean = data.get(position);
         String url = dataBean.getImg_url();
         mImageLoader.loadImage(url,typeWareViewHolder.ivTypeImg,true);
-        String title = dataBean.getTitle().substring(0,10)+"...";
-        typeWareViewHolder.tvTypeName.setText(title);
+        if(dataBean.getTitle().length()<=12) {
+            typeWareViewHolder.tvTypeName.setText(dataBean.getTitle());
+        }else{
+            String title = dataBean.getTitle().substring(0,12)+"...";
+            typeWareViewHolder.tvTypeName.setText(title);
+        }
+
         typeWareViewHolder.tvTypeWareSale.setText("赚:￥"+(dataBean.getMarket_price() - dataBean.getSell_price()));
         typeWareViewHolder.tvTypeWareCoast.setText("成本:￥"+dataBean.getMarket_price());
         Tools.setPartTextColor(typeWareViewHolder.tvTypeWareAprice,"活动价:￥"+dataBean.getSell_price(),":");

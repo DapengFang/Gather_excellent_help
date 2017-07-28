@@ -28,10 +28,12 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
     private LayoutInflater inflater;    //布局填充器
     private ImageLoader mImageLoader;
     private List<OrderAllBean.DataBean> allData;
+    private int curr_statue;
 
-    public OrderAllAdapter(Context context,List<OrderAllBean.DataBean> allData) {
+    public OrderAllAdapter(Context context, List<OrderAllBean.DataBean> allData, int curr_statue) {
         this.context = context;
         this.allData = allData;
+        this.curr_statue = curr_statue;
         inflater = LayoutInflater.from(context);
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
@@ -48,6 +50,26 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
         holder.tvOrderAllTime.setText("下单时间:" + dataBean.getCreate_time());
         holder.tvOrderAllPrice.setText("订单金额:" + dataBean.getPrice());
         holder.tvOrderAllNumber.setText("订单号:" + dataBean.getTrade_id());
+        if(curr_statue == 1) {
+            holder.tvOrderAllStatue.setText("待付款");
+        }else if(curr_statue == 2){
+            holder.tvOrderAllStatue.setText("已付款");
+        }else if(curr_statue == 3) {
+            holder.tvOrderAllStatue.setText("已完成");
+        }else if(curr_statue == 4) {
+            holder.tvOrderAllStatue.setText("退款/售后");
+        }else {
+            if(position==1) {
+                holder.tvOrderAllStatue.setText("已付款");
+            }
+            if(position ==3) {
+                holder.tvOrderAllStatue.setText("已付款");
+            }
+            if(position==4) {
+                holder.tvOrderAllStatue.setText("退款/售后");
+            }
+        }
+
     }
 
     @Override

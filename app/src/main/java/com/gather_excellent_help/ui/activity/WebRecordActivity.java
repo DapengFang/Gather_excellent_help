@@ -116,7 +116,7 @@ public class WebRecordActivity extends BaseActivity {
         netUtil = new NetUtil();
         map = new HashMap<>();
         map.put("goodsId",goods_id);
-        map.put("adzoneId","");
+        map.put("adzoneId","121866255");
         netUtil.okHttp2Server2(chang_url,map);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override

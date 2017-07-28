@@ -1,12 +1,8 @@
 package com.gather_excellent_help.ui.fragment;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +26,7 @@ import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.activity.OrderActivity;
 import com.gather_excellent_help.ui.activity.SetActivity;
 import com.gather_excellent_help.ui.activity.credits.AccountDetailAvtivity;
+import com.gather_excellent_help.ui.activity.credits.BackRebateActivity;
 import com.gather_excellent_help.ui.activity.credits.ExtractCreditsActivity;
 import com.gather_excellent_help.ui.activity.credits.InviteFriendsActivity;
 import com.gather_excellent_help.ui.activity.credits.ShopDetailActivity;
@@ -43,6 +40,7 @@ import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,6 +114,10 @@ public class MineFragment extends BaseFragment {
     LinearLayout llMineZhuanOrder;
     @Bind(R.id.tbn_mine_control)
     MyToggleButton tbnMineControl;
+    @Bind(R.id.ll_mine_user_salery)
+    LinearLayout llMineUserSalery;
+    @Bind(R.id.ll_mine_user_back)
+    LinearLayout llMineUserBack;
     private String mseg = "";
 
     private NetUtil netUtils;
@@ -131,6 +133,7 @@ public class MineFragment extends BaseFragment {
     private String shopId = "60552065";//默认店铺id
     private Map<String, String> exParams;//yhhpass参数
     private Integer amount;
+    private int frostAmount;
 
     @Override
     public View initView() {
@@ -146,7 +149,6 @@ public class MineFragment extends BaseFragment {
         exParams = new HashMap<>();
         exParams.put("isv_code", "appisvcode");
         exParams.put("alibaba", "阿里巴巴");//自定义参数部分，可任意增删改
-        setPartTextColor();
         netUtils = new NetUtil();
         defaultSet();
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
@@ -176,6 +178,9 @@ public class MineFragment extends BaseFragment {
 
         llMineTaobaoOrder.setOnClickListener(new MyOnClickListener());
         llMineJuyoubangOrder.setOnClickListener(new MyOnClickListener());
+        
+        llMineUserSalery.setOnClickListener(new MyOnClickListener());
+        llMineUserBack.setOnClickListener(new MyOnClickListener());
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -191,25 +196,14 @@ public class MineFragment extends BaseFragment {
         tbnMineControl.setOnStateChangeListener(new MyToggleButton.OnStateChangeListener() {
             @Override
             public void isCurrentState(boolean currentState) {
-                CacheUtils.putBoolean(getContext(),CacheUtils.TOGGLE_SHOW,currentState);
-                if(currentState) {
+                CacheUtils.putBoolean(getContext(), CacheUtils.TOGGLE_SHOW, currentState);
+                if (currentState) {
                     Toast.makeText(getContext(), "推广赚已隐藏！", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Toast.makeText(getContext(), "推广赚已显示！", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-    }
-
-    /**
-     * 设置部分字体颜色为红色
-     */
-    private void setPartTextColor() {
-        String str = "0.00/0.00";
-        int end = str.indexOf("/");
-        SpannableStringBuilder style = new SpannableStringBuilder(str);
-        style.setSpan(new ForegroundColorSpan(Color.RED), 0, end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        tvAccountMoney.setText(style);
     }
 
     /**
@@ -244,6 +238,7 @@ public class MineFragment extends BaseFragment {
         String mobile = dataBean.getMobile();
         String nick_name = dataBean.getNick_name();
         amount = dataBean.getAmount();
+        frostAmount = dataBean.getFrostAmount();
         group_id = dataBean.getGroup_id();
         CacheUtils.putInteger(getContext(), CacheUtils.GROUP_TYPE, group_id);
         if (avatar != null && !TextUtils.isEmpty(avatar)) {
@@ -261,7 +256,9 @@ public class MineFragment extends BaseFragment {
         } else {
             tvMineMobietype.setText("用户类型 + (" + mobile + ")");
         }
-
+        DecimalFormat df = new DecimalFormat("0.00");
+        tvAccountMoney.setText(df.format(amount) + "/" + df.format(frostAmount));
+        Tools.setPartTextColor2(tvAccountMoney, df.format(amount) + "/" + df.format(frostAmount), "/");
     }
 
     /**
@@ -355,12 +352,34 @@ public class MineFragment extends BaseFragment {
                     AlibcTrade.show(getActivity(), new AlibcMyOrdersPage(0, true), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback(getActivity()));
                     break;
                 case R.id.ll_mine_juyoubang_order:
-                    Intent intent = new Intent(getActivity(), OrderActivity.class);
-                    intent.putExtra("tab_p", 0);
-                    startActivity(intent);
+                    toJuyouOrder();
+                    break;
+                case R.id.ll_mine_user_salery:
+                    toAccountDetail();
+                    break;
+                case R.id.ll_mine_user_back:
+                    toBackRebate();
                     break;
             }
         }
+    }
+
+    /**
+     * 跳转到返佣界面
+     */
+    private void toBackRebate() {
+        Intent intent = new Intent(getContext(), BackRebateActivity.class);
+        startActivity(intent);
+    }
+
+
+    /**
+     * 跳转到聚优帮订单
+     */
+    private void toJuyouOrder() {
+        Intent intent = new Intent(getActivity(), OrderActivity.class);
+        intent.putExtra("tab_p", 0);
+        startActivity(intent);
     }
 
     /**

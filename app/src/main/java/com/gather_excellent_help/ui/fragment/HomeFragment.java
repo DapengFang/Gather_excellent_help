@@ -20,6 +20,7 @@ import com.gather_excellent_help.bean.HomeGroupBean;
 import com.gather_excellent_help.bean.HomeRushBean;
 import com.gather_excellent_help.bean.HomeRushChangeBean;
 import com.gather_excellent_help.bean.HomeWareBean;
+import com.gather_excellent_help.bean.QiangTaoBean;
 import com.gather_excellent_help.bean.TyepIndexBean;
 import com.gather_excellent_help.ui.adapter.HomeRushAllAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
@@ -32,6 +33,7 @@ import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,10 +56,12 @@ public class HomeFragment extends BaseFragment {
     private NetUtil netUtils;//热销区域的联网接口
     private NetUtil netUtils2;//团购区的商品联网接口
     private NetUtil netUtils3;//分类区的商品联网接口
+    private NetUtil netUtils4;//抢购区的商品数据联网
     private String rush_url = Url.BASE_URL + "IndexGoods.aspx";
 
     private String group_url = Url.BASE_URL + "GroupBuy.aspx";
     private String type_url = Url.BASE_URL + "IndexCategory.aspx";
+    private String qiang_url = Url.BASE_URL + "RushBuy.aspx";
     private HomeRushAllAdapter homeRushAllAdapter;
     private List<HomeWareBean.DataBean> rushData;
     private List<HomeGroupBean.DataBean> groupData;
@@ -88,6 +92,7 @@ public class HomeFragment extends BaseFragment {
     };
     private WeakReference<Handler> wef =new WeakReference<Handler>(handler);
     private String down_timer = "";
+    private List<QiangTaoBean.DataBean> qiangData;
 
     @Override
     public View initView() {
@@ -101,6 +106,7 @@ public class HomeFragment extends BaseFragment {
         netUtils = new NetUtil();
         netUtils2 = new NetUtil();
         netUtils3 = new NetUtil();
+        netUtils4 = new NetUtil();
         requestDataRefresh();
         setRefresh(mIsRequestDataRefresh);
         netUtils.okHttp2Server2(rush_url, null);
@@ -142,6 +148,48 @@ public class HomeFragment extends BaseFragment {
 
             }
         });
+        netUtils4.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
+            @Override
+            public void getSuccessResponse(String response) {
+                LogUtil.e(response);
+                parseData4(response);
+            }
+
+            @Override
+            public void getFailResponse(Call call, Exception e) {
+
+            }
+        });
+    }
+
+    /**
+     * 解析首页抢购数据
+     * @param response
+     */
+    private void parseData4(String response) {
+        QiangTaoBean qiangTaoBean = new Gson().fromJson(response, QiangTaoBean.class);
+        int statusCode = qiangTaoBean.getStatusCode();
+        switch (statusCode) {
+            case 1 :
+                qiangData = qiangTaoBean.getData();
+                if(mIsRequestDataRefresh ==true) {
+                    stopDataRefresh();
+                    setRefresh(mIsRequestDataRefresh);
+                }
+                isFirst = true;
+                if(isFirst) {
+                    handler.removeMessages(TIME_DOWN);
+                    time = 60000;
+                    rushDownTimer = new RushDownTimer(getContext());
+                    //handler.sendEmptyMessage(TIME_DOWN);
+                    loadRecyclerData(rushData,groupData,typeData,rushDownTimer,qiangData);
+                }
+                break;
+            case 0:
+                Toast.makeText(getContext(), qiangTaoBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+
+                break;
+        }
     }
 
     /**
@@ -154,18 +202,10 @@ public class HomeFragment extends BaseFragment {
         switch (statusCode) {
             case 1 :
                 typeData = tyepIndexBean.getData();
-                if(mIsRequestDataRefresh ==true) {
-                    stopDataRefresh();
-                    setRefresh(mIsRequestDataRefresh);
-                }
-                isFirst = true;
-                if(isFirst) {
-                    handler.removeMessages(TIME_DOWN);
-                    time = 60000;
-                    rushDownTimer = new RushDownTimer(getContext());
-                    //handler.sendEmptyMessage(TIME_DOWN);
-                    loadRecyclerData(rushData,groupData,typeData,rushDownTimer);
-                }
+                Map<String, String> map = new HashMap<>();
+                map.put("pageSize","3");
+                map.put("pageIndex","1");
+                netUtils4.okHttp2Server2(qiang_url,map);
                 break;
             case 0:
                 Toast.makeText(getContext(), tyepIndexBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -209,10 +249,10 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    private void loadRecyclerData(List<HomeWareBean.DataBean> homeChangeDatas, List<HomeGroupBean.DataBean> groupData, List<TyepIndexBean.DataBean> typeData, RushDownTimer rushDownTimer) {
+    private void loadRecyclerData(List<HomeWareBean.DataBean> homeChangeDatas, List<HomeGroupBean.DataBean> groupData, List<TyepIndexBean.DataBean> typeData, RushDownTimer rushDownTimer, List<QiangTaoBean.DataBean> qiangData) {
         FullyLinearLayoutManager layoutManager = new FullyLinearLayoutManager(getContext());
         rcvHomeFragment.setLayoutManager(layoutManager);
-        homeRushAllAdapter = new HomeRushAllAdapter(getContext(),homeChangeDatas,getActivity(),groupData,typeData,rushDownTimer);
+        homeRushAllAdapter = new HomeRushAllAdapter(getContext(),homeChangeDatas,getActivity(),groupData,typeData,rushDownTimer,qiangData);
         rcvHomeFragment.setAdapter(homeRushAllAdapter);
     }
 

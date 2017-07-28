@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeBean;
+import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
 import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
@@ -88,11 +89,11 @@ public class FindPswActivity extends Activity {
      */
     private void parseData(String response) {
         Gson gson = new Gson();
-        CodeBean registerBean = gson.fromJson(response, CodeBean.class);
-        int statusCode = registerBean.getStatusCode();
+        CodeStatueBean codeStatueBean = gson.fromJson(response, CodeStatueBean.class);
+        int statusCode = codeStatueBean.getStatusCode();
         switch (statusCode) {
             case 0 :
-                Toast.makeText(FindPswActivity.this, "修改失败！"+registerBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(FindPswActivity.this,codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 Toast.makeText(FindPswActivity.this, "修改成功！", Toast.LENGTH_SHORT).show();

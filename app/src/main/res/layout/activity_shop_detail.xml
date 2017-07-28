@@ -57,10 +57,47 @@
         android:layout_width="@dimen/x300"
         android:layout_height="@dimen/x300"
         android:background="#ffffff"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:padding="@dimen/x3"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x1"
+                android:background="#11000000"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x45"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="#ffffff">
+                <ImageView
+                    android:layout_width="@dimen/x12"
+                    android:layout_height="@dimen/x12"
+                    android:src="@drawable/shop_name_icon"
+                    android:layout_marginLeft="@dimen/x10"/>
+                <TextView
+                    android:layout_width="@dimen/x90"
+                    android:layout_height="wrap_content"
+                    android:text="门店名称"
+                    android:textSize="12sp"
+                    android:textColor="#55000000"
+                    android:paddingLeft="@dimen/x10"/>
+                <EditText
+                    android:id="@+id/et_shop_detail_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="请输入门店名称"
+                    android:textColorHint="#55000000"
+                    android:textSize="12sp"
+                    android:textColor="#55000000"
+                    android:cursorVisible="false"
+                    android:inputType="number"/>
+
+            </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x1"/>
+        android:layout_height="@dimen/x1"
+        android:background="#11000000"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/x45"

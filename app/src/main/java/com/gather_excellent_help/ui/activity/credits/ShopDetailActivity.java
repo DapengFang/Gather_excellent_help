@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -104,6 +105,8 @@ public class ShopDetailActivity extends BaseActivity {
     TextView tvShopDetailAddress;
     @Bind(R.id.tv_shop_detail_confirm)
     TextView tvShopDetailConfirm;
+    @Bind(R.id.et_shop_detail_name)
+    EditText etShopDetailName;
 
     private Uri photoUri;
     /**
@@ -116,6 +119,10 @@ public class ShopDetailActivity extends BaseActivity {
      * 从Intent获取图片路径的KEY
      */
     public static final String KEY_PHOTO_PATH = "photo_path";
+    private String startTime = "6:00";
+    private String endTime = "18:00";
+    private String shopName;
+    private String shopYewu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,9 +157,14 @@ public class ShopDetailActivity extends BaseActivity {
                             if(data.size()>0) {
                                 ShopDetailBean.DataBean dataBean = shopDetailBean.getData().get(0);
                                 etShopDetailTel.setText(dataBean.getTelephone());
-                                etShopDetailYewu.setText(dataBean.getName());
+                                etShopDetailYewu.setText(dataBean.getBusiness());
                                 tvShopDetailIntroduction.setText(dataBean.getInfo());
                                 tvShopDetailAddress.setText(dataBean.getAddress());
+                                etShopDetailName.setText(dataBean.getName());
+                                String starBusinessTime = dataBean.getStarBusinessTime();
+                                String endBusinessTime = dataBean.getEndBusinessTime();
+                                tvShopTimeAm.setText("早上"+starBusinessTime);
+                                tvShopTimePm.setText("晚上"+endBusinessTime);
                                 mImageLoader.loadImage(Url.IMG_URL + dataBean.getStore_url(),ivShopPicture,true);
                             }
                         }else{
@@ -183,6 +195,9 @@ public class ShopDetailActivity extends BaseActivity {
         tvShopDetailConfirm.setOnClickListener(new MyOnClickListener());
     }
 
+    /**
+     * 监听点击事件的类
+     */
     public class MyOnClickListener implements View.OnClickListener {
 
         @Override
@@ -222,17 +237,26 @@ public class ShopDetailActivity extends BaseActivity {
     private void confirmShopInfo() {
         String loginId = Tools.getUserLogin(this);
         telephone = etShopDetailTel.getText().toString().trim();
+        shopName = etShopDetailName.getText().toString().trim();
+        shopYewu = etShopDetailYewu.getText().toString().trim();
         info = tvShopDetailIntroduction.getText().toString().trim();
         address = tvShopDetailAddress.getText().toString().trim();
         which = 1;
         HashMap<String, String> map = new HashMap<>();
         map.put("seller_id", loginId);
-        map.put("name", "");
+        map.put("name", shopName);
         map.put("telephone", telephone);
         map.put("address", address);
         map.put("info", info);
-        File file = new File(picPath);
-        netUtil.okHttp2Server3(update_shop_url, map,file);
+        map.put("business_time",startTime + "a" + endTime);
+        map.put("bussiness",shopYewu);
+       if(!TextUtils.isEmpty(picPath)) {
+            File file = new File(picPath);
+            netUtil.okHttp2Server3(update_shop_url, map,file);
+        }else{
+            Toast.makeText(ShopDetailActivity.this, "请选择上传图片！", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     /**
@@ -266,14 +290,18 @@ public class ShopDetailActivity extends BaseActivity {
                 if (id == R.id.tv_shop_time_am) {
                     if (minute < 10) {
                         tvShopTimeAm.setText("早上" + hour + ":0" + minute);
+                        startTime = hour + ":0" + minute;
                     } else {
                         tvShopTimeAm.setText("早上" + hour + ":" + minute);
+                        startTime = hour + ":" + minute;
                     }
                 } else {
                     if (minute < 10) {
                         tvShopTimePm.setText("晚上" + hour + ":0" + minute);
+                        endTime = hour + ":0" + minute;
                     } else {
                         tvShopTimePm.setText("晚上" + hour + ":" + minute);
+                        endTime = hour + ":0" + minute;
                     }
                 }
             }

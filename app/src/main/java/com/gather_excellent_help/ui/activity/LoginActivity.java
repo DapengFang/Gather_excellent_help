@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeBean;
+import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
@@ -93,19 +94,24 @@ public class LoginActivity extends Activity {
      */
     private void parseData(String response) {
         Gson gson = new Gson();
-        CodeBean codeBean = gson.fromJson(response, CodeBean.class);
-        int statusCode = codeBean.getStatusCode();
-        Integer id = codeBean.getData().get(0).getId();
+        CodeStatueBean codeStatueBean = gson.fromJson(response, CodeStatueBean.class);
+        int statusCode = codeStatueBean.getStatusCode();
         switch (statusCode){
             case 0:
-                Toast.makeText(LoginActivity.this, "登录失败" + codeBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
             case 1:
-                Toast.makeText(LoginActivity.this, codeBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                CacheUtils.putBoolean(LoginActivity.this,CacheUtils.LOGIN_STATE,true);
-                CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_VALUE,id+"");
-                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
-                finish();
+
+                Toast.makeText(LoginActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                CodeBean codeBean = new Gson().fromJson(response, CodeBean.class);
+                List<CodeBean.DataBean> data = codeBean.getData();
+                if(data.size()>0) {
+                    Integer id = data.get(0).getId();
+                    CacheUtils.putBoolean(LoginActivity.this,CacheUtils.LOGIN_STATE,true);
+                    CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_VALUE,id+"");
+                    EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
+                    finish();
+                }
                 break;
         }
     }

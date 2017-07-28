@@ -1,5 +1,6 @@
 package com.gather_excellent_help;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -8,6 +9,7 @@ import android.widget.RadioGroup;
 
 import android.support.v4.app.FragmentManager;
 
+import com.gather_excellent_help.ui.activity.SearchTaobaoActivity;
 import com.gather_excellent_help.ui.adapter.CustomPagerAdapter;
 import com.gather_excellent_help.ui.base.BaseFragmentActivity;
 import com.gather_excellent_help.ui.fragment.GoodscartFragment;
@@ -53,15 +55,14 @@ public class MainActivity extends FragmentActivity {
      * 加载ViewPager页面
      */
     private void loadViewPager() {
-        FragmentManager fm = getSupportFragmentManager();
-        CustomPagerAdapter customPagerAdapter = new CustomPagerAdapter(fm);
         fragments = new ArrayList<>();
         fragments.add(new HomeFragment());
         fragments.add(new TypeFragment());
         fragments.add(new TaobaoFragment());
         fragments.add(new GoodscartFragment());
         fragments.add(new MineFragment());
-        customPagerAdapter.setPagers(fragments);
+        FragmentManager fm = getSupportFragmentManager();
+        CustomPagerAdapter customPagerAdapter = new CustomPagerAdapter(fm,fragments);
         vp_main.setAdapter(customPagerAdapter);
     }
 
@@ -82,7 +83,7 @@ public class MainActivity extends FragmentActivity {
                 case R.id.rb_shaidan://分类
                     currItem = 1;
                     break;
-                case R.id.rb_type://澳+专场
+                case R.id.rb_type://搜淘宝
                     currItem = 2;
                     break;
                 case R.id.rb_shopping://购物车
@@ -92,7 +93,7 @@ public class MainActivity extends FragmentActivity {
                     currItem = 4;
                     break;
             }
-            vp_main.setCurrentItem(currItem, false);
+                vp_main.setCurrentItem(currItem, false);
         }
     }
 

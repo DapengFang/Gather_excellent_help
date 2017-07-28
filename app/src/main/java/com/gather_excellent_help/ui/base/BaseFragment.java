@@ -16,26 +16,28 @@ import android.view.ViewGroup;
 public abstract class BaseFragment extends Fragment {
     protected View mRootView;
     public Context mContext;
-    protected boolean isVisible;
-    private boolean isPrepared;
-    private boolean isFirst = true;
+
+    /** * 控件是否初始化完成 */
+    private boolean isViewCreated;
+    /** * 数据是否已加载完毕 */
+    private boolean isLoadDataCompleted;
 
     public BaseFragment() {
         // Required empty public constructor
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-//        Log.d("TAG", "fragment->setUserVisibleHint");
-        if (getUserVisibleHint()) {
-            isVisible = true;
-            lazyLoad();
-        } else {
-            isVisible = false;
-            onInvisible();
-        }
-    }
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+////        Log.d("TAG", "fragment->setUserVisibleHint");
+//        if (getUserVisibleHint()) {
+//            isVisible = true;
+//            lazyLoad();
+//        } else {
+//            isVisible = false;
+//            onInvisible();
+//        }
+//    }
 
 
     @Override
@@ -61,24 +63,23 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 //        Log.d("TAG", "fragment->onActivityCreated");
-        isPrepared = true;
-        lazyLoad();
-    }
-
-    protected void lazyLoad() {
-        if (!isPrepared || !isVisible || !isFirst) {
-            return;
-        }
-        Log.d("TAG", getClass().getName() + "->initData()");
         initData();
-        isFirst = false;
     }
 
-    //do something
-    protected void onInvisible() {
+//    protected void lazyLoad() {
+//        if (!isPrepared || !isVisible || !isFirst) {
+//            return;
+//        }
+//        Log.d("TAG", getClass().getName() + "->initData()");
+//        initData();
+//        isFirst = false;
+//    }
 
-
-    }
+//    //do something
+//    protected void onInvisible() {
+//
+//
+//    }
 
     public abstract View initView();
 

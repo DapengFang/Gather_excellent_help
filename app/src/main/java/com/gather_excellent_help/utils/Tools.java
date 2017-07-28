@@ -111,12 +111,21 @@ public class Tools {
     }
 
     /**
-     * 设置部分字体颜色为红色
+     * 设置部分字体颜色为红色(后面)
      */
     public static void setPartTextColor(TextView tv,String str,String s) {
         int end = str.indexOf(s);
         SpannableStringBuilder style = new SpannableStringBuilder(str);
         style.setSpan(new ForegroundColorSpan(Color.RED),end, str.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        tv.setText(style);
+    }
+    /**
+     * 设置部分字体颜色为红色(前面)
+     */
+    public static void setPartTextColor2(TextView tv,String str,String s) {
+        int end = str.indexOf(s);
+        SpannableStringBuilder style = new SpannableStringBuilder(str);
+        style.setSpan(new ForegroundColorSpan(Color.RED),0, end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         tv.setText(style);
     }
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_shuaixuan_popup"
+        android:layout_width="match_parent"
+        app:tabSelectedTextColor="@color/red_button_color"
+        app:tabIndicatorColor="@color/red_button_color"
+        app:tabIndicatorHeight="@dimen/x3"
+        android:layout_height="@dimen/x45"
+        android:background="#ffffff"></android.support.design.widget.TabLayout>
+   <FrameLayout
+       android:id="@+id/fl_shaixuan_popup"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"></FrameLayout>
+
+</LinearLayout>
