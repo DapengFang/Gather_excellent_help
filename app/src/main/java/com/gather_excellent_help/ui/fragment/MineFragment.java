@@ -29,6 +29,7 @@ import com.gather_excellent_help.ui.activity.credits.AccountDetailAvtivity;
 import com.gather_excellent_help.ui.activity.credits.BackRebateActivity;
 import com.gather_excellent_help.ui.activity.credits.ExtractCreditsActivity;
 import com.gather_excellent_help.ui.activity.credits.InviteFriendsActivity;
+import com.gather_excellent_help.ui.activity.credits.MerchantEnterActivity;
 import com.gather_excellent_help.ui.activity.credits.ShopDetailActivity;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.CircularImage;
@@ -118,6 +119,10 @@ public class MineFragment extends BaseFragment {
     LinearLayout llMineUserSalery;
     @Bind(R.id.ll_mine_user_back)
     LinearLayout llMineUserBack;
+    @Bind(R.id.tv_account_money_title1)
+    TextView tvAccountMoneyTitle1;
+    @Bind(R.id.tv_account_money_title2)
+    TextView tvAccountMoneyTitle2;
     private String mseg = "";
 
     private NetUtil netUtils;
@@ -178,7 +183,7 @@ public class MineFragment extends BaseFragment {
 
         llMineTaobaoOrder.setOnClickListener(new MyOnClickListener());
         llMineJuyoubangOrder.setOnClickListener(new MyOnClickListener());
-        
+
         llMineUserSalery.setOnClickListener(new MyOnClickListener());
         llMineUserBack.setOnClickListener(new MyOnClickListener());
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
@@ -256,9 +261,21 @@ public class MineFragment extends BaseFragment {
         } else {
             tvMineMobietype.setText("用户类型 + (" + mobile + ")");
         }
-        DecimalFormat df = new DecimalFormat("0.00");
-        tvAccountMoney.setText(df.format(amount) + "/" + df.format(frostAmount));
-        Tools.setPartTextColor2(tvAccountMoney, df.format(amount) + "/" + df.format(frostAmount), "/");
+        if (group_id == 4) {
+            tvAccountMoneyTitle1.setText("余额/提现");
+            DecimalFormat df = new DecimalFormat("0.00");
+            tvAccountMoney.setText(df.format(amount) + "/" + df.format(frostAmount));
+            Tools.setPartTextColor2(tvAccountMoney, df.format(amount) + "/" + df.format(frostAmount), "/");
+            tvAccountMoneyTitle2.setText("赚(冻结期)");
+            tvAccountMoney2.setVisibility(View.VISIBLE);
+            llMineZhuanOrder.setVisibility(View.VISIBLE);
+        }else{
+            tvAccountMoneyTitle1.setText("余额");
+            tvAccountMoneyTitle2.setText("充值");
+            tvAccountMoney2.setVisibility(View.GONE);
+            llMineZhuanOrder.setVisibility(View.GONE);
+        }
+
     }
 
     /**
@@ -360,8 +377,19 @@ public class MineFragment extends BaseFragment {
                 case R.id.ll_mine_user_back:
                     toBackRebate();
                     break;
+                case R.id.ll_mine_huiyuan_statis:
+                    toMerchantEnter();
+                    break;
             }
         }
+    }
+
+    /**
+     * 跳转到商家入驻界面
+     */
+    private void toMerchantEnter() {
+        Intent intent = new Intent(getContext(), MerchantEnterActivity.class);
+        startActivity(intent);
     }
 
     /**

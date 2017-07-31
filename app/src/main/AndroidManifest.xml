@@ -114,7 +114,9 @@
         <activity android:name=".ui.activity.wards.SeeWardsActivity" />
         <activity android:name=".ui.activity.wards.WardsStatisticsActivity" />
         <activity android:name=".ui.activity.SearchTaobaoActivity" />
-        <activity android:name=".ui.activity.credits.BackRebateActivity"></activity>
+        <activity android:name=".ui.activity.credits.BackRebateActivity" />
+        <activity android:name=".ui.activity.credits.MerchantEnterActivity" />
+        <activity android:name=".ui.activity.WebActivity"></activity>
     </application>
 
 </manifest>

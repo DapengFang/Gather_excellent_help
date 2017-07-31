@@ -20,25 +20,40 @@
         android:paddingLeft="@dimen/x10"
         android:paddingRight="@dimen/x10"/>
     <TextView
-        android:id="@+id/tv_home_type_price"
+        android:id="@+id/tv_rush_ware_sale"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="10sp"
+        android:text="到手价：￥5623.00"
         android:textColor="#99ff0000"
-        android:layout_marginTop="@dimen/x3"
-        android:paddingTop="@dimen/x5"
-        android:paddingLeft="@dimen/x10"
-        android:paddingRight="@dimen/x10"/>
+        android:layout_marginTop="@dimen/x2"
+        android:paddingLeft="@dimen/x10"/>
     <TextView
-        android:id="@+id/tv_home_type_allprice"
+        android:id="@+id/tv_rush_ware_coast"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="10sp"
+        android:text="到手价：￥5623.00"
         android:textColor="#99ff0000"
-        android:layout_marginTop="@dimen/x3"
-        android:paddingTop="@dimen/x5"
-        android:paddingLeft="@dimen/x10"
-        android:paddingRight="@dimen/x10"
-        android:paddingBottom="@dimen/x5"/>
+        android:paddingLeft="@dimen/x10"/>
+    <TextView
+        android:id="@+id/tv_rush_ware_aprice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:text="到手价：￥5623.00"
+        android:textColor="#99000000"
+        android:paddingLeft="@dimen/x10"/>
+    <TextView
+        android:id="@+id/tv_rush_ware_coupons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="领券立减200"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        android:gravity="center"
+        android:background="@drawable/type_xiadan_bg"
+        android:layout_marginLeft="@dimen/x3"
+        android:layout_marginRight="@dimen/x3"/>
 
 </LinearLayout>

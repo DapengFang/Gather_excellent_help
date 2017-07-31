@@ -32,10 +32,12 @@ import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.widget.CarouselImageView;
 import com.gather_excellent_help.ui.widget.MyGridView;
 import com.gather_excellent_help.ui.widget.RushDownTimer;
+import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
+import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
 
@@ -302,6 +304,26 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     context.startActivity(intent);
                 }
             });
+            if(dataBean0.getTitle().length()>12) {
+                firstBuyViewHoldre.tvFirstBigTitle.setText(dataBean0.getTitle().substring(0,12)+"...");
+            }else{
+                firstBuyViewHoldre.tvFirstBigTitle.setText(dataBean0.getTitle());
+            }
+            firstBuyViewHoldre.tvFirstBigPrice.setText("￥"+dataBean0.getSell_price());
+            int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
+            if(group_id==4){
+                boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
+                if(toggleShow) {
+                    firstBuyViewHoldre.tvFirstBigZhuan.setVisibility(View.GONE);
+                    firstBuyViewHoldre.tvFirstBigChengben.setVisibility(View.GONE);
+                }else{
+                    firstBuyViewHoldre.tvFirstBigZhuan.setVisibility(View.VISIBLE);
+                    firstBuyViewHoldre.tvFirstBigChengben.setVisibility(View.VISIBLE);
+                }
+            }else{
+                firstBuyViewHoldre.tvFirstBigZhuan.setVisibility(View.GONE);
+                firstBuyViewHoldre.tvFirstBigChengben.setVisibility(View.GONE);
+            }
             mImageLoader.loadImage(dataBean0.getImg_url(),((FirstBuyViewHolder) holder).ivFirstbuyBig,true);
             tvTitle.setTextColor(Color.parseColor("#32C300"));
             firstBuyViewHoldre.tvRushHour.setText(rushDownTimer.getHour());
@@ -415,6 +437,14 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         LinearLayout llFirstWareZera;
         @Bind(R.id.iv_firstbuy_big)
         ImageView ivFirstbuyBig;
+        @Bind(R.id.tv_first_big_title)
+        TextView tvFirstBigTitle;
+        @Bind(R.id.tv_first_big_price)
+        TextView tvFirstBigPrice;
+        @Bind(R.id.tv_first_big_zhuan)
+        TextView tvFirstBigZhuan;
+        @Bind(R.id.tv_first_big_chengben)
+        TextView tvFirstBigChengben;
         public FirstBuyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

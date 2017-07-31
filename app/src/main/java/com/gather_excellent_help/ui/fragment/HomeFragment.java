@@ -66,8 +66,10 @@ public class HomeFragment extends BaseFragment {
     private List<HomeWareBean.DataBean> rushData;
     private List<HomeGroupBean.DataBean> groupData;
     private List<TyepIndexBean.DataBean> typeData;
+    private List<QiangTaoBean.DataBean> qiangData;
     private RushDownTimer rushDownTimer; //倒计时处理类
     public static final int TIME_DOWN = 1; //倒计时显示的标识
+    public static final int LOAD_DATA = 2; //加载数据的标识
     private long time;//倒计时总时长
     private boolean isFirst;//是否有抢购
 
@@ -87,12 +89,30 @@ public class HomeFragment extends BaseFragment {
                     }
                     handler.sendEmptyMessageDelayed(TIME_DOWN,1000);
                     break;
+                case LOAD_DATA:
+                    if(rushData.size()>0 && groupData.size()>0 && typeData.size()>0 && qiangData.size() > 0) {
+                        if(mIsRequestDataRefresh ==true) {
+                            stopDataRefresh();
+                            setRefresh(mIsRequestDataRefresh);
+                        }
+                        isFirst = true;
+                        if(isFirst) {
+                           handler.removeMessages(TIME_DOWN);
+                           time = 60000;
+                           rushDownTimer = new RushDownTimer(getContext());
+                           //handler.sendEmptyMessage(TIME_DOWN);
+                           loadRecyclerData(rushData,groupData,typeData,rushDownTimer,qiangData);
+                           }
+                        handler.removeMessages(LOAD_DATA);
+                        return;
+                    }
+                    handler.sendEmptyMessageDelayed(LOAD_DATA,500);
+                    break;
             }
         }
     };
     private WeakReference<Handler> wef =new WeakReference<Handler>(handler);
     private String down_timer = "";
-    private List<QiangTaoBean.DataBean> qiangData;
 
     @Override
     public View initView() {
@@ -103,17 +123,15 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void initData() {
         cleanCache();
-        netUtils = new NetUtil();
-        netUtils2 = new NetUtil();
-        netUtils3 = new NetUtil();
-        netUtils4 = new NetUtil();
+        initNetUtils();
         requestDataRefresh();
         setRefresh(mIsRequestDataRefresh);
-        netUtils.okHttp2Server2(rush_url, null);
+        initMutilData();
+        net2Server();
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                LogUtil.e("--"+response);
+                LogUtil.e("热销"+response);
                 parseData(response);
             }
 
@@ -127,7 +145,7 @@ public class HomeFragment extends BaseFragment {
         netUtils2.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                LogUtil.e(response);
+                LogUtil.e("团购" + response);
                 parseData2(response);
             }
 
@@ -139,7 +157,7 @@ public class HomeFragment extends BaseFragment {
         netUtils3.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                LogUtil.e(response);
+                LogUtil.e("分类"+response);
                 parseData3(response);
             }
 
@@ -151,7 +169,7 @@ public class HomeFragment extends BaseFragment {
         netUtils4.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                LogUtil.e(response);
+                LogUtil.e("抢购" + response);
                 parseData4(response);
             }
 
@@ -160,6 +178,40 @@ public class HomeFragment extends BaseFragment {
 
             }
         });
+
+    }
+
+    /**
+     * 初始化首页数据
+     */
+    private void initMutilData() {
+        rushData = new ArrayList<>();
+        groupData = new ArrayList<>();
+        typeData = new ArrayList<>();
+        qiangData = new ArrayList<>();
+    }
+
+    /**
+     * 联网请求
+     */
+    private void net2Server() {
+        netUtils.okHttp2Server2(rush_url, null);
+        netUtils2.okHttp2Server2(group_url,null);
+        netUtils3.okHttp2Server2(type_url,null);
+        Map<String, String> map = new HashMap<>();
+        map.put("pageSize","3");
+        map.put("pageIndex","1");
+        netUtils4.okHttp2Server2(qiang_url,map);
+    }
+
+    /**
+     * 出事化联网加载类
+     */
+    private void initNetUtils() {
+        netUtils = new NetUtil();
+        netUtils2 = new NetUtil();
+        netUtils3 = new NetUtil();
+        netUtils4 = new NetUtil();
     }
 
     /**
@@ -172,18 +224,6 @@ public class HomeFragment extends BaseFragment {
         switch (statusCode) {
             case 1 :
                 qiangData = qiangTaoBean.getData();
-                if(mIsRequestDataRefresh ==true) {
-                    stopDataRefresh();
-                    setRefresh(mIsRequestDataRefresh);
-                }
-                isFirst = true;
-                if(isFirst) {
-                    handler.removeMessages(TIME_DOWN);
-                    time = 60000;
-                    rushDownTimer = new RushDownTimer(getContext());
-                    //handler.sendEmptyMessage(TIME_DOWN);
-                    loadRecyclerData(rushData,groupData,typeData,rushDownTimer,qiangData);
-                }
                 break;
             case 0:
                 Toast.makeText(getContext(), qiangTaoBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -202,10 +242,6 @@ public class HomeFragment extends BaseFragment {
         switch (statusCode) {
             case 1 :
                 typeData = tyepIndexBean.getData();
-                Map<String, String> map = new HashMap<>();
-                map.put("pageSize","3");
-                map.put("pageIndex","1");
-                netUtils4.okHttp2Server2(qiang_url,map);
                 break;
             case 0:
                 Toast.makeText(getContext(), tyepIndexBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -223,7 +259,7 @@ public class HomeFragment extends BaseFragment {
         switch (statusCode) {
             case 1 :
                 groupData = homeGroupBean.getData();
-                netUtils3.okHttp2Server2(type_url,null);
+
                 break;
             case 0:
                 Toast.makeText(getContext(), homeGroupBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -241,7 +277,7 @@ public class HomeFragment extends BaseFragment {
         switch (statusCode) {
             case 1 :
                 rushData = homeWareBean.getData();
-                netUtils2.okHttp2Server2(group_url,null);
+                handler.sendEmptyMessage(LOAD_DATA);
                 break;
             case 0:
                 Toast.makeText(getContext(), homeWareBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -271,6 +307,7 @@ public class HomeFragment extends BaseFragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
         handler.removeMessages(TIME_DOWN);
+        handler.removeMessages(LOAD_DATA);
         wef.clear();
         cleanCache();
     }

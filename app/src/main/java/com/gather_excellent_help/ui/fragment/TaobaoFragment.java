@@ -1,9 +1,11 @@
 package com.gather_excellent_help.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -16,7 +18,7 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.SearchTaobaoBean;
-import com.gather_excellent_help.bean.SearchWareBean;
+import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.adapter.TaobaoWareListAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.TaobaoShaixuanPopupwindow;
@@ -112,9 +114,25 @@ public class TaobaoFragment extends BaseFragment {
                 switch (statusCode) {
                     case 1 :
                         SearchTaobaoBean searchTaobaoBean = new Gson().fromJson(response, SearchTaobaoBean.class);
-                        List<SearchTaobaoBean.DataBean> data = searchTaobaoBean.getData();
+                        final List<SearchTaobaoBean.DataBean> data = searchTaobaoBean.getData();
                         TaobaoWareListAdapter taobaoWareListAdapter = new TaobaoWareListAdapter(getContext(), data);
                         gvTaobaoList.setAdapter(taobaoWareListAdapter);
+                        gvTaobaoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                String link_url = data.get(i).getLink_url();
+                                String goods_id = String.valueOf(data.get(i).getProductId());
+                                String goods_img = Url.IMG_URL + data.get(i).getImg_url();
+                                String goods_title = data.get(i).getTitle();
+                                Intent intent = new Intent(getContext(), WebRecordActivity.class);
+                                intent.putExtra("url",link_url);
+                                intent.putExtra("goods_id",goods_id);
+                                intent.putExtra("goods_img",goods_img);
+                                intent.putExtra("goods_title",goods_title);
+                                startActivity(intent);
+                            }
+                        });
+
                         break;
                     case 0:
                         Toast.makeText(getContext(), codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -124,7 +142,7 @@ public class TaobaoFragment extends BaseFragment {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-
+                LogUtil.e(call.toString() + "--" + e.getMessage());
             }
         });
         rlTaobaoSousuo.setOnClickListener(new MyOnclickListener());
@@ -133,6 +151,9 @@ public class TaobaoFragment extends BaseFragment {
         llTaobaoPrice.setOnClickListener(new MyOnclickListener());
         llTaobaoShaixuan.setOnClickListener(new MyOnclickListener());
     }
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

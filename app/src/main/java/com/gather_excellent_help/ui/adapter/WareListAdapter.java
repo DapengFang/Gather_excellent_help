@@ -13,6 +13,7 @@ import com.gather_excellent_help.bean.HomeTypeBean;
 import com.gather_excellent_help.bean.SearchWareBean;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -57,25 +58,36 @@ public class WareListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.home_type_photo = (ImageView) convertView.findViewById(R.id.iv_home_type_photo);
             holder.home_type_name = (TextView) convertView.findViewById(R.id.tv_home_type_title);
-            holder.tv_home_type_price = (TextView) convertView.findViewById(R.id.tv_home_type_price);
-            holder.tv_home_type_allprice = (TextView) convertView.findViewById(R.id.tv_home_type_allprice);
+            holder.tv_home_type_sale = (TextView) convertView.findViewById(R.id.tv_rush_ware_sale);
+            holder.tv_home_type_coast = (TextView) convertView.findViewById(R.id.tv_rush_ware_coast);
+            holder.tv_home_type_aprice = (TextView) convertView.findViewById(R.id.tv_rush_ware_aprice);
+            holder.tv_rush_ware_coupons = (TextView) convertView.findViewById(R.id.tv_rush_ware_coupons);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        String sTitle = dataBean.getTitle().substring(0, 12) + "...";
-        holder.home_type_name.setText(sTitle);
+        if(dataBean.getTitle().length()>12) {
+            String sTitle = dataBean.getTitle().substring(0, 12) + "...";
+            holder.home_type_name.setText(sTitle);
+        }else{
+            holder.home_type_name.setText(dataBean.getTitle());
+        }
         mImageLoader.loadImage(dataBean.getImg_url(),holder.home_type_photo,true);
-        holder.tv_home_type_price.setText("页面价："+dataBean.getMarket_price());
-        holder.tv_home_type_allprice.setText("聚优帮返："+(dataBean.getMarket_price() - dataBean.getSell_price())+" "+
-        "到手价："+dataBean.getSell_price());
+        DecimalFormat df = new DecimalFormat("#0.00");
+        double zhuan = dataBean.getSell_price() * 0.1F * 0.9f * 0.83f;
+        double coast = dataBean.getSell_price() - zhuan;
+        holder.tv_home_type_sale.setText("赚:￥"+df.format(zhuan));
+        holder.tv_home_type_coast.setText("成本:"+df.format(coast));
+        holder.tv_home_type_aprice.setText("页面价："+df.format(dataBean.getSell_price()));
         return convertView;
     }
 
     class ViewHolder {
         ImageView home_type_photo;        //商品图片
         TextView home_type_name;            //商品名称
-        TextView tv_home_type_price ;         //页面价
-        TextView tv_home_type_allprice ;       //据友邦返
+        TextView tv_home_type_sale ;         //赚
+        TextView tv_home_type_coast ;       //成本
+        TextView tv_home_type_aprice ;       //活动价
+        TextView tv_rush_ware_coupons ;       //优惠券
     }
 }
