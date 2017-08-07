@@ -72,6 +72,38 @@ public class NetUtil {
             }
         });
     }
+    /**
+     * 联网请求服务器（post）
+     * 上传文件
+     * @return 参数对象
+     */
+    public void okHttp2Server4(String url, Map<String,String> map,File[] files){
+        PostFormBuilder builder = OkHttpUtils.post().url(url);
+        if(map!=null) {
+            builder = addParams2Builder(builder, map);
+            builder = addFiles2Builder(builder,files);
+        }
+        builder.build()
+                .execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                onServerResponseListener.getFailResponse(call,e);
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                onServerResponseListener.getSuccessResponse(response);
+            }
+        });
+    }
+
+    private PostFormBuilder addFiles2Builder(PostFormBuilder builder, File[] files) {
+        for (int i=0;i<files.length;i++){
+            builder.addFile("picture",(1+i)+".png",files[i]);
+        }
+        return builder;
+    }
+
 
     /**
      * okHttp进行联网请求（get）

@@ -2,6 +2,7 @@ package com.gather_excellent_help.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.SearchTaobaoBean;
 import com.gather_excellent_help.bean.SearchWareBean;
 import com.gather_excellent_help.ui.activity.WebActivity;
+import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 
 import java.text.DecimalFormat;
@@ -68,7 +71,7 @@ public class TaobaoWareListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        String sTitle = dataBean.getTitle().substring(0, 12) + "...";
+        String sTitle = dataBean.getTitle().substring(0, 10) + "...";
         holder.home_type_name.setText(sTitle);
         mImageLoader.loadImage(dataBean.getImg_url(),holder.home_type_photo,true);
         holder.tv_home_type_aprice.setText("页面价："+dataBean.getSell_price());
@@ -81,15 +84,37 @@ public class TaobaoWareListAdapter extends BaseAdapter {
             double coast = sellPrice - zhuan;
             holder.tv_home_type_sale.setText("赚:￥"+df.format(zhuan));
             holder.tv_home_type_coast.setText("成本:"+df.format(coast));
-            holder.tv_rush_ware_coupons.setText("领取优惠券");
+            String coupon_info1 = coupon_info.getCoupon_info();
+            if(coupon_info1!=null && !TextUtils.isEmpty(coupon_info1)) {
+                int index = coupon_info1.indexOf("减");
+                String coupon = coupon_info1.substring(index, coupon_info1.length() - 1);
+                holder.tv_rush_ware_coupons.setText("领券立减"+coupon);
+                holder.tv_rush_ware_coupons.setVisibility(View.VISIBLE);
+            }else{
+                holder.tv_rush_ware_coupons.setVisibility(View.GONE);
+            }
             holder.tv_rush_ware_coupons.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                 Intent intent = new Intent(context, WebActivity.class);
+                    Intent intent = new Intent(context, WebActivity.class);
                     intent.putExtra("web_url",coupon_info.getCoupon_click_url());
-                 context.startActivity(intent);
+                    context.startActivity(intent);
                 }
             });
+            int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
+            if(group_id==4){
+                boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
+                if(toggleShow) {
+                    holder.tv_home_type_sale.setVisibility(View.GONE);
+                    holder.tv_home_type_coast.setVisibility(View.GONE);
+                }else{
+                    holder.tv_home_type_sale.setVisibility(View.VISIBLE);
+                    holder.tv_home_type_coast.setVisibility(View.VISIBLE);
+                }
+            }else{
+                holder.tv_home_type_sale.setVisibility(View.GONE);
+                holder.tv_home_type_coast.setVisibility(View.GONE);
+            }
         }
         return convertView;
     }

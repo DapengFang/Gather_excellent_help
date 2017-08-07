@@ -19,6 +19,7 @@ import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -110,6 +111,9 @@ public class PersonInfoActivity extends BaseActivity {
         List<UserinfoBean.DataBean> data = userinfoBean.getData();
         switch (statusCode) {
             case 1 :
+                if(data==null) {
+                    return;
+                }
                 loadUserInfo(data);
                 break;
             case 0:

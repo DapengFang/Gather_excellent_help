@@ -75,9 +75,9 @@ public class HomeBannerBean {
         private int couponsSurplus;
         private int couponsGet;
         private int stock_quantity;
-        private int market_price;
-        private int sell_price;
-        private int tkRate;
+        private double market_price;
+        private double sell_price;
+        private double tkRate;
 
         public int getActivity_id() {
             return activity_id;
@@ -183,27 +183,27 @@ public class HomeBannerBean {
             this.stock_quantity = stock_quantity;
         }
 
-        public int getMarket_price() {
+        public double getMarket_price() {
             return market_price;
         }
 
-        public void setMarket_price(int market_price) {
+        public void setMarket_price(double market_price) {
             this.market_price = market_price;
         }
 
-        public int getSell_price() {
+        public double getSell_price() {
             return sell_price;
         }
 
-        public void setSell_price(int sell_price) {
+        public void setSell_price(double sell_price) {
             this.sell_price = sell_price;
         }
 
-        public int getTkRate() {
+        public double getTkRate() {
             return tkRate;
         }
 
-        public void setTkRate(int tkRate) {
+        public void setTkRate(double tkRate) {
             this.tkRate = tkRate;
         }
     }

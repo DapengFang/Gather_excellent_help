@@ -31,6 +31,10 @@ public class CacheUtils {
 	public static final String TOGGLE_SHOW = "toggle_show";
 
 	private static final String NAME = "login";
+	//保存广告位id
+	public static final String ADVER_ID = "adver_id";
+	public static final String TAOBAO_NICK = "taobao_nick";
+	public static final String ALIPAY_ACCOUNT = "alipay_account";
 
 	public static SharedPreferences sp;
 

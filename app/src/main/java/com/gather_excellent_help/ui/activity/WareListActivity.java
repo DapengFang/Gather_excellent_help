@@ -101,6 +101,9 @@ public class WareListActivity extends BaseActivity {
     private String ware_url = Url.BASE_URL + "CategoryGoodList.aspx";
     private int isLoadmore = -1;
     private List<SearchWareBean.DataBean> newData;
+    private String content_et = "";
+    private String activity_id = "";
+    private String activity_url = Url.BASE_URL + "ActivityMoreList.aspx";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +123,7 @@ public class WareListActivity extends BaseActivity {
         Intent intent = getIntent();
         sousuoStr = intent.getStringExtra("content");
         type_id = intent.getStringExtra("type_id");
+        activity_id = intent.getStringExtra("activity_id");
         if(type_id!=null && !TextUtils.isEmpty(type_id)) {
             tvWareListOld.setVisibility(View.GONE);
             etWareListContent.setHint("请输入商品名称");
@@ -127,12 +131,20 @@ public class WareListActivity extends BaseActivity {
             map.put("id",type_id);
             netUtil2.okHttp2Server2(ware_url,map2);
         }else{
+            tvWareListOld.setVisibility(View.GONE);
+            etWareListContent.setHint("请输入商品名称");
             if(sousuoStr.equals("isQiang")) {
                 map = new HashMap<>();
                 map.put("pageSize","10");
                 map.put("pageIndex","1");
-                String qiang_url = Url.BASE_URL + "RushBuy.aspx";
+                String qiang_url = Url.BASE_URL + "GroupBuyList.aspx";
                 netUtil2.okHttp2Server2(qiang_url,map);
+            }else if(sousuoStr.equals("activity")) {
+                map = new HashMap<>();
+                map.put("pageSize","10");
+                map.put("pageIndex","1");
+                map.put("activity_id",activity_id);
+                netUtil2.okHttp2Server2(activity_url,map);
             }else if(sousuoStr!=null && !TextUtils.isEmpty(sousuoStr)) {
                 tvWareListOld.setVisibility(View.VISIBLE);
                 tvWareListOld.setText(sousuoStr);
@@ -186,6 +198,9 @@ public class WareListActivity extends BaseActivity {
         int statusCode = searchWareBean.getStatusCode();
         switch (statusCode) {
             case 1 :
+                if(gvWartList==null) {
+                    return;
+                }
                 if(isLoadmore!=-1) {
                     newData = searchWareBean.getData();
                     wareData.addAll(newData);
@@ -201,7 +216,7 @@ public class WareListActivity extends BaseActivity {
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         String link_url = wareData.get(i).getLink_url();
                         String goods_id = wareData.get(i).getProductId();
-                        String goods_img = Url.IMG_URL + wareData.get(i).getImg_url();
+                        String goods_img = wareData.get(i).getImg_url();
                         String goods_title = wareData.get(i).getTitle();
                         Intent intent = new Intent(WareListActivity.this, WebRecordActivity.class);
                         intent.putExtra("url",link_url);
@@ -229,7 +244,7 @@ public class WareListActivity extends BaseActivity {
                                               keyword = sousuoStr;
                                               pageIndex = String.valueOf(page);
                                               LogUtil.e("newData.size() ==" + newData.size());
-                                              if(newData.size() <2) {
+                                              if(newData.size() <Integer.valueOf(pageSize)) {
                                                   showLoadNoMore();
                                               }else{
                                                   showLoadMore();
@@ -240,7 +255,27 @@ public class WareListActivity extends BaseActivity {
                                                       }
                                                   },500);
                                               }
-                                      }else{
+                                      }else if(!TextUtils.isEmpty(content_et)) {
+                                          page++;
+                                          LogUtil.e("page == "+page);
+                                          tvWareListOld.setVisibility(View.VISIBLE);
+                                          tvWareListOld.setText(sousuoStr);
+                                          etWareListContent.setHint("");
+                                          keyword = sousuoStr;
+                                          pageIndex = String.valueOf(page);
+                                          LogUtil.e("newData.size() ==" + newData.size());
+                                          if(newData.size() <Integer.valueOf(pageSize)) {
+                                              showLoadNoMore();
+                                          }else{
+                                              showLoadMore();
+                                              handler.postDelayed(new Runnable() {
+                                                  @Override
+                                                  public void run() {
+                                                      searchWareList(keyword);
+                                                  }
+                                              },500);
+                                          }
+                                      }{
                                           etWareListContent.setHint("请输入商品名称");
                                           tvWareListOld.setVisibility(View.GONE);
                                       }
@@ -285,6 +320,9 @@ public class WareListActivity extends BaseActivity {
             case 1:
                 LogUtil.e(response);
                 conditionData = listBean.getData();
+                if(conditionData==null) {
+                    return;
+                }
                 setPopMenuNull();
                 showPopMenu(conditionData);
 
@@ -391,14 +429,15 @@ public class WareListActivity extends BaseActivity {
                 case R.id.rl_sousuo:
                     isLoadmore = -1;
                     ll_ware_list_loadmore.setVisibility(View.GONE);
-                    String content = etWareListContent.getText().toString().trim();
+                    content_et = etWareListContent.getText().toString().trim();
                     if(sousuoStr!=null && !TextUtils.isEmpty(sousuoStr)) {
                         Toast.makeText(WareListActivity.this, sousuoStr, Toast.LENGTH_SHORT).show();
                         keyword = sousuoStr;
+                        pageIndex = "1";
                         searchWareList(keyword);
-                    }else if(content!=null && !TextUtils.isEmpty(content)) {
-                        Toast.makeText(WareListActivity.this, content, Toast.LENGTH_SHORT).show();
-                        keyword =content;
+                    }else if(content_et!=null && !TextUtils.isEmpty(content_et)) {
+                        keyword =content_et;
+                        pageIndex = "1";
                         searchWareList(keyword);
                     }else{
                         Toast.makeText(WareListActivity.this, "请输入搜索内容！", Toast.LENGTH_SHORT).show();

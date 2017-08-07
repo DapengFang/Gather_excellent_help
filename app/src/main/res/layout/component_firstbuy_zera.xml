@@ -15,6 +15,7 @@
         android:layout_height="@dimen/x240"
         android:orientation="horizontal">
         <LinearLayout
+            android:id="@+id/ll_first_left_zero"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -95,19 +96,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="@dimen/x8">
+                android:layout_marginTop="@dimen/x3">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="抢购价:"
                     android:textSize="12sp"
-                    android:textColor="#55000000"
-                    android:paddingLeft="@dimen/x3" />
+                    android:textColor="#55000000" />
                 <TextView
                     android:id="@+id/tv_first_big_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="￥2589"
                     android:textSize="14sp"
                     android:textColor="#99ff0000"
                     android:paddingLeft="@dimen/x3" />
@@ -118,17 +117,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="赚:￥106.89"
-                android:textSize="12sp"
-                android:textColor="#99ff0000"
-                android:padding="@dimen/x3" />
+                android:textSize="10sp"
+                android:textColor="#99ff0000" />
             <TextView
                 android:id="@+id/tv_first_big_chengben"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="成本:￥3092.11"
-                android:textSize="12sp"
-                android:textColor="#99ff0000"
-                android:padding="@dimen/x3" />
+                android:textSize="10sp"
+                android:textColor="#99ff0000" />
             <ImageView
                 android:id="@+id/iv_firstbuy_big"
                 android:layout_width="wrap_content"

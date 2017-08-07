@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="你的淘口令已生成"
+        android:textSize="14sp"
+        android:textColor="#ee000000"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/x7"/>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x120"
+        android:layout_marginTop="@dimen/x2"
+        android:padding="@dimen/x5">
+        <TextView
+            android:id="@+id/tv_copy_taoword_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="14sp"
+            android:textColor="#55000000"
+            android:background="@drawable/gray_cordor_stroke_shape"
+            android:padding="@dimen/x3"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/tao_word_success"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"/>
+        
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:background="#11000000"/>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_copy_taoword_dismiss"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="不分享了"
+            android:textColor="#99000000"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_margin="@dimen/x3"/>
+        <View
+            android:layout_width="@dimen/x1"
+            android:layout_height="match_parent"
+            android:background="#11000000"/>
+        <TextView
+            android:id="@+id/tv_copy_taoword_share"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="去粘贴"
+            android:textColor="#99ff0000"
+            android:textSize="14sp"
+            android:gravity="center"/>
+
+    </LinearLayout>
+   
+
+</LinearLayout>

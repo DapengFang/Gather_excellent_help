@@ -1,29 +1,27 @@
 package com.gather_excellent_help;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.RadioGroup;
 
 import android.support.v4.app.FragmentManager;
 
-import com.gather_excellent_help.ui.activity.SearchTaobaoActivity;
 import com.gather_excellent_help.ui.adapter.CustomPagerAdapter;
-import com.gather_excellent_help.ui.base.BaseFragmentActivity;
 import com.gather_excellent_help.ui.fragment.GoodscartFragment;
 import com.gather_excellent_help.ui.fragment.HomeFragment;
 import com.gather_excellent_help.ui.fragment.MineFragment;
 import com.gather_excellent_help.ui.fragment.TaobaoFragment;
 import com.gather_excellent_help.ui.fragment.TypeFragment;
 import com.gather_excellent_help.ui.widget.NoScrollViewPager;
+import com.gather_excellent_help.utils.EncryptUtil;
+import com.gather_excellent_help.utils.LogUtil;
+import com.gather_excellent_help.utils.Tools;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 
 public class MainActivity extends FragmentActivity {
 
@@ -40,6 +38,8 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initData();
+        String md5Value = EncryptUtil.getMd5Value("123456@@11fe468");
+        LogUtil.e(md5Value);
     }
 
     /**

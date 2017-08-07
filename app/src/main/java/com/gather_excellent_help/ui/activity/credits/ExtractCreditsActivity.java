@@ -16,13 +16,16 @@ import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.MineBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
+import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
+import com.umeng.analytics.MobclickAgent;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +56,7 @@ public class ExtractCreditsActivity extends BaseActivity {
     private NetUtil netUtil2;
 
     private String mine_url = Url.BASE_URL + "Mine.aspx";
-    private Integer amount;
+    private double amount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,7 @@ public class ExtractCreditsActivity extends BaseActivity {
                         EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"提取成功！"));
                         getExtractCredits();
                         Toast.makeText(ExtractCreditsActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                        finish();
                         break;
                     case 0:
                         Toast.makeText(ExtractCreditsActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -102,6 +106,11 @@ public class ExtractCreditsActivity extends BaseActivity {
 
     private void getExtractCredits() {
         String userLogin = Tools.getUserLogin(this);
+        if(TextUtils.isEmpty(userLogin)) {
+            Toast.makeText(ExtractCreditsActivity.this, "请先登录！", Toast.LENGTH_SHORT).show();
+            toLogin();
+            return;
+        }
         map = new HashMap<>();
         map.put("Id", userLogin);
         netUtil2.okHttp2Server2(mine_url, map);
@@ -116,11 +125,12 @@ public class ExtractCreditsActivity extends BaseActivity {
                         List<MineBean.DataBean> data = mineBean.getData();
                         if(data.size()>0) {
                             amount = mineBean.getData().get(0).getAmount();
-                            tvExteactAccount.setText("可提取积分宝: " + amount);
+                            DecimalFormat df = new DecimalFormat("30.00");
+                            tvExteactAccount.setText("可提取积分宝: " + df.format(amount));
                         }
                         break;
                     case 0:
-
+                        Toast.makeText(ExtractCreditsActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -130,6 +140,15 @@ public class ExtractCreditsActivity extends BaseActivity {
                 LogUtil.e(call.toString() + "-" + e.getMessage());
             }
         });
+    }
+
+    /**
+     * 登录
+     */
+    private void toLogin() {
+        Intent intent = new Intent(ExtractCreditsActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     /**
@@ -178,5 +197,6 @@ public class ExtractCreditsActivity extends BaseActivity {
             Toast.makeText(ExtractCreditsActivity.this, "输入数量不正确！", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 }

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    buildToolsVersion '24.0.1'
     defaultConfig {
         applicationId "com.gather_excellent_help"
         minSdkVersion 15
@@ -14,9 +14,24 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug{
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+            proguardFiles 'proguard-rules.pro'
+        }
     }
+    signingConfigs {
+        debug {
+            storeFile file('woxin')
+            storePassword "6646515"
+            keyAlias "palahe"
+            keyPassword "6646515"
+        }
+    }
+
 }
 repositories {
 
@@ -71,7 +86,8 @@ dependencies {
     compile 'com.alibaba.sdk.android:alibc_trade_sdk:3.1.1.105'
     compile files('libs/eventbus.jar')
     compile files('libs/jsoup-1.10.3.jar')
-    compile files('libs/MobCommons-2017.0608.1618.jar')
     compile 'com.github.bumptech.glide:glide:3.5.2'
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    compile files('libs/SocialSDK_QQ_Simplify.jar')
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }

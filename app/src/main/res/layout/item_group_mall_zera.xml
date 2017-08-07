@@ -34,6 +34,7 @@ android:orientation="horizontal">
         />
 
     <TextView
+        android:id="@+id/tv_group_small_zhuan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="赚:￥106.89"
@@ -42,6 +43,7 @@ android:orientation="horizontal">
         android:paddingLeft="@dimen/x3"
         android:layout_marginTop="@dimen/x2"/>
     <TextView
+        android:id="@+id/tv_group_small_coast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="成本:￥3092.11"
@@ -50,6 +52,7 @@ android:orientation="horizontal">
         android:paddingLeft="@dimen/x3"
         android:layout_marginTop="@dimen/x2"/>
     <TextView
+        android:id="@+id/tv_group_small_coupons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="领券立减200"
@@ -60,10 +63,29 @@ android:orientation="horizontal">
         android:background="@drawable/type_xiadan_bg"/>
 
 </LinearLayout>
-<ImageView
-    android:id="@+id/iv_group_mall_pic"
-    android:layout_width="0dp"
-    android:layout_height="match_parent"
-    android:layout_weight="1"
-    android:src="@drawable/ware_rush"/>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <ImageView
+            android:id="@+id/iv_group_mall_pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ware_rush"/>
+        <TextView
+            android:id="@+id/tv_group_small_second_coupons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="领取优惠券"
+            android:textSize="10sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:padding="@dimen/x3"
+            android:background="@drawable/juxin_coupons"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/x3"/>
+    </RelativeLayout>
+
 </LinearLayout>

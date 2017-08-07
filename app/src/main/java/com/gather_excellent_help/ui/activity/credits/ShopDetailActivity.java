@@ -26,6 +26,7 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.ShopDetailBean;
+import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.EditTextPopupwindow;
 import com.gather_excellent_help.utils.CacheUtils;
@@ -35,6 +36,7 @@ import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.util.Calendar;
@@ -140,6 +142,10 @@ public class ShopDetailActivity extends BaseActivity {
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         which = 0;
         String loginId = Tools.getUserLogin(this);
+        if(TextUtils.isEmpty(loginId)) {
+            toLogin();
+            return;
+        }
         map = new HashMap<>();
         map.put("seller_id", loginId);
         netUtil.okHttp2Server2(see_shop_url, map);
@@ -193,6 +199,15 @@ public class ShopDetailActivity extends BaseActivity {
         rlShopDetailText.setOnClickListener(new MyOnClickListener());
         rlShopDetailAddress.setOnClickListener(new MyOnClickListener());
         tvShopDetailConfirm.setOnClickListener(new MyOnClickListener());
+    }
+
+    /**
+     * 登录
+     */
+    private void toLogin() {
+        Intent intent = new Intent(ShopDetailActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     /**

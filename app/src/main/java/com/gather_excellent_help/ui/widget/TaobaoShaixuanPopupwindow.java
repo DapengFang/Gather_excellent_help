@@ -77,13 +77,17 @@ public class TaobaoShaixuanPopupwindow extends PopupWindow {
         FullyLinearLayoutManager fullyLinearLayoutManager = new FullyLinearLayoutManager(context);
         rcvWarePopup.setLayoutManager(fullyLinearLayoutManager);
         TaobaoShaixuanCityAdapter taobaoShaixuanCityAdapter = new TaobaoShaixuanCityAdapter(context, data);
-        rcvWarePopup.setAdapter(taobaoShaixuanCityAdapter);
-        taobaoShaixuanCityAdapter.setOnItemClickListener(new TaobaoShaixuanCityAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(String text) {
-                city = text;
-            }
-        });
+        if(rcvWarePopup!=null) {
+            rcvWarePopup.setAdapter(taobaoShaixuanCityAdapter);
+            taobaoShaixuanCityAdapter.setOnItemClickListener(new TaobaoShaixuanCityAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(String text) {
+                    city = text;
+                    onPopupClickListener.onListClick(city);
+                }
+            });
+
+        }
         titles = new ArrayList<>();
         titles.add("筛选");
         titles.add("地区");
@@ -122,11 +126,11 @@ public class TaobaoShaixuanPopupwindow extends PopupWindow {
         this.setWidth(screenWidth*3/4);
         int screenHeight = ScreenUtil.getScreenHeight(context);
         //设置SelectPicPopupWindow弹出窗体的高
-        this.setHeight(screenHeight*7/11);
+        this.setHeight(screenHeight*8/13);
         //设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
         //实例化一个ColorDrawable颜色为半透明
-        ColorDrawable dw = new ColorDrawable(Color.parseColor("#eeffffff"));
+        ColorDrawable dw = new ColorDrawable(Color.parseColor("#ffffff"));
         //设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(dw);
     }
@@ -134,6 +138,7 @@ public class TaobaoShaixuanPopupwindow extends PopupWindow {
     private OnPopupClickListener onPopupClickListener;
     public interface OnPopupClickListener{
         void onPopupClick(String start,String end,boolean check,String city);
+        void onListClick(String city);
     }
 
     public void setOnPopupClickListener(OnPopupClickListener onPopupClickListener) {

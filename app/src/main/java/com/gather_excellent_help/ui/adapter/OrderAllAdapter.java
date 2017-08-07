@@ -5,6 +5,7 @@ package com.gather_excellent_help.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,10 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
         holder.tvOrderAllTime.setText("下单时间:" + dataBean.getCreate_time());
         holder.tvOrderAllPrice.setText("订单金额:" + dataBean.getPrice());
         holder.tvOrderAllNumber.setText("订单号:" + dataBean.getTrade_id());
+        String goodsImg = dataBean.getGoodsImg();
+        if(goodsImg!=null && !TextUtils.isEmpty(goodsImg)) {
+            mImageLoader.loadImage(goodsImg,holder.ivOrderAllImg,true);
+        }
         if(curr_statue == 1) {
             holder.tvOrderAllStatue.setText("待付款");
         }else if(curr_statue == 2){

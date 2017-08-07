@@ -12,7 +12,7 @@ public class HomeGroupBean {
     /**
      * statusCode : 1
      * statusMessage : 查询成功
-     * data : [{"activity_id":124,"title":"中欧高端16/15kg大型双桶双缸半自动洗衣机 宾馆旅馆商用家用杀菌","link_url":"http://item.taobao.com/item.htm?id=552462681459","activity_img":"","img_url":"http://img4.tbcdn.cn/tfscom/i4/2597757991/TB24QoxhStkpuFjy0FhXXXQzFXa_!!2597757991.jpg","productId":"552462681459","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":0},{"activity_id":124,"title":"单筒单桶大容量半全自动小型迷你洗衣机 带甩干脱水家用波轮紫光","link_url":"http://item.taobao.com/item.htm?id=553928466888","activity_img":"","img_url":"http://img03.taobaocdn.com/bao/uploaded/i3/TB1gG9hPFXXXXclapXXXXXXXXXX_!!0-item_pic.jpg","productId":"553928466888","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":583,"market_price":405,"sell_price":405,"tkRate":20},{"activity_id":124,"title":"半全自动宿舍微型小洗衣机单筒迷你洗衣机带甩干脱水洗脱小型儿童","link_url":"http://item.taobao.com/item.htm?id=553584340223","activity_img":"","img_url":"http://img3.tbcdn.cn/tfscom/i3/TB1.RJORVXXXXcmXFXXXXXXXXXX_!!0-item_pic.jpg","productId":"553584340223","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":0},{"activity_id":124,"title":"威力XPB30-3038S家用小型迷你洗衣机双桶半自动甩干婴儿儿童宝宝","link_url":"http://item.taobao.com/item.htm?id=531718442513","activity_img":"","img_url":"http://img2.tbcdn.cn/tfscom/i1/TB1gTukRXXXXXcDXVXXXXXXXXXX_!!0-item_pic.jpg","productId":"531718442513","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":0}]
+     * data : [{"activity_id":124,"title":"半全自动宿舍微型小洗衣机单筒迷你洗衣机带甩干脱水洗脱小型儿童","link_url":"http://item.taobao.com/item.htm?id=553584340223","activity_img":"","img_url":"http://img03.taobaocdn.com/bao/uploaded/i3/TB1.RJORVXXXXcmXFXXXXXXXXXX_!!0-item_pic.jpg","productId":"553584340223","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","secondCouponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":2154,"market_price":214,"sell_price":214,"tkRate":20},{"activity_id":124,"title":"中欧高端16/15kg大型双桶双缸半自动洗衣机 宾馆旅馆商用家用杀菌","link_url":"http://item.taobao.com/item.htm?id=552462681459","activity_img":"","img_url":"http://img4.tbcdn.cn/tfscom/i4/2597757991/TB24QoxhStkpuFjy0FhXXXQzFXa_!!2597757991.jpg","productId":"552462681459","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","secondCouponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":0},{"activity_id":124,"title":"单筒单桶大容量半全自动小型迷你洗衣机 带甩干脱水家用波轮紫光","link_url":"http://item.taobao.com/item.htm?id=553928466888","activity_img":"","img_url":"http://img03.taobaocdn.com/bao/uploaded/i3/TB1gG9hPFXXXXclapXXXXXXXXXX_!!0-item_pic.jpg","productId":"553928466888","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","secondCouponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":583,"market_price":405,"sell_price":405,"tkRate":20},{"activity_id":124,"title":"9.2KG公斤双筒双缸半自动大容量家用洗衣机带甩干新品上市","link_url":"http://item.taobao.com/item.htm?id=552537639139","activity_img":"","img_url":"http://img01.taobaocdn.com/bao/uploaded/i1/TB1_M6TLpXXXXXvXpXXXXXXXXXX_!!1-item_pic.gif","productId":"552537639139","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","secondCouponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":2901,"market_price":1627,"sell_price":1138.9,"tkRate":20},{"activity_id":124,"title":"威力XPB30-3038S家用小型迷你洗衣机双桶半自动甩干婴儿儿童宝宝","link_url":"http://item.taobao.com/item.htm?id=531718442513","activity_img":"","img_url":"http://img2.tbcdn.cn/tfscom/i1/TB1gTukRXXXXXcDXVXXXXXXXXXX_!!0-item_pic.jpg","productId":"531718442513","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","secondCouponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":498,"sell_price":298,"tkRate":0}]
      */
 
     private int statusCode;
@@ -46,21 +46,22 @@ public class HomeGroupBean {
     public static class DataBean {
         /**
          * activity_id : 124
-         * title : 中欧高端16/15kg大型双桶双缸半自动洗衣机 宾馆旅馆商用家用杀菌
-         * link_url : http://item.taobao.com/item.htm?id=552462681459
+         * title : 半全自动宿舍微型小洗衣机单筒迷你洗衣机带甩干脱水洗脱小型儿童
+         * link_url : http://item.taobao.com/item.htm?id=553584340223
          * activity_img :
-         * img_url : http://img4.tbcdn.cn/tfscom/i4/2597757991/TB24QoxhStkpuFjy0FhXXXQzFXa_!!2597757991.jpg
-         * productId : 552462681459
+         * img_url : http://img03.taobaocdn.com/bao/uploaded/i3/TB1.RJORVXXXXcmXFXXXXXXXXXX_!!0-item_pic.jpg
+         * productId : 553584340223
          * couponsId :
          * couponsPrice : 0
          * couponsCondition : 0
          * couponsUrl :
+         * secondCouponsUrl :
          * couponsSurplus : 0
          * couponsGet : 0
-         * stock_quantity : 0
-         * market_price : 498
-         * sell_price : 298
-         * tkRate : 0
+         * stock_quantity : 2154
+         * market_price : 214
+         * sell_price : 214
+         * tkRate : 20
          */
 
         private int activity_id;
@@ -73,6 +74,7 @@ public class HomeGroupBean {
         private int couponsPrice;
         private int couponsCondition;
         private String couponsUrl;
+        private String secondCouponsUrl;
         private int couponsSurplus;
         private int couponsGet;
         private int stock_quantity;
@@ -158,6 +160,14 @@ public class HomeGroupBean {
 
         public void setCouponsUrl(String couponsUrl) {
             this.couponsUrl = couponsUrl;
+        }
+
+        public String getSecondCouponsUrl() {
+            return secondCouponsUrl;
+        }
+
+        public void setSecondCouponsUrl(String secondCouponsUrl) {
+            this.secondCouponsUrl = secondCouponsUrl;
         }
 
         public int getCouponsSurplus() {

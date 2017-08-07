@@ -1,6 +1,8 @@
 package com.gather_excellent_help.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +15,13 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.HomeRushChangeBean;
 import com.gather_excellent_help.bean.HomeTypeBean;
 import com.gather_excellent_help.bean.HomeWareBean;
+import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,17 +71,58 @@ public class HomeRushAdapter extends BaseAdapter {
             holder.home_rush_coast = (TextView) convertView.findViewById(R.id.tv_rush_ware_coast);
             holder.home_rush_aprice = (TextView) convertView.findViewById(R.id.tv_rush_ware_aprice);
             holder.home_rush_coupons = (TextView) convertView.findViewById(R.id.tv_rush_ware_coupons);
+            holder.home_rush_second_coupons = (TextView) convertView.findViewById(R.id.tv_rush_second_coupons);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         HomeWareBean.DataBean.ItemBean itemBean = datas.get(position);
-        String newTitle = itemBean.getTitle().substring(0, 10) + "...";
-        holder.home_rush_name.setText(newTitle);
-        holder.home_rush_sale.setText("赚:￥"+(itemBean.getMarket_price() - itemBean.getSell_price()));
-        holder.home_rush_coast.setText("成本:￥"+itemBean.getMarket_price());
-        Tools.setPartTextColor(holder.home_rush_aprice,"活动价:￥"+itemBean.getSell_price(),":");
-        holder.home_rush_coupons.setText("领券立减"+itemBean.getCouponsPrice());
+        if(itemBean.getTitle().length()>10) {
+            String newTitle = itemBean.getTitle().substring(0, 10) + "...";
+            holder.home_rush_name.setText(newTitle);
+        }else{
+            holder.home_rush_name.setText(itemBean.getTitle());
+        }
+        DecimalFormat df = new DecimalFormat("#0.00");
+        double sell_price = itemBean.getSell_price();
+        double tkRate = itemBean.getTkRate()/100;
+        double zhuan = sell_price*tkRate*0.9f*0.83f;
+        double coast = sell_price - zhuan;
+        int couponsPrice = itemBean.getCouponsPrice();
+        final String couponsUrl = itemBean.getCouponsUrl();
+        final String secondCouponsUrl = itemBean.getSecondCouponsUrl();
+        holder.home_rush_sale.setText("赚:￥"+df.format(zhuan));
+        holder.home_rush_coast.setText("成本:￥"+df.format(coast));
+        if(couponsPrice>0) {
+            holder.home_rush_coupons.setVisibility(View.VISIBLE);
+            holder.home_rush_coupons.setText("领券立减"+couponsPrice);
+            holder.home_rush_coupons.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
+                        Intent intent = new Intent(context, WebActivity.class);
+                        intent.putExtra("web_url",couponsUrl);
+                        context.startActivity(intent);
+                    }
+                }
+            });
+        }else{
+            holder.home_rush_coupons.setVisibility(View.GONE);
+        }
+        if(secondCouponsUrl!=null && !TextUtils.isEmpty(secondCouponsUrl)) {
+            holder.home_rush_second_coupons.setVisibility(View.VISIBLE);
+            holder.home_rush_second_coupons.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, WebActivity.class);
+                    intent.putExtra("web_url",secondCouponsUrl);
+                    context.startActivity(intent);
+                }
+            });
+        }else{
+            holder.home_rush_second_coupons.setVisibility(View.GONE);
+        }
+        Tools.setPartTextColor(holder.home_rush_aprice,"活动价:￥"+df.format(sell_price),":");
         int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
         if(group_id==4){
             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
@@ -92,7 +137,6 @@ public class HomeRushAdapter extends BaseAdapter {
                 holder.home_rush_sale.setVisibility(View.GONE);
                 holder.home_rush_coast.setVisibility(View.GONE);
         }
-        holder.home_rush_coupons.setVisibility(View.GONE);
         if(itemBean.getImg_url()!=null) {
             mImageLoader.loadImage(itemBean.getImg_url(),holder.home_rush_photo,true);
         }
@@ -106,5 +150,6 @@ public class HomeRushAdapter extends BaseAdapter {
         TextView home_rush_coast;            //聚优帮成本
         TextView home_rush_aprice;            //聚优帮活动价
         TextView home_rush_coupons;           //聚优帮优惠券
+        TextView home_rush_second_coupons;           //聚优帮优惠券2
     }
 }

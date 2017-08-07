@@ -139,6 +139,7 @@ public class SearchTaobaoBean {
             private String coupon_click_url;
             private long item_id;
             private String max_commission_rate;
+            private String coupon_info;
 
             public int getCategory_id() {
                 return category_id;
@@ -170,6 +171,14 @@ public class SearchTaobaoBean {
 
             public void setMax_commission_rate(String max_commission_rate) {
                 this.max_commission_rate = max_commission_rate;
+            }
+
+            public String getCoupon_info() {
+                return coupon_info;
+            }
+
+            public void setCoupon_info(String coupon_info) {
+                this.coupon_info = coupon_info;
             }
         }
     }

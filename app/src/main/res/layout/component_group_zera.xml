@@ -20,6 +20,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical">
+
             <LinearLayout
                 android:id="@+id/ll_group_big"
                 android:layout_width="match_parent"
@@ -27,11 +28,33 @@
                 android:layout_weight="2"
                 android:orientation="vertical"
                 android:gravity="center">
-                <ImageView
-                    android:id="@+id/iv_group_big_pic"
-                    android:layout_width="@dimen/x100"
-                    android:layout_height="@dimen/x100"
-                    android:src="@drawable/big_ware_group"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x100">
+
+                    <ImageView
+                        android:id="@+id/iv_group_big_pic"
+                        android:layout_width="@dimen/x100"
+                        android:layout_height="@dimen/x100"
+                        android:src="@drawable/big_ware_group"
+                        android:layout_centerInParent="true"/>
+                    <TextView
+                        android:id="@+id/tv_group_big_second_coupons"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="领取优惠券"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/x3"
+                        android:paddingRight="@dimen/x3"
+                        android:background="@drawable/juxin_coupons"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"/>
+
+                </RelativeLayout>
+
                 <TextView
                     android:id="@+id/tv_group_big_title"
                     android:layout_width="wrap_content"
@@ -55,12 +78,14 @@
                     android:paddingRight="@dimen/x7"
                     android:layout_marginLeft="@dimen/x5"/>
                 <TextView
+                    android:id="@+id/tv_home_group_zhuan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="赚:￥106.89  成本:￥3092.11"
                     android:textColor="#99ff0000"
                     android:textSize="10sp"/>
                 <TextView
+                    android:id="@+id/tv_home_group_coupons"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="领券立减200"

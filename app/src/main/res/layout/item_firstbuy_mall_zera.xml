@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_first_right_zero"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="@dimen/x120"
@@ -13,7 +14,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3"
+        android:layout_weight="2"
         android:orientation="vertical"
         android:paddingLeft="@dimen/x3"
         android:gravity="center_vertical">
@@ -30,12 +31,12 @@
             android:layout_height="@dimen/x10">
             <ImageView
                  android:id="@+id/iv_first_mall_bg"
-                android:layout_width="@dimen/x100"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/x10"
                 android:src="@drawable/qianggou_bg"/>
             <ImageView
                 android:id="@+id/iv_first_mall_progress"
-                android:layout_width="@dimen/x30"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/x10"
                 android:src="@drawable/qianggou_progress"/>
             <TextView
@@ -44,12 +45,12 @@
                 android:textSize="8sp"
                 android:text="30%"
                 android:textColor="#55ff0000"
-                android:layout_marginLeft="@dimen/x70"/>
+                android:layout_marginLeft="@dimen/x60"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="已抢20件"
-                android:textSize="9sp"
+                android:textSize="8sp"
                 android:textColor="#99ff0000"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/x3"/>

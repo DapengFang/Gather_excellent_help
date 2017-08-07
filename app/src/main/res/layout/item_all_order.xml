@@ -11,7 +11,7 @@
         android:id="@+id/iv_order_all_img"
         android:layout_width="@dimen/x100"
         android:layout_height="@dimen/x100"
-        android:src="@drawable/order_ware"
+        android:src="@mipmap/zhanwei_icon"
         android:padding="@dimen/x5"/>
     <LinearLayout
         android:layout_width="match_parent"
@@ -63,6 +63,7 @@
                 android:textColor="#99ff0000"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
+                android:visibility="gone"
                 android:background="@drawable/red_cordor_stroke_shape"
                 android:layout_marginRight="@dimen/x8"
                 android:layout_marginLeft="@dimen/x10"/>

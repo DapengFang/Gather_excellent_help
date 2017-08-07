@@ -10,6 +10,7 @@ import android.view.WindowManager;
 
 import com.gather_excellent_help.R;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by wuxin on 2017/7/7.
@@ -39,5 +40,17 @@ public class BaseFragmentActivity extends FragmentActivity{
         }
         win.setAttributes(winParams);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

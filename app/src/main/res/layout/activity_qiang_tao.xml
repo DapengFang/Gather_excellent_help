@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.gather_excellent_help.ui.activity.QiangTaoActivity">
+
+    <include layout="@layout/top_zhuangai_bar"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x3"
+        android:background="#11000000"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x36"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="@dimen/x120"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="开抢啦"
+            android:textSize="16sp"
+            android:textColor="#ee000000"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcv_horizational_time_navigator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x5"
+        android:background="#11000000"/>
+
+    <GridView
+        android:id="@+id/gv_wart_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:numColumns="2"
+        android:horizontalSpacing="2dp"
+        android:verticalSpacing="2dp"
+        android:background="#11000000"></GridView>
+
+</LinearLayout>

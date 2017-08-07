@@ -16,13 +16,18 @@ import android.widget.Toast;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeBean;
+import com.gather_excellent_help.bean.CodeStatueBean;
+import com.gather_excellent_help.bean.SmsCodeBean;
+import com.gather_excellent_help.bean.TaoWordBean;
 import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
 import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.google.gson.Gson;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,6 +53,9 @@ public class RegisterActivity extends Activity {
     private String url = Url.BASE_URL + "register.aspx";
     private HashMap<String, String> hashMap;
     private CountDownTimer countDownTimer;
+    private String sms_url = Url.BASE_URL + "GetRandom.aspx";
+    private String whick = "";
+    private String sms_code_s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,30 +80,55 @@ public class RegisterActivity extends Activity {
             @Override
             public void getSuccessResponse(String response) {
                 LogUtil.e(response);
-                parseData(response);
+                if(whick.equals("register")) {
+                    parseData(response);
+                }else if(whick.equals("sms")) {
+                    parseSmsData(response);
+                }
             }
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-               LogUtil.e(call.toString()+","+e.getMessage());
+                LogUtil.e(call.toString() + "," + e.getMessage());
             }
         });
     }
 
+    private void parseSmsData(String response) {
+        LogUtil.e(response);
+        SmsCodeBean smsCodeBean = new Gson().fromJson(response, SmsCodeBean.class);
+        int statusCode = smsCodeBean.getStatusCode();
+        switch (statusCode) {
+            case 0:
+                Toast.makeText(RegisterActivity.this, "获取验证码失败！" , Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                List<SmsCodeBean.DataBean> data = smsCodeBean.getData();
+                if(data.size()>0) {
+                    sms_code_s = data.get(0).getSms_code();
+                }
+                Toast.makeText(RegisterActivity.this, "验证码已发送你的手机，请查收！", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
     /**
      * 解析数据
+     *
      * @param response
      */
     private void parseData(String response) {
+        LogUtil.e("sms = "+response);
         Gson gson = new Gson();
         CodeBean registerBean = gson.fromJson(response, CodeBean.class);
         int statusCode = registerBean.getStatusCode();
         switch (statusCode) {
-            case 0 :
-                Toast.makeText(RegisterActivity.this, "注册失败！"+registerBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+            case 0:
+                Toast.makeText(RegisterActivity.this, "注册失败！" + registerBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 Toast.makeText(RegisterActivity.this, "注册成功！", Toast.LENGTH_SHORT).show();
+                finish();
                 break;
         }
     }
@@ -105,35 +138,42 @@ public class RegisterActivity extends Activity {
      */
     private void getSmsCode() {
         getPhone();
-        if(phone==null && TextUtils.isEmpty(phone)) {
+        if (phone == null && TextUtils.isEmpty(phone)) {
             Toast.makeText(RegisterActivity.this, "手机号不能为空！", Toast.LENGTH_SHORT).show();
             return;
         }
-                tvRegisterGetSms.setClickable(false);
-                tvRegisterGetSms.setTextColor(Color.parseColor("#ffffff"));
-                countDownTimer =new CountDownTimer(60*1000,1000) {
-                    @Override
-                    public void onTick(long l) {
-                        tvRegisterGetSms.setText(l/1000+"s后重新获取");
-                    }
+        tvRegisterGetSms.setClickable(false);
+        tvRegisterGetSms.setTextColor(Color.parseColor("#ffffff"));
+        countDownTimer = new CountDownTimer(60 * 1000, 1000) {
+            @Override
+            public void onTick(long l) {
+                tvRegisterGetSms.setText(l / 1000 + "s后重新获取");
+            }
 
-                    @Override
-                    public void onFinish() {
-                        tvRegisterGetSms.setClickable(true);
-                        tvRegisterGetSms.setText("获取验证码");
-                        tvRegisterGetSms.setTextColor(Color.parseColor("#ffffff"));
-                    }
-                };
-                countDownTimer.start();
+            @Override
+            public void onFinish() {
+                tvRegisterGetSms.setClickable(true);
+                tvRegisterGetSms.setText("获取验证码");
+                tvRegisterGetSms.setTextColor(Color.parseColor("#ffffff"));
+            }
+        };
+        whick = "sms";
+        hashMap = new HashMap<>();
+        hashMap.put("sms_code",phone);
+        hashMap.put("type","1");
+        netUtils.okHttp2Server2(sms_url,hashMap);
+        countDownTimer.start();
 
     }
 
     /**
      * 获取用户手机号
      */
-    private void getPhone(){
+    private void getPhone() {
         phone = etRegisterUser.getText().toString().trim();
-    };
+    }
+
+    ;
 
     /**
      * 获取用户输入的信息
@@ -141,39 +181,28 @@ public class RegisterActivity extends Activity {
     private void getUserInputParams() {
         phone = etRegisterUser.getText().toString().trim();
         password = etRegisterPsw.getText().toString().trim();
-        password = password+"@@11fe468";
+        password = password + "@@11fe468";
         password = EncryptUtil.getMd5Value(password);
         smscode = etRegisterSmscode.getText().toString().trim();
-        LogUtil.e(phone+"=="+password);
+        LogUtil.e(phone + "==" + password);
         hashMap = new HashMap<>();
-        hashMap.put("UserName",phone);
-        hashMap.put("Password",password);
+        hashMap.put("UserName", phone);
+        hashMap.put("Password", password);
     }
 
-    public class MyOnclickListener implements View.OnClickListener{
+    public class MyOnclickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.tv_register :
-                     getUserInputParams();
-                     netUtils.okHttp2Server2(url,hashMap);
-
-//                    OkHttpUtils.get().url(url)
-//                            .addParams("UserName","55554646")
-//                            .addParams("Password","dsa215121212")
-//                            .build().execute(new StringCallback() {
-//                        @Override
-//                        public void onError(Call call, Exception e, int id) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onResponse(String response, int id) {
-//                            LogUtil.e(response);
-//                        }
-//                    });
-
+                case R.id.tv_register:
+                    getUserInputParams();
+                    if(smscode.equals(sms_code_s)) {
+                        whick = "register";
+                        netUtils.okHttp2Server2(url, hashMap);
+                    }else{
+                        Toast.makeText(RegisterActivity.this, "短信验证码不正确，请从新输入！", Toast.LENGTH_SHORT).show();
+                    }
                     break;
                 case R.id.tv_register_getSms:
                     getSmsCode();
@@ -181,4 +210,5 @@ public class RegisterActivity extends Activity {
             }
         }
     }
+
 }

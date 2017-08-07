@@ -47,6 +47,24 @@ public class Tools {
     public static String getUserLogin(Context context){
         return CacheUtils.getString(context,CacheUtils.LOGIN_VALUE,"");
     }
+    /**
+     * 用户登录后的广告位id
+     * @param context
+     * @return
+     */
+    public static String getAdverId(Context context){
+        return CacheUtils.getString(context,CacheUtils.ADVER_ID,"");
+    }
+
+    /**
+     * 用户登录后的类型
+     * @param context
+     * @return
+     */
+    public static int getGroupId(Context context){
+        return CacheUtils.getInteger(context,CacheUtils.GROUP_TYPE,-1);
+    }
+
     public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, output);

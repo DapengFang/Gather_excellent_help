@@ -1,8 +1,10 @@
 package com.gather_excellent_help.ui.activity.credits;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -12,6 +14,7 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.BackRebateBean;
 import com.gather_excellent_help.bean.CodeStatueBean;
+import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.adapter.BackRebateAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
@@ -19,6 +22,7 @@ import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,12 +136,25 @@ public class BackRebateActivity extends BaseActivity {
 
     private void loadBackData(String type, String pageIndex) {
         Id = Tools.getUserLogin(this);
+        if(TextUtils.isEmpty(Id)) {
+            toLogin();
+            return;
+        }
         map = new HashMap<>();
         map.put("Id", Id);
         map.put("pageSize", pageSize);
         map.put("pageIndex", pageIndex);
         map.put("type", type);
         netUtil.okHttp2Server2(back_url, map);
+    }
+
+    /**
+     * 登录
+     */
+    private void toLogin() {
+        Intent intent = new Intent(BackRebateActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public class MyOnclickListener implements View.OnClickListener{

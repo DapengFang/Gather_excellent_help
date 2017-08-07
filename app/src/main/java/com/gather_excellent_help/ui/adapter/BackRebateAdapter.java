@@ -44,7 +44,17 @@ public class BackRebateAdapter extends RecyclerView.Adapter<BackRebateAdapter.Ac
         if(dataBean.getAudit_time()!=null) {
             holder.tvAccountDetailPro.setText("审核日期:"+dataBean.getAudit_time());
         }
-        holder.tvAccountDetailMoney.setText("当前状态:已完成" );
+        int status = dataBean.getStatus();
+        if(status==1) {
+            holder.tvAccountDetailMoney.setText("当前状态:通过" );
+        }else if(status ==2) {
+            holder.tvAccountDetailMoney.setText("当前状态:驳回" );
+        }else if(status ==3) {
+            holder.tvAccountDetailMoney.setText("当前状态:待处理" );
+        }else{
+            holder.tvAccountDetailMoney.setText("当前状态:已完成" );
+        }
+
         holder.tvAccountDetailSalery.setText("返佣:"+dataBean.getValue()+"现金");
         if(dataBean.getRemark()!=null) {
             holder.tvAccountDetailPhone.setText(dataBean.getRemark());

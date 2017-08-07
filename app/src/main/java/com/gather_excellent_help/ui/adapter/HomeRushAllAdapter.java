@@ -27,7 +27,9 @@ import com.gather_excellent_help.bean.HomeTypeBean;
 import com.gather_excellent_help.bean.HomeWareBean;
 import com.gather_excellent_help.bean.QiangTaoBean;
 import com.gather_excellent_help.bean.TyepIndexBean;
+import com.gather_excellent_help.ui.activity.QiangTaoActivity;
 import com.gather_excellent_help.ui.activity.WareListActivity;
+import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.widget.CarouselImageView;
 import com.gather_excellent_help.ui.widget.MyGridView;
@@ -41,6 +43,7 @@ import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -83,12 +86,12 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private TextView tvRushHour;
     private TextView tvRushMinute;
     private TextView tvRushSecond;
-    private boolean isFirst = true;
+    private boolean isFirst;
 
 
 
     public HomeRushAllAdapter(Context context, List<HomeWareBean.DataBean> data, Activity activity, List<HomeGroupBean.DataBean> groupData, List<TyepIndexBean.DataBean> typeData,
-                              RushDownTimer rushDownTimer,List<QiangTaoBean.DataBean> qiangData) {
+                              RushDownTimer rushDownTimer,List<QiangTaoBean.DataBean> qiangData,boolean isFirst) {
         this.context = context;
         this.activity = activity;
         this.data = data;
@@ -96,13 +99,18 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.typeData = typeData;
         this.qiangData = qiangData;
         this.rushDownTimer = rushDownTimer;
+        this.isFirst = isFirst;
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        if(isFirst) {
+            extraCount =4;
+        }else{
+            extraCount = 3;
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
         if(isFirst) {
-            extraCount =4;
             if(position == 0) {
                 return TYPE_TOP;
             }else if(position == 1) {
@@ -115,7 +123,6 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 return position;
             }
         }else{
-            extraCount = 3;
             if(position == 0) {
                 return TYPE_TOP;
             }else if(position == 1) {
@@ -191,7 +198,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void onClick(View view) {
                     int id = dataBean.getId();
                     Intent intent = new Intent(context, WareListActivity.class);
-                    intent.putExtra("type_id",String.valueOf(id));
+                    intent.putExtra("activity_id",String.valueOf(id));
+                    intent.putExtra("content","activity");
                     context.startActivity(intent);
                 }
             });
@@ -204,7 +212,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                        String link_url = itemData.get(i).getLink_url();
                        String goods_id = itemData.get(i).getProductId();
-                       String goods_img = Url.IMG_URL + itemData.get(i).getImg_url();
+                       String goods_img = itemData.get(i).getImg_url();
                        String goods_title = itemData.get(i).getTitle();
                        Intent intent = new Intent(context, WebRecordActivity.class);
                        intent.putExtra("url",link_url);
@@ -219,17 +227,73 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             GroupViewHolder groupViewHolder = (GroupViewHolder) holder;
             TextView tvTitle = groupViewHolder.tvTitle;
             tvTitle.setText("团购区");
+            DecimalFormat df = new DecimalFormat("#0.00");
             final HomeGroupBean.DataBean dataBean = groupData.get(0);
             String sTitle0 = dataBean.getTitle().substring(0, 12) + "...";
             groupViewHolder.tv_group_big_title.setText(sTitle0);
-            groupViewHolder.tv_group_big_price.setText("今日特价：￥"+dataBean.getMarket_price());
+            groupViewHolder.rl_item_laod_more.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, WareListActivity.class);
+                    intent.putExtra("content","isQiang");
+                    context.startActivity(intent);
+                }
+            });
+            double sell_price = dataBean.getSell_price();
+            double tkRate = dataBean.getTkRate()/100;
+            double zhuan = sell_price*tkRate*0.9f*0.83f;
+            double coast = sell_price - zhuan;
+            int couponsPrice = dataBean.getCouponsPrice();
+            final String couponsUrl = dataBean.getCouponsUrl();
+            final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
+            groupViewHolder.tvHomeGroupZhuan.setText("赚:￥"+df.format(zhuan)+" 成本:￥"+df.format(coast));
+            if(couponsPrice>0) {
+                groupViewHolder.tvHomeGroupCoupons.setVisibility(View.VISIBLE);
+                groupViewHolder.tvHomeGroupCoupons.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
+                            Intent intent = new Intent(context, WebActivity.class);
+                            intent.putExtra("web_url",couponsUrl);
+                            context.startActivity(intent);
+                        }
+                    }
+                });
+            }else{
+                groupViewHolder.tvHomeGroupCoupons.setVisibility(View.GONE);
+            }
+            if(secondCouponsUrl!=null && !TextUtils.isEmpty(secondCouponsUrl)) {
+                groupViewHolder.tvGroupBigSecondSoupons.setVisibility(View.VISIBLE);
+                groupViewHolder.tvGroupBigSecondSoupons.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, WebActivity.class);
+                        intent.putExtra("web_url",secondCouponsUrl);
+                        context.startActivity(intent);
+                    }
+                });
+            }else{
+                groupViewHolder.tvGroupBigSecondSoupons.setVisibility(View.GONE);
+            }
+            int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
+            if(group_id==4){
+                boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
+                if(toggleShow) {
+                    groupViewHolder.tvHomeGroupZhuan.setVisibility(View.GONE);
+                }else{
+                    groupViewHolder.tvHomeGroupZhuan.setVisibility(View.VISIBLE);
+                }
+            }else{
+                groupViewHolder.tvHomeGroupZhuan.setVisibility(View.GONE);
+            }
+            groupViewHolder.tv_group_big_price.setText("今日特价：￥"+df.format(sell_price));
             mImageLoader.loadImage(dataBean.getImg_url(),groupViewHolder.iv_group_big_pic,true);
             groupViewHolder.ll_group_big.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     String link_url = dataBean.getLink_url();
                     String goods_id = dataBean.getProductId();
-                    String goods_img = Url.IMG_URL + dataBean.getImg_url();
+                    String goods_img = dataBean.getImg_url();
                     String goods_title = dataBean.getTitle();
                     Intent intent = new Intent(context, WebRecordActivity.class);
                     intent.putExtra("url",link_url);
@@ -243,17 +307,77 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             TextView tvMallTitle = (TextView) childLeft.findViewById(R.id.tv_group_mall_title);
             TextView tvMallPrice = (TextView) childLeft.findViewById(R.id.tv_group_mall_price);
             ImageView ivMallPic = (ImageView) childLeft.findViewById(R.id.iv_group_mall_pic);
+            TextView tvSmallZhuan = (TextView) childLeft.findViewById(R.id.tv_group_small_zhuan);
+            TextView tvSmallCoast = (TextView) childLeft.findViewById(R.id.tv_group_small_coast);
+            TextView tvSmallCoupons = (TextView) childLeft.findViewById(R.id.tv_group_small_coupons);
+            TextView tvSmallSecondCoupons = (TextView) childLeft.findViewById(R.id.tv_group_small_second_coupons);
             final HomeGroupBean.DataBean groupBean1 = groupData.get(1);
-            String sTitle = groupBean1.getTitle().substring(0, 12) + "...";
-            tvMallPrice.setText("今日特价：￥"+groupBean1.getMarket_price());
-            tvMallTitle.setText(sTitle);
+            if(groupBean1.getTitle().length()>12) {
+                String sTitle = groupBean1.getTitle().substring(0, 12) + "...";
+                tvMallTitle.setText(sTitle);
+            }else{
+                tvMallTitle.setText(groupBean1.getTitle());
+            }
+            double sell_price1 = groupBean1.getSell_price();
+            double tkRate1 = groupBean1.getTkRate()/100;
+            double zhuan1 = sell_price1*tkRate1*0.9f*0.83f;
+            double coast1 = sell_price1 - zhuan1;
+            final int couponsPrice1 = groupBean1.getCouponsPrice();
+            final String couponsUrl1 = groupBean1.getCouponsUrl();
+            final String secondCouponsUrl1 = groupBean1.getSecondCouponsUrl();
+            if(couponsPrice1>0) {
+                tvSmallCoupons.setVisibility(View.VISIBLE);
+                tvSmallCoupons.setText("领券立减"+couponsPrice1);
+                tvSmallCoupons.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                       if(couponsUrl1!=null && !TextUtils.isEmpty(couponsUrl1)) {
+                           Intent intent = new Intent(context, WebActivity.class);
+                           intent.putExtra("web_url",couponsUrl1);
+                           context.startActivity(intent);
+                       }
+                    }
+                });
+            }else{
+                tvSmallCoupons.setVisibility(View.GONE);
+            }
+
+            if(secondCouponsUrl1!=null && !TextUtils.isEmpty(secondCouponsUrl1)) {
+                tvSmallSecondCoupons.setVisibility(View.VISIBLE);
+                tvSmallSecondCoupons.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, WebActivity.class);
+                        intent.putExtra("web_url",secondCouponsUrl1);
+                        context.startActivity(intent);
+                    }
+                });
+            }else{
+                tvSmallSecondCoupons.setVisibility(View.GONE);
+            }
+            tvMallPrice.setText("今日特价：￥"+df.format(sell_price1));
+            tvSmallZhuan.setText("赚:￥"+df.format(zhuan1));
+            tvSmallCoast.setText("成本:￥"+df.format(coast1));
+            if(group_id==4){
+                boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
+                if(toggleShow) {
+                    tvSmallZhuan.setVisibility(View.GONE);
+                    tvSmallCoast.setVisibility(View.GONE);
+                }else{
+                    tvSmallZhuan.setVisibility(View.VISIBLE);
+                    tvSmallCoast.setVisibility(View.VISIBLE);
+                }
+            }else{
+                tvSmallZhuan.setVisibility(View.GONE);
+                tvSmallCoast.setVisibility(View.GONE);
+            }
             mImageLoader.loadImage(groupBean1.getImg_url(),ivMallPic,true);
             childLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     String link_url = groupBean1.getLink_url();
                     String goods_id = groupBean1.getProductId();
-                    String goods_img = Url.IMG_URL + groupBean1.getImg_url();
+                    String goods_img = groupBean1.getImg_url();
                     String goods_title = groupBean1.getTitle();
                     Intent intent = new Intent(context, WebRecordActivity.class);
                     intent.putExtra("url",link_url);
@@ -269,17 +393,77 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 TextView tvMallTitle2 = (TextView) childRight.findViewById(R.id.tv_group_mall_title);
                 TextView tvMallPrice2 = (TextView) childRight.findViewById(R.id.tv_group_mall_price);
                 ImageView ivMallPic2 = (ImageView) childRight.findViewById(R.id.iv_group_mall_pic);
+                TextView tvSmallZhuan2 = (TextView) childRight.findViewById(R.id.tv_group_small_zhuan);
+                TextView tvSmallCoast2 = (TextView) childRight.findViewById(R.id.tv_group_small_coast);
+                TextView tvSmallCoupons2 = (TextView) childRight.findViewById(R.id.tv_group_small_coupons);
+                TextView tvSmallSecondCoupons2 = (TextView) childRight.findViewById(R.id.tv_group_small_second_coupons);
                 final HomeGroupBean.DataBean groupBean2 = groupData.get(i);
-                String sTitle2 = groupBean2.getTitle().substring(0, 12) + "...";
-                tvMallPrice2.setText("今日特价：￥"+groupBean2.getMarket_price());
-                tvMallTitle2.setText(sTitle2);
+                if(groupBean2.getTitle().length()>12) {
+                    String sTitle2 = groupBean2.getTitle().substring(0, 12) + "...";
+                    tvMallTitle2.setText(sTitle2);
+                }else{
+                    tvMallPrice2.setText(groupBean2.getTitle());
+                }
+                double sell_price2 = groupBean2.getSell_price();
+                double tkRate2 = groupBean2.getTkRate()/100;
+                double zhuan2 = sell_price2*tkRate2*0.9f*0.83f;
+                double coast2 = sell_price2 - zhuan2;
+                int couponsPrice2 = groupBean2.getCouponsPrice();
+                final String couponsUrl2 = groupBean2.getCouponsUrl();
+                final String secondCouponsUrl2 = groupBean2.getSecondCouponsUrl();
+                if(couponsPrice2>0) {
+                    tvSmallCoupons2.setVisibility(View.VISIBLE);
+                    tvSmallCoupons2.setText("领券立减"+couponsPrice2);
+                    tvSmallCoupons2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(couponsUrl2!=null && !TextUtils.isEmpty(couponsUrl2)) {
+                                Intent intent = new Intent(context, WebActivity.class);
+                                intent.putExtra("web_url",couponsUrl2);
+                                context.startActivity(intent);
+                            }
+                        }
+                    });
+                }else{
+                    tvSmallCoupons2.setVisibility(View.GONE);
+                }
+
+                if(secondCouponsUrl2!=null && !TextUtils.isEmpty(secondCouponsUrl2)) {
+                    tvSmallSecondCoupons2.setVisibility(View.VISIBLE);
+                    tvSmallSecondCoupons2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, WebActivity.class);
+                            intent.putExtra("web_url",secondCouponsUrl2);
+                            context.startActivity(intent);
+                        }
+                    });
+                }else{
+                    tvSmallSecondCoupons2.setVisibility(View.GONE);
+                }
+                tvMallPrice2.setText("今日特价：￥"+df.format(sell_price2));
+                tvSmallZhuan2.setText("赚:￥"+df.format(zhuan2));
+                tvSmallCoast2.setText("成本:￥"+df.format(coast2));
+                if(group_id==4){
+                    boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
+                    if(toggleShow) {
+                        tvSmallZhuan2.setVisibility(View.GONE);
+                        tvSmallCoast2.setVisibility(View.GONE);
+                    }else{
+                        tvSmallZhuan2.setVisibility(View.VISIBLE);
+                        tvSmallCoast2.setVisibility(View.VISIBLE);
+                    }
+                }else{
+                    tvSmallZhuan2.setVisibility(View.GONE);
+                    tvSmallCoast2.setVisibility(View.GONE);
+                }
                 mImageLoader.loadImage(groupBean2.getImg_url(),ivMallPic2,true);
                 childRight.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         String link_url = groupBean2.getLink_url();
                         String goods_id = groupBean2.getProductId();
-                        String goods_img = Url.IMG_URL + groupBean2.getImg_url();
+                        String goods_img = groupBean2.getImg_url();
                         String goods_title = groupBean2.getTitle();
                         Intent intent = new Intent(context, WebRecordActivity.class);
                         intent.putExtra("url",link_url);
@@ -292,15 +476,29 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 j++;
             }
         }else if(holder instanceof FirstBuyViewHolder) {
-            QiangTaoBean.DataBean dataBean0 = qiangData.get(0);
+            final QiangTaoBean.DataBean dataBean0 = qiangData.get(0);
             FirstBuyViewHolder firstBuyViewHoldre = (FirstBuyViewHolder) holder;
             TextView tvTitle = firstBuyViewHoldre.tvTitle;
             tvTitle.setText("抢购区");
-            firstBuyViewHoldre.tvItemHomeMore.setOnClickListener(new View.OnClickListener() {
+            firstBuyViewHoldre.rl_item_laod_more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context,WareListActivity.class);
-                    intent.putExtra("content","isQiang");
+              Intent intent = new Intent(context, QiangTaoActivity.class);
+              context.startActivity(intent);
+                }
+            });
+            firstBuyViewHoldre.llFirstLeftZero.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String link_url = dataBean0.getLink_url();
+                    String goods_id = String.valueOf(dataBean0.getProductId());
+                    String goods_img = dataBean0.getImg_url();
+                    String goods_title = dataBean0.getTitle();
+                    Intent intent = new Intent(context, WebRecordActivity.class);
+                    intent.putExtra("url",link_url);
+                    intent.putExtra("goods_id",goods_id);
+                    intent.putExtra("goods_img",goods_img);
+                    intent.putExtra("goods_title",goods_title);
                     context.startActivity(intent);
                 }
             });
@@ -309,7 +507,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }else{
                 firstBuyViewHoldre.tvFirstBigTitle.setText(dataBean0.getTitle());
             }
-            firstBuyViewHoldre.tvFirstBigPrice.setText("￥"+dataBean0.getSell_price());
+            DecimalFormat df = new DecimalFormat("#0.00");
+            double sellPrice = Double.parseDouble(dataBean0.getSell_price());
+            firstBuyViewHoldre.tvFirstBigPrice.setText("￥"+df.format(sellPrice));
             int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
             if(group_id==4){
                 boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
@@ -317,8 +517,12 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     firstBuyViewHoldre.tvFirstBigZhuan.setVisibility(View.GONE);
                     firstBuyViewHoldre.tvFirstBigChengben.setVisibility(View.GONE);
                 }else{
+                    double zhuan = sellPrice*0.2f*0.9f*0.83f;
+                    double coast = sellPrice - zhuan;
                     firstBuyViewHoldre.tvFirstBigZhuan.setVisibility(View.VISIBLE);
                     firstBuyViewHoldre.tvFirstBigChengben.setVisibility(View.VISIBLE);
+                    firstBuyViewHoldre.tvFirstBigZhuan.setText("赚:￥"+df.format(zhuan));
+                    firstBuyViewHoldre.tvFirstBigChengben.setText("成本:￥"+df.format(coast));
                 }
             }else{
                 firstBuyViewHoldre.tvFirstBigZhuan.setVisibility(View.GONE);
@@ -330,21 +534,76 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             firstBuyViewHoldre.tvRushMinute.setText(rushDownTimer.getMinute());
             firstBuyViewHoldre.tvRushSecond.setText(rushDownTimer.getSecond());
             LogUtil.e(hour +"--"+ minute + "--" + second);
-            QiangTaoBean.DataBean dataBean1 = qiangData.get(1);
-            QiangTaoBean.DataBean dataBean2 = qiangData.get(2);
+            final QiangTaoBean.DataBean dataBean1 = qiangData.get(1);
+            final QiangTaoBean.DataBean dataBean2 = qiangData.get(2);
             LinearLayout llFirstWareZera = firstBuyViewHoldre.llFirstWareZera;
             for (int i=0;i<llFirstWareZera.getChildCount();i++){
                 if(i!=1) {
                     View child = llFirstWareZera.getChildAt(i);
+                    LinearLayout llFirstRightZero = (LinearLayout) child.findViewById(R.id.ll_first_right_zero);
                     ImageView ivFirstMallBg = (ImageView) child.findViewById(R.id.iv_first_mall_bg);
                     ImageView ivFirstMallProgress = (ImageView) child.findViewById(R.id.iv_first_mall_progress);
                     ImageView ivSmall= (ImageView) child.findViewById(R.id.iv_first_buy_small);
+                    TextView tvSmallTitle = (TextView) child.findViewById(R.id.tv_first_small_title);
+                    TextView tvSmallCoupons = (TextView) child.findViewById(R.id.tv_first_small_coupons);
+                    TextView tvSmallPrice = (TextView) child.findViewById(R.id.tv_first_small_price);
+                    TextView tvSmallZhuan = (TextView) child.findViewById(R.id.tv_first_small_zhuan);
+                    double sell_price_s1 = Double.parseDouble(dataBean1.getSell_price());
+                    double sell_price_s2 = Double.parseDouble(dataBean2.getSell_price());
+                    double zhuan_s1 = sell_price_s1 * 0.2f * 0.9f * 0.83f;
+                    double zhuan_s2 = sell_price_s2 * 0.2f * 0.9f * 0.83f;
+                    double coast_s1 = sell_price_s1 - zhuan_s1;
+                    double coast_s2 = sell_price_s2 - zhuan_s2;
+                    tvSmallCoupons.setVisibility(View.GONE);
+                    final int pos = i;
+                    llFirstRightZero.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(pos==0) {
+                                String link_url = dataBean1.getLink_url();
+                                String goods_id = String.valueOf(dataBean1.getProductId());
+                                String goods_img = dataBean1.getImg_url();
+                                String goods_title = dataBean1.getTitle();
+                                Intent intent = new Intent(context, WebRecordActivity.class);
+                                intent.putExtra("url",link_url);
+                                intent.putExtra("goods_id",goods_id);
+                                intent.putExtra("goods_img",goods_img);
+                                intent.putExtra("goods_title",goods_title);
+                                context.startActivity(intent);
+                            }else if(pos==2) {
+                                String link_url = dataBean2.getLink_url();
+                                String goods_id = String.valueOf(dataBean2.getProductId());
+                                String goods_img = dataBean2.getImg_url();
+                                String goods_title = dataBean2.getTitle();
+                                Intent intent = new Intent(context, WebRecordActivity.class);
+                                intent.putExtra("url",link_url);
+                                intent.putExtra("goods_id",goods_id);
+                                intent.putExtra("goods_img",goods_img);
+                                intent.putExtra("goods_title",goods_title);
+                                context.startActivity(intent);
+                            }
+                        }
+                    });
                     if(i==0) {
+                        if(dataBean1.getTitle().length()>12) {
+                            tvSmallTitle.setText(dataBean1.getTitle().substring(0,12)+"...");
+                        }else{
+                            tvSmallTitle.setText(dataBean1.getTitle());
+                        }
+                        tvSmallPrice.setText("￥"+df.format(sell_price_s1));
+                        tvSmallZhuan.setText("赚:￥"+df.format(zhuan_s1)+" 成本:￥"+df.format(coast_s1));
                         mImageLoader.loadImage(dataBean1.getImg_url(),ivSmall,true);
                     }else if(i==2){
+                        if(dataBean2.getTitle().length()>12) {
+                            tvSmallTitle.setText(dataBean2.getTitle().substring(0,12)+"...");
+                        }else{
+                            tvSmallTitle.setText(dataBean2.getTitle());
+                        }
+                        tvSmallPrice.setText("￥"+df.format(sell_price_s2));
+                        tvSmallZhuan.setText("赚:￥"+df.format(zhuan_s2)+" 成本:￥"+df.format(coast_s2));
                         mImageLoader.loadImage(dataBean2.getImg_url(),ivSmall,true);
                     }
-                    int width = ScreenUtil.getScreenWidth(context)*17/60;
+                    int width = ScreenUtil.getScreenWidth(context)*15/60;
                     ViewGroup.LayoutParams lp2;
                     lp2 = ivFirstMallBg.getLayoutParams();
                     lp2.width =width;
@@ -353,6 +612,16 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     lp =  ivFirstMallProgress.getLayoutParams();
                     lp.width = width/6;
                     ivFirstMallProgress.setLayoutParams(lp);
+                    if(group_id==4){
+                        boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
+                        if(toggleShow) {
+                            tvSmallZhuan.setVisibility(View.GONE);
+                        }else{
+                           tvSmallZhuan.setVisibility(View.VISIBLE);
+                        }
+                    }else{
+                        tvSmallZhuan.setVisibility(View.GONE);
+                    }
                 }
             }
 
@@ -423,6 +692,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     class FirstBuyViewHolder extends RecyclerView.ViewHolder {
 
+        @Bind(R.id.rl_item_laod_more)
+        RelativeLayout rl_item_laod_more;
         @Bind(R.id.tv_item_home_title)
         TextView tvTitle;
         @Bind(R.id.tv_item_home_more)
@@ -445,6 +716,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView tvFirstBigZhuan;
         @Bind(R.id.tv_first_big_chengben)
         TextView tvFirstBigChengben;
+        @Bind(R.id.ll_first_left_zero)
+        LinearLayout llFirstLeftZero;
         public FirstBuyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -468,6 +741,14 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView tv_group_big_price;
         @Bind(R.id.ll_group_big)
         LinearLayout ll_group_big;
+        @Bind(R.id.tv_home_group_zhuan)
+        TextView tvHomeGroupZhuan;
+        @Bind(R.id.tv_home_group_coupons)
+        TextView tvHomeGroupCoupons;
+        @Bind(R.id.tv_group_big_second_coupons)
+        TextView tvGroupBigSecondSoupons;
+        @Bind(R.id.rl_item_laod_more)
+        RelativeLayout rl_item_laod_more;
         public GroupViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -596,9 +877,16 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public void setRushDownTimer(RushDownTimer rushDownTimer) {
         this.rushDownTimer = rushDownTimer;
-        tvRushHour.setText(rushDownTimer.getHour());
-        tvRushMinute.setText(rushDownTimer.getMinute());
-        tvRushSecond.setText(rushDownTimer.getSecond());
+        if(tvRushHour!=null) {
+            tvRushHour.setText(rushDownTimer.getHour());
+        }
+        if(tvRushMinute!=null) {
+            tvRushMinute.setText(rushDownTimer.getMinute());
+        }
+        if(tvRushSecond!=null) {
+            tvRushSecond.setText(rushDownTimer.getSecond());
+        }
+
     }
 
 

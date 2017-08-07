@@ -1,9 +1,15 @@
 package com.gather_excellent_help.ui.activity;
 
+import android.app.AlertDialog;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -24,10 +30,20 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.aliapi.DemoTradeCallback;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.ChangeUrlBean;
+import com.gather_excellent_help.bean.TaoWordBean;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.ui.widget.SharePopupwindow;
+import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +51,6 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 import okhttp3.Call;
 
 public class WebRecordActivity extends BaseActivity {
@@ -53,7 +67,29 @@ public class WebRecordActivity extends BaseActivity {
     LinearLayout activityWeb;
     private String url;
     private String chang_url = Url.BASE_URL + "GoodsConvert.aspx";
+    private String get_url = Url.BASE_URL + "GetTpwd.aspx";
     private String goods_id = "";
+    public static final int GET_URL = 1;
+    private String which = "";
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case GET_URL :
+                    which = "get_url";
+                    String user_id = Tools.getUserLogin(WebRecordActivity.this);
+                    map = new HashMap<>();
+                    map.put("user_id",user_id);
+                    map.put("convert_url",click_url);
+                    map.put("img_url",goods_img);
+                    map.put("title",goods_title);
+                    netUtil.okHttp2Server2(get_url,map);
+                    break;
+            }
+        }
+    };
+
 
     private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
     private AlibcTaokeParams alibcTaokeParams = null;//淘客参数，包括pid，unionid，subPid
@@ -66,6 +102,9 @@ public class WebRecordActivity extends BaseActivity {
     private String click_url = "";//转链的url
     private String goods_img = "";
     private String goods_title = "";
+    private String taoWord;
+
+    private SharePopupwindow sharePopupwindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +120,13 @@ public class WebRecordActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
+        which = "";
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
         goods_id = intent.getStringExtra("goods_id");
         goods_img = intent.getStringExtra("goods_img");
         goods_title = intent.getStringExtra("goods_title");
+
         WebSettings webSettings = wvBanner.getSettings();
         //设置此属性，可任意比例缩放
         webSettings.setUseWideViewPort(true);
@@ -101,27 +142,38 @@ public class WebRecordActivity extends BaseActivity {
         //webSettings.setJavaScriptCanOpenWindowsAutomatically(true); //支持通过JS打开新窗口
         webSettings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
         webSettings.setLoadsImagesAutomatically(true);  //支持自动加载图片
-        LogUtil.e(url);
         //设置Web视图
         //wvBanner.setWebViewClient(new MyWebViewClient());
         //加载需要显示的网页
         //wvBanner.loadUrl(url);
-
+        netUtil = new NetUtil();
         alibcShowParams = new AlibcShowParams(OpenType.H5, false);
         exParams = new HashMap<>();
         exParams.put("isv_code", "appisvcode");
         exParams.put("alibaba", "阿里巴巴");//自定义参数部分，可任意增删改
         rlExit.setOnClickListener(new MyOnclickListener());
         rlShare.setOnClickListener(new MyOnclickListener());
-        netUtil = new NetUtil();
-        map = new HashMap<>();
-        map.put("goodsId",goods_id);
-        map.put("adzoneId","121866255");
-        netUtil.okHttp2Server2(chang_url,map);
+        String adverId = Tools.getAdverId(this);
+        if(!TextUtils.isEmpty(adverId)) {
+            LogUtil.e("adverId = "+adverId);
+            map = new HashMap<>();
+            map.put("goodsId",goods_id);
+            map.put("adzoneId",adverId);
+            netUtil.okHttp2Server2(chang_url,map);
+        }else{
+            toLogin();
+            finish();
+        }
+
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                parseData(response);
+                if(TextUtils.isEmpty(which)) {
+                    parseData(response);
+                }else{
+                    getTaoWord(response);
+                }
+
             }
 
             @Override
@@ -133,11 +185,27 @@ public class WebRecordActivity extends BaseActivity {
     }
 
     /**
+     * 获取淘口令
+     * @param response
+     */
+    private void getTaoWord(String response) {
+        TaoWordBean taoWordBean = new Gson().fromJson(response, TaoWordBean.class);
+        int statusCode = taoWordBean.getStatusCode();
+        switch (statusCode) {
+            case 1 :
+                taoWord = taoWordBean.getData();
+                LogUtil.e(taoWord);
+                break;
+        }
+
+    }
+
+    /**
      * @param response
      * 解析数据
      */
     private void parseData(String response) {
-        LogUtil.e(response);
+        LogUtil.e("click_url = " + response);
         ChangeUrlBean changeUrlBean = new Gson().fromJson(response, ChangeUrlBean.class);
         int statusCode = changeUrlBean.getStatusCode();
         switch (statusCode) {
@@ -145,6 +213,7 @@ public class WebRecordActivity extends BaseActivity {
                     List<ChangeUrlBean.DataBean> data = changeUrlBean.getData();
                     if(data!=null && data.size()>0) {
                         click_url = changeUrlBean.getData().get(0).getClick_url();
+                        handler.sendEmptyMessage(GET_URL);
                         AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(click_url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback(WebRecordActivity.this));
                     }else{
                         AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback(WebRecordActivity.this));
@@ -191,8 +260,12 @@ public class WebRecordActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.rl_share:
+                    boolean login = Tools.isLogin(WebRecordActivity.this);
+                    if(!login) {
+                        toLogin();
+                        return;
+                    }
                     if(!TextUtils.isEmpty(click_url)) {
-                        Toast.makeText(WebRecordActivity.this, "正在加载，请稍后！", Toast.LENGTH_SHORT).show();
                         shareWareUrl();
                     }else{
                         Toast.makeText(WebRecordActivity.this, "商品已下架，无法分享！", Toast.LENGTH_SHORT).show();
@@ -202,38 +275,149 @@ public class WebRecordActivity extends BaseActivity {
         }
     }
 
+    private void toLogin() {
+        Toast.makeText(WebRecordActivity.this, "请先登录！", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * 商品转链分享
      */
     private void shareWareUrl() {
-        OnekeyShare oks = new OnekeyShare();
-        //关闭sso授权
-        oks.disableSSOWhenAuthorize();
-        // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
-        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
-        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-        oks.setTitle(goods_title);
-        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-        oks.setTitleUrl(click_url);
-        // text是分享文本，所有平台都需要这个字段
-        oks.setText("我在聚优帮上发现了一个不错的商品，快来看看吧。");
-        //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
-        oks.setImageUrl(goods_img);
-        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-        // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl(click_url);
-        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
-        oks.setComment(goods_title);
-        // site是分享此内容的网站名称，仅在QQ空间使用
-        oks.setSite(goods_title);
-        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl(click_url);
+        showPopMenu();
+        sharePopupwindow.setOnItemClickListenr(new SharePopupwindow.OnItemClickListenr() {
+            @Override
+            public void onQQClick() {
+              showCopyDialog(SHARE_MEDIA.QQ);
+            }
 
-        // 启动分享GUI
-        oks.show(this);
+            @Override
+            public void onWeixinClick() {
+                showCopyDialog(SHARE_MEDIA.WEIXIN);
+            }
+
+            @Override
+            public void onSinaClick() {
+                showCopyDialog(SHARE_MEDIA.SINA);
+            }
+        });
+    }
+
+    /**
+     * 剪切板剪切淘口令
+     * @param paltform
+     */
+   private void showCopyDialog(final SHARE_MEDIA paltform){
+       AlertDialog.Builder builder = new AlertDialog.Builder(this);
+       View inflate = View.inflate(this, R.layout.item_copy_taoword_dialog, null);
+       TextView tvCopyContent = (TextView) inflate.findViewById(R.id.tv_copy_taoword_content);
+       TextView tvCopyDismiss = (TextView) inflate.findViewById(R.id.tv_copy_taoword_dismiss);
+       TextView tvCopyShare = (TextView) inflate.findViewById(R.id.tv_copy_taoword_share);
+       final String share_content = goods_title+"商品链接"+click_url+"复制这条消息"+taoWord+"去打开手机淘宝";
+       tvCopyContent.setText(share_content);
+       final AlertDialog dialog = builder.setView(inflate)
+               .show();
+
+       tvCopyDismiss.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               if(dialog.isShowing()) {
+                   dialog.dismiss();
+               }
+           }
+       });
+       tvCopyShare.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               ClipboardManager cmb = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+               cmb.setText(share_content);
+               shareDiffSolfplam(paltform);
+           }
+       });
+   }
+
+    /**
+     * 分享淘口令链接到不同给的平台
+     * @param platform
+     */
+    private void shareDiffSolfplam(SHARE_MEDIA platform){
+        LogUtil.e(goods_img);
+        UMImage image = new UMImage(WebRecordActivity.this,goods_img);//网络图片
+        UMImage thumb =  new UMImage(this, R.mipmap.juyoubang_logo);
+        image.setThumb(thumb);
+        UMWeb web = new UMWeb(click_url);
+        web.setTitle(goods_title);//标题
+        web.setThumb(image);  //缩略图
+        web.setDescription("我在聚优帮看到了一件不错的商品,你也看看吧");//描述
+        new ShareAction(this)
+                .setPlatform(platform)//传入平台
+                .withMedia(web)//分享内容
+                .setCallback(shareListener)//回调监听器
+                .share();
+    }
+
+
+    private void showPopMenu() {
+        if (sharePopupwindow == null) {
+            sharePopupwindow = new SharePopupwindow(WebRecordActivity.this);
+            sharePopupwindow.showAtLocation(wvBanner, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        } else if (sharePopupwindow != null
+                && sharePopupwindow.isShowing()) {
+            sharePopupwindow.dismiss();
+        } else {
+            sharePopupwindow.showAtLocation(wvBanner, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        }
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    private UMShareListener shareListener = new UMShareListener() {
+        /**
+         * @descrption 分享开始的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+
+        /**
+         * @descrption 分享成功的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            Toast.makeText(WebRecordActivity.this,"成功了",Toast.LENGTH_LONG).show();
+        }
+
+        /**
+         * @descrption 分享失败的回调
+         * @param platform 平台类型
+         * @param t 错误原因
+         */
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            Toast.makeText(WebRecordActivity.this,"失败"+t.getMessage(),Toast.LENGTH_LONG).show();
+        }
+
+        /**
+         * @descrption 分享取消的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            Toast.makeText(WebRecordActivity.this,"取消了",Toast.LENGTH_LONG).show();
+
+        }
+    };
+
 
 }
 

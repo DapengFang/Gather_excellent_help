@@ -2,9 +2,12 @@ package com.gather_excellent_help.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -18,8 +21,11 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.SearchTaobaoBean;
+import com.gather_excellent_help.event.AnyEvent;
+import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.adapter.TaobaoWareListAdapter;
+import com.gather_excellent_help.ui.adapter.WareListAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.TaobaoShaixuanPopupwindow;
 import com.gather_excellent_help.ui.widget.TaobaoZonghePopupwindow;
@@ -89,9 +95,16 @@ public class TaobaoFragment extends BaseFragment {
     private String start_price = "";//范围下限
     private String end_price = "";//范围上限
     private String page_no ="1";//第几页
-    private String page_size = "6";//每页多少
+    private String page_size = "10";//每页多少
     private TaobaoShaixuanPopupwindow taobaoShaixuanPopupwindow;
     private TaobaoZonghePopupwindow taobaoZonghePopupwindow;
+    private int isLoadmore = -1;//是否加载更多
+    private int page = 1;//加载更多
+
+    private Handler handler = new Handler();
+    private List<SearchTaobaoBean.DataBean> taobaodata;//要加载的数据
+    private List<SearchTaobaoBean.DataBean> newData;//每次获取的数据
+    private TaobaoWareListAdapter taobaoWareListAdapter;
 
 
     @Override
@@ -114,22 +127,63 @@ public class TaobaoFragment extends BaseFragment {
                 switch (statusCode) {
                     case 1 :
                         SearchTaobaoBean searchTaobaoBean = new Gson().fromJson(response, SearchTaobaoBean.class);
-                        final List<SearchTaobaoBean.DataBean> data = searchTaobaoBean.getData();
-                        TaobaoWareListAdapter taobaoWareListAdapter = new TaobaoWareListAdapter(getContext(), data);
-                        gvTaobaoList.setAdapter(taobaoWareListAdapter);
+                        if(gvTaobaoList==null) {
+                            return;
+                        }
+                        if(isLoadmore!=-1) {
+                            newData = searchTaobaoBean.getData();
+                            taobaodata.addAll(newData);
+                            taobaoWareListAdapter.notifyDataSetChanged();
+                        }else{
+                            taobaodata = searchTaobaoBean.getData();
+                            newData = taobaodata;
+                            taobaoWareListAdapter = new TaobaoWareListAdapter(getContext(), taobaodata);
+                            gvTaobaoList.setAdapter(taobaoWareListAdapter);
+                        }
                         gvTaobaoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    String link_url = taobaodata.get(i).getLink_url();
+                                    String goods_id = String.valueOf(taobaodata.get(i).getProductId());
+                                    String goods_img = taobaodata.get(i).getImg_url();
+                                    String goods_title = taobaodata.get(i).getTitle();
+                                    Intent intent = new Intent(getContext(), WebRecordActivity.class);
+                                    intent.putExtra("url",link_url);
+                                    intent.putExtra("goods_id",goods_id);
+                                    intent.putExtra("goods_img",goods_img);
+                                    intent.putExtra("goods_title",goods_title);
+                                    startActivity(intent);
+                                }
+                            });
+                        gvTaobaoList.setOnScrollListener(new AbsListView.OnScrollListener() {
                             @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                String link_url = data.get(i).getLink_url();
-                                String goods_id = String.valueOf(data.get(i).getProductId());
-                                String goods_img = Url.IMG_URL + data.get(i).getImg_url();
-                                String goods_title = data.get(i).getTitle();
-                                Intent intent = new Intent(getContext(), WebRecordActivity.class);
-                                intent.putExtra("url",link_url);
-                                intent.putExtra("goods_id",goods_id);
-                                intent.putExtra("goods_img",goods_img);
-                                intent.putExtra("goods_title",goods_title);
-                                startActivity(intent);
+                            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                                if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                                    if (absListView.getLastVisiblePosition() == (absListView.getCount() - 1)) {
+                                        isLoadmore = 0;
+                                        page++;
+                                        LogUtil.e("page == "+page);
+                                        page_no = String.valueOf(page);
+                                        if(newData.size() <Integer.valueOf(page_size)) {
+                                            showLoadNoMore();
+                                        }else{
+                                            showLoadMore();
+                                            handler.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
+                                                }
+                                            },500);
+                                        }
+                                    }else{
+                                        llTaobaoLoadmore.setVisibility(View.GONE);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+
                             }
                         });
 
@@ -144,6 +198,8 @@ public class TaobaoFragment extends BaseFragment {
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "--" + e.getMessage());
             }
+
+
         });
         rlTaobaoSousuo.setOnClickListener(new MyOnclickListener());
         llTaobaoZonghe.setOnClickListener(new MyOnclickListener());
@@ -153,7 +209,23 @@ public class TaobaoFragment extends BaseFragment {
     }
 
 
+    /**
+     * 显示加载更多
+     */
+    private void showLoadMore() {
+        llTaobaoLoadmore.setVisibility(View.VISIBLE);
+        TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(0);
+        tvTitle.setText("加载更多...");
+    }
 
+    /**
+     * 显示没有更多的数据了
+     */
+    private void showLoadNoMore() {
+        TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(0);
+        tvTitle.setText("没有更多的数据了...");
+        llTaobaoLoadmore.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -181,6 +253,8 @@ public class TaobaoFragment extends BaseFragment {
                    tvTaobaoZongheSort.setSelected(true);
                    ivTaobaoZongheSort.setSelected(true);
                    textSelectChange(0);
+                   page_no = "1";
+                   isLoadmore = -1;
                    ivUpPrice.setImageResource(R.drawable.up_gray_arraw);
                    ivDownPrice.setImageResource(R.drawable.down_gray_arraw);
                    ivTaobaoShaixuanSort.setSelected(false);
@@ -193,22 +267,28 @@ public class TaobaoFragment extends BaseFragment {
                    ivDownPrice.setImageResource(R.drawable.down_gray_arraw);
                    imgSelectChanger();
                    type ="4";
+                   page_no = "1";
+                   isLoadmore = -1;
                    searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
                    break;
                case R.id.ll_taobao_price:
+                   page_no = "1";
+                   isLoadmore = -1;
                    tvTaobaoPriceSort.setSelected(true);
                    textSelectChange(2);
                    price_sort =!price_sort;
                    setPriceSortImg(price_sort);
                    imgSelectChanger();
                    if(price_sort) {
-                       type = "5";
-                   }else{
                        type = "6";
+                   }else{
+                       type = "5";
                    }
                    searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
                    break;
                case R.id.ll_taobao_shaixuan:
+                   page_no = "1";
+                   isLoadmore = -1;
                    tvTaobaoShaixuanSort.setSelected(true);
                    ivTaobaoShaixuanSort.setSelected(true);
                    textSelectChange(3);
@@ -292,9 +372,32 @@ public class TaobaoFragment extends BaseFragment {
                 }
                 city =c;
                 searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
+                if(taobaoShaixuanPopupwindow.isShowing()) {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            taobaoShaixuanPopupwindow.dismiss();
+                        }
+                    },200);
+
+                }
+            }
+
+            @Override
+            public void onListClick(String c) {
+                city = c;
+                searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
+                if(taobaoShaixuanPopupwindow.isShowing()) {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            taobaoShaixuanPopupwindow.dismiss();
+                        }
+                    },200);
+
+                }
             }
         });
-        searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
 
     }
     private void showPopMenu2() {
@@ -314,10 +417,29 @@ public class TaobaoFragment extends BaseFragment {
                 int types = pos+1;
                 type = String.valueOf(types);
                 searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
+                if(taobaoZonghePopupwindow.isShowing()) {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            taobaoZonghePopupwindow.dismiss();
+                        }
+                    },200);
+
+                }
             }
         });
+    }
 
-        searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
+    }
 
+    public void onEvent(AnyEvent event) {
+        String msg = "onEventMainThread收到了消息：" + event.getMessage();
+        LogUtil.e("taobaofragment");
+        LogUtil.e(msg);
+        initData();
     }
 }

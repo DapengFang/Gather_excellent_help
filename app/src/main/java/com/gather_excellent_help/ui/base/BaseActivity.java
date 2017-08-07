@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.utils.StatusBarUtil;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by wuxin on 2017/7/11.
@@ -20,5 +21,17 @@ public class BaseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

@@ -3,11 +3,30 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center">
-    <ImageView
-        android:id="@+id/iv_rush_pic"
+    <RelativeLayout
         android:layout_width="@dimen/x80"
-        android:layout_height="@dimen/x80"
-        android:src="@drawable/ware_rush"/>
+        android:layout_height="@dimen/x80">
+        <ImageView
+            android:id="@+id/iv_rush_pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ware_rush"/>
+
+        <TextView
+            android:id="@+id/tv_rush_second_coupons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="领取优惠券"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:paddingLeft="@dimen/x3"
+            android:paddingRight="@dimen/x3"
+            android:background="@drawable/juxin_coupons"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

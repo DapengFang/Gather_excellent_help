@@ -23,6 +23,7 @@ import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.google.gson.Gson;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -154,4 +155,5 @@ public class LoginActivity extends Activity {
             }
         }
     }
+
 }

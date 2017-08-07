@@ -29,6 +29,7 @@ import com.gather_excellent_help.aliapi.DemoTradeCallback;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.TypeNavigatorBean;
 import com.gather_excellent_help.bean.TypeWareBean;
+import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.adapter.TypeWareAdapter;
@@ -108,6 +109,7 @@ public class TypeFragment extends BaseFragment {
         netUtil2.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
+                LogUtil.e("ware list"+response);
                  parseData2(response);
             }
 
@@ -158,7 +160,7 @@ public class TypeFragment extends BaseFragment {
                     public void onItemClick(int position) {
                         String link_url = data.get(position).getLink_url();
                         String goods_id = data.get(position).getProductId();
-                        String goods_img = Url.IMG_URL + data.get(position).getImg_url();
+                        String goods_img = data.get(position).getImg_url();
                         String goods_title = data.get(position).getTitle();
                         Intent intent = new Intent(getContext(), WebRecordActivity.class);
                         intent.putExtra("url",link_url);
@@ -209,43 +211,46 @@ public class TypeFragment extends BaseFragment {
             case 1 :
                 final List<TypeNavigatorBean.DataBean> data = navigatorData.getData();
                 final SimpleExpandableListViewAdapter adapter = new SimpleExpandableListViewAdapter(data,getActivity());
-                // 设置适配器
-                cusListNavigator.setAdapter(adapter);
-                cusListNavigator.setGroupIndicator(null);
+                if(cusListNavigator!=null) {
+                    // 设置适配器
+                    cusListNavigator.setAdapter(adapter);
+                    cusListNavigator.setGroupIndicator(null);
 
-                cusListNavigator.setOnScrollListener(new MyOnScrollListener());
-                cusListNavigator.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-                    @Override
-                    public void onGroupExpand(int i) {
-                        TypeNavigatorBean.DataBean dataBean = data.get(i);
-                        int id = dataBean.getId();
-                        Map<String,String> map = new HashMap<>();
-                        map.put("id",String.valueOf(id));
-                        netUtil2.okHttp2Server2(ware_url,map);
-                    }
-                });
-                adapter.setOnExpandableClickListener(new SimpleExpandableListViewAdapter.OnExpandableClickListener() {
-                    @Override
-                    public void onSecondItemClick(int position, int groupPisition) {
-                        subListBean = data.get(position).getSubList().get(groupPisition);
-                        int id = subListBean.getId();
-                        Map<String,String> map = new HashMap<>();
-                        map.put("id",String.valueOf(id));
-                        netUtil2.okHttp2Server2(ware_url,map);
-                    }
+                    cusListNavigator.setOnScrollListener(new MyOnScrollListener());
+                    cusListNavigator.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+                        @Override
+                        public void onGroupExpand(int i) {
+                            TypeNavigatorBean.DataBean dataBean = data.get(i);
+                            int id = dataBean.getId();
+                            Map<String,String> map = new HashMap<>();
+                            map.put("id",String.valueOf(id));
+                            netUtil2.okHttp2Server2(ware_url,map);
+                        }
+                    });
 
-                    @Override
-                    public void onThirdItemClick(int position, int groupPisition, int childPosition) {
-                        thirdListBean = data.get(position).getSubList().get(groupPisition).getThreeList().get(childPosition);
-                        int id = thirdListBean.getId();
-                        Map<String,String> map = new HashMap<>();
-                        map.put("id",String.valueOf(id));
-                        netUtil2.okHttp2Server2(ware_url,map);
-                    }
-                });
+                    adapter.setOnExpandableClickListener(new SimpleExpandableListViewAdapter.OnExpandableClickListener() {
+                        @Override
+                        public void onSecondItemClick(int position, int groupPisition) {
+                            subListBean = data.get(position).getSubList().get(groupPisition);
+                            int id = subListBean.getId();
+                            Map<String,String> map = new HashMap<>();
+                            map.put("id",String.valueOf(id));
+                            netUtil2.okHttp2Server2(ware_url,map);
+                        }
 
-                if(mIsRequestDataRefresh ==true) {
-                    netUtil2.okHttp2Server2(ware_url,null);
+                        @Override
+                        public void onThirdItemClick(int position, int groupPisition, int childPosition) {
+                            thirdListBean = data.get(position).getSubList().get(groupPisition).getThreeList().get(childPosition);
+                            int id = thirdListBean.getId();
+                            Map<String,String> map = new HashMap<>();
+                            map.put("id",String.valueOf(id));
+                            netUtil2.okHttp2Server2(ware_url,map);
+                        }
+                    });
+
+                    if(mIsRequestDataRefresh ==true) {
+                        netUtil2.okHttp2Server2(ware_url,null);
+                    }
                 }
                 break;
             case 0:
@@ -339,5 +344,12 @@ public class TypeFragment extends BaseFragment {
         public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
         }
+    }
+
+    public void onEvent(AnyEvent event) {
+        String msg = "onEventMainThread收到了消息：" + event.getMessage();
+        LogUtil.e("typefragment");
+        LogUtil.e(msg);
+        initData();
     }
 }

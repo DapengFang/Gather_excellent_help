@@ -52,6 +52,7 @@
             android:background="@color/white">
 
             <TextView
+                android:id="@+id/tv_set_bind_alipay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -80,6 +81,7 @@
             android:background="@color/white">
 
             <TextView
+                android:id="@+id/tv_set_bind_taobao"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

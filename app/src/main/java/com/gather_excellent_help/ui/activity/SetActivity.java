@@ -3,7 +3,9 @@ package com.gather_excellent_help.ui.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.alibaba.baichuan.trade.biz.login.AlibcLoginCallback;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
+import com.gather_excellent_help.bean.SmsCodeBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.base.BaseActivity;
@@ -28,6 +31,7 @@ import com.gather_excellent_help.utils.NetUtil;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -61,6 +65,10 @@ public class SetActivity extends BaseActivity {
     TextView tvSetLogout;
     @Bind(R.id.tv_set_clear_cache)
     TextView tvSetClearCache;
+    @Bind(R.id.tv_set_bind_alipay)
+    TextView tvSetBindAlipay;
+    @Bind(R.id.tv_set_bind_taobao)
+    TextView tvSetBindTaobao;
 
     private NetUtil netUtils;
     private Map<String, String> map;
@@ -73,6 +81,11 @@ public class SetActivity extends BaseActivity {
     private String nick;
     private String user_id;
     private String which = ""; //哪一个联网请求
+    private String account;
+
+    private String sms_url = Url.BASE_URL + "GetRandom.aspx";
+    private String sms_code_s;
+    private CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +100,20 @@ public class SetActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
+
+        if(isBind()) {
+            nick = CacheUtils.getString(SetActivity.this,CacheUtils.TAOBAO_NICK,"");
+            tvSetBindTaobao.setText("绑定/解绑淘宝账号("+nick+")");
+        }else{
+            tvSetBindTaobao.setText("绑定/解绑淘宝账号");
+        }
+
+        if(isPay()) {
+            account = CacheUtils.getString(SetActivity.this,CacheUtils.ALIPAY_ACCOUNT,"");
+            tvSetBindAlipay.setText("绑定/解绑支付宝账号("+account+")");
+        }else{
+            tvSetBindAlipay.setText("绑定/解绑支付宝账号");
+        }
         if (isLogin()) {
             tvSetLogout.setVisibility(View.VISIBLE);
         } else {
@@ -94,7 +121,7 @@ public class SetActivity extends BaseActivity {
         }
         try {
             String totalCacheSize = DataCleanManager.getTotalCacheSize(this);
-            tvSetClearCache.setText("清理缓存 ("+totalCacheSize +")");
+            tvSetClearCache.setText("清理缓存 (" + totalCacheSize + ")");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,14 +144,26 @@ public class SetActivity extends BaseActivity {
                     case 1:
                         if (which.equals("bind")) {
                             Toast.makeText(SetActivity.this, "绑定成功！", Toast.LENGTH_LONG).show();
+                            tvSetBindTaobao.setText("绑定/解绑淘宝账号("+nick+")");
+                            CacheUtils.putBoolean(SetActivity.this, CacheUtils.BIND_STATE, true);
+                            CacheUtils.putString(SetActivity.this,CacheUtils.TAOBAO_NICK,nick);
                             EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "绑定成功！"));
                         } else if (which.equals("unbind")) {
                             Toast.makeText(SetActivity.this, "解绑成功！", Toast.LENGTH_LONG).show();
+                            tvSetBindTaobao.setText("绑定/解绑淘宝账号");
+                            CacheUtils.putString(SetActivity.this,CacheUtils.TAOBAO_NICK,"");
+                            CacheUtils.putBoolean(SetActivity.this, CacheUtils.BIND_STATE, false);
                             EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "解绑成功！"));
                         } else if (which.equals("pay")) {
+                            tvSetBindAlipay.setText("绑定/解绑支付宝账号("+account+")");
                             CacheUtils.putBoolean(SetActivity.this, CacheUtils.PAY_STATE, true);
+                            CacheUtils.putString(SetActivity.this,CacheUtils.ALIPAY_ACCOUNT,account);
                         } else if (which.equals("unpay")) {
+                            tvSetBindAlipay.setText("绑定/解绑支付宝账号");
                             CacheUtils.putBoolean(SetActivity.this, CacheUtils.PAY_STATE, false);
+                            CacheUtils.putString(SetActivity.this,CacheUtils.ALIPAY_ACCOUNT,"");
+                        }else if(which.equals("sms")) {
+                            parseSmsData(response);
                         }
                         break;
                     case 0:
@@ -138,6 +177,28 @@ public class SetActivity extends BaseActivity {
                 LogUtil.e(call.toString() + "," + e.getMessage());
             }
         });
+    }
+
+    /**
+     * 解析短信验证数据
+     * @param response
+     */
+    private void parseSmsData(String response) {
+        LogUtil.e(response);
+        SmsCodeBean smsCodeBean = new Gson().fromJson(response, SmsCodeBean.class);
+        int statusCode = smsCodeBean.getStatusCode();
+        switch (statusCode) {
+            case 0:
+                Toast.makeText(SetActivity.this, "获取验证码失败！" , Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                List<SmsCodeBean.DataBean> data = smsCodeBean.getData();
+                if(data.size()>0) {
+                    sms_code_s = data.get(0).getSms_code();
+                }
+                Toast.makeText(SetActivity.this, "验证码已发送你的手机，请查收！", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     /**
@@ -178,6 +239,8 @@ public class SetActivity extends BaseActivity {
                     break;
                 case R.id.tv_set_logout:
                     CacheUtils.putBoolean(SetActivity.this, CacheUtils.LOGIN_STATE, false);
+                    CacheUtils.putString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
+                    CacheUtils.putInteger(SetActivity.this,CacheUtils.GROUP_TYPE,-1);
                     EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "退出登录！"));
                     finish();
                     loginUser();
@@ -204,8 +267,8 @@ public class SetActivity extends BaseActivity {
                         try {
                             DataCleanManager.cleanApplicationCache(SetActivity.this);
                             String totalCacheSize = DataCleanManager.getTotalCacheSize(SetActivity.this);
-                            tvSetClearCache.setText("清理缓存 ("+totalCacheSize+")");
-                            CacheUtils.putBoolean(SetActivity.this,CacheUtils.LOGIN_STATE,false);
+                            tvSetClearCache.setText("清理缓存 (" + totalCacheSize + ")");
+                            CacheUtils.putBoolean(SetActivity.this, CacheUtils.LOGIN_STATE, false);
                             EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "清理缓存!"));
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -229,7 +292,6 @@ public class SetActivity extends BaseActivity {
                 //获取淘宝用户信息
                 LogUtil.e("获取淘宝用户信息: " + AlibcLogin.getInstance().getSession());
                 LogUtil.e("代码:" + i);
-                CacheUtils.putBoolean(SetActivity.this, CacheUtils.BIND_STATE, true);
                 openId = AlibcLogin.getInstance().getSession().openId;
                 avatarUrl = AlibcLogin.getInstance().getSession().avatarUrl;
                 nick = AlibcLogin.getInstance().getSession().nick;
@@ -258,7 +320,6 @@ public class SetActivity extends BaseActivity {
         alibcLogin.logout(new AlibcLoginCallback() {
             @Override
             public void onSuccess(int i) {
-                CacheUtils.putBoolean(SetActivity.this, CacheUtils.BIND_STATE, false);
                 unBindUserInfo();
                 which = "unbind";
                 netUtils.okHttp2Server2(unbind_url, map);
@@ -339,14 +400,28 @@ public class SetActivity extends BaseActivity {
         View view = View.inflate(this, R.layout.item_pay_account, null);
         final EditText etAccount = (EditText) view.findViewById(R.id.et_pay_account);
         final EditText etName = (EditText) view.findViewById(R.id.et_pay_name);
+        final EditText etSmsCode = (EditText) view.findViewById(R.id.et_alipay_smscode);
+        final TextView tvAlipayGetSms = (TextView) view.findViewById(R.id.tv_alipay_getSms);
+        tvAlipayGetSms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String user_phone = etAccount.getText().toString().trim();
+                getSmsCode(user_phone,tvAlipayGetSms);
+            }
+        });
         builder.setTitle("绑定支付宝")
                 .setView(view)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String account = etAccount.getText().toString().trim();
+                        account = etAccount.getText().toString().trim();
                         String name = etName.getText().toString().trim();
-                        bindPay(account, name);
+                        String smscode = etSmsCode.getText().toString().trim();
+                        if(smscode.equals(sms_code_s)) {
+                            bindPay(account, name);
+                        }else{
+                            Toast.makeText(SetActivity.this, "短信验证码不正确！", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .setNegativeButton("取消", null)
@@ -396,5 +471,37 @@ public class SetActivity extends BaseActivity {
         } else {
             loginUser();
         }
+    }
+
+    /**
+     * 获取验证码的方法
+     */
+    private void getSmsCode(String user, final TextView tv) {
+
+        if(user==null || TextUtils.isEmpty(user)) {
+            Toast.makeText(SetActivity.this, "手机号不能为空！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        tv.setClickable(false);
+        tv.setTextColor(Color.parseColor("#99000000"));
+        countDownTimer =new CountDownTimer(60*1000,1000) {
+            @Override
+            public void onTick(long l) {
+                tv.setText(l/1000+"s后重新获取");
+            }
+
+            @Override
+            public void onFinish() {
+                tv.setClickable(true);
+                tv.setText("获取验证码");
+                tv.setTextColor(Color.parseColor("#99000000"));
+            }
+        };
+        which = "sms";
+        map = new HashMap<>();
+        map.put("sms_code",user);
+        map.put("type","3");
+        netUtils.okHttp2Server2(sms_url,map);
+        countDownTimer.start();
     }
 }

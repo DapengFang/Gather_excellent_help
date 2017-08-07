@@ -4,6 +4,10 @@ android:layout_width="match_parent"
 android:layout_height="wrap_content"
 android:orientation="vertical"
 android:background="#ffffff">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x5"
+        android:background="#11000000"/>
 <TextView
     android:id="@+id/tv_account_detail_time"
     android:layout_width="match_parent"
@@ -84,7 +88,9 @@ android:background="#ffffff">
             android:textColor="#99000000"/>
 
     </LinearLayout>
+
 </LinearLayout>
+
 
 
 </LinearLayout>

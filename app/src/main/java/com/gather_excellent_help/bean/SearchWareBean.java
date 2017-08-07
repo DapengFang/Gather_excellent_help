@@ -68,6 +68,7 @@ public class SearchWareBean {
         private int couponsPrice;
         private int couponsCondition;
         private String couponsUrl;
+        private String secondCouponsUrl;
         private int couponsSurplus;
         private int couponsGet;
         private int stock_quantity;
@@ -185,6 +186,14 @@ public class SearchWareBean {
 
         public void setTkRate(double tkRate) {
             this.tkRate = tkRate;
+        }
+
+        public String getSecondCouponsUrl() {
+            return secondCouponsUrl;
+        }
+
+        public void setSecondCouponsUrl(String secondCouponsUrl) {
+            this.secondCouponsUrl = secondCouponsUrl;
         }
     }
 }
