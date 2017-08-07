@@ -157,6 +157,9 @@ public class QiangTaoActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 监听点击事件的类
+     */
     public class MyOnclickListener implements View.OnClickListener {
 
         @Override
