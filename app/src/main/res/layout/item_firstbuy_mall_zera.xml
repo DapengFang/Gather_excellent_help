@@ -10,7 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:src="@drawable/ware_rush"/>
+        android:src="@mipmap/juyoub_icon"/>
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -40,6 +40,7 @@
                 android:layout_height="@dimen/x10"
                 android:src="@drawable/qianggou_progress"/>
             <TextView
+                android:id="@+id/tv_first_already_percent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="8sp"
@@ -47,6 +48,7 @@
                 android:textColor="#55ff0000"
                 android:layout_marginLeft="@dimen/x60"/>
             <TextView
+                android:id="@+id/tv_first_already_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="已抢20件"

@@ -10,6 +10,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,8 +30,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.alipay.sdk.app.PayTask;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
+import com.gather_excellent_help.api.pay.PayResult;
 import com.gather_excellent_help.bean.BrandBean;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.ui.activity.AlipayManagerActivity;
@@ -37,12 +41,14 @@ import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.adapter.BrandListAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.MyGridView;
+import com.gather_excellent_help.utils.Base64Coder;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -133,6 +139,10 @@ public class MerchantEnterActivity extends BaseActivity {
     private String business = "";
     private String startTime = "";
     private String endTime = "";
+    private String upload1 = "";
+    private String upload2 = "";
+    private String upload3 = "";
+    private String upload4 = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,6 +214,7 @@ public class MerchantEnterActivity extends BaseActivity {
      * @param response
      */
     private void pareMerchantData(String response) {
+        LogUtil.e(response);
         CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
         int statusCode = codeStatueBean.getStatusCode();
         switch (statusCode) {
@@ -288,8 +299,7 @@ public class MerchantEnterActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.tv_merchant_last_next:
-                    //upLoadMerchantInfo();
-                    toAlipay();
+                    upLoadMerchantInfo();
                     break;
                 case R.id.tv_merchant_choice1:
                     which = "l1";
@@ -400,6 +410,16 @@ public class MerchantEnterActivity extends BaseActivity {
             Toast.makeText(MerchantEnterActivity.this, "请输入店铺简介！", Toast.LENGTH_SHORT).show();
             return;
         }
+        LogUtil.e(upload1);
+        LogUtil.e(upload2);
+        LogUtil.e(upload3);
+        LogUtil.e(upload4);
+        if(TextUtils.isEmpty(upload1) || TextUtils.isEmpty(upload2) || TextUtils.isEmpty(upload3) || TextUtils.isEmpty(upload4)) {
+            Toast.makeText(MerchantEnterActivity.this, "请上传图片！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String pics = upload1.trim()+","+upload2.trim()+","+upload3.trim()+","+upload4.trim();
+
         map = new HashMap<>();
         map.put("user_id", userLogin);
         map.put("name", name);
@@ -408,19 +428,24 @@ public class MerchantEnterActivity extends BaseActivity {
         map.put("info", info);
         map.put("business_time", business_time);
         map.put("business", brand);
-        if (!TextUtils.isEmpty(picpath1) && !TextUtils.isEmpty(picpath2)
-                && !TextUtils.isEmpty(picpath3) && !TextUtils.isEmpty(picpath4)) {
-            File file1 = new File(picpath1);
-            File file2 = new File(picpath2);
-            File file3 = new File(picpath3);
-            File file4 = new File(picpath4);
-            File[] files = {file1, file2, file3, file4};
-            where = "upload_file";
-            netUtil.okHttp2Server4(merchant_url, map, files);
-        } else {
-            Toast.makeText(MerchantEnterActivity.this, "请选择图片！", Toast.LENGTH_SHORT).show();
-        }
-
+        map.put("file",upload1.trim());
+        map.put("file2",upload2.trim());
+        map.put("file3",upload3.trim());
+        map.put("file4",upload4.trim());
+//        if (!TextUtils.isEmpty(picpath1) && !TextUtils.isEmpty(picpath2)
+//                && !TextUtils.isEmpty(picpath3) && !TextUtils.isEmpty(picpath4)) {
+//            File file1 = new File(picpath1);
+//            File file2 = new File(picpath2);
+//            File file3 = new File(picpath3);
+//            File file4 = new File(picpath4);
+//            File[] files = {file1, file2, file3, file4};
+//            where = "upload_file";
+//            netUtil.okHttp2Server4(merchant_url, map, files);
+//        } else {
+//            Toast.makeText(MerchantEnterActivity.this, "请选择图片！", Toast.LENGTH_SHORT).show();
+//        }
+         where = "upload_file";
+         netUtil.okHttp2Server2(merchant_url,map);
     }
 
     /**
@@ -436,19 +461,51 @@ public class MerchantEnterActivity extends BaseActivity {
      * 从相册中取图片
      */
     private void pickPhoto() {
-        Intent openAlbumIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        openAlbumIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        startActivityForResult(openAlbumIntent, CROP_PIC_BY_PICK_PHOTO);
+//        Intent openAlbumIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//        openAlbumIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+//        startActivityForResult(openAlbumIntent, CROP_PIC_BY_PICK_PHOTO);
+
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                "image/*");
+        startActivityForResult(intent, CROP_PIC_BY_PICK_PHOTO);
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            doPhoto(requestCode, data);
+           //doPhoto(requestCode, data);
+            switch (requestCode) {
+                // 如果是直接从相册获取
+                case CROP_PIC_BY_PICK_PHOTO:
+                    startPhotoZoom(data.getData());
+                    break;
+                // 如果是调用相机拍照时
+                // 取得裁剪后的图片
+                case SELECT_PIC_BY_PICK_PHOTO:
+                    /**
+                     * 非空判断大家一定要验证，如果不验证的话，
+                     * 在剪裁之后如果发现不满意，要重新裁剪，丢弃
+                     * 当前功能时，会报NullException，小马只
+                     * 在这个地方加下，大家可以根据不同情况在合适的
+                     * 地方做判断处理类似情况
+                     *
+                     */
+                    if(data != null){
+                        setPicToView(data);
+                    }
+                    break;
+                default:
+                    break;
+
+            }
+            super.onActivityResult(requestCode, resultCode, data);
         }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+        }
+
+
 
     /**
      * 选择图片后，获取图片的路径
@@ -707,6 +764,78 @@ public class MerchantEnterActivity extends BaseActivity {
      */
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
+
+    /**
+     * 裁剪图片方法实现
+     * @param uri
+     */
+    public void startPhotoZoom(Uri uri) {
+		/*
+		 * 至于下面这个Intent的ACTION是怎么知道的，大家可以看下自己路径下的如下网页
+		 * yourself_sdk_path/docs/reference/android/content/Intent.html
+		 * 直接在里面Ctrl+F搜：CROP ，之前小马没仔细看过，其实安卓系统早已经有自带图片裁剪功能,
+		 * 是直接调本地库的，小马不懂C C++  这个不做详细了解去了，有轮子就用轮子，不再研究轮子是怎么
+		 * 制做的了...吼吼
+		 */
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        //下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // outputX outputY 是裁剪图片宽高
+        intent.putExtra("outputX", 150);
+        intent.putExtra("outputY", 150);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, SELECT_PIC_BY_PICK_PHOTO);
+    }
+
+    /**
+     * 保存裁剪之后的图片数据
+     * @param picdata
+     */
+    private void setPicToView(Intent picdata) {
+        Bundle extras = picdata.getExtras();
+        if (extras != null) {
+            Bitmap photo = extras.getParcelable("data");
+            Drawable drawable = new BitmapDrawable(photo);
+            /**
+             * 下面注释的方法是将裁剪之后的图片以Base64Coder的字符方式上
+             * 传到服务器，QQ头像上传采用的方法跟这个类似
+             */
+            String sphoto = Tools.BitmapToBase64(photo);
+//			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//			photo.compress(Bitmap.CompressFormat.JPEG, 60, stream);
+//			byte[] b = stream.toByteArray();
+//			// 将图片流以字符串形式存储下来
+//
+//            String sphoto = new String(Base64Coder.encodeLines(b));
+//			//这个地方大家可以写下给服务器上传图片的实现，直接把tp直接上传就可以了，
+//			//服务器处理的方法是服务器那边的事了，吼吼
+//
+//			//如果下载到的服务器的数据还是以Base64Coder的形式的话，可以用以下方式转换
+//			//为我们可以用的图片类型就OK啦...吼吼
+//			Bitmap dBitmap = BitmapFactory.decodeFile(tp);
+//			Drawable drawable = new BitmapDrawable(dBitmap);
+//            ib.setBackgroundDrawable(drawable);
+//            iv.setBackgroundDrawable(drawable);
+            if (which.equals("l1")) {
+                ivMerchantPictureL1.setImageBitmap(photo);
+                upload1 = sphoto;
+            } else if (which.equals("l2")) {
+                ivMerchantPictureL2.setImageBitmap(photo);
+                left_pic = true;
+                upload2 = sphoto;
+            } else if (which.equals("l3")) {
+                ivMerchantPictureL3.setImageBitmap(photo);
+                upload3 = sphoto;
+            } else if (which.equals("l4")) {
+                ivMerchantPictureL4.setImageBitmap(photo);
+                upload4 =sphoto;
+            }
+        }
     }
 
 }

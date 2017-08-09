@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +23,10 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.SearchTaobaoBean;
 import com.gather_excellent_help.event.AnyEvent;
+import com.gather_excellent_help.event.EventType;
+import com.gather_excellent_help.ui.activity.QiangTaoActivity;
 import com.gather_excellent_help.ui.activity.WareListActivity;
+import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.adapter.TaobaoWareListAdapter;
 import com.gather_excellent_help.ui.adapter.WareListAdapter;
@@ -39,6 +43,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
 /**
@@ -122,6 +127,9 @@ public class TaobaoFragment extends BaseFragment {
             @Override
             public void getSuccessResponse(String response) {
                 LogUtil.e(response);
+                if(getContext()==null) {
+                    return;
+                }
                 CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
                 int statusCode = codeStatueBean.getStatusCode();
                 switch (statusCode) {
@@ -143,16 +151,42 @@ public class TaobaoFragment extends BaseFragment {
                         gvTaobaoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                    String link_url = taobaodata.get(i).getLink_url();
-                                    String goods_id = String.valueOf(taobaodata.get(i).getProductId());
-                                    String goods_img = taobaodata.get(i).getImg_url();
-                                    String goods_title = taobaodata.get(i).getTitle();
-                                    Intent intent = new Intent(getContext(), WebRecordActivity.class);
-                                    intent.putExtra("url",link_url);
-                                    intent.putExtra("goods_id",goods_id);
-                                    intent.putExtra("goods_img",goods_img);
-                                    intent.putExtra("goods_title",goods_title);
-                                    startActivity(intent);
+                                    if(getContext()==null) {
+                                        return;
+                                    }
+                                    SearchTaobaoBean.DataBean.CouponInfoBean coupon_info = taobaodata.get(i).getCoupon_info();
+                                    if(coupon_info!=null) {
+                                        String coupon_info_s = coupon_info.getCoupon_info();
+                                        String coupon_click_url = coupon_info.getCoupon_click_url();
+                                        if(coupon_info_s!=null && !TextUtils.isEmpty(coupon_info_s)) {
+                                            Intent intent = new Intent(getContext(), WebActivity.class);
+                                            intent.putExtra("web_url", coupon_click_url);
+                                            startActivity(intent);
+                                        }else{
+                                            String link_url = taobaodata.get(i).getLink_url();
+                                            String goods_id = String.valueOf(taobaodata.get(i).getProductId());
+                                            String goods_img = taobaodata.get(i).getImg_url();
+                                            String goods_title = taobaodata.get(i).getTitle();
+                                            Intent intent = new Intent(getContext(), WebRecordActivity.class);
+                                            intent.putExtra("url",link_url);
+                                            intent.putExtra("goods_id",goods_id);
+                                            intent.putExtra("goods_img",goods_img);
+                                            intent.putExtra("goods_title",goods_title);
+                                            startActivity(intent);
+                                        }
+                                    }else{
+                                        String link_url = taobaodata.get(i).getLink_url();
+                                        String goods_id = String.valueOf(taobaodata.get(i).getProductId());
+                                        String goods_img = taobaodata.get(i).getImg_url();
+                                        String goods_title = taobaodata.get(i).getTitle();
+                                        Intent intent = new Intent(getContext(), WebRecordActivity.class);
+                                        intent.putExtra("url",link_url);
+                                        intent.putExtra("goods_id",goods_id);
+                                        intent.putExtra("goods_img",goods_img);
+                                        intent.putExtra("goods_title",goods_title);
+                                        startActivity(intent);
+                                    }
+
                                 }
                             });
                         gvTaobaoList.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -189,6 +223,9 @@ public class TaobaoFragment extends BaseFragment {
 
                         break;
                     case 0:
+                        if(getContext()==null) {
+                            return;
+                        }
                         Toast.makeText(getContext(), codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                         break;
                 }
@@ -198,7 +235,6 @@ public class TaobaoFragment extends BaseFragment {
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "--" + e.getMessage());
             }
-
 
         });
         rlTaobaoSousuo.setOnClickListener(new MyOnclickListener());
@@ -213,18 +249,22 @@ public class TaobaoFragment extends BaseFragment {
      * 显示加载更多
      */
     private void showLoadMore() {
-        llTaobaoLoadmore.setVisibility(View.VISIBLE);
-        TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(0);
-        tvTitle.setText("加载更多...");
+        if(llTaobaoLoadmore!=null) {
+            llTaobaoLoadmore.setVisibility(View.VISIBLE);
+            TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(0);
+            tvTitle.setText("加载更多...");
+        }
     }
 
     /**
      * 显示没有更多的数据了
      */
     private void showLoadNoMore() {
-        TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(0);
-        tvTitle.setText("没有更多的数据了...");
-        llTaobaoLoadmore.setVisibility(View.VISIBLE);
+        if(llTaobaoLoadmore!=null) {
+            TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(0);
+            tvTitle.setText("没有更多的数据了...");
+            llTaobaoLoadmore.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -434,12 +474,5 @@ public class TaobaoFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         handler.removeCallbacksAndMessages(null);
-    }
-
-    public void onEvent(AnyEvent event) {
-        String msg = "onEventMainThread收到了消息：" + event.getMessage();
-        LogUtil.e("taobaofragment");
-        LogUtil.e(msg);
-        initData();
     }
 }

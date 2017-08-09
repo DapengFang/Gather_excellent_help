@@ -31,7 +31,7 @@ public class HomeTypeAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return datas.size();
+        return null == datas? 0:datas.size();
     }
 
     @Override

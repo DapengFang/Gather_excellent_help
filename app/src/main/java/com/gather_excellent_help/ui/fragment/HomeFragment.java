@@ -20,10 +20,12 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.HomeGroupBean;
 import com.gather_excellent_help.bean.HomeRushBean;
 import com.gather_excellent_help.bean.HomeRushChangeBean;
+import com.gather_excellent_help.bean.HomeVipBean;
 import com.gather_excellent_help.bean.HomeWareBean;
 import com.gather_excellent_help.bean.QiangTaoBean;
 import com.gather_excellent_help.bean.TyepIndexBean;
 import com.gather_excellent_help.event.AnyEvent;
+import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.adapter.HomeRushAllAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
@@ -62,16 +64,18 @@ public class HomeFragment extends BaseFragment {
     private NetUtil netUtils2;//团购区的商品联网接口
     private NetUtil netUtils3;//分类区的商品联网接口
     private NetUtil netUtils4;//抢购区的商品数据联网
+    private NetUtil netUtils5;//专享区的商品数据联网
     private String rush_url = Url.BASE_URL + "IndexGoods.aspx";
-
     private String group_url = Url.BASE_URL + "GroupBuy.aspx";
     private String type_url = Url.BASE_URL + "IndexCategory.aspx";
     private String qiang_url = Url.BASE_URL + "RushBuy.aspx";
+    private String vip_url = Url.BASE_URL + "ChannelPrice.aspx";
     private HomeRushAllAdapter homeRushAllAdapter;
     private List<HomeWareBean.DataBean> rushData;
     private List<HomeGroupBean.DataBean> groupData;
     private List<TyepIndexBean.DataBean> typeData;
     private List<QiangTaoBean.DataBean> qiangData;
+    private List<HomeVipBean.DataBean> vipData;
     private RushDownTimer rushDownTimer; //倒计时处理类
     public static final int TIME_DOWN = 1; //倒计时显示的标识
     public static final int LOAD_DATA = 2; //加载数据的标识
@@ -95,7 +99,8 @@ public class HomeFragment extends BaseFragment {
                     handler.sendEmptyMessageDelayed(TIME_DOWN,1000);
                     break;
                 case LOAD_DATA:
-                    if(rushData.size()>0 && groupData.size()>0 && typeData.size()>0 && qiangData.size() > 0 && isFirst) {
+                    if(rushData.size()>0 && groupData.size()>0 && typeData.size()>0 && qiangData.size() > 0
+                            && vipData.size()>0&& isFirst) {
                         if(mIsRequestDataRefresh ==true) {
                             stopDataRefresh();
                             setRefresh(mIsRequestDataRefresh);
@@ -105,19 +110,20 @@ public class HomeFragment extends BaseFragment {
                            time = endtime - curr_time;
                            rushDownTimer = new RushDownTimer(getContext());
                            handler.sendEmptyMessage(TIME_DOWN);
-                           loadRecyclerData(rushData,groupData,typeData,rushDownTimer,qiangData);
+                           loadRecyclerData(rushData,groupData,typeData,rushDownTimer,qiangData,vipData);
                            }
                         handler.removeMessages(LOAD_DATA);
                         return;
-                    }else if(rushData.size()>0&&groupData.size()>0&&!isFirst) {
-                        if(mIsRequestDataRefresh ==true) {
-                            stopDataRefresh();
-                            setRefresh(mIsRequestDataRefresh);
-                        }
-                        loadRecyclerData(rushData,groupData,typeData,rushDownTimer,qiangData);
-                        handler.removeMessages(LOAD_DATA);
-                        return;
                     }
+//                    else if(rushData.size()>0&&groupData.size()>0&&!isFirst) {
+//                        if(mIsRequestDataRefresh ==true) {
+//                            stopDataRefresh();
+//                            setRefresh(mIsRequestDataRefresh);
+//                        }
+//                        loadRecyclerData(rushData,groupData,typeData,rushDownTimer,qiangData);
+//                        handler.removeMessages(LOAD_DATA);
+//                        return;
+//                    }
                     handler.sendEmptyMessageDelayed(LOAD_DATA,200);
                     break;
             }
@@ -127,6 +133,7 @@ public class HomeFragment extends BaseFragment {
     private String down_timer = "";
     private long endtime;
     private long curr_time;
+
 
     @Override
     public View initView() {
@@ -208,6 +215,21 @@ public class HomeFragment extends BaseFragment {
                 isFirst =false;
             }
         });
+        netUtils5.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
+            @Override
+            public void getSuccessResponse(String response) {
+                LogUtil.e("专享" + response);
+                if(getContext() ==null) {
+                    return;
+                }
+                parseData5(response);
+            }
+
+            @Override
+            public void getFailResponse(Call call, Exception e) {
+                LogUtil.e("nerUtils5=="+call.toString()+e.getMessage());
+            }
+        });
 
     }
 
@@ -219,6 +241,7 @@ public class HomeFragment extends BaseFragment {
         groupData = new ArrayList<>();
         typeData = new ArrayList<>();
         qiangData = new ArrayList<>();
+        vipData = new ArrayList<>();
     }
 
     /**
@@ -258,6 +281,7 @@ public class HomeFragment extends BaseFragment {
         netUtils.okHttp2Server2(rush_url, null);
         netUtils2.okHttp2Server2(group_url,null);
         netUtils3.okHttp2Server2(type_url,null);
+        netUtils5.okHttp2Server2(vip_url,null);
     }
 
     /**
@@ -268,6 +292,7 @@ public class HomeFragment extends BaseFragment {
         netUtils2 = new NetUtil();
         netUtils3 = new NetUtil();
         netUtils4 = new NetUtil();
+        netUtils5 = new NetUtil();
     }
 
     /**
@@ -287,6 +312,26 @@ public class HomeFragment extends BaseFragment {
                     return;
                 }
                 Toast.makeText(getContext(), qiangTaoBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    /**
+     * 解析首页专享数据
+     * @param response
+     */
+    private void parseData5(String response) {
+        HomeVipBean homeVipBean = new Gson().fromJson(response, HomeVipBean.class);
+        int statusCode = homeVipBean.getStatusCode();
+        switch (statusCode) {
+            case 1 :
+                vipData = homeVipBean.getData();
+                break;
+            case 0:
+                if(getContext()==null) {
+                    return;
+                }
+                Toast.makeText(getContext(), homeVipBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -318,7 +363,6 @@ public class HomeFragment extends BaseFragment {
         switch (statusCode) {
             case 1 :
                 groupData = homeGroupBean.getData();
-
                 break;
             case 0:
                 Toast.makeText(getContext(), homeGroupBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -344,11 +388,11 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    private void loadRecyclerData(List<HomeWareBean.DataBean> homeChangeDatas, List<HomeGroupBean.DataBean> groupData, List<TyepIndexBean.DataBean> typeData, RushDownTimer rushDownTimer, List<QiangTaoBean.DataBean> qiangData) {
+    private void loadRecyclerData(List<HomeWareBean.DataBean> homeChangeDatas, List<HomeGroupBean.DataBean> groupData, List<TyepIndexBean.DataBean> typeData, RushDownTimer rushDownTimer, List<QiangTaoBean.DataBean> qiangData, List<HomeVipBean.DataBean> vipData) {
         if(rcvHomeFragment!=null) {
             FullyLinearLayoutManager layoutManager = new FullyLinearLayoutManager(getContext());
             rcvHomeFragment.setLayoutManager(layoutManager);
-            homeRushAllAdapter = new HomeRushAllAdapter(getContext(),homeChangeDatas,getActivity(),groupData,typeData,rushDownTimer,qiangData,isFirst);
+            homeRushAllAdapter = new HomeRushAllAdapter(getContext(),homeChangeDatas,getActivity(),groupData,typeData,rushDownTimer,qiangData,vipData,isFirst);
             rcvHomeFragment.setAdapter(homeRushAllAdapter);
         }
     }
@@ -440,17 +484,12 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                netUtils.okHttp2Server2(rush_url, null);
-            }
-        },1000);
     }
     public void onEvent(AnyEvent event) {
-        String msg = "onEventMainThread收到了消息：" + event.getMessage();
-        LogUtil.e("homefragment");
-        LogUtil.e(msg);
-        initData();
+        if(event.getType() == EventType.EVENT_LOGIN) {
+            String msg = "onEventMainThread收到了消息：" + event.getMessage();
+            LogUtil.e(msg);
+            initData();
+        }
     }
 }

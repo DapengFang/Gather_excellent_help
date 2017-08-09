@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.TextView;
 
+import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.ListBean;
 import com.gather_excellent_help.utils.DensityUtil;
 
@@ -48,7 +49,7 @@ public class WareSelectorAdapter extends RecyclerView.Adapter<WareSelectorAdapte
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return null == data ? 0:data.size();
     }
 
     public class WareSelectorViewHolder extends RecyclerView.ViewHolder{
@@ -62,17 +63,18 @@ public class WareSelectorAdapter extends RecyclerView.Adapter<WareSelectorAdapte
 
     private TextView getGenericChildView() {
 
-        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        TextView textView = new TextView(context);
-        textView.setLayoutParams(layoutParams);
-        textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-        textView.setPadding(20, 30, 0, 30);
-        textView.setTextSize(DensityUtil.dip2px(context,3));
-        textView.setTextColor(Color.parseColor("#ffffff"));
-        return textView;
+//        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT);
+//
+//        TextView textView = new TextView(context);
+//        textView.setLayoutParams(layoutParams);
+//        textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+//        textView.setPadding(20, 30, 0, 30);
+//        textView.setTextSize(DensityUtil.dip2px(context,3));
+//        textView.setTextColor(Color.parseColor("#ffffff"));
+        TextView  inflate = (TextView) View.inflate(context, R.layout.item_text, null);
+        return inflate;
     }
     private OnItemClickListener onItemClickListener;
 

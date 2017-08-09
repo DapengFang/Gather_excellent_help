@@ -45,7 +45,7 @@ public class HomeRushAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return datas.size();
+        return null == datas? 0:datas.size();
     }
 
     @Override
@@ -84,11 +84,11 @@ public class HomeRushAdapter extends BaseAdapter {
             holder.home_rush_name.setText(itemBean.getTitle());
         }
         DecimalFormat df = new DecimalFormat("#0.00");
+        int couponsPrice = itemBean.getCouponsPrice();
         double sell_price = itemBean.getSell_price();
         double tkRate = itemBean.getTkRate()/100;
-        double zhuan = sell_price*tkRate*0.9f*0.83f;
-        double coast = sell_price - zhuan;
-        int couponsPrice = itemBean.getCouponsPrice();
+        double zhuan = (sell_price - couponsPrice)*tkRate*0.9f*0.83f;
+        double coast = sell_price - zhuan -couponsPrice;
         final String couponsUrl = itemBean.getCouponsUrl();
         final String secondCouponsUrl = itemBean.getSecondCouponsUrl();
         holder.home_rush_sale.setText("赚:￥"+df.format(zhuan));

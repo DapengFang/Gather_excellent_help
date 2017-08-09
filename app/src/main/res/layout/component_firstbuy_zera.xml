@@ -29,6 +29,7 @@
                 android:textSize="16sp"
                 android:padding="@dimen/x3"/>
             <TextView
+                android:id="@+id/tv_first_big_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="距离第四场倒计时"
@@ -130,7 +131,6 @@
                 android:id="@+id/iv_firstbuy_big"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ware_rush"
                 android:layout_gravity="right"/>
         </LinearLayout>
         <View

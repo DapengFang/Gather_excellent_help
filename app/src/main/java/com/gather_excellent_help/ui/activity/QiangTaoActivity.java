@@ -2,12 +2,16 @@ package com.gather_excellent_help.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,8 +21,10 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.QiangTaoBean;
 import com.gather_excellent_help.bean.QiangTimeBean;
+import com.gather_excellent_help.bean.SearchTaobaoBean;
 import com.gather_excellent_help.bean.SearchWareBean;
 import com.gather_excellent_help.ui.adapter.TaoQiangTimeAdapter;
+import com.gather_excellent_help.ui.adapter.TaobaoWareListAdapter;
 import com.gather_excellent_help.ui.adapter.WareListAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.LogUtil;
@@ -37,6 +43,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 
+import static android.R.attr.type;
+
 public class QiangTaoActivity extends BaseActivity {
 
     @Bind(R.id.rl_exit)
@@ -47,18 +55,31 @@ public class QiangTaoActivity extends BaseActivity {
     RecyclerView rcvHorizationalTimeNavigator;
     @Bind(R.id.gv_wart_list)
     GridView gvWartList;
+    @Bind(R.id.ll_ware_list_loadmore)
+    LinearLayout llWareListLoadmore;
 
     private String qiang_url = Url.BASE_URL + "RushBuy.aspx";
     private long curr_time;
     private long endtime;
     private NetUtil netUtils;
     private List<QiangTaoBean.DataBean> qiangData;
-    private WareListAdapter wareListAdapter;
+    //private WareListAdapter wareListAdapter;
     private String end_time;
     private String time_head;
     private String start_time;
     private List<SearchWareBean.DataBean> wareData;
     private int curr_click = 0;//当前点击
+    private int isLoadmore = -1;
+    private int page = 1;//加载更多
+    private Handler handler = new Handler();
+    private String page_no ="1";//第几页
+    private String page_size = "10";//每页多少
+//    private List<SearchWareBean.DataBean> newData;
+//    private List<SearchWareBean.DataBean> taobaodata;
+
+    private List<SearchTaobaoBean.DataBean> taobaodata;//要加载的数据
+    private List<SearchTaobaoBean.DataBean> newData;//每次获取的数据
+    private TaobaoWareListAdapter taobaoWareListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,69 +98,135 @@ public class QiangTaoActivity extends BaseActivity {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         rcvHorizationalTimeNavigator.setLayoutManager(mLayoutManager);
         netUtils = new NetUtil();
-        net2Server();
+        start_time = getCurrentTime();
+        net2Server(page_size,page_no,start_time,end_time);
         final ArrayList<QiangTimeBean> timeData = loadTimeNavData();
         final TaoQiangTimeAdapter taoQiangTimeAdapter = new TaoQiangTimeAdapter(this, timeData);
         rcvHorizationalTimeNavigator.setAdapter(taoQiangTimeAdapter);
         taoQiangTimeAdapter.setOnItemclickListener(new TaoQiangTimeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                curr_click =position;
-                for (int i=0;i<timeData.size();i++){
+                curr_click = position;
+                for (int i = 0; i < timeData.size(); i++) {
                     QiangTimeBean qiangTimeBean = timeData.get(i);
-                    if(i==position) {
+                    if (i == position) {
                         qiangTimeBean.setCheck(true);
-                    }else{
+                    } else {
                         qiangTimeBean.setCheck(false);
                     }
                 }
                 taoQiangTimeAdapter.notifyDataSetChanged();
                 QiangTimeBean qiangTimeBean = timeData.get(position);
                 int time = qiangTimeBean.getTime();
-                if(time==23) {
-                    start_time = time_head +"23:00";
-                    end_time = time_head +"00:00";
-                }else{
-                    start_time = time_head +time+":00";
-                    end_time = time_head +(time+1)+":00";
+                if (time == 23) {
+                    start_time = time_head + "23:00";
+                    end_time = time_head + "00:00";
+                } else {
+                    start_time = time_head + time + ":00";
+                    end_time = time_head + (time + 1) + ":00";
                 }
-                net2ServerCheck();
+                isLoadmore = -1;
+                page_no = "1";
+                net2Server(page_size,page_no,start_time,end_time);
             }
         });
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
+                LogUtil.e("qiangtao = "+ response);
                 CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
                 int statusCode = codeStatueBean.getStatusCode();
                 switch (statusCode) {
                     case 1:
-                        if(gvWartList==null) {
+                        if (gvWartList == null) {
                             return;
                         }
-                        SearchWareBean searchWareBean = new Gson().fromJson(response, SearchWareBean.class);
-                        wareData = searchWareBean.getData();
-                        wareListAdapter = new WareListAdapter(QiangTaoActivity.this, wareData);
-                        gvWartList.setAdapter(wareListAdapter);
+                        SearchTaobaoBean searchTaobaoBean = new Gson().fromJson(response, SearchTaobaoBean.class);
+                        if(isLoadmore!=-1) {
+                            newData = searchTaobaoBean.getData();
+                            taobaodata.addAll(newData);
+                            taobaoWareListAdapter.notifyDataSetChanged();
+                        }else{
+                            taobaodata = searchTaobaoBean.getData();
+                            newData = taobaodata;
+                            taobaoWareListAdapter = new TaobaoWareListAdapter(QiangTaoActivity.this, taobaodata);
+                            gvWartList.setAdapter(taobaoWareListAdapter);
+                        }
+
                         gvWartList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                if(wareData ==null) {
+                                if (taobaodata == null) {
                                     return;
                                 }
-                                if(curr_click == 0) {
-                                    String link_url = wareData.get(i).getLink_url();
-                                    String goods_id = wareData.get(i).getProductId();
-                                    String goods_img = wareData.get(i).getImg_url();
-                                    String goods_title = wareData.get(i).getTitle();
-                                    Intent intent = new Intent(QiangTaoActivity.this, WebRecordActivity.class);
-                                    intent.putExtra("url",link_url);
-                                    intent.putExtra("goods_id",goods_id);
-                                    intent.putExtra("goods_img",goods_img);
-                                    intent.putExtra("goods_title",goods_title);
-                                    startActivity(intent);
-                                }else{
+                                if (curr_click == 0) {
+                                    SearchTaobaoBean.DataBean.CouponInfoBean coupon_info = taobaodata.get(i).getCoupon_info();
+                                    String coupon_info_cest = coupon_info.getCoupon_info();
+                                    String coupon_click_url = coupon_info.getCoupon_click_url();
+                                    if(coupon_info_cest!=null && !TextUtils.isEmpty(coupon_info_cest)) {
+                                        if(coupon_click_url!=null && !TextUtils.isEmpty(coupon_click_url)) {
+                                            Intent intent = new Intent(QiangTaoActivity.this, WebActivity.class);
+                                            intent.putExtra("web_url", coupon_click_url);
+                                            startActivity(intent);
+                                        }else{
+                                            String link_url = taobaodata.get(i).getLink_url();
+                                            String goods_id = String.valueOf(taobaodata.get(i).getProductId());
+                                            String goods_img = taobaodata.get(i).getImg_url();
+                                            String goods_title = taobaodata.get(i).getTitle();
+                                            Intent intent = new Intent(QiangTaoActivity.this, WebRecordActivity.class);
+                                            intent.putExtra("url", link_url);
+                                            intent.putExtra("goods_id", goods_id);
+                                            intent.putExtra("goods_img", goods_img);
+                                            intent.putExtra("goods_title", goods_title);
+                                            startActivity(intent);
+                                        }
+                                    }else{
+                                        String link_url = taobaodata.get(i).getLink_url();
+                                        String goods_id = String.valueOf(taobaodata.get(i).getProductId());
+                                        String goods_img = taobaodata.get(i).getImg_url();
+                                        String goods_title = taobaodata.get(i).getTitle();
+                                        Intent intent = new Intent(QiangTaoActivity.this, WebRecordActivity.class);
+                                        intent.putExtra("url", link_url);
+                                        intent.putExtra("goods_id", goods_id);
+                                        intent.putExtra("goods_img", goods_img);
+                                        intent.putExtra("goods_title", goods_title);
+                                        startActivity(intent);
+                                    }
+                                } else {
                                     Toast.makeText(QiangTaoActivity.this, "抢购还未开启，请够耐心的等待！", Toast.LENGTH_SHORT).show();
                                 }
+
+                            }
+                        });
+                        gvWartList.setOnScrollListener(new AbsListView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                                if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                                    if (absListView.getLastVisiblePosition() == (absListView.getCount() - 1)) {
+                                        isLoadmore = 0;
+                                        page++;
+                                        LogUtil.e("page == "+page);
+                                        page_no = String.valueOf(page);
+                                        if(newData.size() <Integer.valueOf(page_size)) {
+                                            showLoadNoMore();
+                                        }else{
+                                            showLoadMore();
+                                            handler.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    net2Server(page_size,page_no,start_time,end_time);
+                                                }
+                                            },500);
+                                        }
+                                    }else{
+                                        llWareListLoadmore.setVisibility(View.GONE);
+                                    }
+                                }
+
+                            }
+
+                            @Override
+                            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
 
                             }
                         });
@@ -155,6 +242,18 @@ public class QiangTaoActivity extends BaseActivity {
 
             }
         });
+    }
+
+    private void showLoadMore() {
+        llWareListLoadmore.setVisibility(View.VISIBLE);
+        TextView tvTitle = (TextView) llWareListLoadmore.getChildAt(0);
+        tvTitle.setText("加载更多...");
+    }
+
+    private void showLoadNoMore() {
+        TextView tvTitle = (TextView) llWareListLoadmore.getChildAt(0);
+        tvTitle.setText("没有更多的数据了...");
+        llWareListLoadmore.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -177,30 +276,30 @@ public class QiangTaoActivity extends BaseActivity {
     /**
      * 联网请求
      */
-    private void net2Server() {
-        LogUtil.e(start_time+"--------"+end_time);
-        start_time = getCurrentTime();
+    private void net2Server(String page_size,String page_no,String start_time,String end_time) {
+        LogUtil.e(start_time + "--------" + end_time);
         Map<String, String> map = new HashMap<>();
-        map.put("pageSize", "6");
-        map.put("pageIndex", "1");
-        map.put("start_time", start_time);
-        map.put("end_time", end_time);
-        netUtils.okHttp2Server2(qiang_url, map);
-    }
-    /**
-     * 联网请求
-     */
-    private void net2ServerCheck() {
-        LogUtil.e(start_time+"--------"+end_time);
-        Map<String, String> map = new HashMap<>();
-        map.put("pageSize", "6");
-        map.put("pageIndex", "1");
+        map.put("pageSize", page_size);
+        map.put("pageIndex", page_no);
         map.put("start_time", start_time);
         map.put("end_time", end_time);
         netUtils.okHttp2Server2(qiang_url, map);
     }
 
-    private ArrayList<QiangTimeBean> loadTimeNavData(){
+//    /**
+//     * 联网请求
+//     */
+//    private void net2ServerCheck() {
+//        LogUtil.e(start_time + "--------" + end_time);
+//        Map<String, String> map = new HashMap<>();
+//        map.put("pageSize", "6");
+//        map.put("pageIndex", "1");
+//        map.put("start_time", start_time);
+//        map.put("end_time", end_time);
+//        netUtils.okHttp2Server2(qiang_url, map);
+//    }
+
+    private ArrayList<QiangTimeBean> loadTimeNavData() {
         curr_time = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
         Date date = new Date(curr_time);
@@ -214,14 +313,14 @@ public class QiangTaoActivity extends BaseActivity {
         String second = timesArray[5];
         int currHour = Integer.parseInt(hour);
         ArrayList<QiangTimeBean> times = new ArrayList<>();
-       for (int i=currHour;i<24;i++){
-           QiangTimeBean qiangTimeBean = new QiangTimeBean();
-           qiangTimeBean.setTime(i);
-           times.add(qiangTimeBean);
-           if(i==currHour) {
-               qiangTimeBean.setCheck(true);
-           }
-       }
+        for (int i = currHour; i < 24; i++) {
+            QiangTimeBean qiangTimeBean = new QiangTimeBean();
+            qiangTimeBean.setTime(i);
+            times.add(qiangTimeBean);
+            if (i == currHour) {
+                qiangTimeBean.setCheck(true);
+            }
+        }
         return times;
     }
 
@@ -253,5 +352,11 @@ public class QiangTaoActivity extends BaseActivity {
             e.printStackTrace();
         }
         return start_time;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
     }
 }

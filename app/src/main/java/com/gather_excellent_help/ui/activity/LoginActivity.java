@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -11,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
+import com.alibaba.baichuan.trade.biz.login.AlibcLoginCallback;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeBean;
@@ -48,11 +51,18 @@ public class LoginActivity extends Activity {
     @Bind(R.id.tv_register)
     TextView tvRegister;
 
+    private String bind_url = Url.BASE_URL + "bindTaobao.aspx";//绑定淘宝
+
+
     private String user;
     private String password;
     private NetUtil netUtils;
     private Map<String,String> map;
     private String url = Url.BASE_URL + "login.aspx";
+    private String openId;
+    private String avatarUrl;
+    private String nick;
+    private String which;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +88,11 @@ public class LoginActivity extends Activity {
             @Override
             public void getSuccessResponse(String response) {
                 LogUtil.e(response);
-                parseData(response);
-
+                if(which.equals("login")) {
+                    parseData(response);
+                }else if(which.equals("bind")) {
+                    parseBindData(response);
+                }
             }
 
             @Override
@@ -87,6 +100,25 @@ public class LoginActivity extends Activity {
                LogUtil.e(call.toString()+","+e.getMessage());
             }
         });
+    }
+
+    /**
+     * 解析绑定淘宝的数据
+     * @param response
+     */
+    private void parseBindData(String response) {
+        CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
+        int statusCode = codeStatueBean.getStatusCode();
+        switch (statusCode) {
+            case 1 :
+
+                CacheUtils.putBoolean(LoginActivity.this, CacheUtils.BIND_STATE, true);
+                CacheUtils.putString(LoginActivity.this,CacheUtils.TAOBAO_NICK,nick);
+                break;
+            case 0:
+
+                break;
+        }
     }
 
     /**
@@ -102,7 +134,6 @@ public class LoginActivity extends Activity {
                 Toast.makeText(LoginActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
             case 1:
-
                 Toast.makeText(LoginActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 CodeBean codeBean = new Gson().fromJson(response, CodeBean.class);
                 List<CodeBean.DataBean> data = codeBean.getData();
@@ -110,6 +141,7 @@ public class LoginActivity extends Activity {
                     Integer id = data.get(0).getId();
                     CacheUtils.putBoolean(LoginActivity.this,CacheUtils.LOGIN_STATE,true);
                     CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_VALUE,id+"");
+                    bindTaobao(id+"");
                     EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
                     finish();
                 }
@@ -131,6 +163,7 @@ public class LoginActivity extends Activity {
             map= new HashMap<>();
             map.put("UserName",user);
             map.put("Password",password);
+            which = "login";
             netUtils.okHttp2Server2(url,map);
         }
     }
@@ -154,6 +187,53 @@ public class LoginActivity extends Activity {
                     break;
             }
         }
+    }
+
+    /**
+     * 绑定淘宝
+     * @param s
+     */
+    public void bindTaobao(final String s) {
+
+        AlibcLogin alibcLogin = AlibcLogin.getInstance();
+
+        alibcLogin.showLogin(new AlibcLoginCallback() {
+            @Override
+            public void onSuccess(int i) {
+                //获取淘宝用户信息
+                LogUtil.e("获取淘宝用户信息: " + AlibcLogin.getInstance().getSession());
+                LogUtil.e("代码:" + i);
+                openId = AlibcLogin.getInstance().getSession().openId;
+                avatarUrl = AlibcLogin.getInstance().getSession().avatarUrl;
+                nick = AlibcLogin.getInstance().getSession().nick;
+                uploadUserInfo(s);
+                which = "bind";
+                netUtils.okHttp2Server2(bind_url, map);
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+//                Toast.makeText(LoginActivity.this, "绑定失败 ！",
+//                        Toast.LENGTH_LONG).show();
+//                Log.i("GGG", "错误码" + code + "原因" + msg);
+            }
+        });
+    }
+
+    /**
+     * 上传用户信息
+     * @param s
+     */
+    public void uploadUserInfo(String s) {
+
+            if (!TextUtils.isEmpty(s)) {
+                map = new HashMap<>();
+                map.put("Id", s);
+                map.put("openId", openId);
+                map.put("portrait", avatarUrl);
+                map.put("nickname", nick);
+            }
+
     }
 
 }

@@ -51,7 +51,7 @@ public class TypeSelectorPopupwindow extends PopupWindow {
         this.setContentView(inflate);
         //设置SelectPicPopupWindow弹出窗体的宽
         int screenWidth = ScreenUtil.getScreenWidth(context);
-        this.setWidth(screenWidth/4);
+        this.setWidth(screenWidth/3);
         int screenHeight = ScreenUtil.getScreenHeight(context);
         //设置SelectPicPopupWindow弹出窗体的高
         this.setHeight(screenHeight/5);

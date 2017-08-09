@@ -37,7 +37,7 @@
                         android:id="@+id/iv_group_big_pic"
                         android:layout_width="@dimen/x100"
                         android:layout_height="@dimen/x100"
-                        android:src="@drawable/big_ware_group"
+                        android:src="@mipmap/juyoub_icon"
                         android:layout_centerInParent="true"/>
                     <TextView
                         android:id="@+id/tv_group_big_second_coupons"

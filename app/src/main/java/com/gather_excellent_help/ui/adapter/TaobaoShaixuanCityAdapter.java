@@ -47,7 +47,7 @@ public class TaobaoShaixuanCityAdapter extends RecyclerView.Adapter<TaobaoShaixu
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return null == data? 0:data.size();
     }
 
     public class TaobaoShaixuanViewHolder extends RecyclerView.ViewHolder{

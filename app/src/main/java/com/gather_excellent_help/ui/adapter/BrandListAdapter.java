@@ -39,7 +39,7 @@ public class BrandListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return data.size();
+        return null == data? 0:data.size();
     }
 
     @Override

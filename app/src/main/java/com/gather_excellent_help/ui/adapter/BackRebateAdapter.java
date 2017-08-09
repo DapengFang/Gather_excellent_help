@@ -64,7 +64,7 @@ public class BackRebateAdapter extends RecyclerView.Adapter<BackRebateAdapter.Ac
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return data == null? 0:data.size();
     }
 
     public class AccountDetailViewHolder extends RecyclerView.ViewHolder {

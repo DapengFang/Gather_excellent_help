@@ -30,7 +30,9 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.TypeNavigatorBean;
 import com.gather_excellent_help.bean.TypeWareBean;
 import com.gather_excellent_help.event.AnyEvent;
+import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.WareListActivity;
+import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.adapter.TypeWareAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
@@ -110,6 +112,9 @@ public class TypeFragment extends BaseFragment {
             @Override
             public void getSuccessResponse(String response) {
                 LogUtil.e("ware list"+response);
+                if(getContext()==null) {
+                    return;
+                }
                  parseData2(response);
             }
 
@@ -125,6 +130,9 @@ public class TypeFragment extends BaseFragment {
         tvTypeSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(getContext()==null) {
+                    return;
+                }
                 String content = etSousuo.getText().toString().trim();
                 if(TextUtils.isEmpty(content)) {
                     Toast.makeText(getActivity(), "请输入你要搜索商品的名称！", Toast.LENGTH_SHORT).show();
@@ -150,24 +158,43 @@ public class TypeFragment extends BaseFragment {
                     stopDataRefresh();
                     setRefresh(mIsRequestDataRefresh);
                 }
+                if(rcvTypeShow==null) {
+                    return;
+                }
                 final List<TypeWareBean.DataBean> data = typeWareBean.getData();
+                if(data ==null) {
+                    return;
+                }
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
                 rcvTypeShow.setLayoutManager(layoutManager);
                 TypeWareAdapter typeWareAdapter = new TypeWareAdapter(getContext(),data);
                 rcvTypeShow.setAdapter(typeWareAdapter);
+               if(getContext()==null) {
+                   return;
+               }
                 typeWareAdapter.setOnItemClickListener(new TypeWareAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
-                        String link_url = data.get(position).getLink_url();
-                        String goods_id = data.get(position).getProductId();
-                        String goods_img = data.get(position).getImg_url();
-                        String goods_title = data.get(position).getTitle();
-                        Intent intent = new Intent(getContext(), WebRecordActivity.class);
-                        intent.putExtra("url",link_url);
-                        intent.putExtra("goods_id",goods_id);
-                        intent.putExtra("goods_img",goods_img);
-                        intent.putExtra("goods_title",goods_title);
-                        getContext().startActivity(intent);
+                        int couponsPrice = data.get(position).getCouponsPrice();
+                        if(couponsPrice>0) {
+                            String couponsUrl = data.get(position).getCouponsUrl();
+                            if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
+                                Intent intent = new Intent(getContext(), WebActivity.class);
+                                intent.putExtra("web_url",couponsUrl);
+                                getContext().startActivity(intent);
+                            }
+                        }else{
+                            String link_url = data.get(position).getLink_url();
+                            String goods_id = data.get(position).getProductId();
+                            String goods_img = data.get(position).getImg_url();
+                            String goods_title = data.get(position).getTitle();
+                            Intent intent = new Intent(getContext(), WebRecordActivity.class);
+                            intent.putExtra("url",link_url);
+                            intent.putExtra("goods_id",goods_id);
+                            intent.putExtra("goods_img",goods_img);
+                            intent.putExtra("goods_title",goods_title);
+                            getContext().startActivity(intent);
+                        }
                     }
                 });
                 break;
@@ -347,9 +374,10 @@ public class TypeFragment extends BaseFragment {
     }
 
     public void onEvent(AnyEvent event) {
-        String msg = "onEventMainThread收到了消息：" + event.getMessage();
-        LogUtil.e("typefragment");
-        LogUtil.e(msg);
-        initData();
+        if(event.getType() == EventType.EVENT_LOGIN) {
+            String msg = "onEventMainThread收到了消息：" + event.getMessage();
+            LogUtil.e(msg);
+            initData();
+        }
     }
 }

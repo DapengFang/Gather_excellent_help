@@ -105,6 +105,8 @@ public class WareListActivity extends BaseActivity {
     private String activity_id = "";
     private String activity_url = Url.BASE_URL + "ActivityMoreList.aspx";
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +141,12 @@ public class WareListActivity extends BaseActivity {
                 map.put("pageIndex","1");
                 String qiang_url = Url.BASE_URL + "GroupBuyList.aspx";
                 netUtil2.okHttp2Server2(qiang_url,map);
+            }else if(sousuoStr.equals("isVip")) {
+                map = new HashMap<>();
+                map.put("pageSize","10");
+                map.put("pageIndex","1");
+                String vip_url = Url.BASE_URL + "ChannelPriceList.aspx";
+                netUtil2.okHttp2Server2(vip_url,map);
             }else if(sousuoStr.equals("activity")) {
                 map = new HashMap<>();
                 map.put("pageSize","10");
@@ -214,16 +222,23 @@ public class WareListActivity extends BaseActivity {
                 gvWartList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        String link_url = wareData.get(i).getLink_url();
-                        String goods_id = wareData.get(i).getProductId();
-                        String goods_img = wareData.get(i).getImg_url();
-                        String goods_title = wareData.get(i).getTitle();
-                        Intent intent = new Intent(WareListActivity.this, WebRecordActivity.class);
-                        intent.putExtra("url",link_url);
-                        intent.putExtra("goods_id",goods_id);
-                        intent.putExtra("goods_img",goods_img);
-                        intent.putExtra("goods_title",goods_title);
-                        startActivity(intent);
+                        String couponsUrl = wareData.get(i).getCouponsUrl();
+                        if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
+                            Intent intent = new Intent(WareListActivity.this, WebActivity.class);
+                            intent.putExtra("web_url", couponsUrl);
+                            startActivity(intent);
+                        }else{
+                            String link_url = wareData.get(i).getLink_url();
+                            String goods_id = wareData.get(i).getProductId();
+                            String goods_img = wareData.get(i).getImg_url();
+                            String goods_title = wareData.get(i).getTitle();
+                            Intent intent = new Intent(WareListActivity.this, WebRecordActivity.class);
+                            intent.putExtra("url",link_url);
+                            intent.putExtra("goods_id",goods_id);
+                            intent.putExtra("goods_img",goods_img);
+                            intent.putExtra("goods_title",goods_title);
+                            startActivity(intent);
+                        }
                     }
                 });
                 gvWartList.setOnScrollListener(new AbsListView.OnScrollListener() {

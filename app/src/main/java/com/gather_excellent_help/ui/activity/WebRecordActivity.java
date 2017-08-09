@@ -153,8 +153,9 @@ public class WebRecordActivity extends BaseActivity {
         exParams.put("alibaba", "阿里巴巴");//自定义参数部分，可任意增删改
         rlExit.setOnClickListener(new MyOnclickListener());
         rlShare.setOnClickListener(new MyOnclickListener());
+        boolean login = Tools.isLogin(this);
         String adverId = Tools.getAdverId(this);
-        if(!TextUtils.isEmpty(adverId)) {
+        if(login) {
             LogUtil.e("adverId = "+adverId);
             map = new HashMap<>();
             map.put("goodsId",goods_id);

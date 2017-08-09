@@ -169,6 +169,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/v_mine"
                 android:layout_width="@dimen/x1"
                 android:layout_height="@dimen/x30"
                 android:background="#22000000" />
@@ -182,6 +183,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/ll_mine_back_show"
                     android:layout_width="@dimen/x105"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -414,6 +416,7 @@
             android:background="#efefef" />
 
         <RelativeLayout
+            android:id="@+id/rl_mine_toggle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x45"
             android:background="#ffffff">

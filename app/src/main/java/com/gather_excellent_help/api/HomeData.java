@@ -7,8 +7,8 @@ import com.gather_excellent_help.R;
  */
 
 public class HomeData {
-    public static final String[] titles = {"电视", "空调", "小家电", "烟灶消", "洗衣机", "冰箱", "冷柜", "热水器"};
-    public static final int[] imgs = {R.drawable.dianshi, R.drawable.kongtiao, R.drawable.xiaojiadian,
-            R.drawable.yanzaoxiao, R.drawable.xiyiji,
-            R.drawable.bingxiang, R.drawable.lenggui, R.drawable.reshuiqi};
+    public static final String[] titles = {"热水器", "冷柜", "烟灶消", "冰箱", "小家电", "空调", "电视机", "洗衣机"};
+    public static final int[] imgs = {R.drawable.reshuiqi, R.drawable.lenggui, R.drawable.yanzaoxiao,
+            R.drawable.bingxiang, R.drawable.xiaojiadian,
+            R.drawable.kongtiao, R.drawable.dianshi, R.drawable.xiyiji};
 }

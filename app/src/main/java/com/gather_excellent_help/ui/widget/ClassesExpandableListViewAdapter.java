@@ -158,17 +158,26 @@ public class ClassesExpandableListViewAdapter extends BaseExpandableListAdapter 
 
     private TextView getGenericChildView(String string, final int groupPosition, final int childPosition) {
 
-        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        TextView textView = new TextView(activity);
-        textView.setLayoutParams(layoutParams);
-        textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-        textView.setPadding(100, 30, 0, 30);
+//        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT);
+//
+//        TextView textView = new TextView(activity);
+//        textView.setLayoutParams(layoutParams);
+//        textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+//        textView.setPadding(100, 30, 0, 30);
+//        textView.setText(string);
+//        textView.setTextSize(DensityUtil.dip2px(activity,4));
+//        textView.setTextColor(Color.parseColor("#99000000"));
+//        textView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //3级的点击事件
+//                onThirdListClickListener.onThirdClick(groupPosition,childPosition);
+//            }
+//        });
+        TextView textView = (TextView) View.inflate(activity,R.layout.item_text_type,null);
         textView.setText(string);
-        textView.setTextSize(DensityUtil.dip2px(activity,4));
-        textView.setTextColor(Color.parseColor("#99000000"));
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

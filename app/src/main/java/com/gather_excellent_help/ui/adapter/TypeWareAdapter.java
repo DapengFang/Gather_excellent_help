@@ -62,11 +62,11 @@ public class TypeWareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             typeWareViewHolder.tvTypeName.setText(title);
         }
         DecimalFormat df = new DecimalFormat("#0.00");
+        int couponsPrice = dataBean.getCouponsPrice();
         double sell_price = dataBean.getSell_price();
         double tkRate = dataBean.getTkRate()/100;
-        double zhuan = sell_price * tkRate * 0.9f *0.83f;
+        double zhuan = (sell_price - couponsPrice) * tkRate * 0.9f *0.83f;
         double coast = sell_price - zhuan;
-        int couponsPrice = dataBean.getCouponsPrice();
         final String couponsUrl = dataBean.getCouponsUrl();
         final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
         typeWareViewHolder.tvTypeWareSale.setText("赚:￥"+df.format(zhuan));
@@ -125,7 +125,7 @@ public class TypeWareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return null == data ? 0:data.size();
     }
 
     public class TypeWareViewHolder extends RecyclerView.ViewHolder{

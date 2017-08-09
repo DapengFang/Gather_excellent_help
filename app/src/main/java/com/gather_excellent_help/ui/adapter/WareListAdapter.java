@@ -40,7 +40,7 @@ public class WareListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return data.size();
+        return null == data? 0:data.size();
     }
 
     @Override
@@ -79,10 +79,10 @@ public class WareListAdapter extends BaseAdapter {
         }
         mImageLoader.loadImage(dataBean.getImg_url(),holder.home_type_photo,true);
         DecimalFormat df = new DecimalFormat("#0.00");
-        double tkRate = dataBean.getTkRate() / 100;
-        double zhuan = dataBean.getSell_price() * tkRate * 0.9f * 0.83f;
-        double coast = dataBean.getSell_price() - zhuan;
         int couponsPrice = dataBean.getCouponsPrice();
+        double tkRate = dataBean.getTkRate() / 100;
+        double zhuan = (dataBean.getSell_price() - couponsPrice) * tkRate * 0.9f * 0.83f;
+        double coast = dataBean.getSell_price() - zhuan -couponsPrice;
         final String couponsUrl = dataBean.getCouponsUrl();
         final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
         if(couponsPrice>0) {
@@ -99,7 +99,7 @@ public class WareListAdapter extends BaseAdapter {
                 }
             });
         }else {
-            holder.tv_rush_ware_coupons.setVisibility(View.GONE);
+            holder.tv_rush_ware_coupons.setVisibility(View.INVISIBLE);
         }
         if(secondCouponsUrl!=null && !TextUtils.isEmpty(secondCouponsUrl)) {
             holder.tv_rush_ware_second_coupons.setVisibility(View.VISIBLE);

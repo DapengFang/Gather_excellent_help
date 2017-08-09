@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,7 +23,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
@@ -81,6 +82,7 @@ public class ShopDetailActivity extends BaseActivity {
     private NetUtil netUtil;
     private Map<String, String> map;
     private ImageLoader mImageLoader;
+    private String upload = "";
 
     private int which = 0;//区分展示还是修改
 
@@ -93,6 +95,8 @@ public class ShopDetailActivity extends BaseActivity {
      * 使用相册中的图片
      */
     public static final int SELECT_PIC_BY_PICK_PHOTO = 2;
+    public static final int SELECT_PIC_BY_TAKE_CROP = 3;
+    public static final int SELECT_PIC_BY_PICK_CROP = 4;
     @Bind(R.id.tv_shop_time_am)
     TextView tvShopTimeAm;
     @Bind(R.id.tv_shop_time_pm)
@@ -133,6 +137,7 @@ public class ShopDetailActivity extends BaseActivity {
         ButterKnife.bind(this);
         initData();
     }
+
 
     /**
      * 初始化数据
@@ -210,6 +215,8 @@ public class ShopDetailActivity extends BaseActivity {
         finish();
     }
 
+
+
     /**
      * 监听点击事件的类
      */
@@ -225,7 +232,7 @@ public class ShopDetailActivity extends BaseActivity {
                     pickPhoto();
                     break;
                 case R.id.iv_shop_carame:
-                    takePhoto();
+                    //takePhoto();
                     break;
                 case R.id.tv_shop_time_am:
                     showTimePicker(R.id.tv_shop_time_am);
@@ -257,6 +264,10 @@ public class ShopDetailActivity extends BaseActivity {
         info = tvShopDetailIntroduction.getText().toString().trim();
         address = tvShopDetailAddress.getText().toString().trim();
         which = 1;
+        if(TextUtils.isEmpty(upload)) {
+            Toast.makeText(ShopDetailActivity.this, "请上传图片", Toast.LENGTH_SHORT).show();
+            return;
+        }
         HashMap<String, String> map = new HashMap<>();
         map.put("seller_id", loginId);
         map.put("name", shopName);
@@ -265,13 +276,8 @@ public class ShopDetailActivity extends BaseActivity {
         map.put("info", info);
         map.put("business_time",startTime + "a" + endTime);
         map.put("bussiness",shopYewu);
-       if(!TextUtils.isEmpty(picPath)) {
-            File file = new File(picPath);
-            netUtil.okHttp2Server3(update_shop_url, map,file);
-        }else{
-            Toast.makeText(ShopDetailActivity.this, "请选择上传图片！", Toast.LENGTH_SHORT).show();
-        }
-
+        map.put("file",upload.trim());
+        netUtil.okHttp2Server2(update_shop_url,map);
     }
 
     /**
@@ -328,40 +334,78 @@ public class ShopDetailActivity extends BaseActivity {
      * 拍照获取图片
      */
     private void takePhoto() {
-        //执行拍照前，应该先判断SD卡是否存在
-        String SDState = Environment.getExternalStorageState();
-        if (SDState.equals(Environment.MEDIA_MOUNTED)) {
-
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);//"android.media.action.IMAGE_CAPTURE"
-            /***
-             * 需要说明一下，以下操作使用照相机拍照，拍照后的图片会存放在相册中的
-             * 这里使用的这种方式有一个好处就是获取的图片是拍照后的原图
-             * 如果不实用ContentValues存放照片路径的话，拍照后获取的图片为缩略图不清晰
-             */
-            ContentValues values = new ContentValues();
-            photoUri = this.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            /**-----------------*/
-            startActivityForResult(intent, SELECT_PIC_BY_TACK_PHOTO);
-        } else {
-            Toast.makeText(this, "内存卡不存在", Toast.LENGTH_LONG).show();
-        }
+//        //执行拍照前，应该先判断SD卡是否存在
+//        String SDState = Environment.getExternalStorageState();
+//        if (SDState.equals(Environment.MEDIA_MOUNTED)) {
+//
+//            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);//"android.media.action.IMAGE_CAPTURE"
+//            /***
+//             * 需要说明一下，以下操作使用照相机拍照，拍照后的图片会存放在相册中的
+//             * 这里使用的这种方式有一个好处就是获取的图片是拍照后的原图
+//             * 如果不实用ContentValues存放照片路径的话，拍照后获取的图片为缩略图不清晰
+//             */
+//            ContentValues values = new ContentValues();
+//            photoUri = this.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+//            /**-----------------*/
+//            startActivityForResult(intent, SELECT_PIC_BY_TACK_PHOTO);
+//        } else {
+//            Toast.makeText(this, "内存卡不存在", Toast.LENGTH_LONG).show();
+//        }
+        Intent intent = new Intent(
+                MediaStore.ACTION_IMAGE_CAPTURE);
+        //下面这句指定调用相机拍照后的照片存储的路径
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
+                .fromFile(new File(Environment
+                        .getExternalStorageDirectory(),
+                        "xiaoma.jpg")));
+        startActivityForResult(intent, SELECT_PIC_BY_TAKE_CROP);
     }
 
     /***
      * 从相册中取图片
      */
     private void pickPhoto() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, SELECT_PIC_BY_PICK_PHOTO);
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                "image/*");
+        startActivityForResult(intent, SELECT_PIC_BY_PICK_CROP);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            doPhoto(requestCode, data);
+            //doPhoto(requestCode, data);
+            switch (requestCode) {
+                // 如果是直接从相册获取
+                case SELECT_PIC_BY_PICK_CROP:
+                    startPhotoZoom(data.getData());
+                    break;
+                // 如果是调用相机拍照时
+                case SELECT_PIC_BY_TAKE_CROP:
+                    File temp = new File(Environment.getExternalStorageDirectory()
+                            + "/xiaoma.jpg");
+                    startPhotoZoom(Uri.fromFile(temp));
+                    break;
+                // 取得裁剪后的图片
+                case SELECT_PIC_BY_PICK_PHOTO:
+                    /**
+                     * 非空判断大家一定要验证，如果不验证的话，
+                     * 在剪裁之后如果发现不满意，要重新裁剪，丢弃
+                     * 当前功能时，会报NullException，小马只
+                     * 在这个地方加下，大家可以根据不同情况在合适的
+                     * 地方做判断处理类似情况
+                     *
+                     */
+                    if(data != null){
+                        setPicToView(data);
+                    }
+                    break;
+                default:
+                    break;
+
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -406,5 +450,68 @@ public class ShopDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+
+    /**
+     * 裁剪图片方法实现
+     * @param uri
+     */
+    public void startPhotoZoom(Uri uri) {
+		/*
+		 * 至于下面这个Intent的ACTION是怎么知道的，大家可以看下自己路径下的如下网页
+		 * yourself_sdk_path/docs/reference/android/content/Intent.html
+		 * 直接在里面Ctrl+F搜：CROP ，之前小马没仔细看过，其实安卓系统早已经有自带图片裁剪功能,
+		 * 是直接调本地库的，小马不懂C C++  这个不做详细了解去了，有轮子就用轮子，不再研究轮子是怎么
+		 * 制做的了...吼吼
+		 */
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        //下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // outputX outputY 是裁剪图片宽高
+        intent.putExtra("outputX", 150);
+        intent.putExtra("outputY", 150);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, SELECT_PIC_BY_PICK_PHOTO);
+    }
+
+    /**
+     * 保存裁剪之后的图片数据
+     * @param picdata
+     */
+    private void setPicToView(Intent picdata) {
+        Bundle extras = picdata.getExtras();
+        if (extras != null) {
+            Bitmap photo = extras.getParcelable("data");
+            Drawable drawable = new BitmapDrawable(photo);
+            String sphoto = Tools.BitmapToBase64(photo);
+            upload = sphoto;
+            /**
+             * 下面注释的方法是将裁剪之后的图片以Base64Coder的字符方式上
+             * 传到服务器，QQ头像上传采用的方法跟这个类似
+             */
+
+			/*ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			photo.compress(Bitmap.CompressFormat.JPEG, 60, stream);
+			byte[] b = stream.toByteArray();
+			// 将图片流以字符串形式存储下来
+
+			tp = new String(Base64Coder.encodeLines(b));
+			这个地方大家可以写下给服务器上传图片的实现，直接把tp直接上传就可以了，
+			服务器处理的方法是服务器那边的事了，吼吼
+
+			如果下载到的服务器的数据还是以Base64Coder的形式的话，可以用以下方式转换
+			为我们可以用的图片类型就OK啦...吼吼
+			Bitmap dBitmap = BitmapFactory.decodeFile(tp);
+			Drawable drawable = new BitmapDrawable(dBitmap);
+			*/
+//            ib.setBackgroundDrawable(drawable);
+//            iv.setBackgroundDrawable(drawable);
+            ivShopPicture.setImageBitmap(photo);
+        }
     }
 }

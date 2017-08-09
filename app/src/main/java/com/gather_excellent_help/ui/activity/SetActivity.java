@@ -28,6 +28,7 @@ import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.DataCleanManager;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
+import okhttp3.Cache;
 import okhttp3.Call;
 
 public class SetActivity extends BaseActivity {
@@ -92,7 +94,6 @@ public class SetActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set);
         ButterKnife.bind(this);
-
         initData();
     }
 
@@ -100,8 +101,8 @@ public class SetActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
-
-        if(isBind()) {
+        boolean bindTao = Tools.isBindTao(this);
+        if(bindTao) {
             nick = CacheUtils.getString(SetActivity.this,CacheUtils.TAOBAO_NICK,"");
             tvSetBindTaobao.setText("绑定/解绑淘宝账号("+nick+")");
         }else{
@@ -241,6 +242,9 @@ public class SetActivity extends BaseActivity {
                     CacheUtils.putBoolean(SetActivity.this, CacheUtils.LOGIN_STATE, false);
                     CacheUtils.putString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
                     CacheUtils.putInteger(SetActivity.this,CacheUtils.GROUP_TYPE,-1);
+                    CacheUtils.putBoolean(SetActivity.this,CacheUtils.BIND_STATE,false);
+                    CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK,"");
+                    CacheUtils.putString(SetActivity.this,CacheUtils.ALIPAY_ACCOUNT,"");
                     EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "退出登录！"));
                     finish();
                     loginUser();
@@ -503,5 +507,12 @@ public class SetActivity extends BaseActivity {
         map.put("type","3");
         netUtils.okHttp2Server2(sms_url,map);
         countDownTimer.start();
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

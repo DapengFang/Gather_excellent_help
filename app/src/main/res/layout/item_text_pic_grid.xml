@@ -13,7 +13,8 @@
         <ImageView
             android:id="@+id/iv_home_type_photo"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:src="@mipmap/juyoub_icon"/>
         <TextView
             android:id="@+id/tv_type_second_coupons"
             android:layout_width="wrap_content"

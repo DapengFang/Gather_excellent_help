@@ -79,7 +79,7 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
 
     @Override
     public int getItemCount() {
-        return allData==null? 0 : allData.size();
+        return null==allData? 0 : allData.size();
     }
 
     public class OrderManagerViewHolder extends RecyclerView.ViewHolder {

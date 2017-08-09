@@ -64,7 +64,7 @@ public class TaoQiangTimeAdapter extends RecyclerView.Adapter<TaoQiangTimeAdapte
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return null == data? 0:data.size();
     }
 
     public class TaoQiangViewHolder extends RecyclerView.ViewHolder{

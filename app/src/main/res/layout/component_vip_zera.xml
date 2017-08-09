@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+    <include layout="@layout/gray_line9"/>
+    <include layout="@layout/component_zera_title"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:background="#22000000"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x240"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/ll_first_left_zero"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:padding="@dimen/x8">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x100">
+
+                <ImageView
+                    android:id="@+id/iv_vip_big_pic"
+                    android:layout_width="@dimen/x100"
+                    android:layout_height="@dimen/x100"
+                    android:src="@mipmap/juyoub_icon"
+                    android:layout_centerInParent="true"/>
+                <TextView
+                    android:id="@+id/tv_vip_big_second_coupons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="领取优惠券"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/x3"
+                    android:paddingRight="@dimen/x3"
+                    android:background="@drawable/juxin_coupons"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_vip_big_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AUX/奥克斯"
+                android:textSize="12sp"
+                android:textColor="#99000000"
+                android:layout_marginTop="@dimen/x3"
+                android:padding="@dimen/x3"/>
+
+            <TextView
+                android:id="@+id/tv_vip_big_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="今日特价2599.00"
+                android:textSize="10sp"
+                android:textColor="@color/white"
+                android:background="@drawable/home_price_bg"
+                android:layout_marginTop="@dimen/x3"
+                android:paddingLeft="@dimen/x3"
+                android:paddingRight="@dimen/x7"
+                android:layout_marginLeft="@dimen/x5"/>
+            <TextView
+                android:id="@+id/tv_home_vip_zhuan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="赚:￥106.89  成本:￥3092.11"
+                android:textColor="#99ff0000"
+                android:textSize="10sp"/>
+            <TextView
+                android:id="@+id/tv_home_vip_coupons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="领券立减200"
+                android:textSize="10sp"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:padding="@dimen/x2"
+                android:background="@drawable/type_xiadan_bg"/>
+        </LinearLayout>
+        <View
+            android:layout_width="@dimen/x1"
+            android:layout_height="match_parent"
+            android:background="#22000000"/>
+
+        <LinearLayout
+            android:id="@+id/ll_first_vip_zera"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="vertical">
+            <include layout="@layout/item_vip_small_zera"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x1"
+                android:background="#22000000"/>
+            <include layout="@layout/item_vip_small_zera"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

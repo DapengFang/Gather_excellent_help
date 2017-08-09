@@ -44,7 +44,7 @@ public class WardStaticsAdapter extends RecyclerView.Adapter<WardStaticsAdapter.
 
     @Override
     public int getItemCount() {
-        return wardsData.size();
+        return null == wardsData? 0:wardsData.size();
     }
 
     public class WardStaticsViewHolder extends RecyclerView.ViewHolder {

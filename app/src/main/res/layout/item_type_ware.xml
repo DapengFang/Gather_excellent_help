@@ -22,7 +22,7 @@
                   android:id="@+id/iv_type_img"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
-                  android:src="@drawable/type_ware_pic"/>
+                  android:src="@mipmap/juyoub_icon"/>
               <TextView
                   android:id="@+id/tv_type_second_coupons"
                   android:layout_width="wrap_content"

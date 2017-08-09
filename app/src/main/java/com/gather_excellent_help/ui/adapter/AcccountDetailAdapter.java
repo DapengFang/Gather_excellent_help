@@ -53,7 +53,7 @@ public class AcccountDetailAdapter extends RecyclerView.Adapter<AcccountDetailAd
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return null == data? 0:data.size();
     }
 
     public class AccountDetailViewHolder extends RecyclerView.ViewHolder {

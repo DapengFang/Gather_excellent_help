@@ -24,11 +24,11 @@ import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.HelpRuleBean;
 import com.gather_excellent_help.bean.MineBean;
 import com.gather_excellent_help.event.AnyEvent;
+import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.activity.OrderActivity;
 import com.gather_excellent_help.ui.activity.RuleHelpActivity;
 import com.gather_excellent_help.ui.activity.SetActivity;
-import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.credits.AccountDetailAvtivity;
 import com.gather_excellent_help.ui.activity.credits.BackRebateActivity;
 import com.gather_excellent_help.ui.activity.credits.ExtractCreditsActivity;
@@ -155,6 +155,12 @@ public class MineFragment extends BaseFragment {
     ImageView ivMineCompontL06;
     @Bind(R.id.tv_mine_compont_l06)
     TextView tvMineCompontL06;
+    @Bind(R.id.rl_mine_toggle)
+    RelativeLayout rlMineToggle;
+    @Bind(R.id.v_mine)
+    View vMine;
+    @Bind(R.id.ll_mine_back_show)
+    LinearLayout llMineBackShow;
     private String mseg = "";
 
     private NetUtil netUtils;
@@ -177,8 +183,8 @@ public class MineFragment extends BaseFragment {
     private int groupId;
 
 
-    private String help_url = Url.BASE_URL +"UserHelp.aspx";
-    private String rule_url = Url.BASE_URL +"RebateRules.aspx";
+    private String help_url = Url.BASE_URL + "UserHelp.aspx";
+    private String rule_url = Url.BASE_URL + "RebateRules.aspx";
     private double user_earn;
 
     @Override
@@ -191,24 +197,25 @@ public class MineFragment extends BaseFragment {
     public void initData() {
         login = Tools.isLogin(getContext());
         groupId = Tools.getGroupId(getContext());
-        LogUtil.e("groupId = "+groupId);
-        if(groupId == 4) {
+        LogUtil.e("groupId = " + groupId);
+        if (groupId == 4) {
             loadGroupuserDefault();
             tvAccountMoneyTitle1.setText("余额/提现中");
             tvAccountMoneyTitle2.setText("赚(冻结期)");
             tvAccountMoney2.setVisibility(View.VISIBLE);
             llMineZhuanOrder.setVisibility(View.VISIBLE);
             tvAccountMoney.setVisibility(View.VISIBLE);
-        }else{
+            rlMineToggle.setVisibility(View.VISIBLE);
+        } else {
             loadCuserDefault();
             tvAccountMoneyTitle1.setText("余额");
             tvAccountMoneyTitle2.setText("充值");
             tvAccountMoney.setVisibility(View.GONE);
             tvAccountMoney2.setVisibility(View.GONE);
             llMineZhuanOrder.setVisibility(View.GONE);
-
+            rlMineToggle.setVisibility(View.GONE);
         }
-
+        llMineZhuanOrder.setVisibility(View.GONE);
         boolean toggle_show = CacheUtils.getBoolean(getContext(), CacheUtils.TOGGLE_SHOW, false);
         tbnMineControl.setCurrentState(toggle_show);
         alibcShowParams = new AlibcShowParams(OpenType.H5, false);
@@ -219,7 +226,7 @@ public class MineFragment extends BaseFragment {
         netUtils2 = new NetUtil();
         defaultSet();
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
-        if (Tools.isLogin(getActivity())) {
+        if (login) {
             String userLogin = Tools.getUserLogin(getActivity());
             map = new HashMap<>();
             map.put("Id", userLogin);
@@ -277,7 +284,7 @@ public class MineFragment extends BaseFragment {
                 CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
                 int statusCode = codeStatueBean.getStatusCode();
                 switch (statusCode) {
-                    case 1 :
+                    case 1:
                         parseHelpData(response);
                         break;
                     case 0:
@@ -295,6 +302,7 @@ public class MineFragment extends BaseFragment {
 
     /**
      * 解析帮助和返佣规则的数据
+     *
      * @param response
      */
     private void parseHelpData(String response) {
@@ -309,8 +317,10 @@ public class MineFragment extends BaseFragment {
         llMineCompontSecond.setVisibility(View.GONE);
         tvMineCompontL01.setText("商家入驻");
         tvMineCompontL03.setText("帮助");
-        llMineZhuanOrder.setVisibility(View.GONE);
+        llMineUserBack.setVisibility(View.INVISIBLE);
+        //llMineZhuanOrder.setVisibility(View.GONE);
     }
+
     private void loadGroupuserDefault() {
         llMineCompontFirst.setVisibility(View.VISIBLE);
         llMineCompontSecond.setVisibility(View.VISIBLE);
@@ -320,7 +330,8 @@ public class MineFragment extends BaseFragment {
         tvMineCompontL04.setText("商家信息");
         tvMineCompontL05.setText("帮助");
         tvMineCompontL06.setText("返佣规则");
-        llMineZhuanOrder.setVisibility(View.VISIBLE);
+        llMineUserBack.setVisibility(View.VISIBLE);
+        //llMineZhuanOrder.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -335,10 +346,15 @@ public class MineFragment extends BaseFragment {
         List<MineBean.DataBean> data = mineBean.getData();
         switch (statusCode) {
             case 0:
+                if (getActivity() == null) {
+                    return;
+                }
                 Toast.makeText(getActivity(), mineBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
             case 1:
-                loadUserData(data);
+                if (data != null) {
+                    loadUserData(data);
+                }
                 break;
         }
     }
@@ -363,6 +379,9 @@ public class MineFragment extends BaseFragment {
             CacheUtils.putString(getContext(), CacheUtils.ADVER_ID, advertising);
         }
         CacheUtils.putInteger(getContext(), CacheUtils.GROUP_TYPE, group_id);
+        if (civMeHeadIcon == null) {
+            return;
+        }
         if (avatar != null && !TextUtils.isEmpty(avatar)) {
             mImageLoader.loadImage(avatar, civMeHeadIcon, true);
         } else {
@@ -387,16 +406,16 @@ public class MineFragment extends BaseFragment {
             Tools.setPartTextColor2(tvAccountMoney, df.format(amount) + "/" + df.format(frostAmount), "/");
             tvAccountMoneyTitle2.setText("赚(冻结期)");
             tvAccountMoney2.setVisibility(View.VISIBLE);
-            llMineZhuanOrder.setVisibility(View.VISIBLE);
+            //llMineZhuanOrder.setVisibility(View.VISIBLE);
         } else {
             tvAccountMoneyTitle1.setText("余额");
             tvAccountMoneyTitle2.setText("充值");
             tvAccountMoney2.setVisibility(View.GONE);
-            llMineZhuanOrder.setVisibility(View.GONE);
+            //llMineZhuanOrder.setVisibility(View.GONE);
         }
-        if(group_id == 4) {
-             loadGroupuserDefault();
-        }else{
+        if (group_id == 4) {
+            loadGroupuserDefault();
+        } else {
             loadCuserDefault();
         }
 
@@ -478,37 +497,37 @@ public class MineFragment extends BaseFragment {
                     }
                     break;
                 case R.id.ll_mine_extract_credits:
-                   if(!login) {
-                       toLogin();
-                       return;
-                   }
-                    if(groupId ==4) {
+                    if (!login) {
+                        toLogin();
+                        return;
+                    }
+                    if (groupId == 4) {
                         toExtraCredits();
-                    }else{
+                    } else {
                         toMerchantEnter();
                     }
                     break;
                 case R.id.ll_mine_account_details:
-                    if(!login) {
+                    if (!login) {
                         toLogin();
                         return;
                     }
-                    if(groupId == 4) {
+                    if (groupId == 4) {
                         toAccountDetail();
-                    }else{
+                    } else {
                         //条帮助
-                      netUtils2.okHttp2Server2(help_url,null);
+                        netUtils2.okHttp2Server2(help_url, null);
                     }
                     break;
                 case R.id.ll_mine_find_friends:
-                    if(!login) {
+                    if (!login) {
                         toLogin();
                         return;
                     }
                     toInviateFriend();
                     break;
                 case R.id.ll_mine_shop_details:
-                    if(!login) {
+                    if (!login) {
                         toLogin();
                         return;
                     }
@@ -528,11 +547,11 @@ public class MineFragment extends BaseFragment {
                     break;
                 case R.id.ll_mine_huiyuan_statis:
                     //条帮助
-                    netUtils2.okHttp2Server2(help_url,null);
+                    netUtils2.okHttp2Server2(help_url, null);
                     break;
                 case R.id.ll_mine_fanyong_rule:
                     //条返佣规则
-                    netUtils2.okHttp2Server2(rule_url,null);
+                    netUtils2.okHttp2Server2(rule_url, null);
                     break;
             }
         }
@@ -541,7 +560,7 @@ public class MineFragment extends BaseFragment {
 
     private void toHelp(String url) {
         Intent intent = new Intent(getContext(), RuleHelpActivity.class);
-        intent.putExtra("web_url",url);
+        intent.putExtra("web_url", url);
         startActivity(intent);
     }
 
@@ -637,10 +656,12 @@ public class MineFragment extends BaseFragment {
     }
 
     public void onEvent(AnyEvent event) {
-        String msg = "onEventMainThread收到了消息：" + event.getMessage();
-        mseg = msg;
-        LogUtil.e(msg);
-        initData();
+        if (event.getType() == EventType.EVENT_LOGIN) {
+            String msg = "onEventMainThread收到了消息：" + event.getMessage();
+            mseg = msg;
+            LogUtil.e(msg);
+            initData();
+        }
     }
 
 }
