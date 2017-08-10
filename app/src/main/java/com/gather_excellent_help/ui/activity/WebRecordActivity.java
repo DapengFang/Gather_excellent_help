@@ -180,6 +180,8 @@ public class WebRecordActivity extends BaseActivity {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "--" +e.getMessage());
+               // AlibcTrade.show(WebRecordActivity.this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback(WebRecordActivity.this));
+
             }
         });
 
@@ -315,7 +317,7 @@ public class WebRecordActivity extends BaseActivity {
        TextView tvCopyContent = (TextView) inflate.findViewById(R.id.tv_copy_taoword_content);
        TextView tvCopyDismiss = (TextView) inflate.findViewById(R.id.tv_copy_taoword_dismiss);
        TextView tvCopyShare = (TextView) inflate.findViewById(R.id.tv_copy_taoword_share);
-       final String share_content = goods_title+"商品链接"+click_url+"复制这条消息"+taoWord+"去打开手机淘宝";
+       final String share_content = goods_title+"复制这条消息"+taoWord+"去打开手机淘宝";
        tvCopyContent.setText(share_content);
        final AlertDialog dialog = builder.setView(inflate)
                .show();

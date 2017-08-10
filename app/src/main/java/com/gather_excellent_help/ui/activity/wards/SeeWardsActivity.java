@@ -44,7 +44,7 @@ public class SeeWardsActivity extends BaseActivity {
     private Map<String, String> map;
     private String url = Url.BASE_URL + "RewardLog.aspx";
     private String userLogin;
-    private String pageSize = "6";
+    private String pageSize = "10";
     private String pageNo = "1";
     private String type = "1";
 

@@ -35,12 +35,18 @@ public class HomeRushAdapter extends BaseAdapter {
 
     private ImageLoader mImageLoader;
     private List<HomeWareBean.DataBean.ItemBean> datas;
+    private double user_rate;
 
     public HomeRushAdapter(Context context,List<HomeWareBean.DataBean.ItemBean> datas) {
         this.context = context;
         this.datas = datas;
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         inflater = LayoutInflater.from(context);
+        String userRate = Tools.getUserRate(context);
+        if(!TextUtils.isEmpty(userRate)) {
+            double v = Double.parseDouble(userRate);
+            user_rate = v/100;
+        }
     }
 
     @Override
@@ -87,7 +93,7 @@ public class HomeRushAdapter extends BaseAdapter {
         int couponsPrice = itemBean.getCouponsPrice();
         double sell_price = itemBean.getSell_price();
         double tkRate = itemBean.getTkRate()/100;
-        double zhuan = (sell_price - couponsPrice)*tkRate*0.9f*0.83f;
+        double zhuan = (sell_price - couponsPrice)*tkRate*0.9f*user_rate;
         double coast = sell_price - zhuan -couponsPrice;
         final String couponsUrl = itemBean.getCouponsUrl();
         final String secondCouponsUrl = itemBean.getSecondCouponsUrl();

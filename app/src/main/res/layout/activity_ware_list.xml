@@ -271,7 +271,9 @@
             android:background="#22000000"
             android:gravity="center"
             android:visibility="gone"
+            android:orientation="horizontal"
             android:layout_alignParentBottom="true">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -181,7 +181,10 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-
+                if(getContext()==null) {
+                    return;
+                }
+                Toast.makeText(getContext(), "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
             }
         });
         netUtils3.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
@@ -196,7 +199,10 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-
+                if(getContext()==null) {
+                    return;
+                }
+                Toast.makeText(getContext(), "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
             }
         });
         netUtils4.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
@@ -213,6 +219,10 @@ public class HomeFragment extends BaseFragment {
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e("nerUtils4=="+call.toString()+e.getMessage());
                 isFirst =false;
+                if(getContext()==null) {
+                    return;
+                }
+                Toast.makeText(getContext(), "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
             }
         });
         netUtils5.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
@@ -228,6 +238,10 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e("nerUtils5=="+call.toString()+e.getMessage());
+                if(getContext()==null) {
+                    return;
+                }
+                Toast.makeText(getContext(), "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -50,7 +50,7 @@
                 android:id="@+id/rb_shopping"
                 style="@style/bottom_tag_style"
                 android:drawableTop="@drawable/rb_goodscart_selector"
-                android:text="购物车" />
+                android:text="新闻" />
 
             <RadioButton
                 android:id="@+id/rb_me"

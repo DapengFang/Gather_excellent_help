@@ -55,6 +55,16 @@ public class Tools {
     public static String getAdverId(Context context){
         return CacheUtils.getString(context,CacheUtils.ADVER_ID,"");
     }
+    /**
+     * 用户登录后的佣金比率
+     * @param context
+     * @return
+     */
+    public static String getUserRate(Context context){
+        return CacheUtils.getString(context,CacheUtils.USER_RATE,"");
+    }
+
+
 
     /**
      * 用户登录后的类型

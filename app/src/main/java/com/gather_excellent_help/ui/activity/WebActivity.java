@@ -26,6 +26,7 @@ public class WebActivity extends BaseActivity {
     TextView tvTopTitleName;
     @Bind(R.id.wv_banner)
     WebView wvBanner;
+    private String type ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,16 @@ public class WebActivity extends BaseActivity {
     private void initData(){
         Intent intent = getIntent();
         String web_url = intent.getStringExtra("web_url");
-        tvTopTitleName.setText("优惠券专区");
+        type = intent.getStringExtra("type");
+        if(type!=null) {
+            if(type.equals("detail")) {
+                tvTopTitleName.setText("新闻专区");
+            }else {
+                tvTopTitleName.setText("优惠券专区");
+            }
+        }else{
+            tvTopTitleName.setText("优惠券专区");
+        }
         WebSettings webSettings = wvBanner.getSettings();
         //设置此属性，可任意比例缩放
         webSettings.setUseWideViewPort(true);

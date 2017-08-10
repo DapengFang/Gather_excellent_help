@@ -375,6 +375,10 @@ public class MineFragment extends BaseFragment {
         frostAmount = dataBean.getFrostAmount();
         group_id = dataBean.getGroup_id();
         advertising = dataBean.getAdvertising();
+        String user_get_ratio = dataBean.getUser_get_ratio();
+        if(user_get_ratio!=null) {
+            CacheUtils.putString(getContext(),CacheUtils.USER_RATE,user_get_ratio);
+        }
         if (advertising != null) {
             CacheUtils.putString(getContext(), CacheUtils.ADVER_ID, advertising);
         }

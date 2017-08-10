@@ -35,7 +35,7 @@
             android:layout_width="@dimen/x60"
             android:layout_height="@dimen/x28"
             android:text="搜索"
-            android:drawableLeft="@drawable/black_sousuo"
+            android:drawableLeft="@drawable/taobao_sousou_white"
             android:gravity="center"
             android:textSize="14sp"
             android:textColor="@drawable/register_textcolor_confirm_selector"

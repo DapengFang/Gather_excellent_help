@@ -19,6 +19,7 @@ import com.gather_excellent_help.bean.CodeBean;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.SmsCodeBean;
 import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
+import com.gather_excellent_help.utils.Check;
 import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -48,14 +49,14 @@ public class FindPswActivity extends Activity {
 
     private String user;
     private String password;
-    private String smscode;
+    private String smscode = "";
     private NetUtil netUtils;
     private Map<String,String> map;
     private String url = Url.BASE_URL + "findBack.aspx";
     private CountDownTimer countDownTimer;
     private String sms_url = Url.BASE_URL + "GetRandom.aspx";
     private String whick = "";
-    private String sms_code_s;
+    private String sms_code_s = "-1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,13 +144,20 @@ public class FindPswActivity extends Activity {
      */
     private void getUserInputInfo() {
         user = etFindpswUser.getText().toString().trim();
+        boolean matches = user.matches(Check.c_phone);
         password = etFindpswNewPsw.getText().toString().trim();
-        password = password+"@@11fe468";
-        password = EncryptUtil.getMd5Value(password);
-        smscode = etFindpswSmscode.getText().toString().trim();
-        map= new HashMap<>();
-        map.put("userName",user);
-        map.put("newPassword",password);
+        if(!matches) {
+            Toast.makeText(FindPswActivity.this, "输入手机号格式不正确！", Toast.LENGTH_SHORT).show();
+        }else if(!password.matches(Check.c_password)) {
+            Toast.makeText(FindPswActivity.this, "输入密码格式不正确！", Toast.LENGTH_SHORT).show();
+        }else{
+            password = password+"@@11fe468";
+            password = EncryptUtil.getMd5Value(password);
+            smscode = etFindpswSmscode.getText().toString().trim();
+            map= new HashMap<>();
+            map.put("userName",user);
+            map.put("newPassword",password);
+        }
     }
 
     /**

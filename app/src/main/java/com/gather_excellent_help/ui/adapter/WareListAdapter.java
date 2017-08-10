@@ -15,6 +15,7 @@ import com.gather_excellent_help.bean.HomeTypeBean;
 import com.gather_excellent_help.bean.SearchWareBean;
 import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 
 import java.text.DecimalFormat;
@@ -30,12 +31,18 @@ public class WareListAdapter extends BaseAdapter {
     private List<SearchWareBean.DataBean> data;
     private LayoutInflater inflater;    //布局填充器
     private ImageLoader mImageLoader;
+    private double user_rate;
 
     public WareListAdapter(Context context,List<SearchWareBean.DataBean> data) {
         this.context = context;
         this.data = data;
         inflater = LayoutInflater.from(context);
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        String userRate = Tools.getUserRate(context);
+        if(!TextUtils.isEmpty(userRate)) {
+            double v = Double.parseDouble(userRate);
+            user_rate = v/100;
+        }
     }
 
     @Override
@@ -81,7 +88,7 @@ public class WareListAdapter extends BaseAdapter {
         DecimalFormat df = new DecimalFormat("#0.00");
         int couponsPrice = dataBean.getCouponsPrice();
         double tkRate = dataBean.getTkRate() / 100;
-        double zhuan = (dataBean.getSell_price() - couponsPrice) * tkRate * 0.9f * 0.83f;
+        double zhuan = (dataBean.getSell_price() - couponsPrice) * tkRate * 0.9f * user_rate;
         double coast = dataBean.getSell_price() - zhuan -couponsPrice;
         final String couponsUrl = dataBean.getCouponsUrl();
         final String secondCouponsUrl = dataBean.getSecondCouponsUrl();

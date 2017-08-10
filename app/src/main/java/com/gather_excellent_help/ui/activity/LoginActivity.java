@@ -22,6 +22,7 @@ import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
 import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.Check;
 import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -157,6 +158,10 @@ public class LoginActivity extends Activity {
         password = etLoginPsw.getText().toString().trim();
         if(TextUtils.isEmpty(user) || TextUtils.isEmpty(password)) {
             Toast.makeText(LoginActivity.this, "用户名和密码不能为空！", Toast.LENGTH_SHORT).show();
+        }else if(!user.matches(Check.c_phone)) {
+            Toast.makeText(LoginActivity.this, "手机号格式不正确！", Toast.LENGTH_SHORT).show();
+        }else if(!password.matches(Check.c_password)) {
+            Toast.makeText(LoginActivity.this, "密码格式不正确！", Toast.LENGTH_SHORT).show();
         }else{
             password = password+"@@11fe468";
             password = EncryptUtil.getMd5Value(password);

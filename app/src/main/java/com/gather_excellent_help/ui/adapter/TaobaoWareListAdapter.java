@@ -16,6 +16,7 @@ import com.gather_excellent_help.bean.SearchWareBean;
 import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
+import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 
 import java.text.DecimalFormat;
@@ -31,12 +32,18 @@ public class TaobaoWareListAdapter extends BaseAdapter {
     private List<SearchTaobaoBean.DataBean> data;
     private LayoutInflater inflater;    //布局填充器
     private ImageLoader mImageLoader;
+    private double user_rate;
 
     public TaobaoWareListAdapter(Context context, List<SearchTaobaoBean.DataBean> data) {
         this.context = context;
         this.data = data;
         inflater = LayoutInflater.from(context);
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        String userRate = Tools.getUserRate(context);
+        if(!TextUtils.isEmpty(userRate)) {
+            double v = Double.parseDouble(userRate);
+            user_rate = v/100;
+        }
     }
 
     @Override
@@ -98,7 +105,7 @@ public class TaobaoWareListAdapter extends BaseAdapter {
             }
             double maxCommissionRate = Double.parseDouble(coupon_info.getMax_commission_rate());
             double sellPrice = Double.parseDouble(dataBean.getSell_price());
-            double zhuan = (sellPrice - coupons) * (maxCommissionRate / 100) * 0.9f * 0.83f;
+            double zhuan = (sellPrice - coupons) * (maxCommissionRate / 100) * 0.9f * user_rate;
             DecimalFormat df = new DecimalFormat("#0.00");
             double coast = sellPrice - zhuan -coupons;
             holder.tv_home_type_sale.setText("赚:￥"+df.format(zhuan));

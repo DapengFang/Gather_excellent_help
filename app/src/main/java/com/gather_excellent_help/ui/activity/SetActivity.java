@@ -25,6 +25,7 @@ import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.Check;
 import com.gather_excellent_help.utils.DataCleanManager;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -86,7 +87,7 @@ public class SetActivity extends BaseActivity {
     private String account;
 
     private String sms_url = Url.BASE_URL + "GetRandom.aspx";
-    private String sms_code_s;
+    private String sms_code_s = "-1";
     private CountDownTimer countDownTimer;
 
     @Override
@@ -245,6 +246,7 @@ public class SetActivity extends BaseActivity {
                     CacheUtils.putBoolean(SetActivity.this,CacheUtils.BIND_STATE,false);
                     CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK,"");
                     CacheUtils.putString(SetActivity.this,CacheUtils.ALIPAY_ACCOUNT,"");
+                    CacheUtils.putString(SetActivity.this,CacheUtils.USER_RATE,"");
                     EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "退出登录！"));
                     finish();
                     loginUser();
@@ -421,6 +423,23 @@ public class SetActivity extends BaseActivity {
                         account = etAccount.getText().toString().trim();
                         String name = etName.getText().toString().trim();
                         String smscode = etSmsCode.getText().toString().trim();
+
+                        if(TextUtils.isEmpty(account)) {
+                            Toast.makeText(SetActivity.this, "请输入支付宝账号!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if(TextUtils.isEmpty(name)) {
+                            Toast.makeText(SetActivity.this, "请输入用户名!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if(TextUtils.isEmpty(smscode)) {
+                            Toast.makeText(SetActivity.this, "请输入短信验证码!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if(!account.matches(Check.c_phone) && !account.matches(Check.c_mail)) {
+                            Toast.makeText(SetActivity.this, "输入支付宝账号不正确！", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         if(smscode.equals(sms_code_s)) {
                             bindPay(account, name);
                         }else{

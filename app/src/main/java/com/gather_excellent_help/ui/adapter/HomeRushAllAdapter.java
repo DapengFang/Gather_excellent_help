@@ -39,6 +39,7 @@ import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
+import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
 
@@ -92,6 +93,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private TextView tvRushMinute;
     private TextView tvRushSecond;
     private boolean isFirst;
+    private double user_rate;
 
 
     public HomeRushAllAdapter(Context context, List<HomeWareBean.DataBean> data, Activity activity, List<HomeGroupBean.DataBean> groupData, List<TyepIndexBean.DataBean> typeData,
@@ -106,6 +108,11 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.rushDownTimer = rushDownTimer;
         this.isFirst = isFirst;
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        String userRate = Tools.getUserRate(context);
+        if(!TextUtils.isEmpty(userRate)) {
+            double v = Double.parseDouble(userRate);
+            user_rate = v/100;
+        }
         if (isFirst) {
             extraCount = 5;
         } else {
@@ -121,11 +128,11 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             } else if (position == 1) {
                 return TYPE_GRID;
             } else if (position == 2) {
-                return TYPE_FIRSTBUY;
-            } else if (position == 3) {
-                return TYPE_GROUP;
-            } else if (position == 4) {
                 return TYPE_VIP;
+            } else if (position == 3) {
+                return TYPE_FIRSTBUY;
+            } else if (position == 4) {
+                return TYPE_GROUP;
             } else {
                 return position;
             }
@@ -203,7 +210,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             rushWareViewHolder.tvRushMoreTitle.setText(dataBean.getTitle());
             String url = dataBean.getImg_url();
             LogUtil.e(url);
-            mImageLoader.loadImage(url, rushWareViewHolder.ivRushMoreBig, true);
+            if(url!=null) {
+                mImageLoader.loadImage(url, rushWareViewHolder.ivRushMoreBig, true);
+            }
             rushWareViewHolder.ivRushMoreBig.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -262,7 +271,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             final int couponsPrice = dataBean.getCouponsPrice();
             double sell_price = dataBean.getSell_price();
             double tkRate = dataBean.getTkRate() / 100;
-            double zhuan = (sell_price - couponsPrice) * tkRate * 0.9f * 0.83f;
+            double zhuan = (sell_price - couponsPrice) * tkRate * 0.9f * user_rate;
             double coast = sell_price - zhuan -couponsPrice;
             final String couponsUrl = dataBean.getCouponsUrl();
             final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
@@ -349,7 +358,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             final int couponsPrice1 = groupBean1.getCouponsPrice();
             double sell_price1 = groupBean1.getSell_price();
             double tkRate1 = groupBean1.getTkRate() / 100;
-            double zhuan1 = (sell_price1 - couponsPrice1) * tkRate1 * 0.9f * 0.83f;
+            double zhuan1 = (sell_price1 - couponsPrice1) * tkRate1 * 0.9f * user_rate;
             double coast1 = sell_price1 - zhuan1 - couponsPrice1;
             final String couponsUrl1 = groupBean1.getCouponsUrl();
             final String secondCouponsUrl1 = groupBean1.getSecondCouponsUrl();
@@ -443,7 +452,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 final int couponsPrice2 = groupBean2.getCouponsPrice();
                 double sell_price2 = groupBean2.getSell_price();
                 double tkRate2 = groupBean2.getTkRate() / 100;
-                double zhuan2 = (sell_price2 - couponsPrice2) * tkRate2 * 0.9f * 0.83f;
+                double zhuan2 = (sell_price2 - couponsPrice2) * tkRate2 * 0.9f * user_rate;
                 double coast2 = sell_price2 - zhuan2 - couponsPrice2;
                 final String couponsUrl2 = groupBean2.getCouponsUrl();
                 final String secondCouponsUrl2 = groupBean2.getSecondCouponsUrl();
@@ -568,7 +577,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     firstBuyViewHoldre.tvFirstBigZhuan.setVisibility(View.GONE);
                     firstBuyViewHoldre.tvFirstBigChengben.setVisibility(View.GONE);
                 } else {
-                    double zhuan = sellPrice * 0.2f * 0.9f * 0.83f;
+                    double zhuan = sellPrice * 0.2f * 0.9f * user_rate;
                     double coast = sellPrice - zhuan;
                     firstBuyViewHoldre.tvFirstBigZhuan.setVisibility(View.VISIBLE);
                     firstBuyViewHoldre.tvFirstBigChengben.setVisibility(View.VISIBLE);
@@ -615,11 +624,19 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
                     tvPercent.setText(percent + "%");
                     tvAlreadyAcccount.setText("已抢" + sold_num + "件");
+                    String coupon_info_s1 = null;
+                    String coupon_info_s2 = null;
+                    String coupon_click_url_s1 = null;
+                    String coupon_click_url_s2 = null;
+                    if(coupon_info_l1!=null) {
+                        coupon_info_s1 = coupon_info_l1.getCoupon_info();
+                        coupon_click_url_s1 = coupon_info_l1.getCoupon_click_url();
+                    }
 
-                    String coupon_info_s1 = coupon_info_l1.getCoupon_info();
-                    final String coupon_click_url_s1 = coupon_info_l1.getCoupon_click_url();
-                    String coupon_info_s2 = coupon_info_l2.getCoupon_info();
-                    final String coupon_click_url_s2 = coupon_info_l2.getCoupon_click_url();
+                    if(coupon_info_l2!=null) {
+                        coupon_info_s2 = coupon_info_l2.getCoupon_info();
+                       coupon_click_url_s2 = coupon_info_l2.getCoupon_click_url();
+                    }
                     int coupon_p1 = 0;
                     int coupon_p2 = 0;
                     if (coupon_info_s1 != null && !TextUtils.isEmpty(coupon_info_s1)) {
@@ -634,19 +651,23 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         coupon_p2 = Integer.parseInt(substring_s2);
                     }
 
-                    double zhuan_s1 = (sell_price_s1 - coupon_p1) * 0.2f * 0.9f * 0.83f;
-                    double zhuan_s2 = (sell_price_s2 - coupon_p2) * 0.2f * 0.9f * 0.83f;
+                    double zhuan_s1 = (sell_price_s1 - coupon_p1) * 0.2f * 0.9f * user_rate;
+                    double zhuan_s2 = (sell_price_s2 - coupon_p2) * 0.2f * 0.9f * user_rate;
                     double coast_s1 = sell_price_s1 - zhuan_s1 - coupon_p1;
                     double coast_s2 = sell_price_s2 - zhuan_s2 - coupon_p2;
                     tvSmallCoupons.setVisibility(View.GONE);
                     final int pos = i;
+                    final String finalCoupon_click_url_s = coupon_click_url_s1;
+                    final String finalCoupon_click_url_s1 = coupon_click_url_s2;
+                    final String finalCoupon_info_s = coupon_info_s1;
+                    final String finalCoupon_info_s1 = coupon_info_s2;
                     llFirstRightZero.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             if (pos == 0) {
-                                if (coupon_click_url_s1 != null && !TextUtils.isEmpty(coupon_click_url_s1)) {
+                                if (finalCoupon_info_s != null && !TextUtils.isEmpty(finalCoupon_info_s)) {
                                     Intent intent = new Intent(context, WebActivity.class);
-                                    intent.putExtra("web_url", coupon_click_url_s1);
+                                    intent.putExtra("web_url", finalCoupon_click_url_s);
                                     context.startActivity(intent);
                                 } else {
                                     String link_url = dataBean1.getLink_url();
@@ -661,9 +682,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     context.startActivity(intent);
                                 }
                             } else if (pos == 2) {
-                                if (coupon_click_url_s2 != null && !TextUtils.isEmpty(coupon_click_url_s2)) {
+                                if (finalCoupon_info_s1 != null && !TextUtils.isEmpty(finalCoupon_info_s1)) {
                                     Intent intent = new Intent(context, WebActivity.class);
-                                    intent.putExtra("web_url", coupon_click_url_s2);
+                                    intent.putExtra("web_url", finalCoupon_click_url_s1);
                                     context.startActivity(intent);
                                 } else {
                                     String link_url = dataBean2.getLink_url();
@@ -733,7 +754,6 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
                 }
             }
-
             tvRushHour = firstBuyViewHoldre.tvRushHour;
             tvRushMinute = firstBuyViewHoldre.tvRushMinute;
             tvRushSecond = firstBuyViewHoldre.tvRushSecond;
@@ -742,7 +762,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             final HomeVipBean.DataBean dataBean = vipData.get(0);
             HomeVipViewHolder homeVipViewHolder = (HomeVipViewHolder) holder;
             homeVipViewHolder.tvItemHomeTitle.setText("专享价区");
-            homeVipViewHolder.tvItemHomeTitle.setTextColor(Color.parseColor("#FF1493"));
+            homeVipViewHolder.tvItemHomeTitle.setTextColor(Color.parseColor("#CD6839"));
             homeVipViewHolder.rlItemLaodMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -769,7 +789,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             final String couponsUrl = dataBean.getCouponsUrl();
             double sell_price = dataBean.getSell_price();
             final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
-            double zhuan = (sell_price -couponsPrice)*tkRate*0.9f*0.83f;
+            double zhuan = (sell_price -couponsPrice)*tkRate*0.9f*user_rate;
             double coast = sell_price -couponsPrice-zhuan;
             homeVipViewHolder.tvHomeVipZhuan.setText("赚:￥"+df.format(zhuan)+" 成本:￥"+df.format(coast));
             homeVipViewHolder.tvVipBigPrice.setText("专享价"+df.format(sell_price));

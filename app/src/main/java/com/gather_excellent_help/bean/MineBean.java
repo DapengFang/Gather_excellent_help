@@ -65,6 +65,7 @@ public class MineBean {
         private double amount;
         private double frostAmount;
         private double user_earn;
+        private String user_get_ratio;
 
 
         public String getAvatar() {
@@ -145,6 +146,14 @@ public class MineBean {
 
         public void setUser_earn(double user_earn) {
             this.user_earn = user_earn;
+        }
+
+        public String getUser_get_ratio() {
+            return user_get_ratio;
+        }
+
+        public void setUser_get_ratio(String user_get_ratio) {
+            this.user_get_ratio = user_get_ratio;
         }
     }
 }

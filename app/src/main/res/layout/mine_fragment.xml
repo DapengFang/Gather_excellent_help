@@ -150,7 +150,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="余额"
-                            android:textColor="#55000000"
+                            android:textColor="#99000000"
                             android:textSize="12sp" />
 
                         <TextView
@@ -207,7 +207,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="充值"
-                            android:textColor="#55000000"
+                            android:textColor="#99000000"
                             android:textSize="12sp" />
 
                         <TextView
@@ -260,7 +260,7 @@
                 android:layout_marginLeft="@dimen/x3"
                 android:layout_weight="1"
                 android:text="我的淘宝订单"
-                android:textColor="#55000000"
+                android:textColor="#99000000"
                 android:textSize="12sp" />
 
             <TextView
@@ -304,7 +304,7 @@
                 android:layout_marginLeft="@dimen/x3"
                 android:layout_weight="1"
                 android:text="我的苏宁订单"
-                android:textColor="#55000000"
+                android:textColor="#99000000"
                 android:textSize="12sp" />
 
             <TextView
@@ -348,7 +348,7 @@
                 android:layout_marginLeft="@dimen/x3"
                 android:layout_weight="1"
                 android:text="我的聚优帮订单"
-                android:textColor="#55000000"
+                android:textColor="#99000000"
                 android:textSize="12sp" />
 
             <TextView
@@ -392,7 +392,7 @@
                 android:layout_marginLeft="@dimen/x3"
                 android:layout_weight="1"
                 android:text="我的推广赚订单"
-                android:textColor="#55000000"
+                android:textColor="#99000000"
                 android:textSize="12sp" />
 
             <TextView
@@ -436,7 +436,7 @@
                 android:layout_marginRight="@dimen/x10"
                 android:layout_toLeftOf="@id/tbn_mine_control"
                 android:text="推广赚显示开关"
-                android:textColor="#55000000"
+                android:textColor="#99000000"
                 android:textSize="12sp" />
 
         </RelativeLayout>
@@ -635,7 +635,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/x3"
                     android:text="提取现金"
-                    android:textColor="#55000000"
+                    android:textColor="#99000000"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -666,7 +666,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/x3"
                     android:text="邀请好友赚钱啦"
-                    android:textColor="#55000000"
+                    android:textColor="#99000000"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -697,7 +697,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/x3"
                     android:text="账号明细"
-                    android:textColor="#55000000"
+                    android:textColor="#99000000"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -740,7 +740,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/x3"
                     android:text="商家信息"
-                    android:textColor="#55000000"
+                    android:textColor="#99000000"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -771,7 +771,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/x3"
                     android:text="商家入驻"
-                    android:textColor="#55000000"
+                    android:textColor="#99000000"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -802,7 +802,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/x3"
                     android:text="返佣规则"
-                    android:textColor="#55000000"
+                    android:textColor="#99000000"
                     android:textSize="12sp" />
             </LinearLayout>
 

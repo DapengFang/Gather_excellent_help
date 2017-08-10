@@ -43,10 +43,10 @@ public class AlipayManagerActivity extends BaseActivity {
     TextView tvTopTitleName;
     @Bind(R.id.wv_banner)
     WebView wvBanner;
-    private String url = "";
+    private String url = "http://juyoubang.com.h001.webe7.com/api/share/paycost.html";
     private String key;
-    private String succ_url = "http://192.168.200.101/api/share/success.html";
-    private String fail_url = "http://192.168.200.101/api/share/failure.html";
+    private String succ_url = "http://juyoubang.com.h001.webe7.com/api/share/success.html";
+    private String fail_url = "http://juyoubang.com.h001.webe7.com/api/share/failure.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +78,6 @@ public class AlipayManagerActivity extends BaseActivity {
         webSettings.setLoadsImagesAutomatically(true);  //支持自动加载图片
         //设置Web视图
         wvBanner.setWebViewClient(new MyWebViewClient());
-        url = "http://192.168.200.101/api/share/paycost.html";
         //加载需要显示的网页
         wvBanner.loadUrl(url);
 
