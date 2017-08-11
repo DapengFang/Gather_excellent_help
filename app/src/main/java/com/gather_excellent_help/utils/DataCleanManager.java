@@ -74,7 +74,7 @@ public class DataCleanManager {
         cleanInternalCache(context);
         cleanExternalCache(context);
         //cleanDatabases(context);
-        cleanSharedPreference(context);
+        //cleanSharedPreference(context);
         //cleanFiles(context);
     }
 

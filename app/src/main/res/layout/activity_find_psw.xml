@@ -31,10 +31,12 @@
                 android:layout_marginLeft="@dimen/x10"
                 android:background="@null"
                 android:hint="手机号"
+                android:cursorVisible="true"
+                android:textCursorDrawable="@drawable/edit_cursor_shape"
                 android:inputType="number"
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -61,10 +63,13 @@
                 android:layout_marginLeft="@dimen/x10"
                 android:background="@null"
                 android:hint="新密码"
+                android:maxLength="12"
+                android:cursorVisible="true"
+                android:textCursorDrawable="@drawable/edit_cursor_shape"
                 android:inputType="textPassword"
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -97,10 +102,12 @@
                     android:layout_marginLeft="@dimen/x10"
                     android:background="@null"
                     android:hint="请输入验证码"
+                    android:cursorVisible="true"
+                    android:textCursorDrawable="@drawable/edit_cursor_shape"
                     android:inputType="number"
                     android:textColor="#ffffff"
                     android:textColorHint="#ffffff"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -109,10 +116,12 @@
                 android:layout_width="@dimen/x80"
                 android:layout_height="wrap_content"
                 android:text="获取验证码"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textColor="@color/white"
                 android:padding="@dimen/x3"
                 android:gravity="center"
+                android:cursorVisible="true"
+                android:textCursorDrawable="@drawable/edit_cursor_shape"
                 android:background="@drawable/sms_shape_background"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"/>

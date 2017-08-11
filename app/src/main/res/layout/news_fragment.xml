@@ -46,7 +46,7 @@
                 android:textColor="#99000000"
                 android:hint="请输入关键字查询"
                 android:textSize="14sp"
-                android:cursorVisible="false"
+                android:cursorVisible="true"
                 android:paddingLeft="@dimen/x3"/>
 
 

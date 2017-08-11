@@ -39,7 +39,7 @@
                 android:background="@drawable/gray_sousuo_stroke_shape"
                 android:textColor="#99000000"
                 android:textSize="14sp"
-                android:cursorVisible="false"
+                android:cursorVisible="true"
                 android:paddingLeft="@dimen/x3"/>
 
                 <TextView
@@ -80,7 +80,8 @@
     android:layout_height="@dimen/x50"
     android:background="#ffffff"
     android:orientation="horizontal"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:visibility="gone">
 <LinearLayout
     android:layout_width="0dp"
     android:layout_height="match_parent"

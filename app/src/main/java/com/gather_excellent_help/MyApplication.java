@@ -54,7 +54,7 @@ public class MyApplication extends Application {
                 application.startService(localIntent);
 
                 PlatformConfig.setWeixin("wxc883e0b88fddcc71", "73657caeee905f216e6228fe3f3ed5e0");
-                PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
+                PlatformConfig.setQQZone("1106275340", "vYLYLlyRQ7ZDZMlf");
                 PlatformConfig.setSinaWeibo("869688985", "942c4c9d93c5e0e6b97f8c8eed00d105", "http://sns.whalecloud.com");
                 UMShareAPI.get(application);
                 JPushInterface.setDebugMode(true);

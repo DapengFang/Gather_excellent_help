@@ -21,12 +21,12 @@
             android:layout_marginLeft="@dimen/x7"
             android:text="团购区"
             android:textColor="#E0AE85"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/iv_home_rcv_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/x16"
+            android:layout_height="@dimen/x16"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/x3"
@@ -40,5 +40,5 @@
             android:layout_marginRight="@dimen/x3"
             android:layout_toLeftOf="@id/iv_home_rcv_right"
             android:text="更多"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
     </RelativeLayout>

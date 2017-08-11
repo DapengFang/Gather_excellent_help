@@ -29,6 +29,8 @@ public class CacheUtils {
 	public static final String GROUP_TYPE = "group_type";
     //保存推广赚开关状态
 	public static final String TOGGLE_SHOW = "toggle_show";
+	//保存会员类型
+	public static final String SHOP_TYPE = "shop_type";
 
 	private static final String NAME = "login";
 	//保存广告位id
@@ -36,6 +38,7 @@ public class CacheUtils {
 	public static final String TAOBAO_NICK = "taobao_nick";
 	public static final String ALIPAY_ACCOUNT = "alipay_account";
 	public static final String USER_RATE = "user_rate";
+	public static final String LOGIN_PHONE = "login_phone";
 
 	public static SharedPreferences sp;
 

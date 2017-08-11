@@ -16,7 +16,6 @@
         android:id="@+id/tv_exteact_account"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x45"
-        android:text="可提取积分宝：3600.00"
         android:textSize="14sp"
         android:textColor="#88000000"
         android:gravity="center_vertical"

@@ -146,10 +146,16 @@ public class FindPswActivity extends Activity {
         user = etFindpswUser.getText().toString().trim();
         boolean matches = user.matches(Check.c_phone);
         password = etFindpswNewPsw.getText().toString().trim();
-        if(!matches) {
-            Toast.makeText(FindPswActivity.this, "输入手机号格式不正确！", Toast.LENGTH_SHORT).show();
-        }else if(!password.matches(Check.c_password)) {
-            Toast.makeText(FindPswActivity.this, "输入密码格式不正确！", Toast.LENGTH_SHORT).show();
+        if(TextUtils.isEmpty(user)) {
+            Toast.makeText(FindPswActivity.this, "请输入手机号码！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(TextUtils.isEmpty(password)) {
+            Toast.makeText(FindPswActivity.this, "请输入新密码！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(password.length()<6 || password.matches(Check.p_sample) || password.matches(Check.p_simple)) {
+            Toast.makeText(FindPswActivity.this, "新密码过于简单，为了您的账号安全，请输入6位到12位不同数字或字母和数字的组合！", Toast.LENGTH_SHORT).show();
         }else{
             password = password+"@@11fe468";
             password = EncryptUtil.getMd5Value(password);

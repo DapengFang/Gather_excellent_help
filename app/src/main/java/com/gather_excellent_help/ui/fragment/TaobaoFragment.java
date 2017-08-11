@@ -35,6 +35,7 @@ import com.gather_excellent_help.ui.widget.TaobaoShaixuanPopupwindow;
 import com.gather_excellent_help.ui.widget.TaobaoZonghePopupwindow;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -138,6 +139,14 @@ public class TaobaoFragment extends BaseFragment {
                         if(gvTaobaoList==null) {
                             return;
                         }
+                        List<SearchTaobaoBean.DataBean> data = searchTaobaoBean.getData();
+                        if(data!=null) {
+                            int size = data.size();
+                            if(size == 0) {
+                                Toast.makeText(getContext(), "没有找到你所查询的商品信息！", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }
                         if(isLoadmore!=-1) {
                             newData = searchTaobaoBean.getData();
                             taobaodata.addAll(newData);
@@ -158,15 +167,19 @@ public class TaobaoFragment extends BaseFragment {
                                     if(coupon_info!=null) {
                                         String coupon_info_s = coupon_info.getCoupon_info();
                                         String coupon_click_url = coupon_info.getCoupon_click_url();
+                                        String link_url = taobaodata.get(i).getLink_url();
+                                        String goods_id = String.valueOf(taobaodata.get(i).getProductId());
+                                        String goods_img = taobaodata.get(i).getImg_url();
+                                        String goods_title = taobaodata.get(i).getTitle();
                                         if(coupon_info_s!=null && !TextUtils.isEmpty(coupon_info_s)) {
                                             Intent intent = new Intent(getContext(), WebActivity.class);
                                             intent.putExtra("web_url", coupon_click_url);
+                                            intent.putExtra("url",link_url);
+                                            intent.putExtra("goods_id",goods_id);
+                                            intent.putExtra("goods_img",goods_img);
+                                            intent.putExtra("goods_title",goods_title);
                                             startActivity(intent);
                                         }else{
-                                            String link_url = taobaodata.get(i).getLink_url();
-                                            String goods_id = String.valueOf(taobaodata.get(i).getProductId());
-                                            String goods_img = taobaodata.get(i).getImg_url();
-                                            String goods_title = taobaodata.get(i).getTitle();
                                             Intent intent = new Intent(getContext(), WebRecordActivity.class);
                                             intent.putExtra("url",link_url);
                                             intent.putExtra("goods_id",goods_id);
@@ -251,7 +264,7 @@ public class TaobaoFragment extends BaseFragment {
     private void showLoadMore() {
         if(llTaobaoLoadmore!=null) {
             llTaobaoLoadmore.setVisibility(View.VISIBLE);
-            TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(0);
+            TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(1);
             tvTitle.setText("加载更多...");
         }
     }
@@ -261,7 +274,7 @@ public class TaobaoFragment extends BaseFragment {
      */
     private void showLoadNoMore() {
         if(llTaobaoLoadmore!=null) {
-            TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(0);
+            TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(1);
             tvTitle.setText("没有更多的数据了...");
             llTaobaoLoadmore.setVisibility(View.VISIBLE);
         }
@@ -272,6 +285,7 @@ public class TaobaoFragment extends BaseFragment {
         // TODO: inflate a fragment view
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.bind(this, rootView);
+        EventBus.getDefault().register(this);
         return rootView;
     }
 
@@ -279,6 +293,7 @@ public class TaobaoFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -338,6 +353,13 @@ public class TaobaoFragment extends BaseFragment {
                    showPopMenu();
                    break;
                case R.id.rl_taobao_sousuo:
+                   Toast.makeText(getContext(), "正在搜索中，请稍后！", Toast.LENGTH_SHORT).show();
+                   String sousuoStr = etTaobaoSearchContent.getText().toString().trim();
+                   if(TextUtils.isEmpty(sousuoStr)) {
+                       Toast.makeText(getContext(), "请输入查询内容！", Toast.LENGTH_SHORT).show();
+                       return;
+                   }
+                   keyword = sousuoStr;
                    searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
                    break;
            }
@@ -349,6 +371,10 @@ public class TaobaoFragment extends BaseFragment {
      */
     private void searchTaobaoWare(String keyword,String city,String type,String is_tmall
     ,String start_price,String end_price,String page_no) {
+        if(getContext()==null) {
+            return;
+        }
+        Toast.makeText(getContext(), "正在加载中，请稍后！", Toast.LENGTH_SHORT).show();
         map = new HashMap<>();
         map.put("keyword",keyword);
         map.put("city",city);
@@ -474,5 +500,13 @@ public class TaobaoFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         handler.removeCallbacksAndMessages(null);
+    }
+
+    public void onEvent(AnyEvent event) {
+        if(event.getType() == EventType.EVENT_LOGIN) {
+            String msg = "onEventMainThread收到了消息：" + event.getMessage();
+            LogUtil.e(msg);
+            initData();
+        }
     }
 }

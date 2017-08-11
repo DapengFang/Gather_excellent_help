@@ -70,7 +70,7 @@ public class ExtractCreditsActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
-        tvTopTitleName.setText("提取积分宝");
+        tvTopTitleName.setText("提取现金");
         netUtil = new NetUtil();
         netUtil2 = new NetUtil();
         getExtractCredits();
@@ -126,7 +126,7 @@ public class ExtractCreditsActivity extends BaseActivity {
                         if(data.size()>0) {
                             amount = mineBean.getData().get(0).getAmount();
                             DecimalFormat df = new DecimalFormat("30.00");
-                            tvExteactAccount.setText("可提取积分宝: " + df.format(amount));
+                            tvExteactAccount.setText("可提取现金: " + df.format(amount));
                         }
                         break;
                     case 0:

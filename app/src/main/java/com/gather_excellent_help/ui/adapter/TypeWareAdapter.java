@@ -36,10 +36,12 @@ public class TypeWareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
     private List<TypeWareBean.DataBean> data;
     private ImageLoader mImageLoader;
+    private int shopType;
 
     public TypeWareAdapter(Context context,List<TypeWareBean.DataBean> data) {
         this.context = context;
         this.data = data;
+        shopType = Tools.getShopType(context);
         mImageLoader =ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
@@ -66,7 +68,7 @@ public class TypeWareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         double sell_price = dataBean.getSell_price();
         double tkRate = dataBean.getTkRate()/100;
         double zhuan = (sell_price - couponsPrice) * tkRate * 0.9f *0.83f;
-        double coast = sell_price - zhuan;
+        double coast = sell_price - zhuan -couponsPrice;
         final String couponsUrl = dataBean.getCouponsUrl();
         final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
         typeWareViewHolder.tvTypeWareSale.setText("赚:￥"+df.format(zhuan));
@@ -79,9 +81,9 @@ public class TypeWareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onClick(View view) {
                     if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
-                        Intent intent = new Intent(context, WebActivity.class);
-                        intent.putExtra("web_url",couponsUrl);
-                        context.startActivity(intent);
+//                        Intent intent = new Intent(context, WebActivity.class);
+//                        intent.putExtra("web_url",couponsUrl);
+//                        context.startActivity(intent);
                     }
                 }
             });
@@ -93,16 +95,16 @@ public class TypeWareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             typeWareViewHolder.tvTypeSecondCoupons.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, WebActivity.class);
-                    intent.putExtra("web_url",secondCouponsUrl);
-                    context.startActivity(intent);
+//                    Intent intent = new Intent(context, WebActivity.class);
+//                    intent.putExtra("web_url",secondCouponsUrl);
+//                    context.startActivity(intent);
                 }
             });
         }else{
             typeWareViewHolder.tvTypeSecondCoupons.setVisibility(View.GONE);
         }
-        int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
-        if(group_id==4){
+        //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
+        if(shopType==1){
             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
             if(toggleShow) {
                 typeWareViewHolder.tvTypeWareSale.setVisibility(View.GONE);

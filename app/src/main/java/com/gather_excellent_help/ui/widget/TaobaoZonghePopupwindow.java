@@ -43,7 +43,7 @@ public class TaobaoZonghePopupwindow extends PopupWindow {
         FullyLinearLayoutManager fullyLinearLayoutManager = new FullyLinearLayoutManager(context);
         rcvWarePopup.setLayoutManager(fullyLinearLayoutManager);
         ArrayList<String> data = new ArrayList<>();
-        data.add("淘客佣金比率");
+        data.add("赚的多");
         data.add("累计推广量");
         data.add("总支出佣金");
         TaobaoZongheAdapter taobaoShaixuanCityAdapter = new TaobaoZongheAdapter(context, data);

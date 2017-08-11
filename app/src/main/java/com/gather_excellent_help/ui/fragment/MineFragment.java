@@ -181,6 +181,7 @@ public class MineFragment extends BaseFragment {
     private String advertising;
     private boolean login;
     private int groupId;
+    private int shopType;
 
 
     private String help_url = Url.BASE_URL + "UserHelp.aspx";
@@ -197,15 +198,15 @@ public class MineFragment extends BaseFragment {
     public void initData() {
         login = Tools.isLogin(getContext());
         groupId = Tools.getGroupId(getContext());
+        shopType = Tools.getShopType(getContext());
         LogUtil.e("groupId = " + groupId);
-        if (groupId == 4) {
+        if (shopType == 1) {
             loadGroupuserDefault();
             tvAccountMoneyTitle1.setText("余额/提现中");
             tvAccountMoneyTitle2.setText("赚(冻结期)");
             tvAccountMoney2.setVisibility(View.VISIBLE);
             llMineZhuanOrder.setVisibility(View.VISIBLE);
             tvAccountMoney.setVisibility(View.VISIBLE);
-            rlMineToggle.setVisibility(View.VISIBLE);
         } else {
             loadCuserDefault();
             tvAccountMoneyTitle1.setText("余额");
@@ -213,7 +214,6 @@ public class MineFragment extends BaseFragment {
             tvAccountMoney.setVisibility(View.GONE);
             tvAccountMoney2.setVisibility(View.GONE);
             llMineZhuanOrder.setVisibility(View.GONE);
-            rlMineToggle.setVisibility(View.GONE);
         }
         llMineZhuanOrder.setVisibility(View.GONE);
         boolean toggle_show = CacheUtils.getBoolean(getContext(), CacheUtils.TOGGLE_SHOW, false);
@@ -233,7 +233,7 @@ public class MineFragment extends BaseFragment {
             netUtils.okHttp2Server2(url, map);
         } else {
             if (TextUtils.isEmpty(mseg)) {
-                Toast.makeText(getContext(), "请先登录！", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "请先登录！", Toast.LENGTH_SHORT).show();
             }
         }
         rlMineSet.setOnClickListener(new MyOnClickListener());
@@ -252,9 +252,10 @@ public class MineFragment extends BaseFragment {
 
         llMineTaobaoOrder.setOnClickListener(new MyOnClickListener());
         llMineJuyoubangOrder.setOnClickListener(new MyOnClickListener());
-
+        llMineZhuanOrder.setOnClickListener(new MyOnClickListener());
         llMineUserSalery.setOnClickListener(new MyOnClickListener());
         llMineUserBack.setOnClickListener(new MyOnClickListener());
+        civMeHeadIcon.setOnClickListener(new MyOnClickListener());
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -318,7 +319,8 @@ public class MineFragment extends BaseFragment {
         tvMineCompontL01.setText("商家入驻");
         tvMineCompontL03.setText("帮助");
         llMineUserBack.setVisibility(View.INVISIBLE);
-        //llMineZhuanOrder.setVisibility(View.GONE);
+        llMineZhuanOrder.setVisibility(View.GONE);
+        rlMineToggle.setVisibility(View.GONE);
     }
 
     private void loadGroupuserDefault() {
@@ -331,7 +333,8 @@ public class MineFragment extends BaseFragment {
         tvMineCompontL05.setText("帮助");
         tvMineCompontL06.setText("返佣规则");
         llMineUserBack.setVisibility(View.VISIBLE);
-        //llMineZhuanOrder.setVisibility(View.VISIBLE);
+        rlMineToggle.setVisibility(View.VISIBLE);
+        llMineZhuanOrder.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -401,7 +404,7 @@ public class MineFragment extends BaseFragment {
         } else {
             tvMineMobietype.setText("用户类型 + (" + mobile + ")");
         }
-        if (group_id == 4) {
+        if (shopType== 1) {
             tvAccountMoneyTitle1.setText("余额/提现中");
             DecimalFormat df = new DecimalFormat("0.00");
             tvAccountMoney.setText(df.format(amount) + "/" + df.format(frostAmount));
@@ -417,7 +420,7 @@ public class MineFragment extends BaseFragment {
             tvAccountMoney2.setVisibility(View.GONE);
             //llMineZhuanOrder.setVisibility(View.GONE);
         }
-        if (group_id == 4) {
+        if (shopType == 1) {
             loadGroupuserDefault();
         } else {
             loadCuserDefault();
@@ -505,7 +508,7 @@ public class MineFragment extends BaseFragment {
                         toLogin();
                         return;
                     }
-                    if (groupId == 4) {
+                    if (shopType == 1) {
                         toExtraCredits();
                     } else {
                         toMerchantEnter();
@@ -516,7 +519,7 @@ public class MineFragment extends BaseFragment {
                         toLogin();
                         return;
                     }
-                    if (groupId == 4) {
+                    if (shopType == 1) {
                         toAccountDetail();
                     } else {
                         //条帮助
@@ -543,6 +546,9 @@ public class MineFragment extends BaseFragment {
                 case R.id.ll_mine_juyoubang_order:
                     toJuyouOrder();
                     break;
+                case R.id.ll_mine_zhuan_order:
+                    toZhuanOrder();
+                    break;
                 case R.id.ll_mine_user_salery:
                     toAccountDetail();
                     break;
@@ -557,10 +563,12 @@ public class MineFragment extends BaseFragment {
                     //条返佣规则
                     netUtils2.okHttp2Server2(rule_url, null);
                     break;
+                case R.id.civ_me_head_icon:
+                    toSetActivity();
+                    break;
             }
         }
     }
-
 
     private void toHelp(String url) {
         Intent intent = new Intent(getContext(), RuleHelpActivity.class);
@@ -590,6 +598,17 @@ public class MineFragment extends BaseFragment {
      */
     private void toJuyouOrder() {
         Intent intent = new Intent(getActivity(), OrderActivity.class);
+        intent.putExtra("order_type",-1);
+        intent.putExtra("tab_p", 0);
+        startActivity(intent);
+    }
+
+    /**
+     * 跳转到推广赚订单
+     */
+    private void toZhuanOrder() {
+        Intent intent = new Intent(getActivity(), OrderActivity.class);
+        intent.putExtra("order_type",-2);
         intent.putExtra("tab_p", 0);
         startActivity(intent);
     }

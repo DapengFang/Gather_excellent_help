@@ -243,10 +243,12 @@ public class SetActivity extends BaseActivity {
                     CacheUtils.putBoolean(SetActivity.this, CacheUtils.LOGIN_STATE, false);
                     CacheUtils.putString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
                     CacheUtils.putInteger(SetActivity.this,CacheUtils.GROUP_TYPE,-1);
+                    CacheUtils.putInteger(SetActivity.this,CacheUtils.SHOP_TYPE,-1);
                     CacheUtils.putBoolean(SetActivity.this,CacheUtils.BIND_STATE,false);
                     CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK,"");
                     CacheUtils.putString(SetActivity.this,CacheUtils.ALIPAY_ACCOUNT,"");
                     CacheUtils.putString(SetActivity.this,CacheUtils.USER_RATE,"");
+                    CacheUtils.putString(SetActivity.this,CacheUtils.LOGIN_PHONE,"");
                     EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "退出登录！"));
                     finish();
                     loginUser();
@@ -272,10 +274,8 @@ public class SetActivity extends BaseActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         try {
                             DataCleanManager.cleanApplicationCache(SetActivity.this);
-                            String totalCacheSize = DataCleanManager.getTotalCacheSize(SetActivity.this);
-                            tvSetClearCache.setText("清理缓存 (" + totalCacheSize + ")");
-                            CacheUtils.putBoolean(SetActivity.this, CacheUtils.LOGIN_STATE, false);
-                            EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "清理缓存!"));
+                            tvSetClearCache.setText("清理缓存 (0KB)");
+                            //EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "清理缓存!"));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -402,7 +402,7 @@ public class SetActivity extends BaseActivity {
      */
     private void showPayAcount() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = View.inflate(this, R.layout.item_pay_account, null);
         final EditText etAccount = (EditText) view.findViewById(R.id.et_pay_account);
         final EditText etName = (EditText) view.findViewById(R.id.et_pay_name);
@@ -411,44 +411,45 @@ public class SetActivity extends BaseActivity {
         tvAlipayGetSms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String user_phone = etAccount.getText().toString().trim();
-                getSmsCode(user_phone,tvAlipayGetSms);
+                String user_account = etAccount.getText().toString().trim();
+                String userPhone = Tools.getUserPhone(SetActivity.this);
+                LogUtil.e(userPhone);
+                getSmsCode(userPhone,user_account,tvAlipayGetSms);
             }
         });
-        builder.setTitle("绑定支付宝")
+        final AlertDialog alertDialog = builder.setTitle("绑定支付宝")
                 .setView(view)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        account = etAccount.getText().toString().trim();
-                        String name = etName.getText().toString().trim();
-                        String smscode = etSmsCode.getText().toString().trim();
+                .setPositiveButton("确定",null)
+                .setNegativeButton("取消", null).create();
+                alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                account = etAccount.getText().toString().trim();
+                String name = etName.getText().toString().trim();
+                String smscode = etSmsCode.getText().toString().trim();
 
-                        if(TextUtils.isEmpty(account)) {
-                            Toast.makeText(SetActivity.this, "请输入支付宝账号!", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        if(TextUtils.isEmpty(name)) {
-                            Toast.makeText(SetActivity.this, "请输入用户名!", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        if(TextUtils.isEmpty(smscode)) {
-                            Toast.makeText(SetActivity.this, "请输入短信验证码!", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        if(!account.matches(Check.c_phone) && !account.matches(Check.c_mail)) {
-                            Toast.makeText(SetActivity.this, "输入支付宝账号不正确！", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        if(smscode.equals(sms_code_s)) {
-                            bindPay(account, name);
-                        }else{
-                            Toast.makeText(SetActivity.this, "短信验证码不正确！", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .setNegativeButton("取消", null)
-                .show();
+                if (TextUtils.isEmpty(account)) {
+                    Toast.makeText(SetActivity.this, "请输入支付宝账号!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(name)) {
+                    Toast.makeText(SetActivity.this, "请输入用户名!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(smscode)) {
+                    Toast.makeText(SetActivity.this, "请输入短信验证码!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (smscode.equals(sms_code_s)) {
+                    bindPay(account, name);
+                    alertDialog.dismiss();
+                } else {
+                    Toast.makeText(SetActivity.this, "短信验证码不正确！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        });
     }
 
     /**
@@ -499,12 +500,8 @@ public class SetActivity extends BaseActivity {
     /**
      * 获取验证码的方法
      */
-    private void getSmsCode(String user, final TextView tv) {
+    private void getSmsCode(String userPhone,String user, final TextView tv) {
 
-        if(user==null || TextUtils.isEmpty(user)) {
-            Toast.makeText(SetActivity.this, "手机号不能为空！", Toast.LENGTH_SHORT).show();
-            return;
-        }
         tv.setClickable(false);
         tv.setTextColor(Color.parseColor("#99000000"));
         countDownTimer =new CountDownTimer(60*1000,1000) {
@@ -522,7 +519,7 @@ public class SetActivity extends BaseActivity {
         };
         which = "sms";
         map = new HashMap<>();
-        map.put("sms_code",user);
+        map.put("sms_code",userPhone);
         map.put("type","3");
         netUtils.okHttp2Server2(sms_url,map);
         countDownTimer.start();

@@ -129,13 +129,15 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#e5e5e5" />
+            android:background="#e5e5e5"
+            android:visibility="gone"/>
         <RelativeLayout
             android:id="@+id/rl_set_about"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/x10"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"

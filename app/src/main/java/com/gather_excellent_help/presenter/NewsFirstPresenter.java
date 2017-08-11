@@ -171,6 +171,10 @@ public class NewsFirstPresenter {
                          NewsListBean newsListBean = new Gson().fromJson(response, NewsListBean.class);
                          List<NewsListBean.DataBean> currData = newsListBean.getData();
                          int size = currData.size();
+                         if(size == 0) {
+                             Toast.makeText(context, "没有找到你所要查询的商品信息！", Toast.LENGTH_SHORT).show();
+                             return;
+                         }
                          if(isLoadMore) {
                              if (size<10) {
                                  newsFirstAdapter.updateLoadStatus(newsFirstAdapter.LOAD_NONE);
@@ -195,13 +199,14 @@ public class NewsFirstPresenter {
                                  loadNewsDetail();
                              }
                          });
+                         scrollRecycleView();
                      }else if(whick.equals("detail")) {
                          LogUtil.e("新闻详情"+response);
                          NewsDetailBean newsDetailBean = new Gson().fromJson(response, NewsDetailBean.class);
                          String link_url = newsDetailBean.getData().get(0).getLink_url();
                          if(link_url!=null && !TextUtils.isEmpty(link_url)) {
                              Intent intent = new Intent(context, WebActivity.class);
-                             intent.putExtra("web_url",link_url);
+                             intent.putExtra("web_url",Url.IMG_URL+link_url);
                              intent.putExtra("type","detail");
                              LogUtil.e("--------"+Url.IMG_URL+link_url);
                              context.startActivity(intent);
@@ -237,6 +242,9 @@ public class NewsFirstPresenter {
     }
 
     public void scrollRecycleView() {
+        if(newsFirstAdapter == null) {
+            Toast.makeText(context, "adpater为空", Toast.LENGTH_SHORT).show();
+        }
         if(rcv_news_first!=null && newsFirstAdapter!=null) {
             rcv_news_first.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override

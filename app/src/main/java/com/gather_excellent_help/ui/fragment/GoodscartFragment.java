@@ -61,7 +61,7 @@ public class GoodscartFragment extends BaseFragment {
         flNewsFrag.addView(rootView);
         newsFirstPresenter.loadTitleData(rcvNewsHorizational);
         newsFirstPresenter.refreshSwip();
-        newsFirstPresenter.scrollRecycleView();
+        //newsFirstPresenter.scrollRecycleView();
         rlTaobaoSousuo.setOnClickListener(new MyOnclickListener());
 
     }
@@ -87,6 +87,7 @@ public class GoodscartFragment extends BaseFragment {
         public void onClick(View view) {
              switch (view.getId()) {
                  case R.id.rl_taobao_sousuo :
+                     Toast.makeText(getContext(), "正在搜索中，请稍后！", Toast.LENGTH_SHORT).show();
                      String keyword = etTaobaoSearchContent.getText().toString().trim();
                      if(TextUtils.isEmpty(keyword)) {
                          Toast.makeText(context, "关键字不能为空！", Toast.LENGTH_SHORT).show();

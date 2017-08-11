@@ -225,7 +225,8 @@
             android:id="@+id/rl_person_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/x10">
+            android:padding="@dimen/x10"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"

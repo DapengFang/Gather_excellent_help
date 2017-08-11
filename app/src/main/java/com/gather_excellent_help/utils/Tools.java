@@ -63,6 +63,14 @@ public class Tools {
     public static String getUserRate(Context context){
         return CacheUtils.getString(context,CacheUtils.USER_RATE,"");
     }
+    /**
+     * 用户登录后的手机号
+     * @param context
+     * @return
+     */
+    public static String getUserPhone(Context context){
+        return CacheUtils.getString(context,CacheUtils.LOGIN_PHONE,"");
+    }
 
 
 
@@ -73,6 +81,14 @@ public class Tools {
      */
     public static int getGroupId(Context context){
         return CacheUtils.getInteger(context,CacheUtils.GROUP_TYPE,-1);
+    }
+    /**
+     * 用户登录后的类型
+     * @param context
+     * @return
+     */
+    public static int getShopType(Context context){
+        return CacheUtils.getInteger(context,CacheUtils.SHOP_TYPE,-1);
     }
 
     public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {

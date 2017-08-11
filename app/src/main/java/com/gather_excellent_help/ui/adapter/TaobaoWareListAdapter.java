@@ -33,11 +33,13 @@ public class TaobaoWareListAdapter extends BaseAdapter {
     private LayoutInflater inflater;    //布局填充器
     private ImageLoader mImageLoader;
     private double user_rate;
+    private int shopType;
 
     public TaobaoWareListAdapter(Context context, List<SearchTaobaoBean.DataBean> data) {
         this.context = context;
         this.data = data;
         inflater = LayoutInflater.from(context);
+        shopType =Tools.getShopType(context);
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         String userRate = Tools.getUserRate(context);
         if(!TextUtils.isEmpty(userRate)) {
@@ -113,13 +115,13 @@ public class TaobaoWareListAdapter extends BaseAdapter {
             holder.tv_rush_ware_coupons.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, WebActivity.class);
-                    intent.putExtra("web_url",coupon_info.getCoupon_click_url());
-                    context.startActivity(intent);
+//                    Intent intent = new Intent(context, WebActivity.class);
+//                    intent.putExtra("web_url",coupon_info.getCoupon_click_url());
+//                    context.startActivity(intent);
                 }
             });
-            int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
-            if(group_id==4){
+            //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
+            if(shopType==1){
                 boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                 if(toggleShow) {
                     holder.tv_home_type_sale.setVisibility(View.GONE);

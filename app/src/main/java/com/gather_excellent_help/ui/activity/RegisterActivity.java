@@ -182,17 +182,25 @@ public class RegisterActivity extends Activity {
     private void getUserInputParams() {
         phone = etRegisterUser.getText().toString().trim();
         password = etRegisterPsw.getText().toString().trim();
-        if(!phone.matches(Check.c_phone)) {
-            Toast.makeText(RegisterActivity.this, "输入手机号格式不正确！", Toast.LENGTH_SHORT).show();
+        if(TextUtils.isEmpty(phone)) {
+            Toast.makeText(RegisterActivity.this, "请你输入正确的手机号码！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(!password.matches(Check.c_password)) {
-            Toast.makeText(RegisterActivity.this, "输入密码格式不正确！", Toast.LENGTH_SHORT).show();
+        if(TextUtils.isEmpty(password)) {
+            Toast.makeText(RegisterActivity.this, "请输入密码！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(password.length()<6 || password.matches(Check.p_sample) || password.matches(Check.p_simple)) {
+            Toast.makeText(RegisterActivity.this, "输入密码过于简单，为了您的账号安全，请输入6位到12位不同数字或字母和数字的组合！", Toast.LENGTH_SHORT).show();
             return;
         }
         password = password + "@@11fe468";
         password = EncryptUtil.getMd5Value(password);
         smscode = etRegisterSmscode.getText().toString().trim();
+        if(TextUtils.isEmpty(smscode)) {
+            Toast.makeText(RegisterActivity.this, "请输入验证码！", Toast.LENGTH_SHORT).show();
+            return;
+        }
         LogUtil.e(phone + "==" + password);
         hashMap = new HashMap<>();
         hashMap.put("UserName", phone);

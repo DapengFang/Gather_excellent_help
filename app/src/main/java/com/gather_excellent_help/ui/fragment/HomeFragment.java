@@ -33,6 +33,7 @@ import com.gather_excellent_help.ui.widget.RushDownTimer;
 import com.gather_excellent_help.utils.DataCleanManager;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
@@ -46,6 +47,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
 /**
@@ -418,6 +420,7 @@ public class HomeFragment extends BaseFragment {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.bind(this, rootView);
         setupSwipeRefresh(rootView);
+        EventBus.getDefault().register(this);
         return rootView;
     }
 
@@ -429,6 +432,7 @@ public class HomeFragment extends BaseFragment {
         handler.removeMessages(LOAD_DATA);
         wef.clear();
         cleanCache();
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -503,6 +507,7 @@ public class HomeFragment extends BaseFragment {
         if(event.getType() == EventType.EVENT_LOGIN) {
             String msg = "onEventMainThread收到了消息：" + event.getMessage();
             LogUtil.e(msg);
+            int groupId = Tools.getGroupId(getContext());
             initData();
         }
     }

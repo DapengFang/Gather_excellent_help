@@ -1,8 +1,15 @@
 package com.gather_excellent_help.ui.activity;
 
+import android.app.AlertDialog;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -10,13 +17,38 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.baichuan.android.trade.AlibcTrade;
+import com.alibaba.baichuan.android.trade.page.AlibcPage;
+import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
+import com.alibaba.baichuan.trade.biz.login.AlibcLoginCallback;
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.aliapi.DemoTradeCallback;
+import com.gather_excellent_help.api.Url;
+import com.gather_excellent_help.bean.ChangeUrlBean;
+import com.gather_excellent_help.bean.CodeStatueBean;
+import com.gather_excellent_help.bean.TaoWordBean;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.ui.widget.SharePopupwindow;
+import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
+import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
+import com.google.gson.Gson;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.Call;
 
 public class WebActivity extends BaseActivity {
 
@@ -26,7 +58,46 @@ public class WebActivity extends BaseActivity {
     TextView tvTopTitleName;
     @Bind(R.id.wv_banner)
     WebView wvBanner;
-    private String type ="";
+    @Bind(R.id.rl_share)
+    RelativeLayout rlShare;
+    private String type = "";
+    private SharePopupwindow sharePopupwindow;
+    private String url;
+    private String goods_id;
+    private String goods_img = "";
+    private String goods_title = "";
+    private String openId = "";
+    private String avatarUrl = "";
+    private String nick = "";
+
+    public static final int GET_URL = 1;
+    private String chang_url = Url.BASE_URL + "GoodsConvert.aspx";
+    private String get_url = Url.BASE_URL + "GetTpwd.aspx";
+    private String bind_url = Url.BASE_URL + "bindTaobao.aspx";//绑定淘宝
+    private NetUtil netUtil;
+    private String click_url = "";//转链的url
+    private Map<String, String> map;
+    private String which = "";
+    private String taoWord = "";
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case GET_URL :
+                    which = "get_url";
+                    String user_id = Tools.getUserLogin(WebActivity.this);
+                    map = new HashMap<>();
+                    map.put("user_id",user_id);
+                    map.put("convert_url",click_url);
+                    map.put("img_url",goods_img);
+                    map.put("title",goods_title);
+                    netUtil.okHttp2Server2(get_url,map);
+                    break;
+            }
+        }
+    };
+    private String adverId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +110,71 @@ public class WebActivity extends BaseActivity {
     /**
      * 初始化数据
      */
-    private void initData(){
+    private void initData() {
         Intent intent = getIntent();
+        netUtil = new NetUtil();
         String web_url = intent.getStringExtra("web_url");
         type = intent.getStringExtra("type");
-        if(type!=null) {
-            if(type.equals("detail")) {
+        if (type != null) {
+            if (type.equals("detail")) {
                 tvTopTitleName.setText("新闻专区");
-            }else {
+                rlShare.setVisibility(View.GONE);
+            } else {
                 tvTopTitleName.setText("优惠券专区");
+                rlShare.setVisibility(View.VISIBLE);
+                url = intent.getStringExtra("url");
+                goods_id = intent.getStringExtra("goods_id");
+                goods_img = intent.getStringExtra("goods_img");
+                goods_title = intent.getStringExtra("goods_title");
+                boolean login = Tools.isLogin(this);
+                adverId = Tools.getAdverId(this);
+                if(login) {
+                    boolean bindTao = Tools.isBindTao(this);
+                    if(bindTao) {
+                        LogUtil.e("adverId = "+ adverId);
+                        which = "change_url";
+                        map = new HashMap<>();
+                        map.put("goodsId",goods_id);
+                        map.put("adzoneId", adverId);
+                        netUtil.okHttp2Server2(chang_url,map);
+                    }else{
+                        Toast.makeText(WebActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
+                        String userLogin = Tools.getUserLogin(this);
+                        bindTaobao(userLogin);
+                    }
+                }else{
+                    toLogin();
+                    finish();
+                }
+
             }
-        }else{
+        } else {
             tvTopTitleName.setText("优惠券专区");
+            rlShare.setVisibility(View.VISIBLE);
+            url = intent.getStringExtra("url");
+            goods_id = intent.getStringExtra("goods_id");
+            goods_img = intent.getStringExtra("goods_img");
+            goods_title = intent.getStringExtra("goods_title");
+            boolean login = Tools.isLogin(this);
+            adverId = Tools.getAdverId(this);
+            if(login) {
+                boolean bindTao = Tools.isBindTao(this);
+                if(bindTao) {
+                    LogUtil.e("adverId = "+ adverId);
+                    which = "change_url";
+                    map = new HashMap<>();
+                    map.put("goodsId",goods_id);
+                    map.put("adzoneId", adverId);
+                    netUtil.okHttp2Server2(chang_url,map);
+                }else{
+                    Toast.makeText(WebActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
+                    String userLogin = Tools.getUserLogin(this);
+                    bindTaobao(userLogin);
+                }
+            }else{
+                toLogin();
+                finish();
+            }
         }
         WebSettings webSettings = wvBanner.getSettings();
         //设置此属性，可任意比例缩放
@@ -73,10 +197,146 @@ public class WebActivity extends BaseActivity {
         //加载需要显示的网页
         wvBanner.loadUrl(web_url);
         rlExit.setOnClickListener(new MyOnclickListener());
+        rlShare.setOnClickListener(new MyOnclickListener());
+        netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
+            @Override
+            public void getSuccessResponse(String response) {
+                if(which.equals("change_url")) {
+                    parseData(response);
+                }else if(which.equals("get_url")) {
+                    getTaoWord(response);
+                }else if(which.equals("bind")) {
+                    parseBindData(response);
+                }
+
+            }
+
+            @Override
+            public void getFailResponse(Call call, Exception e) {
+                LogUtil.e(call.toString() + "--" +e.getMessage());
+                // AlibcTrade.show(WebRecordActivity.this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback(WebRecordActivity.this));
+
+            }
+        });
+    }
+
+    /**
+     * 解析绑定淘宝的数据
+     * @param response
+     */
+    private void parseBindData(String response) {
+        CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
+        int statusCode = codeStatueBean.getStatusCode();
+        switch (statusCode) {
+            case 1 :
+                CacheUtils.putBoolean(WebActivity.this, CacheUtils.BIND_STATE, true);
+                CacheUtils.putString(WebActivity.this,CacheUtils.TAOBAO_NICK,nick);
+                which = "change_url";
+                map = new HashMap<>();
+                map.put("goodsId",goods_id);
+                map.put("adzoneId",adverId);
+                netUtil.okHttp2Server2(chang_url,map);
+                break;
+            case 0:
+                Toast.makeText(WebActivity.this, "绑定淘宝失败", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    /**
+     * 获取淘口令
+     * @param response
+     */
+    private void getTaoWord(String response) {
+        TaoWordBean taoWordBean = new Gson().fromJson(response, TaoWordBean.class);
+        int statusCode = taoWordBean.getStatusCode();
+        switch (statusCode) {
+            case 1 :
+                taoWord = taoWordBean.getData();
+                LogUtil.e(taoWord);
+                break;
+        }
+
+    }
+
+    /**
+     * @param response
+     * 解析数据
+     */
+    private void parseData(String response) {
+        LogUtil.e("click_url = " + response);
+        ChangeUrlBean changeUrlBean = new Gson().fromJson(response, ChangeUrlBean.class);
+        int statusCode = changeUrlBean.getStatusCode();
+        switch (statusCode) {
+            case 1 :
+                List<ChangeUrlBean.DataBean> data = changeUrlBean.getData();
+                if(data!=null && data.size()>0) {
+                    click_url = changeUrlBean.getData().get(0).getClick_url();
+                    handler.sendEmptyMessage(GET_URL);
+                }
+                break;
+            case 0 :
+                Toast.makeText(WebActivity.this, changeUrlBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    private void toLogin() {
+        Toast.makeText(WebActivity.this, "请先登录！", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
 
-    public class MyWebViewClient extends WebViewClient{
+    /**
+     * 绑定淘宝
+     * @param s
+     */
+    public void bindTaobao(final String s) {
+
+        AlibcLogin alibcLogin = AlibcLogin.getInstance();
+
+        alibcLogin.showLogin(new AlibcLoginCallback() {
+            @Override
+            public void onSuccess(int i) {
+                //获取淘宝用户信息
+                LogUtil.e("获取淘宝用户信息: " + AlibcLogin.getInstance().getSession());
+                LogUtil.e("代码:" + i);
+                openId = AlibcLogin.getInstance().getSession().openId;
+                avatarUrl = AlibcLogin.getInstance().getSession().avatarUrl;
+                nick = AlibcLogin.getInstance().getSession().nick;
+                uploadUserInfo(s);
+                which = "bind";
+                netUtil.okHttp2Server2(bind_url, map);
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+//                Toast.makeText(LoginActivity.this, "绑定失败 ！",
+//                        Toast.LENGTH_LONG).show();
+//                Log.i("GGG", "错误码" + code + "原因" + msg);
+            }
+        });
+    }
+
+    /**
+     * 上传用户信息
+     * @param s
+     */
+    public void uploadUserInfo(String s) {
+
+        if (!TextUtils.isEmpty(s)) {
+            map = new HashMap<>();
+            map.put("Id", s);
+            map.put("openId", openId);
+            map.put("portrait", avatarUrl);
+            map.put("nickname", nick);
+        }
+
+    }
+
+
+    public class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
             return super.shouldOverrideKeyEvent(view, event);
@@ -93,15 +353,146 @@ public class WebActivity extends BaseActivity {
         }
     }
 
-    public class MyOnclickListener implements View.OnClickListener{
+    public class MyOnclickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.rl_exit :
+                case R.id.rl_exit:
                     finish();
+                    break;
+                case R.id.rl_share:
+                     shareWareUrl();
                     break;
             }
         }
     }
+
+    /**
+     * 商品转链分享
+     */
+    private void shareWareUrl() {
+        showPopMenu();
+        sharePopupwindow.setOnItemClickListenr(new SharePopupwindow.OnItemClickListenr() {
+            @Override
+            public void onQQClick() {
+                showCopyDialog(SHARE_MEDIA.QQ);
+            }
+
+            @Override
+            public void onWeixinClick() {
+                showCopyDialog(SHARE_MEDIA.WEIXIN);
+            }
+
+            @Override
+            public void onSinaClick() {
+                showCopyDialog(SHARE_MEDIA.SINA);
+            }
+        });
+    }
+
+    private void showPopMenu() {
+        if (sharePopupwindow == null) {
+            sharePopupwindow = new SharePopupwindow(WebActivity.this);
+            sharePopupwindow.showAtLocation(wvBanner, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        } else if (sharePopupwindow != null
+                && sharePopupwindow.isShowing()) {
+            sharePopupwindow.dismiss();
+        } else {
+            sharePopupwindow.showAtLocation(wvBanner, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        }
+
+    }
+
+    /**
+     * 分享淘口令链接到不同给的平台
+     * @param platform
+     */
+    private void shareDiffSolfplam(SHARE_MEDIA platform){
+        UMImage image = new UMImage(WebActivity.this,goods_img);//网络图片
+        UMImage thumb =  new UMImage(this, R.mipmap.juyoubang_logo);
+        image.setThumb(thumb);
+        UMWeb web = new UMWeb(click_url);
+        web.setTitle(goods_title);//标题
+        web.setThumb(image);  //缩略图
+        web.setDescription("我在聚优帮看到了一件不错的商品,你也看看吧");//描述
+        new ShareAction(this)
+                .setPlatform(platform)//传入平台
+                .withMedia(web)//分享内容
+                .setCallback(shareListener)//回调监听器
+                .share();
+    }
+
+    /**
+     * 剪切板剪切淘口令
+     * @param paltform
+     */
+    private void showCopyDialog(final SHARE_MEDIA paltform){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View inflate = View.inflate(this, R.layout.item_copy_taoword_dialog, null);
+        TextView tvCopyContent = (TextView) inflate.findViewById(R.id.tv_copy_taoword_content);
+        TextView tvCopyDismiss = (TextView) inflate.findViewById(R.id.tv_copy_taoword_dismiss);
+        TextView tvCopyShare = (TextView) inflate.findViewById(R.id.tv_copy_taoword_share);
+        final String share_content = goods_title+"复制这条消息"+taoWord+"去打开手机淘宝";
+        tvCopyContent.setText(share_content);
+        final AlertDialog dialog = builder.setView(inflate)
+                .show();
+
+        tvCopyDismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        tvCopyShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager cmb = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                cmb.setText(share_content);
+                shareDiffSolfplam(paltform);
+            }
+        });
+    }
+
+    private UMShareListener shareListener = new UMShareListener() {
+        /**
+         * @descrption 分享开始的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+
+        /**
+         * @descrption 分享成功的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            Toast.makeText(WebActivity.this,"成功了",Toast.LENGTH_LONG).show();
+        }
+
+        /**
+         * @descrption 分享失败的回调
+         * @param platform 平台类型
+         * @param t 错误原因
+         */
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            Toast.makeText(WebActivity.this,"失败"+t.getMessage(),Toast.LENGTH_LONG).show();
+        }
+
+        /**
+         * @descrption 分享取消的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            Toast.makeText(WebActivity.this,"取消了",Toast.LENGTH_LONG).show();
+
+        }
+    };
 }

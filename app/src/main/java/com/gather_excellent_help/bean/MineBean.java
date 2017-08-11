@@ -66,7 +66,7 @@ public class MineBean {
         private double frostAmount;
         private double user_earn;
         private String user_get_ratio;
-
+        private int group_type;
 
         public String getAvatar() {
             return avatar;
@@ -154,6 +154,14 @@ public class MineBean {
 
         public void setUser_get_ratio(String user_get_ratio) {
             this.user_get_ratio = user_get_ratio;
+        }
+
+        public int getGroup_type() {
+            return group_type;
+        }
+
+        public void setGroup_type(int group_type) {
+            this.group_type = group_type;
         }
     }
 }

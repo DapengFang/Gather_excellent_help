@@ -2,6 +2,7 @@ package com.gather_excellent_help.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.SSLCertificateSocketFactory;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,10 +33,18 @@ public class WareListAdapter extends BaseAdapter {
     private LayoutInflater inflater;    //布局填充器
     private ImageLoader mImageLoader;
     private double user_rate;
+    private String load_type;
+    private int shopType;
 
-    public WareListAdapter(Context context,List<SearchWareBean.DataBean> data) {
+    public WareListAdapter(Context context,List<SearchWareBean.DataBean> data,String load_type) {
         this.context = context;
         this.data = data;
+        if(load_type!=null) {
+            this.load_type = load_type;
+        }else{
+            this.load_type = "";
+        }
+        shopType = Tools.getShopType(context);
         inflater = LayoutInflater.from(context);
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         String userRate = Tools.getUserRate(context);
@@ -92,40 +101,46 @@ public class WareListAdapter extends BaseAdapter {
         double coast = dataBean.getSell_price() - zhuan -couponsPrice;
         final String couponsUrl = dataBean.getCouponsUrl();
         final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
-        if(couponsPrice>0) {
-            holder.tv_rush_ware_coupons.setVisibility(View.VISIBLE);
-            holder.tv_rush_ware_coupons.setText("领取优惠券"+couponsPrice);
-            holder.tv_rush_ware_coupons.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
-                        Intent intent = new Intent(context, WebActivity.class);
-                        intent.putExtra("web_url",couponsUrl);
-                        context.startActivity(intent);
-                    }
-                }
-            });
-        }else {
+        if(load_type.equals("isVip")) {
             holder.tv_rush_ware_coupons.setVisibility(View.INVISIBLE);
-        }
-        if(secondCouponsUrl!=null && !TextUtils.isEmpty(secondCouponsUrl)) {
-            holder.tv_rush_ware_second_coupons.setVisibility(View.VISIBLE);
-            holder.tv_rush_ware_second_coupons.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(context, WebActivity.class);
-                    intent.putExtra("web_url",secondCouponsUrl);
-                    context.startActivity(intent);
-                }
-            });
-        }else{
             holder.tv_rush_ware_second_coupons.setVisibility(View.GONE);
+        }else{
+            if(couponsPrice>0) {
+                holder.tv_rush_ware_coupons.setVisibility(View.VISIBLE);
+                holder.tv_rush_ware_coupons.setText("领取优惠券"+couponsPrice);
+                holder.tv_rush_ware_coupons.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
+//                            Intent intent = new Intent(context, WebActivity.class);
+//                            intent.putExtra("web_url",couponsUrl);
+//                            context.startActivity(intent);
+                        }
+                    }
+                });
+            }else {
+                holder.tv_rush_ware_coupons.setVisibility(View.INVISIBLE);
+            }
+            if(secondCouponsUrl!=null && !TextUtils.isEmpty(secondCouponsUrl)) {
+                holder.tv_rush_ware_second_coupons.setVisibility(View.VISIBLE);
+                holder.tv_rush_ware_second_coupons.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+//                        Intent intent = new Intent(context, WebActivity.class);
+//                        intent.putExtra("web_url",secondCouponsUrl);
+//                        context.startActivity(intent);
+                    }
+                });
+            }else{
+                holder.tv_rush_ware_second_coupons.setVisibility(View.GONE);
+            }
         }
+
         holder.tv_home_type_sale.setText("赚:￥"+df.format(zhuan));
         holder.tv_home_type_coast.setText("成本:"+df.format(coast));
         holder.tv_home_type_aprice.setText("页面价："+df.format(dataBean.getSell_price()));
-        int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
-        if(group_id==4){
+        //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
+        if(shopType==1){
             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
             if(toggleShow) {
                 holder.tv_home_type_sale.setVisibility(View.GONE);

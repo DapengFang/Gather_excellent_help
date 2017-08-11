@@ -31,10 +31,12 @@
                 android:layout_marginLeft="@dimen/x10"
                 android:background="@null"
                 android:hint="手机号"
+                android:cursorVisible="true"
+                android:textCursorDrawable="@drawable/edit_cursor_shape"
                 android:inputType="number"
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -61,12 +63,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x10"
-                android:background="@null"
                 android:hint="密码"
+                android:cursorVisible="true"
+                android:background="@null"
+                android:maxLength="12"
+                android:textCursorDrawable="@drawable/edit_cursor_shape"
                 android:inputType="textPassword"
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -87,7 +92,7 @@
                 android:layout_alignParentRight="true"
                 android:text="忘记密码?"
                 android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
         </RelativeLayout>
 
         <LinearLayout
@@ -106,7 +111,7 @@
                 android:layout_alignParentRight="true"
                 android:text="登录"
                 android:textColor="@drawable/login_textcolor_selector"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:gravity="center"
                 android:background="@drawable/login_shape_selector"/>
             <TextView
@@ -119,7 +124,7 @@
                 android:layout_alignParentRight="true"
                 android:text="注册"
                 android:textColor="@drawable/register_textcolor_selector"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:gravity="center"
                 android:background="@drawable/register_shape_selector"/>
         </LinearLayout>

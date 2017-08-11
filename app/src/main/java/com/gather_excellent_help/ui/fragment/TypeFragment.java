@@ -53,6 +53,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
 
@@ -138,8 +139,10 @@ public class TypeFragment extends BaseFragment {
                     Toast.makeText(getActivity(), "请输入你要搜索商品的名称！", Toast.LENGTH_SHORT).show();
                 }else{
                     Intent intent = new Intent(getActivity(), WareListActivity.class);
-                    intent.putExtra("content",content);
+                    intent.putExtra("content","isTypeSou");
+                    intent.putExtra("sousuo",content);
                     startActivity(intent);
+                    etSousuo.setText("");
                 }
             }
         });
@@ -176,18 +179,22 @@ public class TypeFragment extends BaseFragment {
                     @Override
                     public void onItemClick(int position) {
                         int couponsPrice = data.get(position).getCouponsPrice();
+                        String link_url = data.get(position).getLink_url();
+                        String goods_id = data.get(position).getProductId();
+                        String goods_img = data.get(position).getImg_url();
+                        String goods_title = data.get(position).getTitle();
                         if(couponsPrice>0) {
                             String couponsUrl = data.get(position).getCouponsUrl();
                             if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
                                 Intent intent = new Intent(getContext(), WebActivity.class);
                                 intent.putExtra("web_url",couponsUrl);
+                                intent.putExtra("url",link_url);
+                                intent.putExtra("goods_id",goods_id);
+                                intent.putExtra("goods_img",goods_img);
+                                intent.putExtra("goods_title",goods_title);
                                 getContext().startActivity(intent);
                             }
                         }else{
-                            String link_url = data.get(position).getLink_url();
-                            String goods_id = data.get(position).getProductId();
-                            String goods_img = data.get(position).getImg_url();
-                            String goods_title = data.get(position).getTitle();
                             Intent intent = new Intent(getContext(), WebRecordActivity.class);
                             intent.putExtra("url",link_url);
                             intent.putExtra("goods_id",goods_id);
@@ -343,6 +350,7 @@ public class TypeFragment extends BaseFragment {
         // TODO: inflate a fragment view
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.bind(this, rootView);
+        EventBus.getDefault().register(this);
         setupSwipeRefresh(rootView);
         return rootView;
     }
@@ -351,6 +359,7 @@ public class TypeFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        EventBus.getDefault().unregister(this);
     }
 
     public class MyOnScrollListener implements AbsListView.OnScrollListener{

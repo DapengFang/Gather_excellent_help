@@ -20,6 +20,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:orientation="vertical"
+            android:gravity="center"
             android:padding="@dimen/x8">
             <RelativeLayout
                 android:layout_width="match_parent"

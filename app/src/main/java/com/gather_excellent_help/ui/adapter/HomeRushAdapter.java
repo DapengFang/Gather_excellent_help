@@ -36,12 +36,14 @@ public class HomeRushAdapter extends BaseAdapter {
     private ImageLoader mImageLoader;
     private List<HomeWareBean.DataBean.ItemBean> datas;
     private double user_rate;
+    private int shopType;
 
     public HomeRushAdapter(Context context,List<HomeWareBean.DataBean.ItemBean> datas) {
         this.context = context;
         this.datas = datas;
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         inflater = LayoutInflater.from(context);
+        shopType = Tools.getShopType(context);
         String userRate = Tools.getUserRate(context);
         if(!TextUtils.isEmpty(userRate)) {
             double v = Double.parseDouble(userRate);
@@ -93,6 +95,7 @@ public class HomeRushAdapter extends BaseAdapter {
         int couponsPrice = itemBean.getCouponsPrice();
         double sell_price = itemBean.getSell_price();
         double tkRate = itemBean.getTkRate()/100;
+        LogUtil.e("tkRate = "+tkRate+",user_rate = "+user_rate);
         double zhuan = (sell_price - couponsPrice)*tkRate*0.9f*user_rate;
         double coast = sell_price - zhuan -couponsPrice;
         final String couponsUrl = itemBean.getCouponsUrl();
@@ -106,9 +109,9 @@ public class HomeRushAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
-                        Intent intent = new Intent(context, WebActivity.class);
-                        intent.putExtra("web_url",couponsUrl);
-                        context.startActivity(intent);
+//                        Intent intent = new Intent(context, WebActivity.class);
+//                        intent.putExtra("web_url",couponsUrl);
+//                        context.startActivity(intent);
                     }
                 }
             });
@@ -120,17 +123,17 @@ public class HomeRushAdapter extends BaseAdapter {
             holder.home_rush_second_coupons.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, WebActivity.class);
-                    intent.putExtra("web_url",secondCouponsUrl);
-                    context.startActivity(intent);
+//                    Intent intent = new Intent(context, WebActivity.class);
+//                    intent.putExtra("web_url",secondCouponsUrl);
+//                    context.startActivity(intent);
                 }
             });
         }else{
             holder.home_rush_second_coupons.setVisibility(View.GONE);
         }
         Tools.setPartTextColor(holder.home_rush_aprice,"活动价:￥"+df.format(sell_price),":");
-        int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
-        if(group_id==4){
+        //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
+        if(shopType==1){
             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
             if(toggleShow) {
                 holder.home_rush_sale.setVisibility(View.GONE);

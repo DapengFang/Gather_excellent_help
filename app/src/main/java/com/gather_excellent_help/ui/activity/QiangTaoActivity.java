@@ -160,14 +160,32 @@ public class QiangTaoActivity extends BaseActivity {
                                     return;
                                 }
                                 if (curr_click == 0) {
+                                    LogUtil.e("淘抢购 ===" +taobaodata.size());
                                     SearchTaobaoBean.DataBean.CouponInfoBean coupon_info = taobaodata.get(i).getCoupon_info();
-                                    String coupon_info_cest = coupon_info.getCoupon_info();
-                                    String coupon_click_url = coupon_info.getCoupon_click_url();
-                                    if(coupon_info_cest!=null && !TextUtils.isEmpty(coupon_info_cest)) {
-                                        if(coupon_click_url!=null && !TextUtils.isEmpty(coupon_click_url)) {
-                                            Intent intent = new Intent(QiangTaoActivity.this, WebActivity.class);
-                                            intent.putExtra("web_url", coupon_click_url);
-                                            startActivity(intent);
+                                    if(coupon_info!=null) {
+                                        String coupon_info_cest = coupon_info.getCoupon_info();
+                                        String coupon_click_url = coupon_info.getCoupon_click_url();
+                                        if(coupon_info_cest!=null && !TextUtils.isEmpty(coupon_info_cest)) {
+                                            String link_url = taobaodata.get(i).getLink_url();
+                                            String goods_id = String.valueOf(taobaodata.get(i).getProductId());
+                                            String goods_img = taobaodata.get(i).getImg_url();
+                                            String goods_title = taobaodata.get(i).getTitle();
+                                            if(coupon_click_url!=null && !TextUtils.isEmpty(coupon_click_url)) {
+                                                Intent intent = new Intent(QiangTaoActivity.this, WebActivity.class);
+                                                intent.putExtra("web_url", coupon_click_url);
+                                                intent.putExtra("url", link_url);
+                                                intent.putExtra("goods_id", goods_id);
+                                                intent.putExtra("goods_img", goods_img);
+                                                intent.putExtra("goods_title", goods_title);
+                                                startActivity(intent);
+                                            }else{
+                                                Intent intent = new Intent(QiangTaoActivity.this, WebRecordActivity.class);
+                                                intent.putExtra("url", link_url);
+                                                intent.putExtra("goods_id", goods_id);
+                                                intent.putExtra("goods_img", goods_img);
+                                                intent.putExtra("goods_title", goods_title);
+                                                startActivity(intent);
+                                            }
                                         }else{
                                             String link_url = taobaodata.get(i).getLink_url();
                                             String goods_id = String.valueOf(taobaodata.get(i).getProductId());
@@ -181,16 +199,7 @@ public class QiangTaoActivity extends BaseActivity {
                                             startActivity(intent);
                                         }
                                     }else{
-                                        String link_url = taobaodata.get(i).getLink_url();
-                                        String goods_id = String.valueOf(taobaodata.get(i).getProductId());
-                                        String goods_img = taobaodata.get(i).getImg_url();
-                                        String goods_title = taobaodata.get(i).getTitle();
-                                        Intent intent = new Intent(QiangTaoActivity.this, WebRecordActivity.class);
-                                        intent.putExtra("url", link_url);
-                                        intent.putExtra("goods_id", goods_id);
-                                        intent.putExtra("goods_img", goods_img);
-                                        intent.putExtra("goods_title", goods_title);
-                                        startActivity(intent);
+
                                     }
                                 } else {
                                     Toast.makeText(QiangTaoActivity.this, "抢购还未开启，请够耐心的等待！", Toast.LENGTH_SHORT).show();

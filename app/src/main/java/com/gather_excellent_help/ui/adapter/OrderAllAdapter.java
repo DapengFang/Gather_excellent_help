@@ -52,6 +52,7 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
         holder.tvOrderAllPrice.setText("订单金额:" + dataBean.getPrice());
         holder.tvOrderAllNumber.setText("订单号:" + dataBean.getTrade_id());
         String goodsImg = dataBean.getGoodsImg();
+        String tk_status = dataBean.getTk_status();
         if(goodsImg!=null && !TextUtils.isEmpty(goodsImg)) {
             mImageLoader.loadImage(goodsImg,holder.ivOrderAllImg,true);
         }
@@ -64,13 +65,16 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
         }else if(curr_statue == 4) {
             holder.tvOrderAllStatue.setText("退款/售后");
         }else {
-            if(position==1) {
+            if(tk_status.equals("3")) {
+                holder.tvOrderAllStatue.setText("待付款");
+            }
+            if(tk_status.equals("12")) {
                 holder.tvOrderAllStatue.setText("已付款");
             }
-            if(position ==3) {
-                holder.tvOrderAllStatue.setText("已付款");
+            if(tk_status.equals("14")) {
+                holder.tvOrderAllStatue.setText("已完成");
             }
-            if(position==4) {
+            if(tk_status.equals("13")) {
                 holder.tvOrderAllStatue.setText("退款/售后");
             }
         }

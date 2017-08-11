@@ -54,7 +54,6 @@ public class LoginActivity extends Activity {
 
     private String bind_url = Url.BASE_URL + "bindTaobao.aspx";//绑定淘宝
 
-
     private String user;
     private String password;
     private NetUtil netUtils;
@@ -112,9 +111,9 @@ public class LoginActivity extends Activity {
         int statusCode = codeStatueBean.getStatusCode();
         switch (statusCode) {
             case 1 :
-
                 CacheUtils.putBoolean(LoginActivity.this, CacheUtils.BIND_STATE, true);
                 CacheUtils.putString(LoginActivity.this,CacheUtils.TAOBAO_NICK,nick);
+                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
                 break;
             case 0:
 
@@ -140,10 +139,14 @@ public class LoginActivity extends Activity {
                 List<CodeBean.DataBean> data = codeBean.getData();
                 if(data.size()>0) {
                     Integer id = data.get(0).getId();
+                    int group_type = data.get(0).getGroup_type();
+                    int user_rate = data.get(0).getGroup_type();
                     CacheUtils.putBoolean(LoginActivity.this,CacheUtils.LOGIN_STATE,true);
                     CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_VALUE,id+"");
+                    CacheUtils.putInteger(LoginActivity.this,CacheUtils.SHOP_TYPE,group_type);
+                    CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_PHONE,user);
+                    CacheUtils.putString(LoginActivity.this,CacheUtils.USER_RATE,user_rate+"");
                     bindTaobao(id+"");
-                    EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
                     finish();
                 }
                 break;
@@ -156,13 +159,15 @@ public class LoginActivity extends Activity {
     private void getUserInputInfo() {
         user = etLoginUser.getText().toString().trim();
         password = etLoginPsw.getText().toString().trim();
-        if(TextUtils.isEmpty(user) || TextUtils.isEmpty(password)) {
-            Toast.makeText(LoginActivity.this, "用户名和密码不能为空！", Toast.LENGTH_SHORT).show();
-        }else if(!user.matches(Check.c_phone)) {
-            Toast.makeText(LoginActivity.this, "手机号格式不正确！", Toast.LENGTH_SHORT).show();
-        }else if(!password.matches(Check.c_password)) {
-            Toast.makeText(LoginActivity.this, "密码格式不正确！", Toast.LENGTH_SHORT).show();
-        }else{
+        if(TextUtils.isEmpty(user)) {
+            Toast.makeText(LoginActivity.this, "请输入手机号码！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(TextUtils.isEmpty(password)) {
+            Toast.makeText(LoginActivity.this, "请输入密码！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
             password = password+"@@11fe468";
             password = EncryptUtil.getMd5Value(password);
             map= new HashMap<>();
@@ -170,7 +175,7 @@ public class LoginActivity extends Activity {
             map.put("Password",password);
             which = "login";
             netUtils.okHttp2Server2(url,map);
-        }
+
     }
 
     public class MyOnClickListener implements View.OnClickListener{

@@ -26,10 +26,13 @@ import com.alibaba.baichuan.android.trade.page.AlibcDetailPage;
 import com.alibaba.baichuan.android.trade.page.AlibcMyOrdersPage;
 import com.alibaba.baichuan.android.trade.page.AlibcPage;
 import com.alibaba.baichuan.trade.biz.core.taoke.AlibcTaokeParams;
+import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
+import com.alibaba.baichuan.trade.biz.login.AlibcLoginCallback;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.aliapi.DemoTradeCallback;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.ChangeUrlBean;
+import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.TaoWordBean;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.SharePopupwindow;
@@ -68,6 +71,7 @@ public class WebRecordActivity extends BaseActivity {
     private String url;
     private String chang_url = Url.BASE_URL + "GoodsConvert.aspx";
     private String get_url = Url.BASE_URL + "GetTpwd.aspx";
+    private String bind_url = Url.BASE_URL + "bindTaobao.aspx";//绑定淘宝
     private String goods_id = "";
     public static final int GET_URL = 1;
     private String which = "";
@@ -105,6 +109,10 @@ public class WebRecordActivity extends BaseActivity {
     private String taoWord;
 
     private SharePopupwindow sharePopupwindow;
+    private String openId = "";
+    private String avatarUrl = "";
+    private String nick = "";
+    private String adverId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,13 +162,22 @@ public class WebRecordActivity extends BaseActivity {
         rlExit.setOnClickListener(new MyOnclickListener());
         rlShare.setOnClickListener(new MyOnclickListener());
         boolean login = Tools.isLogin(this);
-        String adverId = Tools.getAdverId(this);
+        adverId = Tools.getAdverId(this);
+        LogUtil.e("adverId================"+adverId);
         if(login) {
-            LogUtil.e("adverId = "+adverId);
-            map = new HashMap<>();
-            map.put("goodsId",goods_id);
-            map.put("adzoneId",adverId);
-            netUtil.okHttp2Server2(chang_url,map);
+            boolean bindTao = Tools.isBindTao(this);
+            if(bindTao) {
+                LogUtil.e("adverId = "+ adverId);
+                which = "change_url";
+                map = new HashMap<>();
+                map.put("goodsId",goods_id);
+                map.put("adzoneId", adverId);
+                netUtil.okHttp2Server2(chang_url,map);
+            }else{
+                Toast.makeText(WebRecordActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
+                String userLogin = Tools.getUserLogin(this);
+                bindTaobao(userLogin);
+            }
         }else{
             toLogin();
             finish();
@@ -169,10 +186,12 @@ public class WebRecordActivity extends BaseActivity {
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                if(TextUtils.isEmpty(which)) {
+                if(which.equals("change_url")) {
                     parseData(response);
-                }else{
+                }else if(which.equals("get_url")) {
                     getTaoWord(response);
+                }else if(which.equals("bind")) {
+                    parseBindData(response);
                 }
 
             }
@@ -420,6 +439,76 @@ public class WebRecordActivity extends BaseActivity {
 
         }
     };
+
+    /**
+     * 绑定淘宝
+     * @param s
+     */
+    public void bindTaobao(final String s) {
+
+        AlibcLogin alibcLogin = AlibcLogin.getInstance();
+
+        alibcLogin.showLogin(new AlibcLoginCallback() {
+            @Override
+            public void onSuccess(int i) {
+                //获取淘宝用户信息
+                LogUtil.e("获取淘宝用户信息: " + AlibcLogin.getInstance().getSession());
+                LogUtil.e("代码:" + i);
+                openId = AlibcLogin.getInstance().getSession().openId;
+                avatarUrl = AlibcLogin.getInstance().getSession().avatarUrl;
+                nick = AlibcLogin.getInstance().getSession().nick;
+                uploadUserInfo(s);
+                which = "bind";
+                netUtil.okHttp2Server2(bind_url, map);
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+//                Toast.makeText(LoginActivity.this, "绑定失败 ！",
+//                        Toast.LENGTH_LONG).show();
+//                Log.i("GGG", "错误码" + code + "原因" + msg);
+            }
+        });
+    }
+
+    /**
+     * 上传用户信息
+     * @param s
+     */
+    public void uploadUserInfo(String s) {
+
+        if (!TextUtils.isEmpty(s)) {
+            map = new HashMap<>();
+            map.put("Id", s);
+            map.put("openId", openId);
+            map.put("portrait", avatarUrl);
+            map.put("nickname", nick);
+        }
+
+    }
+
+    /**
+     * 解析绑定淘宝的数据
+     * @param response
+     */
+    private void parseBindData(String response) {
+        CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
+        int statusCode = codeStatueBean.getStatusCode();
+        switch (statusCode) {
+            case 1 :
+                CacheUtils.putBoolean(WebRecordActivity.this, CacheUtils.BIND_STATE, true);
+                CacheUtils.putString(WebRecordActivity.this,CacheUtils.TAOBAO_NICK,nick);
+                which = "change_url";
+                map = new HashMap<>();
+                map.put("goodsId",goods_id);
+                map.put("adzoneId",adverId);
+                netUtil.okHttp2Server2(chang_url,map);
+                break;
+            case 0:
+               Toast.makeText(WebRecordActivity.this, "绑定淘宝失败", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
 
 
 }

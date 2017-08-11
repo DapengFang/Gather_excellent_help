@@ -140,8 +140,20 @@ public class MyToggleButton extends View {
         if (currentState) {
             slideBtn_left = backgroundBitmap.getWidth()
                     - slideButton.getWidth();
+            backgroundBitmap = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.switch_background_gray);
+            backgroundBitmap = Tools.zoomBitmap(backgroundBitmap, DensityUtil.dip2px(getContext(),45), DensityUtil.dip2px(getContext(),23));
+            slideButton = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.slide_button);
+            slideButton = Tools.zoomBitmap(slideButton,DensityUtil.dip2px(getContext(),23),DensityUtil.dip2px(getContext(),23));
         } else {
             slideBtn_left = 0;
+            backgroundBitmap = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.switch_background);
+            backgroundBitmap = Tools.zoomBitmap(backgroundBitmap, DensityUtil.dip2px(getContext(),45), DensityUtil.dip2px(getContext(),23));
+            slideButton = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.slide_button);
+            slideButton = Tools.zoomBitmap(slideButton,DensityUtil.dip2px(getContext(),23),DensityUtil.dip2px(getContext(),23));
         }
     }
 
@@ -164,6 +176,8 @@ public class MyToggleButton extends View {
     public void setOnStateChangeListener(OnStateChangeListener onStateChangeListener) {
         this.onStateChangeListener = onStateChangeListener;
     }
+
+
 
 
 }

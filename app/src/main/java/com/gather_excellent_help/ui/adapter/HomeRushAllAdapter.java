@@ -94,6 +94,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private TextView tvRushSecond;
     private boolean isFirst;
     private double user_rate;
+    private int shopType;
 
 
     public HomeRushAllAdapter(Context context, List<HomeWareBean.DataBean> data, Activity activity, List<HomeGroupBean.DataBean> groupData, List<TyepIndexBean.DataBean> typeData,
@@ -107,6 +108,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.vipData = vipData;
         this.rushDownTimer = rushDownTimer;
         this.isFirst = isFirst;
+        shopType = Tools.getShopType(context);
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         String userRate = Tools.getUserRate(context);
         if(!TextUtils.isEmpty(userRate)) {
@@ -231,17 +233,21 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         String couponsUrl = itemData.get(i).getCouponsUrl();
+                        String link_url = itemData.get(i).getLink_url();
+                        String goods_id = itemData.get(i).getProductId();
+                        String goods_img = itemData.get(i).getImg_url();
+                        String goods_title = itemData.get(i).getTitle();
                         if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
                             if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
                                 Intent intent = new Intent(context, WebActivity.class);
                                 intent.putExtra("web_url",couponsUrl);
+                                intent.putExtra("url", link_url);
+                                intent.putExtra("goods_id", goods_id);
+                                intent.putExtra("goods_img", goods_img);
+                                intent.putExtra("goods_title", goods_title);
                                 context.startActivity(intent);
                             }
                         }else{
-                            String link_url = itemData.get(i).getLink_url();
-                            String goods_id = itemData.get(i).getProductId();
-                            String goods_img = itemData.get(i).getImg_url();
-                            String goods_title = itemData.get(i).getTitle();
                             Intent intent = new Intent(context, WebRecordActivity.class);
                             intent.putExtra("url", link_url);
                             intent.putExtra("goods_id", goods_id);
@@ -282,9 +288,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     @Override
                     public void onClick(View view) {
                         if (couponsUrl != null && !TextUtils.isEmpty(couponsUrl)) {
-                            Intent intent = new Intent(context, WebActivity.class);
-                            intent.putExtra("web_url", couponsUrl);
-                            context.startActivity(intent);
+//                            Intent intent = new Intent(context, WebActivity.class);
+//                            intent.putExtra("web_url", couponsUrl);
+//                            context.startActivity(intent);
                         }
                     }
                 });
@@ -296,16 +302,16 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 groupViewHolder.tvGroupBigSecondSoupons.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(context, WebActivity.class);
-                        intent.putExtra("web_url", secondCouponsUrl);
-                        context.startActivity(intent);
+//                        Intent intent = new Intent(context, WebActivity.class);
+//                        intent.putExtra("web_url", secondCouponsUrl);
+//                        context.startActivity(intent);
                     }
                 });
             } else {
                 groupViewHolder.tvGroupBigSecondSoupons.setVisibility(View.GONE);
             }
-            int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
-            if (group_id == 4) {
+            //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
+            if (shopType == 1) {
                 boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                 if (toggleShow) {
                     groupViewHolder.tvHomeGroupZhuan.setVisibility(View.GONE);
@@ -320,17 +326,21 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             groupViewHolder.ll_group_big.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    String link_url = dataBean.getLink_url();
+                    String goods_id = dataBean.getProductId();
+                    String goods_img = dataBean.getImg_url();
+                    String goods_title = dataBean.getTitle();
                     if (couponsPrice > 0) {
                         if (couponsUrl != null && !TextUtils.isEmpty(couponsUrl)) {
                             Intent intent = new Intent(context, WebActivity.class);
                             intent.putExtra("web_url", couponsUrl);
+                            intent.putExtra("url", link_url);
+                            intent.putExtra("goods_id", goods_id);
+                            intent.putExtra("goods_img", goods_img);
+                            intent.putExtra("goods_title", goods_title);
                             context.startActivity(intent);
                         }
                     } else {
-                        String link_url = dataBean.getLink_url();
-                        String goods_id = dataBean.getProductId();
-                        String goods_img = dataBean.getImg_url();
-                        String goods_title = dataBean.getTitle();
                         Intent intent = new Intent(context, WebRecordActivity.class);
                         intent.putExtra("url", link_url);
                         intent.putExtra("goods_id", goods_id);
@@ -369,9 +379,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     @Override
                     public void onClick(View view) {
                         if (couponsUrl1 != null && !TextUtils.isEmpty(couponsUrl1)) {
-                            Intent intent = new Intent(context, WebActivity.class);
-                            intent.putExtra("web_url", couponsUrl1);
-                            context.startActivity(intent);
+//                            Intent intent = new Intent(context, WebActivity.class);
+//                            intent.putExtra("web_url", couponsUrl1);
+//                            context.startActivity(intent);
                         }
                     }
                 });
@@ -384,9 +394,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 tvSmallSecondCoupons.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(context, WebActivity.class);
-                        intent.putExtra("web_url", secondCouponsUrl1);
-                        context.startActivity(intent);
+//                        Intent intent = new Intent(context, WebActivity.class);
+//                        intent.putExtra("web_url", secondCouponsUrl1);
+//                        context.startActivity(intent);
                     }
                 });
             } else {
@@ -395,7 +405,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             tvMallPrice.setText("今日特价：￥" + df.format(sell_price1));
             tvSmallZhuan.setText("赚:￥" + df.format(zhuan1));
             tvSmallCoast.setText("成本:￥" + df.format(coast1));
-            if (group_id == 4) {
+            if (shopType == 1) {
                 boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                 if (toggleShow) {
                     tvSmallZhuan.setVisibility(View.GONE);
@@ -412,17 +422,21 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             childLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    String link_url = groupBean1.getLink_url();
+                    String goods_id = groupBean1.getProductId();
+                    String goods_img = groupBean1.getImg_url();
+                    String goods_title = groupBean1.getTitle();
                     if (couponsPrice1 > 0) {
                         if (couponsUrl1 != null && !TextUtils.isEmpty(couponsUrl1)) {
                             Intent intent = new Intent(context, WebActivity.class);
                             intent.putExtra("web_url", couponsUrl1);
+                            intent.putExtra("url", link_url);
+                            intent.putExtra("goods_id", goods_id);
+                            intent.putExtra("goods_img", goods_img);
+                            intent.putExtra("goods_title", goods_title);
                             context.startActivity(intent);
                         }
                     } else {
-                        String link_url = groupBean1.getLink_url();
-                        String goods_id = groupBean1.getProductId();
-                        String goods_img = groupBean1.getImg_url();
-                        String goods_title = groupBean1.getTitle();
                         Intent intent = new Intent(context, WebRecordActivity.class);
                         intent.putExtra("url", link_url);
                         intent.putExtra("goods_id", goods_id);
@@ -463,9 +477,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         @Override
                         public void onClick(View view) {
                             if (couponsUrl2 != null && !TextUtils.isEmpty(couponsUrl2)) {
-                                Intent intent = new Intent(context, WebActivity.class);
-                                intent.putExtra("web_url", couponsUrl2);
-                                context.startActivity(intent);
+//                                Intent intent = new Intent(context, WebActivity.class);
+//                                intent.putExtra("web_url", couponsUrl2);
+//                                context.startActivity(intent);
                             }
                         }
                     });
@@ -478,9 +492,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     tvSmallSecondCoupons2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(context, WebActivity.class);
-                            intent.putExtra("web_url", secondCouponsUrl2);
-                            context.startActivity(intent);
+//                            Intent intent = new Intent(context, WebActivity.class);
+//                            intent.putExtra("web_url", secondCouponsUrl2);
+//                            context.startActivity(intent);
                         }
                     });
                 } else {
@@ -489,7 +503,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 tvMallPrice2.setText("今日特价：￥" + df.format(sell_price2));
                 tvSmallZhuan2.setText("赚:￥" + df.format(zhuan2));
                 tvSmallCoast2.setText("成本:￥" + df.format(coast2));
-                if (group_id == 4) {
+                if (shopType == 1) {
                     boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                     if (toggleShow) {
                         tvSmallZhuan2.setVisibility(View.GONE);
@@ -506,17 +520,21 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 childRight.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        String link_url = groupBean2.getLink_url();
+                        String goods_id = groupBean2.getProductId();
+                        String goods_img = groupBean2.getImg_url();
+                        String goods_title = groupBean2.getTitle();
                         if (couponsPrice2 > 0) {
                             if (couponsUrl2 != null && !TextUtils.isEmpty(couponsUrl2)) {
                                 Intent intent = new Intent(context, WebActivity.class);
                                 intent.putExtra("web_url", couponsUrl2);
+                                intent.putExtra("url", link_url);
+                                intent.putExtra("goods_id", goods_id);
+                                intent.putExtra("goods_img", goods_img);
+                                intent.putExtra("goods_title", goods_title);
                                 context.startActivity(intent);
                             }
                         } else {
-                            String link_url = groupBean2.getLink_url();
-                            String goods_id = groupBean2.getProductId();
-                            String goods_img = groupBean2.getImg_url();
-                            String goods_title = groupBean2.getTitle();
                             Intent intent = new Intent(context, WebRecordActivity.class);
                             intent.putExtra("url", link_url);
                             intent.putExtra("goods_id", goods_id);
@@ -547,16 +565,6 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             firstBuyViewHoldre.llFirstLeftZero.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    String link_url = dataBean0.getLink_url();
-//                    String goods_id = String.valueOf(dataBean0.getProductId());
-//                    String goods_img = dataBean0.getImg_url();
-//                    String goods_title = dataBean0.getTitle();
-//                    Intent intent = new Intent(context, WebRecordActivity.class);
-//                    intent.putExtra("url",link_url);
-//                    intent.putExtra("goods_id",goods_id);
-//                    intent.putExtra("goods_img",goods_img);
-//                    intent.putExtra("goods_title",goods_title);
-//                    context.startActivity(intent);
                     Intent intent = new Intent(context, QiangTaoActivity.class);
                     context.startActivity(intent);
                 }
@@ -570,8 +578,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             double sellPrice = Double.parseDouble(dataBean0.getSell_price());
 
             firstBuyViewHoldre.tvFirstBigPrice.setText("￥" + df.format(sellPrice));
-            int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
-            if (group_id == 4) {
+            //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
+            if (shopType == 1) {
                 boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                 if (toggleShow) {
                     firstBuyViewHoldre.tvFirstBigZhuan.setVisibility(View.GONE);
@@ -665,15 +673,19 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         @Override
                         public void onClick(View view) {
                             if (pos == 0) {
+                                String link_url = dataBean1.getLink_url();
+                                String goods_id = String.valueOf(dataBean1.getProductId());
+                                String goods_img = dataBean1.getImg_url();
+                                String goods_title = dataBean1.getTitle();
                                 if (finalCoupon_info_s != null && !TextUtils.isEmpty(finalCoupon_info_s)) {
                                     Intent intent = new Intent(context, WebActivity.class);
                                     intent.putExtra("web_url", finalCoupon_click_url_s);
+                                    intent.putExtra("url", link_url);
+                                    intent.putExtra("goods_id", goods_id);
+                                    intent.putExtra("goods_img", goods_img);
+                                    intent.putExtra("goods_title", goods_title);
                                     context.startActivity(intent);
                                 } else {
-                                    String link_url = dataBean1.getLink_url();
-                                    String goods_id = String.valueOf(dataBean1.getProductId());
-                                    String goods_img = dataBean1.getImg_url();
-                                    String goods_title = dataBean1.getTitle();
                                     Intent intent = new Intent(context, WebRecordActivity.class);
                                     intent.putExtra("url", link_url);
                                     intent.putExtra("goods_id", goods_id);
@@ -682,15 +694,19 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     context.startActivity(intent);
                                 }
                             } else if (pos == 2) {
+                                String link_url = dataBean2.getLink_url();
+                                String goods_id = String.valueOf(dataBean2.getProductId());
+                                String goods_img = dataBean2.getImg_url();
+                                String goods_title = dataBean2.getTitle();
                                 if (finalCoupon_info_s1 != null && !TextUtils.isEmpty(finalCoupon_info_s1)) {
                                     Intent intent = new Intent(context, WebActivity.class);
                                     intent.putExtra("web_url", finalCoupon_click_url_s1);
+                                    intent.putExtra("url", link_url);
+                                    intent.putExtra("goods_id", goods_id);
+                                    intent.putExtra("goods_img", goods_img);
+                                    intent.putExtra("goods_title", goods_title);
                                     context.startActivity(intent);
                                 } else {
-                                    String link_url = dataBean2.getLink_url();
-                                    String goods_id = String.valueOf(dataBean2.getProductId());
-                                    String goods_img = dataBean2.getImg_url();
-                                    String goods_title = dataBean2.getTitle();
                                     Intent intent = new Intent(context, WebRecordActivity.class);
                                     intent.putExtra("url", link_url);
                                     intent.putExtra("goods_id", goods_id);
@@ -742,7 +758,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     lp.width = width * (percent / 100);
                     ivFirstMallProgress.setLayoutParams(lp);
 
-                    if (group_id == 4) {
+                    if (shopType == 1) {
                         boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                         if (toggleShow) {
                             tvSmallZhuan.setVisibility(View.GONE);
@@ -794,8 +810,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             homeVipViewHolder.tvHomeVipZhuan.setText("赚:￥"+df.format(zhuan)+" 成本:￥"+df.format(coast));
             homeVipViewHolder.tvVipBigPrice.setText("专享价"+df.format(sell_price));
 
-            int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
-            if (group_id == 4) {
+            //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
+            if (shopType == 1) {
                 boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                 if (toggleShow) {
                     homeVipViewHolder.tvHomeVipZhuan.setVisibility(View.GONE);
@@ -806,35 +822,32 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 homeVipViewHolder.tvHomeVipZhuan.setVisibility(View.GONE);
             }
 
-            if(secondCouponsUrl!=null && !TextUtils.isEmpty(secondCouponsUrl)) {
-                homeVipViewHolder.tvVipBigSecondCoupons.setVisibility(View.VISIBLE);
-                homeVipViewHolder.tvVipBigSecondCoupons.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(context, WebActivity.class);
-                        intent.putExtra("web_url", secondCouponsUrl);
-                        context.startActivity(intent);
-                    }
-                });
-            }else{
-                homeVipViewHolder.tvVipBigSecondCoupons.setVisibility(View.GONE);
-            }
+//            if(secondCouponsUrl!=null && !TextUtils.isEmpty(secondCouponsUrl)) {
+//                homeVipViewHolder.tvVipBigSecondCoupons.setVisibility(View.VISIBLE);
+//                homeVipViewHolder.tvVipBigSecondCoupons.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Intent intent = new Intent(context, WebActivity.class);
+//                        intent.putExtra("web_url", secondCouponsUrl);
+//                        context.startActivity(intent);
+//                    }
+//                });
+//            }else{
+//                homeVipViewHolder.tvVipBigSecondCoupons.setVisibility(View.GONE);
+//            }
 
-            if(couponsPrice>0) {
-                homeVipViewHolder.tvHomeVipCoupons.setVisibility(View.VISIBLE);
-                homeVipViewHolder.tvHomeVipCoupons.setText("领券立减"+couponsPrice);
-            }else{
-                homeVipViewHolder.tvHomeVipCoupons.setVisibility(View.GONE);
-            }
+//            if(couponsPrice>0) {
+//                homeVipViewHolder.tvHomeVipCoupons.setVisibility(View.VISIBLE);
+//                homeVipViewHolder.tvHomeVipCoupons.setText("领券立减"+couponsPrice);
+//            }else{
+//                homeVipViewHolder.tvHomeVipCoupons.setVisibility(View.GONE);
+//            }
+            homeVipViewHolder.tvVipBigSecondCoupons.setVisibility(View.GONE);
+            homeVipViewHolder.tvHomeVipCoupons.setVisibility(View.GONE);
 
             homeVipViewHolder.llFirstLeftZero.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
-                        Intent intent = new Intent(context, WebActivity.class);
-                        intent.putExtra("web_url", couponsUrl);
-                        context.startActivity(intent);
-                    }else{
                         String link_url = dataBean.getLink_url();
                         String goods_id = String.valueOf(dataBean.getProductId());
                         String goods_img = dataBean.getImg_url();
@@ -845,7 +858,6 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         intent.putExtra("goods_img", goods_img);
                         intent.putExtra("goods_title", goods_title);
                         context.startActivity(intent);
-                    }
                 }
             });
 
@@ -905,12 +917,12 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         }
                     }
                     if(tv_vip_mall_price!=null) {
-                        tv_vip_mall_price.setText("专项价"+df.format(sell_price1));
+                        tv_vip_mall_price.setText("专享价"+df.format(sell_price1));
                     }
 
                     if(tv_vip_small_zhuan!=null) {
                        tv_vip_small_zhuan.setText("赚:￥"+df.format(zhuan1));
-                        if (group_id == 4) {
+                        if (shopType == 1) {
                             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                             if (toggleShow) {
                                 tv_vip_small_zhuan.setVisibility(View.GONE);
@@ -924,7 +936,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                     if(tv_vip_small_coast!=null) {
                         tv_vip_small_coast.setText("成本:￥"+df.format(coast1));
-                        if (group_id == 4) {
+                        if (shopType == 1) {
                             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                             if (toggleShow) {
                                 tv_vip_small_coast.setVisibility(View.GONE);
@@ -936,40 +948,37 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         }
                     }
 
-                    if(tv_vip_small_second_coupons!=null) {
-                        if(secondCouponsUrl1!=null && !TextUtils.isEmpty(secondCouponsUrl1)) {
-                            tv_vip_small_second_coupons.setVisibility(View.VISIBLE);
-                            tv_vip_small_second_coupons.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent intent = new Intent(context, WebActivity.class);
-                                    intent.putExtra("web_url", secondCouponsUrl1);
-                                    context.startActivity(intent);
-                                }
-                            });
-                        }else{
-                            tv_vip_small_second_coupons.setVisibility(View.GONE);
-                        }
-                    }
+//                    if(tv_vip_small_second_coupons!=null) {
+//                        if(secondCouponsUrl1!=null && !TextUtils.isEmpty(secondCouponsUrl1)) {
+//                            tv_vip_small_second_coupons.setVisibility(View.VISIBLE);
+//                            tv_vip_small_second_coupons.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View view) {
+//                                    Intent intent = new Intent(context, WebActivity.class);
+//                                    intent.putExtra("web_url", secondCouponsUrl1);
+//                                    context.startActivity(intent);
+//                                }
+//                            });
+//                        }else{
+//                            tv_vip_small_second_coupons.setVisibility(View.GONE);
+//                        }
+//                    }
 
-                    if(tv_vip_small_coupons!=null) {
-                        if(couponsPrice1>0) {
-                            tv_vip_small_coupons.setVisibility(View.VISIBLE);
-                            tv_vip_small_coupons.setText("领券立减"+couponsPrice1);
-                        }else{
-                            tv_vip_small_coupons.setVisibility(View.GONE);
-                        }
-                    }
+//                    if(tv_vip_small_coupons!=null) {
+//                        if(couponsPrice1>0) {
+//                            tv_vip_small_coupons.setVisibility(View.VISIBLE);
+//                            tv_vip_small_coupons.setText("领券立减"+couponsPrice1);
+//                        }else{
+//                            tv_vip_small_coupons.setVisibility(View.GONE);
+//                        }
+//                    }
+                    tv_vip_small_second_coupons.setVisibility(View.GONE);
+                    tv_vip_small_coupons.setVisibility(View.GONE);
 
                     if(childAt!=null) {
                         childAt.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if(couponsUrl1!=null && !TextUtils.isEmpty(couponsUrl1)) {
-                                    Intent intent = new Intent(context, WebActivity.class);
-                                    intent.putExtra("web_url", couponsUrl1);
-                                    context.startActivity(intent);
-                                }else{
                                     String link_url = dataBean1.getLink_url();
                                     String goods_id = String.valueOf(dataBean1.getProductId());
                                     String goods_img = dataBean1.getImg_url();
@@ -980,7 +989,6 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     intent.putExtra("goods_img", goods_img);
                                     intent.putExtra("goods_title", goods_title);
                                     context.startActivity(intent);
-                                }
                             }
                         });
                     }
@@ -999,12 +1007,12 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         }
                     }
                     if(tv_vip_mall_price!=null) {
-                        tv_vip_mall_price.setText("专项价"+df.format(sell_price2));
+                        tv_vip_mall_price.setText("专享价"+df.format(sell_price2));
                     }
 
                     if(tv_vip_small_zhuan!=null) {
                         tv_vip_small_zhuan.setText("赚:￥"+df.format(zhuan2));
-                        if (group_id == 4) {
+                        if (shopType == 1) {
                             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                             if (toggleShow) {
                                 tv_vip_small_zhuan.setVisibility(View.GONE);
@@ -1018,7 +1026,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                     if(tv_vip_small_coast!=null) {
                         tv_vip_small_coast.setText("成本:￥"+df.format(coast2));
-                        if (group_id == 4) {
+                        if (shopType == 1) {
                             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                             if (toggleShow) {
                                 tv_vip_small_coast.setVisibility(View.GONE);
@@ -1030,40 +1038,36 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         }
                     }
 
-                    if(tv_vip_small_second_coupons!=null) {
-                        if(secondCouponsUrl2!=null && !TextUtils.isEmpty(secondCouponsUrl2)) {
-                            tv_vip_small_second_coupons.setVisibility(View.VISIBLE);
-                            tv_vip_small_second_coupons.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent intent = new Intent(context, WebActivity.class);
-                                    intent.putExtra("web_url", secondCouponsUrl2);
-                                    context.startActivity(intent);
-                                }
-                            });
-                        }else{
-                            tv_vip_small_second_coupons.setVisibility(View.GONE);
-                        }
-                    }
+//                    if(tv_vip_small_second_coupons!=null) {
+//                        if(secondCouponsUrl2!=null && !TextUtils.isEmpty(secondCouponsUrl2)) {
+//                            tv_vip_small_second_coupons.setVisibility(View.VISIBLE);
+//                            tv_vip_small_second_coupons.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View view) {
+//                                    Intent intent = new Intent(context, WebActivity.class);
+//                                    intent.putExtra("web_url", secondCouponsUrl2);
+//                                    context.startActivity(intent);
+//                                }
+//                            });
+//                        }else{
+//                            tv_vip_small_second_coupons.setVisibility(View.GONE);
+//                        }
+//                    }
 
-                    if(tv_vip_small_coupons!=null) {
-                        if(couponsPrice2>0) {
-                            tv_vip_small_coupons.setVisibility(View.VISIBLE);
-                            tv_vip_small_coupons.setText("领券立减"+couponsPrice2);
-                        }else{
-                            tv_vip_small_coupons.setVisibility(View.GONE);
-                        }
-                    }
-
+//                    if(tv_vip_small_coupons!=null) {
+//                        if(couponsPrice2>0) {
+//                            tv_vip_small_coupons.setVisibility(View.VISIBLE);
+//                            tv_vip_small_coupons.setText("领券立减"+couponsPrice2);
+//                        }else{
+//                            tv_vip_small_coupons.setVisibility(View.GONE);
+//                        }
+//                    }
+                    tv_vip_small_second_coupons.setVisibility(View.GONE);
+                    tv_vip_small_coupons.setVisibility(View.GONE);
                     if(childAt!=null) {
                         childAt.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if(couponsUrl2!=null && !TextUtils.isEmpty(couponsUrl2)) {
-                                    Intent intent = new Intent(context, WebActivity.class);
-                                    intent.putExtra("web_url", couponsUrl2);
-                                    context.startActivity(intent);
-                                }else{
                                     String link_url = dataBean2.getLink_url();
                                     String goods_id = String.valueOf(dataBean2.getProductId());
                                     String goods_img = dataBean2.getImg_url();
@@ -1074,7 +1078,6 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     intent.putExtra("goods_img", goods_img);
                                     intent.putExtra("goods_title", goods_title);
                                     context.startActivity(intent);
-                                }
                             }
                         });
                     }
