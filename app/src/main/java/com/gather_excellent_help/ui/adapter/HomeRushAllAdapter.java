@@ -448,6 +448,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             });
             int j = -1;
             for (int i = 2; i < groupData.size(); i++) {
+                if(i>=5) {
+                    return;
+                }
                 LinearLayout childRight = (LinearLayout) groupViewHolder.ll_group_right.getChildAt(i + j - 1);
                 TextView tvMallTitle2 = (TextView) childRight.findViewById(R.id.tv_group_mall_title);
                 TextView tvMallPrice2 = (TextView) childRight.findViewById(R.id.tv_group_mall_price);
