@@ -7,9 +7,5 @@
             android:id="@+id/civ_home_ganner"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x120" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/x80"
-            android:background="@drawable/flow_home_bg_color" />
 
 </RelativeLayout>
