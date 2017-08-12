@@ -579,7 +579,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
             DecimalFormat df = new DecimalFormat("#0.00");
             double sellPrice = Double.parseDouble(dataBean0.getSell_price());
-
+            QiangTaoBean.DataBean.CouponInfoBean coupon_info = dataBean0.getCoupon_info();
+            String max_commission_rate = coupon_info.getMax_commission_rate();
+            double rate = Double.parseDouble(max_commission_rate)/100;
             firstBuyViewHoldre.tvFirstBigPrice.setText("￥" + df.format(sellPrice));
             //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
             if (shopType == 1) {
@@ -588,7 +590,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     firstBuyViewHoldre.tvFirstBigZhuan.setVisibility(View.GONE);
                     firstBuyViewHoldre.tvFirstBigChengben.setVisibility(View.GONE);
                 } else {
-                    double zhuan = sellPrice * 0.2f * 0.9f * user_rate;
+                    double zhuan = sellPrice * rate * 0.9f * user_rate;
                     double coast = sellPrice - zhuan;
                     firstBuyViewHoldre.tvFirstBigZhuan.setVisibility(View.VISIBLE);
                     firstBuyViewHoldre.tvFirstBigChengben.setVisibility(View.VISIBLE);
@@ -625,6 +627,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     TextView tvAlreadyAcccount = (TextView) child.findViewById(R.id.tv_first_already_account);
                     double sell_price_s1 = Double.parseDouble(dataBean1.getSell_price());
                     double sell_price_s2 = Double.parseDouble(dataBean2.getSell_price());
+
                     int sold_num = dataBean2.getSold_num();
                     int total_amount = dataBean2.getTotal_amount();
                     int percent = 0;
@@ -639,14 +642,22 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     String coupon_info_s2 = null;
                     String coupon_click_url_s1 = null;
                     String coupon_click_url_s2 = null;
+                    String max_commission_rate1 = null;
+                    String max_commission_rate2 = null;
+                    double rate1 = 0;
+                    double rate2 = 0;
                     if(coupon_info_l1!=null) {
                         coupon_info_s1 = coupon_info_l1.getCoupon_info();
                         coupon_click_url_s1 = coupon_info_l1.getCoupon_click_url();
+                        max_commission_rate1 = coupon_info_l1.getMax_commission_rate();
+                        rate1 = Double.parseDouble(max_commission_rate1)/100;
                     }
 
                     if(coupon_info_l2!=null) {
                         coupon_info_s2 = coupon_info_l2.getCoupon_info();
                        coupon_click_url_s2 = coupon_info_l2.getCoupon_click_url();
+                        max_commission_rate2 = coupon_info_l2.getMax_commission_rate();
+                        rate2 = Double.parseDouble(max_commission_rate2)/100;
                     }
                     int coupon_p1 = 0;
                     int coupon_p2 = 0;
@@ -662,8 +673,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         coupon_p2 = Integer.parseInt(substring_s2);
                     }
 
-                    double zhuan_s1 = (sell_price_s1 - coupon_p1) * 0.2f * 0.9f * user_rate;
-                    double zhuan_s2 = (sell_price_s2 - coupon_p2) * 0.2f * 0.9f * user_rate;
+                    double zhuan_s1 = (sell_price_s1 - coupon_p1) * rate1 * 0.9f * user_rate;
+                    double zhuan_s2 = (sell_price_s2 - coupon_p2) * rate2 * 0.9f * user_rate;
                     double coast_s1 = sell_price_s1 - zhuan_s1 - coupon_p1;
                     double coast_s2 = sell_price_s2 - zhuan_s2 - coupon_p2;
                     tvSmallCoupons.setVisibility(View.GONE);
@@ -808,6 +819,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             final String couponsUrl = dataBean.getCouponsUrl();
             double sell_price = dataBean.getSell_price();
             final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
+            LogUtil.e("zhuan tkRate = " + tkRate +",===+user_rate == "+user_rate);
             double zhuan = (sell_price -couponsPrice)*tkRate*0.9f*user_rate;
             double coast = sell_price -couponsPrice-zhuan;
             homeVipViewHolder.tvHomeVipZhuan.setText("赚:￥"+df.format(zhuan)+" 成本:￥"+df.format(coast));
@@ -867,23 +879,23 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             final HomeVipBean.DataBean dataBean1 = vipData.get(1);
             String img_url1 = dataBean1.getImg_url();
             double sell_price1 = dataBean1.getSell_price();
-            double tkRate1 = dataBean1.getTkRate();
+            double tkRate1 = dataBean1.getTkRate()/100;
             final int couponsPrice1 = dataBean1.getCouponsPrice();
             final String couponsUrl1 = dataBean1.getCouponsUrl();
             final String secondCouponsUrl1 = dataBean1.getSecondCouponsUrl();
             String title1 = dataBean1.getTitle();
-            double zhuan1 = (sell_price1- couponsPrice1)*tkRate1*0.9f*0.83;
+            double zhuan1 = (sell_price1- couponsPrice1)*tkRate1*0.9f*user_rate;
             double coast1 = sell_price1 - zhuan1 -couponsPrice1;
 
             final HomeVipBean.DataBean dataBean2 = vipData.get(2);
             String img_url2 = dataBean2.getImg_url();
             double sell_price2 = dataBean2.getSell_price();
-            double tkRate2 = dataBean2.getTkRate();
+            double tkRate2 = dataBean2.getTkRate()/100;
             int couponsPrice2 = dataBean2.getCouponsPrice();
             final String couponsUrl2 = dataBean2.getCouponsUrl();
             final String secondCouponsUrl2 = dataBean2.getSecondCouponsUrl();
             String title2 = dataBean2.getTitle();
-            double zhuan2 = (sell_price2- couponsPrice2)*tkRate1*0.9f*0.83;
+            double zhuan2 = (sell_price2- couponsPrice2)*tkRate2*0.9f*user_rate;
             double coast2 = sell_price2 - zhuan2 -couponsPrice2;
 
             TextView tv_vip_mall_title =null;

@@ -8,6 +8,7 @@ import android.widget.RadioGroup;
 import android.support.v4.app.FragmentManager;
 
 import com.gather_excellent_help.ui.adapter.CustomPagerAdapter;
+import com.gather_excellent_help.ui.base.BaseFragmentActivity;
 import com.gather_excellent_help.ui.fragment.GoodscartFragment;
 import com.gather_excellent_help.ui.fragment.HomeFragment;
 import com.gather_excellent_help.ui.fragment.MineFragment;

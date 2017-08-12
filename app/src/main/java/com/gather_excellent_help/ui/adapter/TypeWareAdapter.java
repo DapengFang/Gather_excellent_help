@@ -37,11 +37,17 @@ public class TypeWareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<TypeWareBean.DataBean> data;
     private ImageLoader mImageLoader;
     private int shopType;
+    private double user_rate;
 
     public TypeWareAdapter(Context context,List<TypeWareBean.DataBean> data) {
         this.context = context;
         this.data = data;
         shopType = Tools.getShopType(context);
+        String userRate = Tools.getUserRate(context);
+        if(!TextUtils.isEmpty(userRate)) {
+            double v = Double.parseDouble(userRate);
+            user_rate = v/100;
+        }
         mImageLoader =ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
@@ -67,7 +73,7 @@ public class TypeWareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         int couponsPrice = dataBean.getCouponsPrice();
         double sell_price = dataBean.getSell_price();
         double tkRate = dataBean.getTkRate()/100;
-        double zhuan = (sell_price - couponsPrice) * tkRate * 0.9f *0.83f;
+        double zhuan = (sell_price - couponsPrice) * tkRate * 0.9f *user_rate;
         double coast = sell_price - zhuan -couponsPrice;
         final String couponsUrl = dataBean.getCouponsUrl();
         final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
