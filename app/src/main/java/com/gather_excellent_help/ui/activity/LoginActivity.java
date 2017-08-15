@@ -140,7 +140,7 @@ public class LoginActivity extends Activity {
                 if(data.size()>0) {
                     Integer id = data.get(0).getId();
                     int group_type = data.get(0).getGroup_type();
-                    int user_rate = data.get(0).getGroup_type();
+                    double user_rate = data.get(0).getUser_get_ratio();
                     CacheUtils.putBoolean(LoginActivity.this,CacheUtils.LOGIN_STATE,true);
                     CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_VALUE,id+"");
                     CacheUtils.putInteger(LoginActivity.this,CacheUtils.SHOP_TYPE,group_type);

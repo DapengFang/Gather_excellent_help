@@ -1,11 +1,15 @@
 package com.gather_excellent_help;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.KeyEvent;
 import android.widget.RadioGroup;
 
 import android.support.v4.app.FragmentManager;
+import android.widget.Toast;
 
 import com.gather_excellent_help.ui.adapter.CustomPagerAdapter;
 import com.gather_excellent_help.ui.base.BaseFragmentActivity;
@@ -32,6 +36,29 @@ public class MainActivity extends FragmentActivity {
     RadioGroup rg_main;
     private int currItem;//当前显示的界面
     private ArrayList<Fragment> fragments;//存放fragment页面的工作
+    public static final int EXIT_APP =1;
+    public static final int EXIT_APP_CONTINUE =2;
+    private boolean isExit = false;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case EXIT_APP :
+                    if(isExit) {
+                        finish();
+                    }else {
+                        isExit = true;
+                        Toast.makeText(MainActivity.this, "再按一次点击退出聚优帮！", Toast.LENGTH_SHORT).show();
+                        handler.sendEmptyMessageDelayed(EXIT_APP_CONTINUE,3000);
+                    }
+                    break;
+                case EXIT_APP_CONTINUE:
+                    isExit = false;
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +123,19 @@ public class MainActivity extends FragmentActivity {
             }
                 vp_main.setCurrentItem(currItem, false);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+            if (keyCode == KeyEvent.KEYCODE_BACK
+                    && event.getRepeatCount() == 0) {
+                //do something...
+                handler.sendEmptyMessage(EXIT_APP);
+                return true;
+            }
+
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

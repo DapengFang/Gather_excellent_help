@@ -109,9 +109,31 @@ public class NewsFirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         Date date = sf.parse(add_time);
                         long time = date.getTime();
                         long result_time = curr_time - time;
-                        long hour = result_time / 60000;
+                        long day = result_time / (3600000 * 24);
+                        long rest_time = result_time%(3600000 * 24);
+                        long hour = rest_time / 3600000;
+                        long rest_time2 = rest_time%3600000;
+                        long min = rest_time2 / 60000;
+
+
+//                        long min = result_time / 60000;
+//                        if(newsHolder.tvNewsFirstTime!=null) {
+//                            newsHolder.tvNewsFirstTime.setText(min+"分钟前");
+//                        }
                         if(newsHolder.tvNewsFirstTime!=null) {
-                            newsHolder.tvNewsFirstTime.setText(hour+"分钟前");
+                            if(day == 0) {
+                                if(hour ==0) {
+                                    newsHolder.tvNewsFirstTime.setText(min+"分钟前");
+                                }else{
+                                    newsHolder.tvNewsFirstTime.setText(hour+"小时"+min+"分钟前");
+                                }
+                            }else{
+                                if(hour == 0) {
+                                    newsHolder.tvNewsFirstTime.setText(day+"天"+min+"分钟前");
+                                }else{
+                                    newsHolder.tvNewsFirstTime.setText(day+"天"+hour+"小时"+min+"分钟前");
+                                }
+                            }
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();

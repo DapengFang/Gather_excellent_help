@@ -37,6 +37,7 @@ import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -119,6 +120,7 @@ public class WareListActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
+        showLoading();
         netUtil = new NetUtil();
         netUtil2 = new NetUtil();
         map = new HashMap<>();
@@ -252,16 +254,19 @@ public class WareListActivity extends BaseActivity {
                 gvWartList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        DecimalFormat df = new DecimalFormat("#0.00");
                         if(sousuoStr.equals("isVip")) {
                             String link_url = wareData.get(i).getLink_url();
                             String goods_id = wareData.get(i).getProductId();
                             String goods_img = wareData.get(i).getImg_url();
                             String goods_title = wareData.get(i).getTitle();
+                            double sell_price = wareData.get(i).getSell_price();
                             Intent intent = new Intent(WareListActivity.this, WebRecordActivity.class);
                             intent.putExtra("url",link_url);
                             intent.putExtra("goods_id",goods_id);
                             intent.putExtra("goods_img",goods_img);
                             intent.putExtra("goods_title",goods_title);
+                            intent.putExtra("goods_price",df.format(sell_price)+"");
                             startActivity(intent);
                         }else{
                             String couponsUrl = wareData.get(i).getCouponsUrl();
@@ -269,20 +274,28 @@ public class WareListActivity extends BaseActivity {
                             String goods_id = wareData.get(i).getProductId();
                             String goods_img = wareData.get(i).getImg_url();
                             String goods_title = wareData.get(i).getTitle();
-                            if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
-                                Intent intent = new Intent(WareListActivity.this, WebActivity.class);
-                                intent.putExtra("web_url", couponsUrl);
-                                intent.putExtra("url",link_url);
-                                intent.putExtra("goods_id",goods_id);
-                                intent.putExtra("goods_img",goods_img);
-                                intent.putExtra("goods_title",goods_title);
-                                startActivity(intent);
-                            }else{
+                            double sell_price = wareData.get(i).getSell_price();
+                            int couponsPrice = wareData.get(i).getCouponsPrice();
+                            if(couponsPrice>0) {
+                                if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
+                                    Intent intent = new Intent(WareListActivity.this, WebActivity.class);
+                                    intent.putExtra("web_url", couponsUrl);
+                                    intent.putExtra("url",link_url);
+                                    intent.putExtra("goods_id",goods_id);
+                                    intent.putExtra("goods_img",goods_img);
+                                    intent.putExtra("goods_title",goods_title);
+                                    intent.putExtra("goods_price",df.format(sell_price)+"");
+                                    intent.putExtra("goods_coupon",String.valueOf(couponsPrice));
+                                    intent.putExtra("goods_coupon_url",couponsUrl);
+                                    startActivity(intent);
+                                }
+                            } else{
                                 Intent intent = new Intent(WareListActivity.this, WebRecordActivity.class);
                                 intent.putExtra("url",link_url);
                                 intent.putExtra("goods_id",goods_id);
                                 intent.putExtra("goods_img",goods_img);
                                 intent.putExtra("goods_title",goods_title);
+                                intent.putExtra("goods_price",df.format(sell_price)+"");
                                 startActivity(intent);
                             }
                         }
@@ -296,7 +309,25 @@ public class WareListActivity extends BaseActivity {
                               if (absListView.getLastVisiblePosition() == (absListView.getCount() - 1)) {
                                   isLoadmore = 0;
                                   if(type_id!=null && !TextUtils.isEmpty(type_id)) {
-                                     showLoadNoMore();
+                                      page++;
+                                      LogUtil.e("page == "+page);
+                                      //tvWareListOld.setVisibility(View.VISIBLE);
+                                      //tvWareListOld.setText(sousuoStr);
+                                      //etWareListContent.setHint("");
+                                      //keyword = sousuoStr;
+                                      pageIndex = String.valueOf(page);
+                                      LogUtil.e("newData.size() ==" + newData.size());
+                                      if(newData.size() <Integer.valueOf(pageSize)) {
+                                          showLoadNoMore();
+                                      }else{
+                                          showLoadMore();
+                                          handler.postDelayed(new Runnable() {
+                                              @Override
+                                              public void run() {
+                                                  searchWareList();
+                                              }
+                                          },500);
+                                      }
                                   }else{
                                       if(sousuoStr!=null && !TextUtils.isEmpty(sousuoStr)) {
                                               page++;
@@ -355,6 +386,7 @@ public class WareListActivity extends BaseActivity {
 
                     }
                 });
+                ll_ware_list_loadmore.setVisibility(View.GONE);
                 break;
             case 0:
                 Toast.makeText(WareListActivity.this, searchWareBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -364,13 +396,21 @@ public class WareListActivity extends BaseActivity {
 
     private void showLoadMore() {
         ll_ware_list_loadmore.setVisibility(View.VISIBLE);
-        TextView tvTitle = (TextView) ll_ware_list_loadmore.getChildAt(0);
+        ll_ware_list_loadmore.getChildAt(0).setVisibility(View.VISIBLE);
+        TextView tvTitle = (TextView) ll_ware_list_loadmore.getChildAt(1);
         tvTitle.setText("加载更多...");
     }
 
     private void showLoadNoMore() {
-        TextView tvTitle = (TextView) ll_ware_list_loadmore.getChildAt(0);
+        TextView tvTitle = (TextView) ll_ware_list_loadmore.getChildAt(1);
         tvTitle.setText("没有更多的数据了...");
+        ll_ware_list_loadmore.getChildAt(0).setVisibility(View.GONE);
+        ll_ware_list_loadmore.setVisibility(View.VISIBLE);
+    }
+    private void showLoading() {
+        TextView tvTitle = (TextView) ll_ware_list_loadmore.getChildAt(1);
+        tvTitle.setText("正在加载中...");
+        ll_ware_list_loadmore.getChildAt(0).setVisibility(View.VISIBLE);
         ll_ware_list_loadmore.setVisibility(View.VISIBLE);
     }
 
@@ -606,7 +646,7 @@ public class WareListActivity extends BaseActivity {
             map.put("id", type_id);
             map.put("key_words", keyword);
             map.put("pageSize", "10");
-            map.put("pageIndex", "1");
+            map.put("pageIndex", pageIndex);
             netUtil2.okHttp2Server2(ware_url, map);
         } else {
             tvWareListOld.setVisibility(View.GONE);
@@ -615,21 +655,21 @@ public class WareListActivity extends BaseActivity {
                 map = new HashMap<>();
                 map.put("key_words", keyword);
                 map.put("pageSize", "10");
-                map.put("pageIndex", "1");
+                map.put("pageIndex", pageIndex);
                 String qiang_url = Url.BASE_URL + "GroupBuyList.aspx";
                 netUtil2.okHttp2Server2(qiang_url, map);
             } else if (sousuoStr.equals("isVip")) {
                 map = new HashMap<>();
                 map.put("key_words", keyword);
                 map.put("pageSize", "10");
-                map.put("pageIndex", "1");
+                map.put("pageIndex", pageIndex);
                 String vip_url = Url.BASE_URL + "ChannelPriceList.aspx";
                 netUtil2.okHttp2Server2(vip_url, map);
             } else if (sousuoStr.equals("activity")) {
                 map = new HashMap<>();
                 map.put("key_words", keyword);
                 map.put("pageSize", "10");
-                map.put("pageIndex", "1");
+                map.put("pageIndex", pageIndex);
                 map.put("activity_id", activity_id);
                 netUtil2.okHttp2Server2(activity_url, map);
             } else if (sousuoStr.equals("isTypeSou")) {
@@ -641,7 +681,7 @@ public class WareListActivity extends BaseActivity {
                 map = new HashMap<>();
                 map.put("key_words", keyword);
                 map.put("pageSize", "10");
-                map.put("pageIndex", "1");
+                map.put("pageIndex", pageIndex);
                 netUtil2.okHttp2Server2(sousuo_url, map);
             }
         }

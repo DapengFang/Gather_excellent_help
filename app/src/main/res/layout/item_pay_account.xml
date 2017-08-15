@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#fff">
 
     <EditText
         android:id="@+id/et_pay_account"
@@ -11,7 +12,7 @@
         android:textSize="14sp"
         android:textColor="#88000000"
         android:background="@drawable/gray_cordor_stroke_shape"
-        android:cursorVisible="false"
+        android:cursorVisible="true"
         android:layout_marginTop="@dimen/x5"
         android:layout_marginLeft="@dimen/x5"
         android:layout_marginRight="@dimen/x5"
@@ -25,7 +26,7 @@
         android:textSize="14sp"
         android:textColor="#88000000"
         android:background="@drawable/gray_cordor_stroke_shape"
-        android:cursorVisible="false"
+        android:cursorVisible="true"
         android:layout_marginTop="@dimen/x10"
         android:layout_marginLeft="@dimen/x5"
         android:layout_marginRight="@dimen/x5"
@@ -54,6 +55,7 @@
                 android:background="@null"
                 android:hint="请输入验证码"
                 android:inputType="number"
+                android:cursorVisible="true"
                 android:textColor="#88000000"
                 android:textColorHint="#55000000"
                 android:textSize="14sp" />

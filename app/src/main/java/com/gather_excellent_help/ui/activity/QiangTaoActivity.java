@@ -93,6 +93,7 @@ public class QiangTaoActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
+        showLoading();
         tvTopTitleName.setText("淘抢购");
         rlExit.setOnClickListener(new MyOnclickListener());
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -170,6 +171,9 @@ public class QiangTaoActivity extends BaseActivity {
                                             String goods_id = String.valueOf(taobaodata.get(i).getProductId());
                                             String goods_img = taobaodata.get(i).getImg_url();
                                             String goods_title = taobaodata.get(i).getTitle();
+                                            String sell_price = taobaodata.get(i).getSell_price();
+                                            int index = coupon_info_cest.indexOf("减")+1;
+                                            String coupon = coupon_info_cest.substring(index, coupon_info_cest.length() - 1);
                                             if(coupon_click_url!=null && !TextUtils.isEmpty(coupon_click_url)) {
                                                 Intent intent = new Intent(QiangTaoActivity.this, WebActivity.class);
                                                 intent.putExtra("web_url", coupon_click_url);
@@ -177,6 +181,9 @@ public class QiangTaoActivity extends BaseActivity {
                                                 intent.putExtra("goods_id", goods_id);
                                                 intent.putExtra("goods_img", goods_img);
                                                 intent.putExtra("goods_title", goods_title);
+                                                intent.putExtra("goods_price",sell_price);
+                                                intent.putExtra("goods_coupon",coupon);
+                                                intent.putExtra("goods_coupon_url",coupon_click_url);
                                                 startActivity(intent);
                                             }else{
                                                 Intent intent = new Intent(QiangTaoActivity.this, WebRecordActivity.class);
@@ -184,6 +191,7 @@ public class QiangTaoActivity extends BaseActivity {
                                                 intent.putExtra("goods_id", goods_id);
                                                 intent.putExtra("goods_img", goods_img);
                                                 intent.putExtra("goods_title", goods_title);
+                                                intent.putExtra("goods_price",sell_price);
                                                 startActivity(intent);
                                             }
                                         }else{
@@ -191,11 +199,13 @@ public class QiangTaoActivity extends BaseActivity {
                                             String goods_id = String.valueOf(taobaodata.get(i).getProductId());
                                             String goods_img = taobaodata.get(i).getImg_url();
                                             String goods_title = taobaodata.get(i).getTitle();
+                                            String sell_price = taobaodata.get(i).getSell_price();
                                             Intent intent = new Intent(QiangTaoActivity.this, WebRecordActivity.class);
                                             intent.putExtra("url", link_url);
                                             intent.putExtra("goods_id", goods_id);
                                             intent.putExtra("goods_img", goods_img);
                                             intent.putExtra("goods_title", goods_title);
+                                            intent.putExtra("goods_price",sell_price);
                                             startActivity(intent);
                                         }
                                     }else{
@@ -239,6 +249,7 @@ public class QiangTaoActivity extends BaseActivity {
 
                             }
                         });
+                        llWareListLoadmore.setVisibility(View.GONE);
                         break;
                     case 0:
 
@@ -255,13 +266,21 @@ public class QiangTaoActivity extends BaseActivity {
 
     private void showLoadMore() {
         llWareListLoadmore.setVisibility(View.VISIBLE);
-        TextView tvTitle = (TextView) llWareListLoadmore.getChildAt(0);
+        TextView tvTitle = (TextView) llWareListLoadmore.getChildAt(1);
+        llWareListLoadmore.getChildAt(0).setVisibility(View.VISIBLE);
         tvTitle.setText("加载更多...");
     }
 
     private void showLoadNoMore() {
-        TextView tvTitle = (TextView) llWareListLoadmore.getChildAt(0);
+        TextView tvTitle = (TextView) llWareListLoadmore.getChildAt(1);
         tvTitle.setText("没有更多的数据了...");
+        llWareListLoadmore.getChildAt(0).setVisibility(View.GONE);
+        llWareListLoadmore.setVisibility(View.VISIBLE);
+    }
+    private void showLoading() {
+        TextView tvTitle = (TextView) llWareListLoadmore.getChildAt(1);
+        tvTitle.setText("正在加载中...");
+        llWareListLoadmore.getChildAt(0).setVisibility(View.VISIBLE);
         llWareListLoadmore.setVisibility(View.VISIBLE);
     }
 

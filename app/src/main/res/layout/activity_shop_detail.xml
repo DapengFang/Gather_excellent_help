@@ -90,7 +90,7 @@
                     android:textColorHint="#55000000"
                     android:textSize="12sp"
                     android:textColor="#55000000"
-                    android:cursorVisible="false"
+                    android:cursorVisible="true"
                     android:inputType="number"/>
 
             </LinearLayout>
@@ -125,7 +125,7 @@
             android:textColorHint="#55000000"
             android:textSize="12sp"
             android:textColor="#55000000"
-            android:cursorVisible="false"
+            android:cursorVisible="true"
             android:inputType="number"/>
 
     </LinearLayout>
@@ -160,7 +160,7 @@
             android:textColorHint="#55000000"
             android:textSize="12sp"
             android:textColor="#55000000"
-            android:cursorVisible="false"
+            android:cursorVisible="true"
             android:inputType="number"/>
 
     </LinearLayout>

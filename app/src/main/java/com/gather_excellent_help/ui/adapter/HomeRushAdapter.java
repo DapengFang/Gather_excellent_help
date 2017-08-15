@@ -16,6 +16,7 @@ import com.gather_excellent_help.bean.HomeRushChangeBean;
 import com.gather_excellent_help.bean.HomeTypeBean;
 import com.gather_excellent_help.bean.HomeWareBean;
 import com.gather_excellent_help.ui.activity.WebActivity;
+import com.gather_excellent_help.ui.widget.MyTextView;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -31,8 +32,8 @@ import java.util.List;
 
 public class HomeRushAdapter extends BaseAdapter {
 
-    private Context context; private LayoutInflater inflater;    //布局填充器
-
+    private Context context;
+    private LayoutInflater inflater;    //布局填充器
     private ImageLoader mImageLoader;
     private List<HomeWareBean.DataBean.ItemBean> datas;
     private double user_rate;
@@ -78,15 +79,15 @@ public class HomeRushAdapter extends BaseAdapter {
             holder.home_rush_sale = (TextView) convertView.findViewById(R.id.tv_rush_ware_sale);
             holder.home_rush_coast = (TextView) convertView.findViewById(R.id.tv_rush_ware_coast);
             holder.home_rush_aprice = (TextView) convertView.findViewById(R.id.tv_rush_ware_aprice);
-            holder.home_rush_coupons = (TextView) convertView.findViewById(R.id.tv_rush_ware_coupons);
+            holder.home_rush_coupons = (MyTextView) convertView.findViewById(R.id.tv_rush_ware_coupons);
             holder.home_rush_second_coupons = (TextView) convertView.findViewById(R.id.tv_rush_second_coupons);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         HomeWareBean.DataBean.ItemBean itemBean = datas.get(position);
-        if(itemBean.getTitle().length()>10) {
-            String newTitle = itemBean.getTitle().substring(0, 10) + "...";
+        if(itemBean.getTitle().length()>6) {
+            String newTitle = itemBean.getTitle().substring(0, 6);
             holder.home_rush_name.setText(newTitle);
         }else{
             holder.home_rush_name.setText(itemBean.getTitle());
@@ -158,7 +159,7 @@ public class HomeRushAdapter extends BaseAdapter {
         TextView home_rush_sale;            //聚优帮赚
         TextView home_rush_coast;            //聚优帮成本
         TextView home_rush_aprice;            //聚优帮活动价
-        TextView home_rush_coupons;           //聚优帮优惠券
+        MyTextView home_rush_coupons;           //聚优帮优惠券
         TextView home_rush_second_coupons;           //聚优帮优惠券2
     }
 }

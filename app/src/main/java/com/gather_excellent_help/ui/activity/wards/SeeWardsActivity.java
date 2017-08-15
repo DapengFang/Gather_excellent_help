@@ -93,7 +93,7 @@ public class SeeWardsActivity extends BaseActivity {
 
     private void loadRewardData() {
         map = new HashMap<>();
-        map.put("Id", "5");
+        map.put("Id", userLogin);
         map.put("pageSize", pageSize);
         map.put("pageNo", pageNo);
         map.put("Type", type);

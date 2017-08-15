@@ -2,74 +2,82 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-<LinearLayout
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
-    <ImageView
-        android:id="@+id/iv_order_all_img"
-        android:layout_width="@dimen/x100"
-        android:layout_height="@dimen/x100"
-        android:src="@mipmap/zhanwei_icon"
-        android:padding="@dimen/x5"/>
     <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/tv_order_all_number"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/iv_order_all_img"
+            android:layout_width="@dimen/x100"
+            android:layout_height="@dimen/x100"
+            android:src="@mipmap/zhanwei_icon"
+            android:padding="@dimen/x5"/>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="订单号：4545454544454545"
-            android:textSize="12sp"
-            android:textColor="#66000000"
-            android:padding="@dimen/x3"/>
-        <TextView
-            android:id="@+id/tv_order_all_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="订单金额：￥000"
-            android:textSize="12sp"
-            android:textColor="#66000000"
-            android:padding="@dimen/x3"/>
-        <TextView
-            android:id="@+id/tv_order_all_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="下单时间：2016-12-15 00:02:17"
-            android:textSize="12sp"
-            android:textColor="#66000000"
-            android:padding="@dimen/x3"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/x3">
+            android:orientation="vertical">
             <TextView
-                android:id="@+id/tv_order_all_statue"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_order_all_number"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="当前状态：交易成功"
+                android:text="订单号：4545454544454545"
                 android:textSize="12sp"
-                android:textColor="#99ff0000"/>
+                android:textColor="#66000000"
+                android:padding="@dimen/x3"/>
             <TextView
-                android:id="@+id/tv_order_all_seedetail"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_order_all_price"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/x3"
-                android:text="查看详情"
+                android:text="订单金额：￥000"
                 android:textSize="12sp"
-                android:textColor="#99ff0000"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:visibility="gone"
-                android:background="@drawable/red_cordor_stroke_shape"
-                android:layout_marginRight="@dimen/x8"
-                android:layout_marginLeft="@dimen/x10"/>
-        </RelativeLayout>
+                android:textColor="#66000000"
+                android:padding="@dimen/x3"/>
+            <TextView
+                android:id="@+id/tv_order_zhuan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="赚：￥0"
+                android:textSize="12sp"
+                android:textColor="#eeff0000"
+                android:padding="@dimen/x3"/>
+            <TextView
+                android:id="@+id/tv_order_all_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="下单时间：2016-12-15 00:02:17"
+                android:textSize="12sp"
+                android:textColor="#66000000"
+                android:padding="@dimen/x3"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/x3">
+                <TextView
+                    android:id="@+id/tv_order_all_statue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="当前状态：交易成功"
+                    android:textSize="12sp"
+                    android:textColor="#99ff0000"/>
+                <TextView
+                    android:id="@+id/tv_order_all_seedetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/x3"
+                    android:text="查看详情"
+                    android:textSize="12sp"
+                    android:textColor="#99ff0000"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"
+                    android:background="@drawable/red_cordor_stroke_shape"
+                    android:layout_marginRight="@dimen/x8"
+                    android:layout_marginLeft="@dimen/x10"/>
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/x1"

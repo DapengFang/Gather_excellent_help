@@ -240,18 +240,7 @@ public class SetActivity extends BaseActivity {
                     showCacheClearDialog();
                     break;
                 case R.id.tv_set_logout:
-                    CacheUtils.putBoolean(SetActivity.this, CacheUtils.LOGIN_STATE, false);
-                    CacheUtils.putString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
-                    CacheUtils.putInteger(SetActivity.this,CacheUtils.GROUP_TYPE,-1);
-                    CacheUtils.putInteger(SetActivity.this,CacheUtils.SHOP_TYPE,-1);
-                    CacheUtils.putBoolean(SetActivity.this,CacheUtils.BIND_STATE,false);
-                    CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK,"");
-                    CacheUtils.putString(SetActivity.this,CacheUtils.ALIPAY_ACCOUNT,"");
-                    CacheUtils.putString(SetActivity.this,CacheUtils.USER_RATE,"");
-                    CacheUtils.putString(SetActivity.this,CacheUtils.LOGIN_PHONE,"");
-                    EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "退出登录！"));
-                    finish();
-                    loginUser();
+                    showAppExitDialog();
                     break;
                 case R.id.rl_set_userinfo:
                     intent = new Intent(SetActivity.this, PersonInfoActivity.class);
@@ -276,6 +265,38 @@ public class SetActivity extends BaseActivity {
                             DataCleanManager.cleanApplicationCache(SetActivity.this);
                             tvSetClearCache.setText("清理缓存 (0KB)");
                             //EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "清理缓存!"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .show();
+    }
+    /**
+     * 是否退出的dialog
+     */
+    private void showAppExitDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("温馨提示")
+                .setMessage("你确定要退出吗?")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        try {
+                            CacheUtils.putBoolean(SetActivity.this, CacheUtils.LOGIN_STATE, false);
+                            CacheUtils.putString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
+                            CacheUtils.putInteger(SetActivity.this,CacheUtils.GROUP_TYPE,-1);
+                            CacheUtils.putInteger(SetActivity.this,CacheUtils.SHOP_TYPE,-1);
+                            CacheUtils.putBoolean(SetActivity.this,CacheUtils.BIND_STATE,false);
+                            CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK,"");
+                            CacheUtils.putString(SetActivity.this,CacheUtils.ALIPAY_ACCOUNT,"");
+                            CacheUtils.putString(SetActivity.this,CacheUtils.USER_RATE,"");
+                            CacheUtils.putString(SetActivity.this,CacheUtils.LOGIN_PHONE,"");
+                            EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "退出登录！"));
+                            finish();
+                            loginUser();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

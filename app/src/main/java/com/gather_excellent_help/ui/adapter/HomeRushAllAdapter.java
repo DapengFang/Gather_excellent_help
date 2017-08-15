@@ -13,9 +13,11 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.HomeData;
@@ -32,7 +34,9 @@ import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.widget.CarouselImageView;
+import com.gather_excellent_help.ui.widget.MyFillGridView;
 import com.gather_excellent_help.ui.widget.MyGridView;
+import com.gather_excellent_help.ui.widget.MyImageView;
 import com.gather_excellent_help.ui.widget.RushDownTimer;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.DensityUtil;
@@ -192,7 +196,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else if (holder instanceof TypeViewHolder) {
             TypeViewHolder typeViewHolder = (TypeViewHolder) holder;
             GridView gvHomeType = typeViewHolder.gvHomeType;
-            loadTypeData(gvHomeType);
+            loadTypeData(gvHomeType,typeData);
             gvHomeType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -213,7 +217,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             String url = dataBean.getImg_url();
             LogUtil.e(url);
             if(url!=null) {
-                mImageLoader.loadImage(url, rushWareViewHolder.ivRushMoreBig, true);
+                mImageLoader.loadImage(Url.IMG_URL + url, rushWareViewHolder.ivRushMoreBig, true);
             }
             rushWareViewHolder.ivRushMoreBig.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -232,33 +236,41 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 rushWareViewHolder.gvRushZera.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        DecimalFormat df = new DecimalFormat("#0.00");
                         String couponsUrl = itemData.get(i).getCouponsUrl();
                         String link_url = itemData.get(i).getLink_url();
                         String goods_id = itemData.get(i).getProductId();
                         String goods_img = itemData.get(i).getImg_url();
                         String goods_title = itemData.get(i).getTitle();
-                        if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
-                            if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
-                                Intent intent = new Intent(context, WebActivity.class);
-                                intent.putExtra("web_url",couponsUrl);
-                                intent.putExtra("url", link_url);
-                                intent.putExtra("goods_id", goods_id);
-                                intent.putExtra("goods_img", goods_img);
-                                intent.putExtra("goods_title", goods_title);
-                                context.startActivity(intent);
+                        double sell_price = itemData.get(i).getSell_price();
+                        int couponsPrice = itemData.get(i).getCouponsPrice();
+                        if(couponsPrice>0) {
+                                if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
+                                    Intent intent = new Intent(context, WebActivity.class);
+                                    intent.putExtra("web_url",couponsUrl);
+                                    intent.putExtra("url", link_url);
+                                    intent.putExtra("goods_id", goods_id);
+                                    intent.putExtra("goods_img", goods_img);
+                                    intent.putExtra("goods_title", goods_title);
+                                    intent.putExtra("goods_price", df.format(sell_price)+"");
+                                    intent.putExtra("goods_coupon", String.valueOf(couponsPrice));
+                                    intent.putExtra("goods_coupon_url", couponsUrl);
+                                    context.startActivity(intent);
                             }
-                        }else{
+                        } else{
                             Intent intent = new Intent(context, WebRecordActivity.class);
                             intent.putExtra("url", link_url);
                             intent.putExtra("goods_id", goods_id);
                             intent.putExtra("goods_img", goods_img);
                             intent.putExtra("goods_title", goods_title);
+                            intent.putExtra("goods_price", df.format(sell_price)+"");
                             context.startActivity(intent);
                         }
                     }
                 });
             }
         } else if (holder instanceof GroupViewHolder) {
+            LogUtil.e("==================groupData.size() ==" + groupData.size());
             GroupViewHolder groupViewHolder = (GroupViewHolder) holder;
             TextView tvTitle = groupViewHolder.tvTitle;
             tvTitle.setText("团购区");
@@ -326,10 +338,13 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             groupViewHolder.ll_group_big.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    DecimalFormat df = new DecimalFormat("#0.00");
                     String link_url = dataBean.getLink_url();
                     String goods_id = dataBean.getProductId();
                     String goods_img = dataBean.getImg_url();
                     String goods_title = dataBean.getTitle();
+                    double goods_price = dataBean.getSell_price();
+                    int goods_coupon = dataBean.getCouponsPrice();
                     if (couponsPrice > 0) {
                         if (couponsUrl != null && !TextUtils.isEmpty(couponsUrl)) {
                             Intent intent = new Intent(context, WebActivity.class);
@@ -338,6 +353,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             intent.putExtra("goods_id", goods_id);
                             intent.putExtra("goods_img", goods_img);
                             intent.putExtra("goods_title", goods_title);
+                            intent.putExtra("goods_price", df.format(goods_price)+"");
+                            intent.putExtra("goods_coupon",String.valueOf(goods_coupon));
+                            intent.putExtra("goods_coupon_url",couponsUrl);
                             context.startActivity(intent);
                         }
                     } else {
@@ -346,6 +364,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         intent.putExtra("goods_id", goods_id);
                         intent.putExtra("goods_img", goods_img);
                         intent.putExtra("goods_title", goods_title);
+                        intent.putExtra("goods_price", df.format(goods_price)+"");
                         context.startActivity(intent);
                     }
                 }
@@ -422,10 +441,13 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             childLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    DecimalFormat df = new DecimalFormat("#0.00");
                     String link_url = groupBean1.getLink_url();
                     String goods_id = groupBean1.getProductId();
                     String goods_img = groupBean1.getImg_url();
                     String goods_title = groupBean1.getTitle();
+                    double goods_price = groupBean1.getSell_price();
+                    int goods_coupons = groupBean1.getCouponsPrice();
                     if (couponsPrice1 > 0) {
                         if (couponsUrl1 != null && !TextUtils.isEmpty(couponsUrl1)) {
                             Intent intent = new Intent(context, WebActivity.class);
@@ -434,6 +456,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             intent.putExtra("goods_id", goods_id);
                             intent.putExtra("goods_img", goods_img);
                             intent.putExtra("goods_title", goods_title);
+                            intent.putExtra("goods_price", df.format(goods_price)+"");
+                            intent.putExtra("goods_coupon",String.valueOf(goods_coupons));
+                            intent.putExtra("goods_coupon_url",couponsUrl1);
                             context.startActivity(intent);
                         }
                     } else {
@@ -442,6 +467,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         intent.putExtra("goods_id", goods_id);
                         intent.putExtra("goods_img", goods_img);
                         intent.putExtra("goods_title", goods_title);
+                        intent.putExtra("goods_price", df.format(goods_price)+"");
                         context.startActivity(intent);
                     }
                 }
@@ -523,10 +549,13 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 childRight.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        DecimalFormat df = new DecimalFormat("#0.00");
                         String link_url = groupBean2.getLink_url();
                         String goods_id = groupBean2.getProductId();
                         String goods_img = groupBean2.getImg_url();
                         String goods_title = groupBean2.getTitle();
+                        double goods_price = groupBean2.getSell_price();
+                        int goods_coupons = groupBean2.getCouponsPrice();
                         if (couponsPrice2 > 0) {
                             if (couponsUrl2 != null && !TextUtils.isEmpty(couponsUrl2)) {
                                 Intent intent = new Intent(context, WebActivity.class);
@@ -535,6 +564,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 intent.putExtra("goods_id", goods_id);
                                 intent.putExtra("goods_img", goods_img);
                                 intent.putExtra("goods_title", goods_title);
+                                intent.putExtra("goods_price", df.format(goods_price)+"");
+                                intent.putExtra("goods_coupon",String.valueOf(goods_coupons));
+                                intent.putExtra("goods_coupon_url",couponsUrl2);
                                 context.startActivity(intent);
                             }
                         } else {
@@ -543,6 +575,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             intent.putExtra("goods_id", goods_id);
                             intent.putExtra("goods_img", goods_img);
                             intent.putExtra("goods_title", goods_title);
+                            intent.putExtra("goods_price", df.format(goods_price)+"");
                             context.startActivity(intent);
                         }
                     }
@@ -551,25 +584,34 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
         } else if (holder instanceof FirstBuyViewHolder) {
             final QiangTaoBean.DataBean dataBean0 = qiangData.get(0);
+            final String hour = getCurrentHour();
+            final int curr_index = Integer.parseInt(hour);
             FirstBuyViewHolder firstBuyViewHoldre = (FirstBuyViewHolder) holder;
             TextView tvTitle = firstBuyViewHoldre.tvTitle;
             tvTitle.setText("抢购区");
             firstBuyViewHoldre.rl_item_laod_more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, QiangTaoActivity.class);
-                    context.startActivity(intent);
+                    if(curr_index>=0 && curr_index<8) {
+                        Toast.makeText(context, "活动在早上8点准时开启，请耐心等待！", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Intent intent = new Intent(context, QiangTaoActivity.class);
+                        context.startActivity(intent);
+                    }
                 }
             });
 
-            String hour = getCurrentHour();
-            int curr_index = Integer.parseInt(hour);
             firstBuyViewHoldre.tv_first_big_time.setText("距离第" + (curr_index + 1) + "场倒计时");
             firstBuyViewHoldre.llFirstLeftZero.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, QiangTaoActivity.class);
-                    context.startActivity(intent);
+                    if(curr_index>=0 && curr_index<8) {
+                        Toast.makeText(context, "活动在早上8点准时开启，请耐心等待！", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Intent intent = new Intent(context, QiangTaoActivity.class);
+                        context.startActivity(intent);
+                    }
+
                 }
             });
             if (dataBean0.getTitle().length() > 12) {
@@ -579,9 +621,12 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
             DecimalFormat df = new DecimalFormat("#0.00");
             double sellPrice = Double.parseDouble(dataBean0.getSell_price());
-            QiangTaoBean.DataBean.CouponInfoBean coupon_info = dataBean0.getCoupon_info();
-            String max_commission_rate = coupon_info.getMax_commission_rate();
-            double rate = Double.parseDouble(max_commission_rate)/100;
+            final QiangTaoBean.DataBean.CouponInfoBean coupon_info = dataBean0.getCoupon_info();
+            double rate = 0;
+            if(coupon_info!=null) {
+                String max_commission_rate = coupon_info.getMax_commission_rate();
+                rate = Double.parseDouble(max_commission_rate)/100;
+            }
             firstBuyViewHoldre.tvFirstBigPrice.setText("￥" + df.format(sellPrice));
             //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
             if (shopType == 1) {
@@ -687,10 +732,26 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         @Override
                         public void onClick(View view) {
                             if (pos == 0) {
+                                if(curr_index>=0 && curr_index<8) {
+                                    Toast.makeText(context, "活动在早上8点准时开启，请耐心等待！", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
                                 String link_url = dataBean1.getLink_url();
                                 String goods_id = String.valueOf(dataBean1.getProductId());
                                 String goods_img = dataBean1.getImg_url();
                                 String goods_title = dataBean1.getTitle();
+                                String goods_price = dataBean1.getSell_price();
+                                int goods_coupon = 0;
+                                QiangTaoBean.DataBean.CouponInfoBean coupon_infos = dataBean1.getCoupon_info();
+                                if(coupon_infos!=null) {
+                                    String coupon_info_s = coupon_infos.getCoupon_info();
+                                    if(coupon_info_s!=null && !TextUtils.isEmpty(coupon_info_s)) {
+                                        int index = coupon_info_s.indexOf("减") + 1;
+                                        String curr_coupon = coupon_info_s.substring(index, coupon_info_s.length() - 1);
+                                        goods_coupon = Integer.parseInt(curr_coupon);
+                                    }
+                                }
                                 if (finalCoupon_info_s != null && !TextUtils.isEmpty(finalCoupon_info_s)) {
                                     Intent intent = new Intent(context, WebActivity.class);
                                     intent.putExtra("web_url", finalCoupon_click_url_s);
@@ -698,6 +759,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     intent.putExtra("goods_id", goods_id);
                                     intent.putExtra("goods_img", goods_img);
                                     intent.putExtra("goods_title", goods_title);
+                                    intent.putExtra("goods_price", goods_price);
+                                    intent.putExtra("goods_coupon",String.valueOf(goods_coupon));
+                                    intent.putExtra("goods_coupon_url",finalCoupon_click_url_s);
                                     context.startActivity(intent);
                                 } else {
                                     Intent intent = new Intent(context, WebRecordActivity.class);
@@ -705,13 +769,29 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     intent.putExtra("goods_id", goods_id);
                                     intent.putExtra("goods_img", goods_img);
                                     intent.putExtra("goods_title", goods_title);
+                                    intent.putExtra("goods_price", goods_price);
                                     context.startActivity(intent);
                                 }
                             } else if (pos == 2) {
+                                if(curr_index>=0 && curr_index<8) {
+                                    Toast.makeText(context, "活动在早上8点准时开启，请耐心等待！", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                                 String link_url = dataBean2.getLink_url();
                                 String goods_id = String.valueOf(dataBean2.getProductId());
                                 String goods_img = dataBean2.getImg_url();
                                 String goods_title = dataBean2.getTitle();
+                                String goods_price = dataBean2.getSell_price();
+                                int goods_coupon = 0;
+                                QiangTaoBean.DataBean.CouponInfoBean coupon_infos = dataBean2.getCoupon_info();
+                                if(coupon_infos!=null) {
+                                    String coupon_info_s = coupon_infos.getCoupon_info();
+                                    if(coupon_info_s!=null && !TextUtils.isEmpty(coupon_info_s)) {
+                                        int index = coupon_info_s.indexOf("减") + 1;
+                                        String curr_coupon = coupon_info_s.substring(index, coupon_info_s.length() - 1);
+                                        goods_coupon = Integer.parseInt(curr_coupon);
+                                    }
+                                }
                                 if (finalCoupon_info_s1 != null && !TextUtils.isEmpty(finalCoupon_info_s1)) {
                                     Intent intent = new Intent(context, WebActivity.class);
                                     intent.putExtra("web_url", finalCoupon_click_url_s1);
@@ -719,6 +799,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     intent.putExtra("goods_id", goods_id);
                                     intent.putExtra("goods_img", goods_img);
                                     intent.putExtra("goods_title", goods_title);
+                                    intent.putExtra("goods_price", goods_price);
+                                    intent.putExtra("goods_coupon",String.valueOf(goods_coupon));
+                                    intent.putExtra("goods_coupon_url",finalCoupon_click_url_s1);
                                     context.startActivity(intent);
                                 } else {
                                     Intent intent = new Intent(context, WebRecordActivity.class);
@@ -726,6 +809,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     intent.putExtra("goods_id", goods_id);
                                     intent.putExtra("goods_img", goods_img);
                                     intent.putExtra("goods_title", goods_title);
+                                    intent.putExtra("goods_price", goods_price);
                                     context.startActivity(intent);
                                 }
                             }
@@ -863,15 +947,18 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             homeVipViewHolder.llFirstLeftZero.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                        String link_url = dataBean.getLink_url();
+                    DecimalFormat df = new DecimalFormat("#0.00");
+                    String link_url = dataBean.getLink_url();
                         String goods_id = String.valueOf(dataBean.getProductId());
                         String goods_img = dataBean.getImg_url();
                         String goods_title = dataBean.getTitle();
+                        double goods_price = dataBean.getSell_price();
                         Intent intent = new Intent(context, WebRecordActivity.class);
                         intent.putExtra("url", link_url);
                         intent.putExtra("goods_id", goods_id);
                         intent.putExtra("goods_img", goods_img);
                         intent.putExtra("goods_title", goods_title);
+                        intent.putExtra("goods_price", df.format(goods_price)+"");
                         context.startActivity(intent);
                 }
             });
@@ -994,15 +1081,18 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         childAt.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                    String link_url = dataBean1.getLink_url();
+                                DecimalFormat df = new DecimalFormat("#0.00");
+                                String link_url = dataBean1.getLink_url();
                                     String goods_id = String.valueOf(dataBean1.getProductId());
                                     String goods_img = dataBean1.getImg_url();
                                     String goods_title = dataBean1.getTitle();
+                                    double goods_price = dataBean1.getSell_price();
                                     Intent intent = new Intent(context, WebRecordActivity.class);
                                     intent.putExtra("url", link_url);
                                     intent.putExtra("goods_id", goods_id);
                                     intent.putExtra("goods_img", goods_img);
                                     intent.putExtra("goods_title", goods_title);
+                                    intent.putExtra("goods_price", df.format(goods_price)+"");
                                     context.startActivity(intent);
                             }
                         });
@@ -1083,15 +1173,18 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         childAt.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                    String link_url = dataBean2.getLink_url();
+                                DecimalFormat df = new DecimalFormat("#0.00");
+                                String link_url = dataBean2.getLink_url();
                                     String goods_id = String.valueOf(dataBean2.getProductId());
                                     String goods_img = dataBean2.getImg_url();
                                     String goods_title = dataBean2.getTitle();
+                                    double goods_price = dataBean2.getSell_price();
                                     Intent intent = new Intent(context, WebRecordActivity.class);
                                     intent.putExtra("url", link_url);
                                     intent.putExtra("goods_id", goods_id);
                                     intent.putExtra("goods_img", goods_img);
                                     intent.putExtra("goods_title", goods_title);
+                                    intent.putExtra("goods_price", df.format(goods_price)+"");
                                     context.startActivity(intent);
                             }
                         });
@@ -1265,11 +1358,11 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     class RushWareViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.gv_rush_zera)
-        GridView gvRushZera;
+        MyFillGridView gvRushZera;
         @Bind(R.id.tv_rush_more_title)
         TextView tvRushMoreTitle;
         @Bind(R.id.iv_rush_more_big)
-        ImageView ivRushMoreBig;
+        MyImageView ivRushMoreBig;
 
         public RushWareViewHolder(View itemView) {
             super(itemView);
@@ -1414,14 +1507,15 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      * 首页分类的数据展示
      *
      * @param gvHomeType
+     * @param typeData
      */
-    private void loadTypeData(GridView gvHomeType) {
+    private void loadTypeData(GridView gvHomeType, List<TyepIndexBean.DataBean> typeData) {
         ArrayList<HomeTypeBean> lists = new ArrayList<>();
         for (int i = 0; i < HomeData.titles.length; i++) {
             HomeTypeBean homeTypeBean = new HomeTypeBean(HomeData.imgs[i], HomeData.titles[i]);
             lists.add(homeTypeBean);
         }
-        HomeTypeAdapter homeTypeAdapter = new HomeTypeAdapter(context, lists);
+        HomeTypeAdapter homeTypeAdapter = new HomeTypeAdapter(context, lists,typeData);
         gvHomeType.setAdapter(homeTypeAdapter);
     }
 
@@ -1438,6 +1532,5 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
     }
-
 
 }

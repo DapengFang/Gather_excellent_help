@@ -123,6 +123,7 @@ public class TaobaoFragment extends BaseFragment {
     public void initData() {
         rlExit.setVisibility(View.INVISIBLE);
         netUtil = new NetUtil();
+        showLoading();
         searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
@@ -171,13 +172,19 @@ public class TaobaoFragment extends BaseFragment {
                                         String goods_id = String.valueOf(taobaodata.get(i).getProductId());
                                         String goods_img = taobaodata.get(i).getImg_url();
                                         String goods_title = taobaodata.get(i).getTitle();
+                                        String sell_price = taobaodata.get(i).getSell_price();
                                         if(coupon_info_s!=null && !TextUtils.isEmpty(coupon_info_s)) {
+                                            int index = coupon_info_s.indexOf("减")+1;
+                                            String coupon = coupon_info_s.substring(index, coupon_info_s.length() - 1);
                                             Intent intent = new Intent(getContext(), WebActivity.class);
                                             intent.putExtra("web_url", coupon_click_url);
                                             intent.putExtra("url",link_url);
                                             intent.putExtra("goods_id",goods_id);
                                             intent.putExtra("goods_img",goods_img);
                                             intent.putExtra("goods_title",goods_title);
+                                            intent.putExtra("goods_price",sell_price);
+                                            intent.putExtra("goods_coupon",coupon);
+                                            intent.putExtra("goods_coupon_url",coupon_click_url);
                                             startActivity(intent);
                                         }else{
                                             Intent intent = new Intent(getContext(), WebRecordActivity.class);
@@ -185,6 +192,7 @@ public class TaobaoFragment extends BaseFragment {
                                             intent.putExtra("goods_id",goods_id);
                                             intent.putExtra("goods_img",goods_img);
                                             intent.putExtra("goods_title",goods_title);
+                                            intent.putExtra("goods_price",sell_price);
                                             startActivity(intent);
                                         }
                                     }else{
@@ -192,11 +200,13 @@ public class TaobaoFragment extends BaseFragment {
                                         String goods_id = String.valueOf(taobaodata.get(i).getProductId());
                                         String goods_img = taobaodata.get(i).getImg_url();
                                         String goods_title = taobaodata.get(i).getTitle();
+                                        String sell_price = taobaodata.get(i).getSell_price();
                                         Intent intent = new Intent(getContext(), WebRecordActivity.class);
                                         intent.putExtra("url",link_url);
                                         intent.putExtra("goods_id",goods_id);
                                         intent.putExtra("goods_img",goods_img);
                                         intent.putExtra("goods_title",goods_title);
+                                        intent.putExtra("goods_price",sell_price);
                                         startActivity(intent);
                                     }
 
@@ -233,7 +243,7 @@ public class TaobaoFragment extends BaseFragment {
 
                             }
                         });
-
+                        llTaobaoLoadmore.setVisibility(View.GONE);
                         break;
                     case 0:
                         if(getContext()==null) {
@@ -266,6 +276,16 @@ public class TaobaoFragment extends BaseFragment {
             llTaobaoLoadmore.setVisibility(View.VISIBLE);
             TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(1);
             tvTitle.setText("加载更多...");
+        }
+    }
+    /**
+     * 显示正在加载中
+     */
+    private void showLoading() {
+        if(llTaobaoLoadmore!=null) {
+            llTaobaoLoadmore.setVisibility(View.VISIBLE);
+            TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(1);
+            tvTitle.setText("正在加载中...");
         }
     }
 
@@ -324,6 +344,7 @@ public class TaobaoFragment extends BaseFragment {
                    type ="4";
                    page_no = "1";
                    isLoadmore = -1;
+                   showLoading();
                    searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
                    break;
                case R.id.ll_taobao_price:
@@ -339,6 +360,7 @@ public class TaobaoFragment extends BaseFragment {
                    }else{
                        type = "5";
                    }
+                   showLoading();
                    searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
                    break;
                case R.id.ll_taobao_shaixuan:
@@ -360,6 +382,7 @@ public class TaobaoFragment extends BaseFragment {
                        return;
                    }
                    keyword = sousuoStr;
+                   page_no = "1";
                    searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
                    break;
            }
@@ -374,7 +397,6 @@ public class TaobaoFragment extends BaseFragment {
         if(getContext()==null) {
             return;
         }
-        Toast.makeText(getContext(), "正在加载中，请稍后！", Toast.LENGTH_SHORT).show();
         map = new HashMap<>();
         map.put("keyword",keyword);
         map.put("city",city);
@@ -437,6 +459,7 @@ public class TaobaoFragment extends BaseFragment {
                     is_tmall = "0";
                 }
                 city =c;
+                showLoading();
                 searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
                 if(taobaoShaixuanPopupwindow.isShowing()) {
                     handler.postDelayed(new Runnable() {
@@ -452,6 +475,7 @@ public class TaobaoFragment extends BaseFragment {
             @Override
             public void onListClick(String c) {
                 city = c;
+                showLoading();
                 searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
                 if(taobaoShaixuanPopupwindow.isShowing()) {
                     handler.postDelayed(new Runnable() {
@@ -482,6 +506,7 @@ public class TaobaoFragment extends BaseFragment {
             public void onSelectedPos(int pos) {
                 int types = pos+1;
                 type = String.valueOf(types);
+                showLoading();
                 searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);
                 if(taobaoZonghePopupwindow.isShowing()) {
                     handler.postDelayed(new Runnable() {

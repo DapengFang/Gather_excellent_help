@@ -113,6 +113,7 @@ public class WebRecordActivity extends BaseActivity {
     private String avatarUrl = "";
     private String nick = "";
     private String adverId = "";
+    private String goods_price = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +135,7 @@ public class WebRecordActivity extends BaseActivity {
         goods_id = intent.getStringExtra("goods_id");
         goods_img = intent.getStringExtra("goods_img");
         goods_title = intent.getStringExtra("goods_title");
+        goods_price = intent.getStringExtra("goods_price");
 
         WebSettings webSettings = wvBanner.getSettings();
         //设置此属性，可任意比例缩放
@@ -336,7 +338,7 @@ public class WebRecordActivity extends BaseActivity {
        TextView tvCopyContent = (TextView) inflate.findViewById(R.id.tv_copy_taoword_content);
        TextView tvCopyDismiss = (TextView) inflate.findViewById(R.id.tv_copy_taoword_dismiss);
        TextView tvCopyShare = (TextView) inflate.findViewById(R.id.tv_copy_taoword_share);
-       final String share_content = goods_title+"复制这条消息"+taoWord+"去打开手机淘宝";
+       final String share_content = "商品名称:"+goods_title+"\n商品价格￥"+goods_price+"\n复制这条消息:"+taoWord+"\n去打开手机淘宝";
        tvCopyContent.setText(share_content);
        final AlertDialog dialog = builder.setView(inflate)
                .show();

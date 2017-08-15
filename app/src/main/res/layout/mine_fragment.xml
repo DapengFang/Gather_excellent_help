@@ -325,7 +325,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/x1"
-            android:background="#efefef" />
+            android:background="#efefef"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/ll_mine_juyoubang_order"
@@ -334,7 +335,7 @@
             android:background="#ffffff"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"

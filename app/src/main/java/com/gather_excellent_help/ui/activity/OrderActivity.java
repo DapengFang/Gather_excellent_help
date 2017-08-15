@@ -48,6 +48,7 @@ public class OrderActivity extends BaseActivity {
     @Bind(R.id.vid_order_manager)
     ViewpagerIndicator vid_order_manager;
 
+
     private String[] tabs = {"全部","待付款", "已付款", "已完成", "退款/售后"};
     private OrderManagerAdapter orderManagerAdapter;
     private OrderAllAdapter orderAllAdapter;
@@ -96,9 +97,9 @@ public class OrderActivity extends BaseActivity {
                 }
             },20);
             if(tab_p==0) {
-                  curr_statue = 5;
+                curr_statue = 5;
             }else {
-                 curr_statue =tab_p;
+                curr_statue =tab_p;
             }
             isLoaderMore = false;
             net2ServerOrder(curr_statue);
@@ -188,7 +189,11 @@ public class OrderActivity extends BaseActivity {
             orderAllAdapter.notifyDataSetChanged();
         }else{
             allData = data;
-            orderAllAdapter = new OrderAllAdapter(OrderActivity.this, allData,curr_statue);
+            if(order_type == -1) {
+                orderAllAdapter = new OrderAllAdapter(OrderActivity.this, allData,curr_statue,-1);
+            }else if(order_type == -2) {
+                orderAllAdapter = new OrderAllAdapter(OrderActivity.this, allData,curr_statue,-2);
+            }
             rcvOrderManager.setAdapter(orderAllAdapter);
             orderAllAdapter.notifyDataSetChanged();
         }

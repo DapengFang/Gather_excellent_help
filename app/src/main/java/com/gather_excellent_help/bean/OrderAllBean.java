@@ -56,7 +56,7 @@ public class OrderAllBean {
         private String create_time;
         private String tk_status;
         private String goodsImg;
-
+        private double amount;
         public String getTrade_id() {
             return trade_id;
         }
@@ -95,6 +95,14 @@ public class OrderAllBean {
 
         public void setGoodsImg(String goodsImg) {
             this.goodsImg = goodsImg;
+        }
+
+        public double getAmount() {
+            return amount;
+        }
+
+        public void setAmount(double amount) {
+            this.amount = amount;
         }
     }
 }

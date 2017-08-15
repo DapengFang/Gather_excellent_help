@@ -46,6 +46,7 @@ import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -178,11 +179,13 @@ public class TypeFragment extends BaseFragment {
                 typeWareAdapter.setOnItemClickListener(new TypeWareAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
+                        DecimalFormat df = new DecimalFormat("#0.00");
                         int couponsPrice = data.get(position).getCouponsPrice();
                         String link_url = data.get(position).getLink_url();
                         String goods_id = data.get(position).getProductId();
                         String goods_img = data.get(position).getImg_url();
                         String goods_title = data.get(position).getTitle();
+                        double sell_price = data.get(position).getSell_price();
                         if(couponsPrice>0) {
                             String couponsUrl = data.get(position).getCouponsUrl();
                             if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
@@ -192,6 +195,9 @@ public class TypeFragment extends BaseFragment {
                                 intent.putExtra("goods_id",goods_id);
                                 intent.putExtra("goods_img",goods_img);
                                 intent.putExtra("goods_title",goods_title);
+                                intent.putExtra("goods_price", df.format(sell_price)+"");
+                                intent.putExtra("goods_coupon",String.valueOf(couponsPrice));
+                                intent.putExtra("goods_coupon_url",couponsUrl);
                                 getContext().startActivity(intent);
                             }
                         }else{
@@ -200,6 +206,7 @@ public class TypeFragment extends BaseFragment {
                             intent.putExtra("goods_id",goods_id);
                             intent.putExtra("goods_img",goods_img);
                             intent.putExtra("goods_title",goods_title);
+                            intent.putExtra("goods_price", df.format(sell_price)+"");
                             getContext().startActivity(intent);
                         }
                     }

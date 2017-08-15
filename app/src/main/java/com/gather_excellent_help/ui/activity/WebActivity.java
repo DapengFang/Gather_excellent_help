@@ -79,6 +79,10 @@ public class WebActivity extends BaseActivity {
     private Map<String, String> map;
     private String which = "";
     private String taoWord = "";
+    private String adverId = "";
+    private String goods_price = "";
+    private String goods_coupon = "";
+    private String goods_coupon_url;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -97,7 +101,6 @@ public class WebActivity extends BaseActivity {
             }
         }
     };
-    private String adverId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,17 +129,22 @@ public class WebActivity extends BaseActivity {
                 goods_id = intent.getStringExtra("goods_id");
                 goods_img = intent.getStringExtra("goods_img");
                 goods_title = intent.getStringExtra("goods_title");
+                goods_price = intent.getStringExtra("goods_price");
+                goods_coupon = intent.getStringExtra("goods_coupon");
+                goods_coupon_url = intent.getStringExtra("goods_coupon_url");
                 boolean login = Tools.isLogin(this);
                 adverId = Tools.getAdverId(this);
                 if(login) {
                     boolean bindTao = Tools.isBindTao(this);
                     if(bindTao) {
-                        LogUtil.e("adverId = "+ adverId);
-                        which = "change_url";
-                        map = new HashMap<>();
-                        map.put("goodsId",goods_id);
-                        map.put("adzoneId", adverId);
-                        netUtil.okHttp2Server2(chang_url,map);
+//                        LogUtil.e("adverId = "+ adverId);
+//                        which = "change_url";
+//                        map = new HashMap<>();
+//                        map.put("goodsId",goods_id);
+//                        map.put("adzoneId", adverId);
+//                        netUtil.okHttp2Server2(chang_url,map);
+                        click_url = goods_coupon_url;
+                        handler.sendEmptyMessage(GET_URL);
                     }else{
                         Toast.makeText(WebActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
                         String userLogin = Tools.getUserLogin(this);
@@ -155,17 +163,22 @@ public class WebActivity extends BaseActivity {
             goods_id = intent.getStringExtra("goods_id");
             goods_img = intent.getStringExtra("goods_img");
             goods_title = intent.getStringExtra("goods_title");
+            goods_price = intent.getStringExtra("goods_price");
+            goods_coupon = intent.getStringExtra("goods_coupon");
+            goods_coupon_url = intent.getStringExtra("goods_coupon_url");
             boolean login = Tools.isLogin(this);
             adverId = Tools.getAdverId(this);
             if(login) {
                 boolean bindTao = Tools.isBindTao(this);
                 if(bindTao) {
-                    LogUtil.e("adverId = "+ adverId);
-                    which = "change_url";
-                    map = new HashMap<>();
-                    map.put("goodsId",goods_id);
-                    map.put("adzoneId", adverId);
-                    netUtil.okHttp2Server2(chang_url,map);
+//                    LogUtil.e("adverId = "+ adverId);
+//                    which = "change_url";
+//                    map = new HashMap<>();
+//                    map.put("goodsId",goods_id);
+//                    map.put("adzoneId", adverId);
+//                    netUtil.okHttp2Server2(chang_url,map);
+                    click_url = goods_coupon_url;
+                    handler.sendEmptyMessage(GET_URL);
                 }else{
                     Toast.makeText(WebActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
                     String userLogin = Tools.getUserLogin(this);
@@ -231,11 +244,13 @@ public class WebActivity extends BaseActivity {
             case 1 :
                 CacheUtils.putBoolean(WebActivity.this, CacheUtils.BIND_STATE, true);
                 CacheUtils.putString(WebActivity.this,CacheUtils.TAOBAO_NICK,nick);
-                which = "change_url";
-                map = new HashMap<>();
-                map.put("goodsId",goods_id);
-                map.put("adzoneId",adverId);
-                netUtil.okHttp2Server2(chang_url,map);
+//                which = "change_url";
+//                map = new HashMap<>();
+//                map.put("goodsId",goods_id);
+//                map.put("adzoneId",adverId);
+//                netUtil.okHttp2Server2(chang_url,map);
+                click_url = goods_coupon_url;
+                handler.sendEmptyMessage(GET_URL);
                 break;
             case 0:
                 Toast.makeText(WebActivity.this, "绑定淘宝失败", Toast.LENGTH_SHORT).show();
@@ -433,7 +448,7 @@ public class WebActivity extends BaseActivity {
         TextView tvCopyContent = (TextView) inflate.findViewById(R.id.tv_copy_taoword_content);
         TextView tvCopyDismiss = (TextView) inflate.findViewById(R.id.tv_copy_taoword_dismiss);
         TextView tvCopyShare = (TextView) inflate.findViewById(R.id.tv_copy_taoword_share);
-        final String share_content = goods_title+"复制这条消息"+taoWord+"去打开手机淘宝";
+        final String share_content = "商品名称:"+goods_title+"\n商品价格￥"+goods_price+"\n优惠券"+goods_coupon+"元"+"\n复制这条消息:"+taoWord+"\n去打开手机淘宝";
         tvCopyContent.setText(share_content);
         final AlertDialog dialog = builder.setView(inflate)
                 .show();

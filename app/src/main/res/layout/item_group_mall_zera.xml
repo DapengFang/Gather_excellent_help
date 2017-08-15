@@ -67,7 +67,8 @@ android:orientation="horizontal">
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="5">
+        android:layout_weight="5"
+        android:layout_marginRight="@dimen/x3">
         <ImageView
             android:id="@+id/iv_group_mall_pic"
             android:layout_width="match_parent"

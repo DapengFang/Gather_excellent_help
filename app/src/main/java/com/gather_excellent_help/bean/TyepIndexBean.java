@@ -51,6 +51,7 @@ public class TyepIndexBean {
 
         private int id;
         private String title;
+        private String img_url;
 
         public int getId() {
             return id;
@@ -66,6 +67,14 @@ public class TyepIndexBean {
 
         public void setTitle(String title) {
             this.title = title;
+        }
+
+        public String getImg_url() {
+            return img_url;
+        }
+
+        public void setImg_url(String img_url) {
+            this.img_url = img_url;
         }
     }
 }

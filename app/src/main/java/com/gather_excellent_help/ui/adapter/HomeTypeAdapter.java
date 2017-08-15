@@ -9,7 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.HomeTypeBean;
+import com.gather_excellent_help.bean.TyepIndexBean;
+import com.gather_excellent_help.utils.LogUtil;
+import com.gather_excellent_help.utils.imageutils.ImageLoader;
 
 import java.util.List;
 
@@ -22,10 +26,14 @@ public class HomeTypeAdapter extends BaseAdapter {
     private Context context;
     private List<HomeTypeBean> datas;
     private LayoutInflater inflater;    //布局填充器
+    private List<TyepIndexBean.DataBean> typeData;
+    private ImageLoader mImageLoader;
 
-    public HomeTypeAdapter(Context context, List<HomeTypeBean> datas) {
+    public HomeTypeAdapter(Context context, List<HomeTypeBean> datas, List<TyepIndexBean.DataBean> typeData) {
         this.context = context;
         this.datas = datas;
+        this.typeData = typeData;
+        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         inflater = LayoutInflater.from(context);
     }
 
@@ -47,6 +55,7 @@ public class HomeTypeAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         HomeTypeBean homeTypeBean = datas.get(position);
+        TyepIndexBean.DataBean dataBean = typeData.get(position);
         ViewHolder holder = null;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_text_pic, null);
@@ -57,8 +66,18 @@ public class HomeTypeAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.home_type_name.setText(homeTypeBean.getTypeName());
-        holder.home_type_photo.setImageResource(homeTypeBean.getId());
+        if(holder.home_type_name!=null) {
+            if(dataBean.getTitle()!=null) {
+                holder.home_type_name.setText(dataBean.getTitle());
+            }
+        }
+        if(holder.home_type_photo!=null) {
+            if(dataBean.getImg_url()!=null) {
+                mImageLoader.loadImage(Url.IMG_URL+dataBean.getImg_url(),holder.home_type_photo,true);
+            }else{
+                LogUtil.e("img==null");
+            }
+        }
         return convertView;
     }
 

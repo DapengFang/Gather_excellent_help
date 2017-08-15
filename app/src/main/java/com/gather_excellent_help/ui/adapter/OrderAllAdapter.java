@@ -16,6 +16,7 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.OrderAllBean;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import butterknife.Bind;
@@ -30,11 +31,13 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
     private ImageLoader mImageLoader;
     private List<OrderAllBean.DataBean> allData;
     private int curr_statue;
+    private int order_type;
 
-    public OrderAllAdapter(Context context, List<OrderAllBean.DataBean> allData, int curr_statue) {
+    public OrderAllAdapter(Context context, List<OrderAllBean.DataBean> allData, int curr_statue,int order_type) {
         this.context = context;
         this.allData = allData;
         this.curr_statue = curr_statue;
+        this.order_type = order_type;
         inflater = LayoutInflater.from(context);
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
@@ -48,9 +51,18 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
     @Override
     public void onBindViewHolder(OrderManagerViewHolder holder, int position) {
         OrderAllBean.DataBean dataBean = allData.get(position);
+        DecimalFormat df = new DecimalFormat("#0.00");
         holder.tvOrderAllTime.setText("下单时间:" + dataBean.getCreate_time());
-        holder.tvOrderAllPrice.setText("订单金额:" + dataBean.getPrice());
+        holder.tvOrderAllPrice.setText("订单金额:￥" + dataBean.getPrice());
         holder.tvOrderAllNumber.setText("订单号:" + dataBean.getTrade_id());
+        if(order_type == -1) {
+            holder.tv_order_zhuan.setVisibility(View.GONE);
+        }else if(order_type == -2) {
+            holder.tv_order_zhuan.setVisibility(View.VISIBLE);
+            holder.tv_order_zhuan.setText("赚:￥" + df.format(dataBean.getAmount()));
+        }else{
+            holder.tv_order_zhuan.setVisibility(View.GONE);
+        }
         String goodsImg = dataBean.getGoodsImg();
         String tk_status = dataBean.getTk_status();
         if(goodsImg!=null && !TextUtils.isEmpty(goodsImg)) {
@@ -100,6 +112,8 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
         TextView tvOrderAllStatue;
         @Bind(R.id.tv_order_all_seedetail)
         TextView tvOrderAllSeedetail;
+        @Bind(R.id.tv_order_zhuan)
+        TextView tv_order_zhuan;
         public OrderManagerViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

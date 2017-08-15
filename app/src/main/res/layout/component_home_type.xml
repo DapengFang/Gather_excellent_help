@@ -2,9 +2,10 @@
 <com.gather_excellent_help.ui.widget.MyGridView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/gv_home_type"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/x120"
+    android:layout_height="wrap_content"
     android:numColumns="4"
     android:padding="@dimen/x5"
+    android:gravity="center"
     android:background="@color/white">
 
 </com.gather_excellent_help.ui.widget.MyGridView>

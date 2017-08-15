@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/x205"
     android:gravity="center">
     <RelativeLayout
         android:layout_width="@dimen/x80"
@@ -63,10 +64,10 @@
             android:textSize="10sp"
             android:text="到手价：￥5623.00"
             android:textColor="#99000000"/>
-        <TextView
+        <com.gather_excellent_help.ui.widget.MyTextView
             android:id="@+id/tv_rush_ware_coupons"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/x30"
             android:text="领券立减200"
             android:textColor="@color/white"
             android:textSize="10sp"

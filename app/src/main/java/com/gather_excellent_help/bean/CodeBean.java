@@ -49,7 +49,7 @@ public class CodeBean {
 
         private Integer id;
         private int group_type;
-        private int user_get_ratio;
+        private double user_get_ratio;
 
         public Integer getId() {
             return id;
@@ -67,11 +67,11 @@ public class CodeBean {
             this.group_type = group_type;
         }
 
-        public int getUser_get_ratio() {
+        public double getUser_get_ratio() {
             return user_get_ratio;
         }
 
-        public void setUser_get_ratio(int user_get_ratio) {
+        public void setUser_get_ratio(double user_get_ratio) {
             this.user_get_ratio = user_get_ratio;
         }
     }

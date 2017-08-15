@@ -153,7 +153,7 @@ public class AlipayManagerActivity extends BaseActivity {
             return;
         }
         key = String.valueOf(System.currentTimeMillis());
-        String orderInfo = getOrderInfo("聚优帮加盟", "聚优帮-商家-加盟", "0.01");
+        String orderInfo = getOrderInfo("聚优帮加盟", "聚优帮-商家-加盟", "200.00");
         String sign = sign(orderInfo);
         try {
             /**

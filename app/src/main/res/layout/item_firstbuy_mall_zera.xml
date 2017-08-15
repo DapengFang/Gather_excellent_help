@@ -17,6 +17,7 @@
         android:layout_weight="2"
         android:orientation="vertical"
         android:paddingLeft="@dimen/x3"
+        android:paddingRight="@dimen/x3"
         android:gravity="center_vertical">
         <TextView
             android:id="@+id/tv_first_small_title"
@@ -28,7 +29,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/x10">
+            android:layout_height="@dimen/x15">
             <ImageView
                  android:id="@+id/iv_first_mall_bg"
                 android:layout_width="wrap_content"

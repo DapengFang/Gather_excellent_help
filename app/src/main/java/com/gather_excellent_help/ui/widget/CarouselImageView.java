@@ -33,7 +33,7 @@ public class CarouselImageView extends LinearLayout {
     /**
      * 图片轮播视图
      */
-    private ViewPager mAdvPager = null;
+    private WrapContentHeightViewPager mAdvPager = null;
     /**
      * 滚动图片视图适配
      */
@@ -84,7 +84,7 @@ public class CarouselImageView extends LinearLayout {
         mContext = context;
         mScale = context.getResources().getDisplayMetrics().density;
         LayoutInflater.from(context).inflate(R.layout.ad_cycle_view, this);
-        mAdvPager = (ViewPager) findViewById(R.id.adv_pager);
+        mAdvPager = (WrapContentHeightViewPager) findViewById(R.id.adv_pager);
         mAdvPager.addOnPageChangeListener(new GuidePageChangeListener());
         mAdvPager.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -280,7 +280,9 @@ public class CarouselImageView extends LinearLayout {
             ImageView imageView;
             if (mImageViewCacheList.isEmpty()) {
                 imageView = new ImageView(mContext);
+                imageView.setAdjustViewBounds(true);
                 imageView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                imageView.setImageResource(R.drawable.zhanwei_gray);
             } else {
                 imageView = mImageViewCacheList.remove(0);
             }
