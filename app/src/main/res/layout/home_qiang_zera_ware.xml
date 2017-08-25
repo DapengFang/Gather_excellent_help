@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_qiang_right_ware"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3">
+
+        <ImageView
+            android:id="@+id/iv_qiang_ware_img"
+            android:layout_width="@dimen/x78"
+            android:layout_height="@dimen/x78"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:id="@+id/tv_qiang_ware_coupon"
+            android:layout_width="@dimen/x43"
+            android:layout_height="@dimen/x10"
+            android:layout_alignTop="@id/iv_qiang_ware_img"
+            android:layout_alignRight="@id/iv_qiang_ware_img"
+            android:background="@drawable/juxing_coupon_shape"
+            android:gravity="center"
+            android:text="领券减200"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x6"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/x10"
+        android:paddingRight="@dimen/x6"
+        android:paddingTop="@dimen/x6">
+
+        <TextView
+            android:id="@+id/tv_qiang_ware_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x15"
+            android:lineSpacingExtra="@dimen/x2"
+            android:text="正品长虹全自动洗衣机7.5KG家用大容量波"
+            android:textColor="#333333"
+            android:textSize="@dimen/x12" />
+
+        <RelativeLayout
+            android:id="@+id/rl_qiang_ware_count"
+            android:layout_width="@dimen/x100"
+            android:layout_height="@dimen/x8"
+            android:layout_marginTop="@dimen/x8"
+            android:background="@drawable/white_qiang_bg_shape">
+
+            <View
+                android:id="@+id/v_qiang_ware_progress"
+                android:layout_width="@dimen/x30"
+                android:layout_height="match_parent"
+                android:background="@drawable/red_qiang_progress_shape" />
+
+            <TextView
+                android:id="@+id/tv_qiang_ware_percent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/x5"
+                android:text="20%"
+                android:textColor="#FA2D3B"
+                android:textSize="@dimen/x6" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_qiang_ware_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x3"
+            android:text="已抢25件"
+            android:textColor="#CCCCCC"
+            android:textSize="@dimen/x8"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/x4"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_qiang_ware_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="￥2000.00"
+                android:textColor="#FA2D3B"
+                android:textSize="@dimen/x14"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="@dimen/x5"
+                android:text="现价"
+                android:textColor="#55000000"
+                android:textSize="@dimen/x10" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_qiang_ware_zhuan"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x12"
+            android:layout_marginTop="@dimen/x3"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_qiang_ware_zhuan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="￥22.55"
+                android:layout_gravity="bottom"
+                android:textColor="#ff6600"
+                android:textSize="@dimen/x9" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="@dimen/x2"
+                android:text="赚"
+                android:textColor="#ff6600"
+                android:textSize="@dimen/x6" />
+
+            <TextView
+                android:id="@+id/tv_qiang_ware_coast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x8"
+                android:text="￥1177.45"
+                android:layout_gravity="bottom"
+                android:textColor="#ff6600"
+                android:textSize="@dimen/x9" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="@dimen/x2"
+                android:text="成本"
+                android:textColor="#ff6600"
+                android:textSize="@dimen/x6" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

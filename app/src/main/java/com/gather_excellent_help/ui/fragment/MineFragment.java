@@ -316,7 +316,7 @@ public class MineFragment extends BaseFragment {
     private void loadCuserDefault() {
         llMineCompontFirst.setVisibility(View.VISIBLE);
         llMineCompontSecond.setVisibility(View.GONE);
-        tvMineCompontL01.setText("商家入驻");
+        tvMineCompontL01.setText("实体申请入驻");
         tvMineCompontL03.setText("帮助");
         llMineUserBack.setVisibility(View.INVISIBLE);
         llMineZhuanOrder.setVisibility(View.GONE);
@@ -564,7 +564,11 @@ public class MineFragment extends BaseFragment {
                     netUtils2.okHttp2Server2(rule_url, null);
                     break;
                 case R.id.civ_me_head_icon:
-                    toSetActivity();
+                    if(login) {
+                        toSetActivity();
+                    }else{
+                        toLogin();
+                    }
                     break;
             }
         }

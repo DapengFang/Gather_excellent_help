@@ -6,8 +6,7 @@
     <com.gather_excellent_help.ui.widget.WrapContentHeightViewPager
         android:id="@+id/adv_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#11000000">
+        android:layout_height="wrap_content">
     </com.gather_excellent_help.ui.widget.WrapContentHeightViewPager>
 
     <LinearLayout

@@ -3,16 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_ware_list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context="com.gather_excellent_help.ui.activity.WareListActivity">
 
     <LinearLayout
+        android:id="@+id/ll_ware_list_sousuo"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x45"
         android:background="#eeff0000"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
         <RelativeLayout
             android:id="@+id/rl_exit"
             android:layout_width="@dimen/x40"
@@ -31,29 +33,38 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/x35"
             android:layout_weight="1"
-            android:background="#ffffff">
+            android:background="@drawable/gray_sousuo_stroke_shape">
+
+            <ImageView
+                android:id="@+id/iv_ware_list_shape"
+                android:layout_width="@dimen/x18"
+                android:layout_height="@dimen/x18"
+                android:src="@drawable/sousuo_shape"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/x3"/>
             <EditText
                 android:id="@+id/et_ware_list_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/gray_sousuo_stroke_shape"
-                android:textColor="#99000000"
-                android:textSize="14sp"
                 android:cursorVisible="true"
-                android:paddingLeft="@dimen/x3"/>
+                android:paddingLeft="@dimen/x3"
+                android:textColor="#99000000"
+                android:background="@null"
+                android:layout_toRightOf="@id/iv_ware_list_shape"
+                android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/tv_ware_list_old"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="#99000000"
-                    android:drawableRight="@drawable/sousuo_guanbi"
-                    android:drawablePadding="@dimen/x8"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/x3"
-                    android:padding="@dimen/x5"
-                    android:background="#22000000"/>
+            <TextView
+                android:id="@+id/tv_ware_list_old"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/x3"
+                android:background="#22000000"
+                android:drawablePadding="@dimen/x8"
+                android:drawableRight="@drawable/sousuo_guanbi"
+                android:padding="@dimen/x5"
+                android:textColor="#99000000"
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
@@ -61,233 +72,257 @@
             android:id="@+id/rl_sousuo"
             android:layout_width="@dimen/x60"
             android:layout_height="@dimen/x40">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:text="搜索"
                 android:textColor="@color/white"
-                android:textSize="14sp"
-                android:layout_centerInParent="true"/>
+                android:textSize="14sp" />
         </RelativeLayout>
 
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/x1"
-        android:background="#22000000"/>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/x50"
-    android:background="#ffffff"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:visibility="gone">
-<LinearLayout
-    android:layout_width="0dp"
-    android:layout_height="match_parent"
-    android:layout_weight="1"
-    android:orientation="horizontal"
-    android:gravity="center">
+        android:background="#22000000" />
 
     <LinearLayout
-        android:id="@+id/ll_ware_list_price"
-        android:layout_width="@dimen/x60"
-        android:layout_height="@dimen/x30"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x50"
+        android:background="#ffffff"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:background="#11000000">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="价格"
-            android:textSize="14sp"
-            android:textColor="#55000000"/>
+        android:visibility="visible">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
-            android:layout_marginLeft="@dimen/x8">
-            <ImageView
-                android:id="@+id/iv_up_price"
-                android:layout_width="@dimen/x7"
-                android:layout_height="@dimen/x7"
-                android:src="@drawable/up_black_arraw"/>
-            <ImageView
-                android:id="@+id/iv_down_price"
-                android:layout_width="@dimen/x7"
-                android:layout_height="@dimen/x7"
-                android:src="@drawable/down_gray_arraw" />
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/ll_ware_list_price"
+                android:layout_width="@dimen/x60"
+                android:layout_height="@dimen/x30"
+                android:background="@drawable/gray_cordor_solid_shape"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="价格"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x8"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_up_price"
+                        android:layout_width="@dimen/x7"
+                        android:layout_height="@dimen/x7"
+                        android:src="@drawable/up_black_arraw" />
+
+                    <ImageView
+                        android:id="@+id/iv_down_price"
+                        android:layout_width="@dimen/x7"
+                        android:layout_height="@dimen/x7"
+                        android:src="@drawable/down_gray_arraw" />
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/ll_ware_list_leibie"
+                android:layout_width="@dimen/x60"
+                android:layout_height="@dimen/x30"
+                android:background="@drawable/gray_cordor_solid_shape"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_ware_list_leibie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="类别"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x8"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/x7"
+                        android:layout_height="@dimen/x7"
+                        android:src="@drawable/up_black_arraw"
+                        android:visibility="invisible" />
+
+                    <ImageView
+                        android:layout_width="@dimen/x7"
+                        android:layout_height="@dimen/x7"
+                        android:src="@drawable/down_black_arraw" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/ll_ware_list_pingpai"
+                android:layout_width="@dimen/x60"
+                android:layout_height="@dimen/x30"
+                android:background="@drawable/gray_cordor_solid_shape"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_ware_list_pingpai"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="品牌"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x8"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/x7"
+                        android:layout_height="@dimen/x7"
+                        android:src="@drawable/up_black_arraw"
+                        android:visibility="invisible" />
+
+                    <ImageView
+                        android:layout_width="@dimen/x7"
+                        android:layout_height="@dimen/x7"
+                        android:src="@drawable/down_black_arraw" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/ll_ware_list_rongliang"
+                android:layout_width="@dimen/x60"
+                android:layout_height="@dimen/x30"
+                android:background="@drawable/gray_cordor_solid_shape"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_ware_list_rongliang"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="容量"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x8"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/x7"
+                        android:layout_height="@dimen/x7"
+                        android:src="@drawable/up_black_arraw"
+                        android:visibility="invisible" />
+
+                    <ImageView
+                        android:layout_width="@dimen/x7"
+                        android:layout_height="@dimen/x7"
+                        android:src="@drawable/down_black_arraw" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
-</LinearLayout>
-<LinearLayout
-    android:layout_width="0dp"
-    android:layout_height="match_parent"
-    android:layout_weight="1"
-    android:orientation="horizontal"
-    android:gravity="center">
-
-    <LinearLayout
-        android:id="@+id/ll_ware_list_leibie"
-        android:layout_width="@dimen/x60"
-        android:layout_height="@dimen/x30"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:background="#11000000">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="类别"
-            android:textSize="14sp"
-            android:textColor="#55000000"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginLeft="@dimen/x8">
-            <ImageView
-                android:layout_width="@dimen/x7"
-                android:layout_height="@dimen/x7"
-                android:src="@drawable/up_black_arraw"
-                android:visibility="invisible"/>
-            <ImageView
-                android:layout_width="@dimen/x7"
-                android:layout_height="@dimen/x7"
-                android:src="@drawable/down_black_arraw" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-</LinearLayout>
-<LinearLayout
-    android:layout_width="0dp"
-    android:layout_height="match_parent"
-    android:layout_weight="1"
-    android:orientation="horizontal"
-    android:gravity="center">
-
-    <LinearLayout
-        android:id="@+id/ll_ware_list_pingpai"
-        android:layout_width="@dimen/x60"
-        android:layout_height="@dimen/x30"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:background="#11000000">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="品牌"
-            android:textSize="14sp"
-            android:textColor="#55000000"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginLeft="@dimen/x8">
-            <ImageView
-                android:layout_width="@dimen/x7"
-                android:layout_height="@dimen/x7"
-                android:visibility="invisible"
-                android:src="@drawable/up_black_arraw"/>
-            <ImageView
-                android:layout_width="@dimen/x7"
-                android:layout_height="@dimen/x7"
-                android:src="@drawable/down_black_arraw" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-</LinearLayout>
-<LinearLayout
-    android:layout_width="0dp"
-    android:layout_height="match_parent"
-    android:layout_weight="1"
-    android:orientation="horizontal"
-    android:gravity="center">
-
-    <LinearLayout
-        android:id="@+id/ll_ware_list_rongliang"
-        android:layout_width="@dimen/x60"
-        android:layout_height="@dimen/x30"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:background="@drawable/gray_cordor_solid_shape">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="容量"
-            android:textSize="14sp"
-            android:textColor="#55000000"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginLeft="@dimen/x8">
-            <ImageView
-                android:layout_width="@dimen/x7"
-                android:layout_height="@dimen/x7"
-                android:visibility="invisible"
-                android:src="@drawable/up_black_arraw"/>
-            <ImageView
-                android:layout_width="@dimen/x7"
-                android:layout_height="@dimen/x7"
-                android:src="@drawable/down_black_arraw" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-</LinearLayout>
-
-
-</LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/x3"
-        android:background="#11000000"/>
+        android:background="#11000000" />
 
 
-        <GridView
-            android:id="@+id/gv_wart_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:numColumns="2"
-            android:horizontalSpacing="2dp"
-            android:verticalSpacing="2dp"
-            android:background="#11000000"></GridView>
-        <LinearLayout
-            android:id="@+id/ll_ware_list_loadmore"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/x40"
-            android:background="#22000000"
-            android:gravity="center"
-            android:visibility="gone"
-            android:orientation="horizontal"
-            android:layout_alignParentBottom="true">
+    <GridView
+        android:id="@+id/gv_wart_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#11000000"
+        android:horizontalSpacing="2dp"
+        android:numColumns="2"
+        android:verticalSpacing="2dp"></GridView>
 
-            <ProgressBar
-                android:id="@+id/progress"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center" />
+    <LinearLayout
+        android:id="@+id/ll_ware_list_loadmore"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:layout_alignParentBottom="true"
+        android:background="#22000000"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="加载更多..."
-                android:textColor="#55000000"
-                android:textSize="14sp"/>
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center" />
 
-        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="加载更多..."
+            android:textColor="#55000000"
+            android:textSize="14sp" />
+
+    </LinearLayout>
 
 </LinearLayout>

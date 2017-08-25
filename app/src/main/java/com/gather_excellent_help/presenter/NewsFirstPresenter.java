@@ -60,6 +60,8 @@ public class NewsFirstPresenter {
     private String news_id = "";
     private List<NewsListBean.DataBean> newsData;
     private NewsFirstAdapter newsFirstAdapter;
+    private List<NewsListBean.DataBean> currData;
+    private int curr_click;
 
     public NewsFirstPresenter(Context context) {
         this.context = context;
@@ -169,13 +171,10 @@ public class NewsFirstPresenter {
                      }else if(whick.equals("news")) {
                          LogUtil.e("新闻 == "+response);
                          NewsListBean newsListBean = new Gson().fromJson(response, NewsListBean.class);
-                         List<NewsListBean.DataBean> currData = newsListBean.getData();
+                         currData = newsListBean.getData();
                          int size = currData.size();
-                         if(size == 0) {
-                             Toast.makeText(context, "没有找到你所要查询的商品信息！", Toast.LENGTH_SHORT).show();
-                             return;
-                         }
                          if(isLoadMore) {
+                             page++;
                              if (size<10) {
                                  newsFirstAdapter.updateLoadStatus(newsFirstAdapter.LOAD_NONE);
                                  return;
@@ -189,10 +188,16 @@ public class NewsFirstPresenter {
                              newsFirstAdapter = new NewsFirstAdapter(context, newsData);
                              rcv_news_first.setAdapter(newsFirstAdapter);
                              newsFirstAdapter.notifyDataSetChanged();
+                             page = 2;
+                         }
+                         if(size == 0) {
+                             Toast.makeText(context, "没有搜索到查询内容！", Toast.LENGTH_SHORT).show();
+                             return;
                          }
                          newsFirstAdapter.setOnNewsItemClickListner(new NewsFirstAdapter.OnNewsItemClickListner() {
                              @Override
                              public void onItemClick(View v, int position) {
+                                 curr_click = position;
                                  NewsListBean.DataBean dataBean = newsData.get(position);
                                  int id = dataBean.getId();
                                  news_id = String.valueOf(id);
@@ -204,10 +209,24 @@ public class NewsFirstPresenter {
                          LogUtil.e("新闻详情"+response);
                          NewsDetailBean newsDetailBean = new Gson().fromJson(response, NewsDetailBean.class);
                          String link_url = newsDetailBean.getData().get(0).getLink_url();
+                         String imgurl = "";
+                         String newsTitle = "";
+                         if(currData!=null) {
+                             String img_url = currData.get(curr_click).getImg_url();
+                             if(img_url!=null) {
+                                 imgurl = Url.IMG_URL + img_url;
+                             }
+                             String title = currData.get(curr_click).getTitle();
+                             if(title!=null) {
+                                 newsTitle = title;
+                             }
+                         }
                          if(link_url!=null && !TextUtils.isEmpty(link_url)) {
                              Intent intent = new Intent(context, WebActivity.class);
                              intent.putExtra("web_url",Url.IMG_URL+link_url);
                              intent.putExtra("type","detail");
+                             intent.putExtra("news_img",imgurl);
+                             intent.putExtra("news_title",newsTitle);
                              LogUtil.e("--------"+Url.IMG_URL+link_url);
                              context.startActivity(intent);
                          }
@@ -242,9 +261,6 @@ public class NewsFirstPresenter {
     }
 
     public void scrollRecycleView() {
-        if(newsFirstAdapter == null) {
-            Toast.makeText(context, "adpater为空", Toast.LENGTH_SHORT).show();
-        }
         if(rcv_news_first!=null && newsFirstAdapter!=null) {
             rcv_news_first.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
@@ -259,10 +275,8 @@ public class NewsFirstPresenter {
                         }
                         if (lastVisibleItem + 1 == layoutManager
                                 .getItemCount()) {
-
                             newsFirstAdapter.updateLoadStatus(newsFirstAdapter.LOAD_PULL_TO);
                             isLoadMore = true;
-                            page++;
                             newsFirstAdapter.updateLoadStatus(newsFirstAdapter.LOAD_MORE);
                             new Handler().postDelayed(new Runnable() {
                                 @Override

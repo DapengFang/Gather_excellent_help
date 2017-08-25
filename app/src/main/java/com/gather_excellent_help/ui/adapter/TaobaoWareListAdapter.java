@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gather_excellent_help.R;
@@ -68,7 +69,7 @@ public class TaobaoWareListAdapter extends BaseAdapter {
         SearchTaobaoBean.DataBean dataBean = data.get(position);
         ViewHolder holder = null;
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.item_text_pic_grid, null);
+            convertView = inflater.inflate(R.layout.item_type_text_pic_grid, null);
             holder = new ViewHolder();
             holder.home_type_photo = (ImageView) convertView.findViewById(R.id.iv_home_type_photo);
             holder.home_type_name = (TextView) convertView.findViewById(R.id.tv_home_type_title);
@@ -77,21 +78,19 @@ public class TaobaoWareListAdapter extends BaseAdapter {
             holder.tv_home_type_aprice = (TextView) convertView.findViewById(R.id.tv_rush_ware_aprice);
             holder.tv_rush_ware_coupons = (TextView) convertView.findViewById(R.id.tv_rush_ware_coupons);
             holder.tv_rush_ware_second_coupons = (TextView) convertView.findViewById(R.id.tv_type_second_coupons);
+            holder.ll_activity_list_ware_zhuan = (LinearLayout) convertView.findViewById(R.id.ll_activity_list_ware_zhuan);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.tv_rush_ware_second_coupons.setVisibility(View.GONE);
-        if(dataBean.getTitle().length()>10) {
-            String sTitle = dataBean.getTitle().substring(0, 10) + "...";
-            holder.home_type_name.setText(sTitle);
-        }else{
+        if(dataBean.getTitle()!=null) {
             holder.home_type_name.setText(dataBean.getTitle());
         }
         if(holder.home_type_photo!=null && dataBean.getImg_url()!=null) {
-            mImageLoader.loadImage(dataBean.getImg_url(),holder.home_type_photo,true);
+            mImageLoader.loadImage(dataBean.getImg_url()+"_430x430q90.jpg",holder.home_type_photo,true);
         }
-        holder.tv_home_type_aprice.setText("页面价："+dataBean.getSell_price());
+        holder.tv_home_type_aprice.setText("￥"+dataBean.getSell_price());
         final SearchTaobaoBean.DataBean.CouponInfoBean coupon_info = dataBean.getCoupon_info();
         if(coupon_info!=null) {
             String coupon_info1 = coupon_info.getCoupon_info();
@@ -100,7 +99,7 @@ public class TaobaoWareListAdapter extends BaseAdapter {
                 int index = coupon_info1.indexOf("减")+1;
                 String coupon = coupon_info1.substring(index, coupon_info1.length() - 1);
                 coupons = Integer.parseInt(coupon);
-                holder.tv_rush_ware_coupons.setText("领券立减"+coupon);
+                holder.tv_rush_ware_coupons.setText("领券减"+coupon);
                 holder.tv_rush_ware_coupons.setVisibility(View.VISIBLE);
             }else{
                 holder.tv_rush_ware_coupons.setVisibility(View.INVISIBLE);
@@ -110,8 +109,8 @@ public class TaobaoWareListAdapter extends BaseAdapter {
             double zhuan = (sellPrice - coupons) * (maxCommissionRate / 100) * 0.9f * user_rate;
             DecimalFormat df = new DecimalFormat("#0.00");
             double coast = sellPrice - zhuan -coupons;
-            holder.tv_home_type_sale.setText("赚:￥"+df.format(zhuan));
-            holder.tv_home_type_coast.setText("成本:"+df.format(coast));
+            holder.tv_home_type_sale.setText("￥"+df.format(zhuan));
+            holder.tv_home_type_coast.setText("￥"+df.format(coast));
             holder.tv_rush_ware_coupons.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -124,15 +123,15 @@ public class TaobaoWareListAdapter extends BaseAdapter {
             if(shopType==1){
                 boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                 if(toggleShow) {
-                    holder.tv_home_type_sale.setVisibility(View.GONE);
-                    holder.tv_home_type_coast.setVisibility(View.GONE);
+                   holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
                 }else{
-                    holder.tv_home_type_sale.setVisibility(View.VISIBLE);
-                    holder.tv_home_type_coast.setVisibility(View.VISIBLE);
+                   holder.ll_activity_list_ware_zhuan.setVisibility(View.VISIBLE);
                 }
             }else{
-                holder.tv_home_type_sale.setVisibility(View.GONE);
-                holder.tv_home_type_coast.setVisibility(View.GONE);
+               holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
+            }
+            if(zhuan == 0) {
+                holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
             }
         }
         return convertView;
@@ -146,5 +145,6 @@ public class TaobaoWareListAdapter extends BaseAdapter {
         TextView tv_home_type_aprice ;       //活动价
         TextView tv_rush_ware_coupons ;       //优惠券
         TextView tv_rush_ware_second_coupons ;       //优惠券
+        LinearLayout ll_activity_list_ware_zhuan;   //显示隐藏赚
     }
 }

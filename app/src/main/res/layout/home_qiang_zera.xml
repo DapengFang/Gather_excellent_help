@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?><!--抢购区-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_home_qiang_zera"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/gray_line9" />
+
+    <include layout="@layout/component_zera_title" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#EFEFEF" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x196"
+        android:background="#fff"
+        android:orientation="horizontal">
+
+        <!--LEFT-->
+        <LinearLayout
+            android:id="@+id/ll_qiang_left_zera"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="40"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginTop="@dimen/x13"
+                android:layout_weight="25"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="限时抢购"
+                    android:textColor="#FA2D3B"
+                    android:textSize="@dimen/x16"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_qinag_left_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x2"
+                    android:text="距离第16场倒计时"
+                    android:textColor="#BDBDBD"
+                    android:textSize="@dimen/x10" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/x2"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_rush_hour"
+                        android:layout_width="@dimen/x22"
+                        android:layout_height="@dimen/x22"
+                        android:background="@drawable/red_count_down"
+                        android:gravity="center"
+                        android:padding="@dimen/x2"
+                        android:text="03"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/x10" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/x2"
+                        android:text=":"
+                        android:textColor="#66000000"
+                        android:textSize="@dimen/x10" />
+
+                    <TextView
+                        android:id="@+id/tv_rush_minute"
+                        android:layout_width="@dimen/x22"
+                        android:layout_height="@dimen/x22"
+                        android:layout_marginLeft="@dimen/x2"
+                        android:background="@drawable/red_count_down"
+                        android:gravity="center"
+                        android:padding="@dimen/x2"
+                        android:text="08"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/x10" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/x2"
+                        android:text=":"
+                        android:textColor="#66000000"
+                        android:textSize="@dimen/x10" />
+
+                    <TextView
+                        android:id="@+id/tv_rush_second"
+                        android:layout_width="@dimen/x22"
+                        android:layout_height="@dimen/x22"
+                        android:background="@drawable/red_count_down"
+                        android:gravity="center"
+                        android:padding="@dimen/x2"
+                        android:text="22"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/x10" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x2"
+                    android:text="到手价"
+                    android:textColor="#BDBDBD"
+                    android:textSize="@dimen/x10" />
+
+                <TextView
+                    android:id="@+id/tv_qiang_left_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x2"
+                    android:text="2 ? ? ?"
+                    android:textColor="#FA2D3B"
+                    android:textSize="@dimen/x12"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="21"
+                android:paddingBottom="@dimen/x4"
+                android:paddingRight="@dimen/x4">
+
+                <ImageView
+                    android:id="@+id/iv_qiang_left_img"
+                    android:layout_width="@dimen/x80"
+                    android:layout_height="@dimen/x80"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="#11000000" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#EFEFEF" />
+        <!--RIGHT-->
+        <LinearLayout
+            android:id="@+id/ll_qiang_right_zera"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="75"
+            android:orientation="vertical">
+
+            <!--小商品区域-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/x4"
+                android:paddingLeft="@dimen/x4"
+                android:paddingTop="@dimen/x4">
+
+                <include layout="@layout/home_qiang_zera_ware" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="#EFEFEF" />
+
+            <!--小商品区域-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/x4"
+                android:paddingLeft="@dimen/x4"
+                android:paddingTop="@dimen/x4">
+
+                <include layout="@layout/home_qiang_zera_ware" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -93,6 +94,9 @@ public class GoodscartFragment extends BaseFragment {
                          Toast.makeText(context, "关键字不能为空！", Toast.LENGTH_SHORT).show();
                          return;
                      }
+                     InputMethodManager imm = (InputMethodManager)getContext().getSystemService(
+                             Context.INPUT_METHOD_SERVICE);
+                     imm.hideSoftInputFromWindow(etTaobaoSearchContent.getWindowToken(), 0);
                      newsFirstPresenter.searchData(keyword);
                      break;
              }

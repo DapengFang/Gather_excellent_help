@@ -39,6 +39,10 @@ public class Tools {
         return CacheUtils.getBoolean(context,CacheUtils.BIND_STATE,false);
     }
 
+    public static boolean isToggleShow(Context context){
+        return CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
+    }
+
     /**
      * 用户登录后的标识
      * @param context
@@ -111,7 +115,7 @@ public class Tools {
     //讲Bitmap转为Base64的方法。
     @SuppressLint("NewApi")
     public static String BitmapToBase64(Bitmap bitmap) {
-        String result = null;
+        String result = "";
         ByteArrayOutputStream baos = null;
         try {
             if (bitmap != null && !bitmap.isRecycled()) {

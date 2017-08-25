@@ -1,5 +1,6 @@
 package com.gather_excellent_help.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -149,6 +151,7 @@ public class TaobaoFragment extends BaseFragment {
                             }
                         }
                         if(isLoadmore!=-1) {
+                            page++;
                             newData = searchTaobaoBean.getData();
                             taobaodata.addAll(newData);
                             taobaoWareListAdapter.notifyDataSetChanged();
@@ -157,6 +160,7 @@ public class TaobaoFragment extends BaseFragment {
                             newData = taobaodata;
                             taobaoWareListAdapter = new TaobaoWareListAdapter(getContext(), taobaodata);
                             gvTaobaoList.setAdapter(taobaoWareListAdapter);
+                            page = 2;
                         }
                         gvTaobaoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
@@ -218,7 +222,6 @@ public class TaobaoFragment extends BaseFragment {
                                 if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
                                     if (absListView.getLastVisiblePosition() == (absListView.getCount() - 1)) {
                                         isLoadmore = 0;
-                                        page++;
                                         LogUtil.e("page == "+page);
                                         page_no = String.valueOf(page);
                                         if(newData.size() <Integer.valueOf(page_size)) {
@@ -381,6 +384,9 @@ public class TaobaoFragment extends BaseFragment {
                        Toast.makeText(getContext(), "请输入查询内容！", Toast.LENGTH_SHORT).show();
                        return;
                    }
+                   InputMethodManager imm = (InputMethodManager)getContext().getSystemService(
+                           Context.INPUT_METHOD_SERVICE);
+                   imm.hideSoftInputFromWindow(etTaobaoSearchContent.getWindowToken(), 0);
                    keyword = sousuoStr;
                    page_no = "1";
                    searchTaobaoWare(keyword,city,type,is_tmall,start_price,end_price,page_no);

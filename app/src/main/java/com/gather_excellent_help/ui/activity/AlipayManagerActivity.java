@@ -21,19 +21,28 @@ import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.api.pay.PayResult;
 import com.gather_excellent_help.api.pay.SignUtils;
+import com.gather_excellent_help.bean.ApplyMoneyBean;
+import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.LogUtil;
+import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
+import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.Call;
 
 public class AlipayManagerActivity extends BaseActivity {
 
@@ -47,6 +56,14 @@ public class AlipayManagerActivity extends BaseActivity {
     private String key;
     private String succ_url = "http://juyoubang.com.h001.webe7.com/api/share/success.html";
     private String fail_url = "http://juyoubang.com.h001.webe7.com/api/share/failure.html";
+    private String money_url = Url.BASE_URL + "AppSystem.aspx";
+    private NetUtil netUtil;
+    private double enterAmount;
+    private String extract_url = Url.BASE_URL + "PayStatus.aspx";
+    private Map<String,String> map;
+    private String pay_status = "";
+    private String which = "";
+    private String user_login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +79,8 @@ public class AlipayManagerActivity extends BaseActivity {
     @SuppressLint("JavascriptInterface")
     private void initData() {
         tvTopTitleName.setText("加盟支付");
+        netUtil = new NetUtil();
+        user_login = Tools.getUserLogin(this);
         rlExit.setOnClickListener(new MyOnClickListener());
         WebSettings webSettings = wvBanner.getSettings();
         //设置此属性，可任意比例缩放
@@ -81,7 +100,104 @@ public class AlipayManagerActivity extends BaseActivity {
         //加载需要显示的网页
         wvBanner.loadUrl(url);
 
-        wvBanner.addJavascriptInterface(AlipayManagerActivity.this,"AlipayInterface");
+        wvBanner.addJavascriptInterface(AlipayManagerActivity.this, "AlipayInterface");
+        netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
+            @Override
+            public void getSuccessResponse(String response) {
+                LogUtil.e(response);
+                if(which.equals("money")) {
+                    parseMoneyData(response);
+                }else if(which.equals("extract")) {
+                   parseExtractData(response);
+                }
+            }
+
+            @Override
+            public void getFailResponse(Call call, Exception e) {
+            Toast.makeText(AlipayManagerActivity.this, "网络请求出错！", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * 解析支付入驻数据
+     * @param response
+     */
+    private void parseExtractData(String response) {
+        CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
+        //Toast.makeText(AlipayManagerActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+        LogUtil.e(codeStatueBean.getStatusMessage());
+    }
+
+    /**
+     * 解析支付金额的数据
+     * @param response
+     */
+    private void parseMoneyData(String response) {
+        ApplyMoneyBean applyMoneyBean = new Gson().fromJson(response, ApplyMoneyBean.class);
+        int statusCode = applyMoneyBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                List<ApplyMoneyBean.DataBean> data = applyMoneyBean.getData();
+                if (data != null && data.size() > 0) {
+                    ApplyMoneyBean.DataBean dataBean = data.get(0);
+                    enterAmount = dataBean.getEnterAmount();
+                    if (enterAmount > 0) {
+                        DecimalFormat df = new DecimalFormat("#0.00");
+                        String price = df.format(enterAmount);
+                        if (TextUtils.isEmpty(PARTNER) || TextUtils.isEmpty(RSA_PRIVATE) || TextUtils.isEmpty(SELLER)) {
+                            new AlertDialog.Builder(AlipayManagerActivity.this).setTitle("警告").setMessage("需要配置PARTNER | RSA_PRIVATE| SELLER")
+                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialoginterface, int i) {
+                                            finish();
+                                        }
+                                    }).show();
+                            return;
+                        }
+                        key = String.valueOf(System.currentTimeMillis());
+                        String orderInfo = getOrderInfo("聚优帮加盟", "聚优帮-商家-加盟", price);
+                        String sign = sign(orderInfo);
+                        try {
+                            /**
+                             * 仅需对sign 做URL编码
+                             */
+                            sign = URLEncoder.encode(sign, "UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+
+                        /**
+                         * 完整的符合支付宝参数规范的订单信息
+                         */
+                        final String payInfo = orderInfo + "&sign=\"" + sign + "\"&" + getSignType();
+
+                        LogUtil.e(payInfo);
+
+                        Runnable payRunnable = new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // 构造PayTask 对象
+                                PayTask alipay = new PayTask(AlipayManagerActivity.this);
+                                // 调用支付接口，获取支付结果
+                                String result = alipay.pay(payInfo, true);
+                                Message msg = new Message();
+                                msg.what = SDK_PAY_FLAG;
+                                msg.obj = result;
+                                mHandler.sendMessage(msg);
+                            }
+                        };
+
+                        // 必须异步调用
+                        Thread payThread = new Thread(payRunnable);
+                        payThread.start();
+                    }
+                }
+                break;
+            case 0:
+                Toast.makeText(AlipayManagerActivity.this, applyMoneyBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     //Web视图
@@ -108,12 +224,12 @@ public class AlipayManagerActivity extends BaseActivity {
         }
     }
 
-    public class MyOnClickListener implements View.OnClickListener{
+    public class MyOnClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.rl_exit :
+                case R.id.rl_exit:
                     finish();
                     break;
             }
@@ -141,55 +257,11 @@ public class AlipayManagerActivity extends BaseActivity {
             "qs8s8NwJW5RL";   // 支付宝公钥
     public static final String RSA_PUBLIC = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCgF1G+SCzt2RpMwy2JXcYjjglRCpFiJnGbrGhWDhwBqsAG8JrUXoLgKnuPF8LsEPR8Sw+KG/n0IpUKGr4Da663vlS/MOicglE2LH/d7MkmtGYZTkk2gvVs5GZstkRkyJvpuF77AUfu2MRc9aFcU6iwW6Rj5f2L+diWQks32oujJQIDAQAB";
     private static final int SDK_PAY_FLAG = 1;
+
     @JavascriptInterface
-    public void toPay(){
-        if (TextUtils.isEmpty(PARTNER) || TextUtils.isEmpty(RSA_PRIVATE) || TextUtils.isEmpty(SELLER)) {
-            new AlertDialog.Builder(this).setTitle("警告").setMessage("需要配置PARTNER | RSA_PRIVATE| SELLER")
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialoginterface, int i) {
-                            finish();
-                        }
-                    }).show();
-            return;
-        }
-        key = String.valueOf(System.currentTimeMillis());
-        String orderInfo = getOrderInfo("聚优帮加盟", "聚优帮-商家-加盟", "200.00");
-        String sign = sign(orderInfo);
-        try {
-            /**
-             * 仅需对sign 做URL编码
-             */
-            sign = URLEncoder.encode(sign, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        /**
-         * 完整的符合支付宝参数规范的订单信息
-         */
-        final String payInfo = orderInfo + "&sign=\"" + sign + "\"&" + getSignType();
-
-        LogUtil.e(payInfo);
-
-        Runnable payRunnable = new Runnable() {
-
-            @Override
-            public void run() {
-                // 构造PayTask 对象
-                PayTask alipay = new PayTask(AlipayManagerActivity.this);
-                // 调用支付接口，获取支付结果
-                String result = alipay.pay(payInfo, true);
-                Message msg = new Message();
-                msg.what = SDK_PAY_FLAG;
-                msg.obj = result;
-                mHandler.sendMessage(msg);
-            }
-        };
-
-        // 必须异步调用
-        Thread payThread = new Thread(payRunnable);
-        payThread.start();
-
+    public void toPay() {
+        which = "money";
+        netUtil.okHttp2Server2(money_url, null);
     }
 
     @SuppressLint("HandlerLeak")
@@ -206,14 +278,15 @@ public class AlipayManagerActivity extends BaseActivity {
                      * docType=1) 建议商户依赖异步通知
                      */
                     String resultInfo = payResult.getResult();// 同步返回需要验证的信息
-
                     String resultStatus = payResult.getResultStatus();
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(AlipayManagerActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
                         wvBanner.loadUrl(succ_url);
+                        pay_status = "1";
                         MobclickAgent.onEvent(AlipayManagerActivity.this, "a_pay");
                     } else {
+                        pay_status = "0";
                         // 判断resultStatus 为非"9000"则代表可能支付失败
                         // "8000"代表支付结果因为支付渠道原因或者系统原因还在等待支付结果确认，最终交易是否成功以服务端异步通知为准（小概率状态）
                         if (TextUtils.equals(resultStatus, "8000")) {
@@ -225,6 +298,14 @@ public class AlipayManagerActivity extends BaseActivity {
                             wvBanner.loadUrl(fail_url);
                         }
                     }
+                    if(pay_status!=null && !TextUtils.isEmpty(pay_status)) {
+                        map = new HashMap<>();
+                        map.put("user_id",user_login);
+                        map.put("pay_status",pay_status);
+                        which = "extract";
+                        netUtil.okHttp2Server2(extract_url,map);
+                    }
+                    
                     break;
                 }
 

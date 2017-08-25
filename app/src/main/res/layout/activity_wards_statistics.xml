@@ -118,7 +118,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="获得积分宝"
+            android:text="获得金额"
             android:textSize="14sp"
             android:textColor="#88000000"
             android:gravity="center"/>

@@ -144,6 +144,8 @@ public class QiangTaoActivity extends BaseActivity {
                         }
                         SearchTaobaoBean searchTaobaoBean = new Gson().fromJson(response, SearchTaobaoBean.class);
                         if(isLoadmore!=-1) {
+                            page++;
+                            LogUtil.e("page == "+page);
                             newData = searchTaobaoBean.getData();
                             taobaodata.addAll(newData);
                             taobaoWareListAdapter.notifyDataSetChanged();
@@ -152,6 +154,7 @@ public class QiangTaoActivity extends BaseActivity {
                             newData = taobaodata;
                             taobaoWareListAdapter = new TaobaoWareListAdapter(QiangTaoActivity.this, taobaodata);
                             gvWartList.setAdapter(taobaoWareListAdapter);
+                            page = 2;
                         }
 
                         gvWartList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -223,8 +226,6 @@ public class QiangTaoActivity extends BaseActivity {
                                 if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
                                     if (absListView.getLastVisiblePosition() == (absListView.getCount() - 1)) {
                                         isLoadmore = 0;
-                                        page++;
-                                        LogUtil.e("page == "+page);
                                         page_no = String.valueOf(page);
                                         if(newData.size() <Integer.valueOf(page_size)) {
                                             showLoadNoMore();

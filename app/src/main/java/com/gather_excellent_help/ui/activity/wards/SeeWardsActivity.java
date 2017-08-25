@@ -2,8 +2,10 @@ package com.gather_excellent_help.ui.activity.wards;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -11,7 +13,6 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.BackRebateBean;
 import com.gather_excellent_help.bean.CodeStatueBean;
-import com.gather_excellent_help.ui.activity.credits.BackRebateActivity;
 import com.gather_excellent_help.ui.adapter.BackRebateAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
@@ -39,6 +40,8 @@ public class SeeWardsActivity extends BaseActivity {
     ViewpagerIndicator vidSeeWard;
     @Bind(R.id.rcv_see_ward)
     RecyclerView rcvSeeWard;
+    @Bind(R.id.ll_taobao_loadmore)
+    LinearLayout llTaobaoLoadmore;
 
     private NetUtil netUtil;
     private Map<String, String> map;
@@ -47,6 +50,15 @@ public class SeeWardsActivity extends BaseActivity {
     private String pageSize = "10";
     private String pageNo = "1";
     private String type = "1";
+    private int page = 1;
+    private boolean isLoadMore = false;
+    private FullyLinearLayoutManager fullyLinearLayoutManager;
+    private int lastVisibleItem;
+
+    private List<BackRebateBean.DataBean> rewardData;
+    private List<BackRebateBean.DataBean> currData;
+    private BackRebateAdapter backRebateAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,31 +73,77 @@ public class SeeWardsActivity extends BaseActivity {
         tvTopTitleName.setText("奖励明细");
         userLogin = Tools.getUserLogin(this);
         netUtil = new NetUtil();
-        FullyLinearLayoutManager fullyLinearLayoutManager = new FullyLinearLayoutManager(this);
+        fullyLinearLayoutManager = new FullyLinearLayoutManager(this);
         rcvSeeWard.setLayoutManager(fullyLinearLayoutManager);
+        showLoading();
         loadRewardData();
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
                 LogUtil.e("查看奖励" + response);
-                CodeStatueBean codeStatueBean = new Gson().fromJson(response,CodeStatueBean.class);
-                int statusCode =  codeStatueBean.getStatusCode();
+                CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
+                int statusCode = codeStatueBean.getStatusCode();
                 switch (statusCode) {
-                    case 1 :
-                        BackRebateBean backRebateBean =new Gson().fromJson(response,BackRebateBean.class);
-                        List<BackRebateBean.DataBean> rewardData = backRebateBean.getData();
-                        BackRebateAdapter backRebateAdapter = new BackRebateAdapter(SeeWardsActivity.this, rewardData);
-                        rcvSeeWard.setAdapter(backRebateAdapter);
+                    case 1:
+                        BackRebateBean backRebateBean = new Gson().fromJson(response, BackRebateBean.class);
+                        currData = backRebateBean.getData();
+                        int size = currData.size();
+                        if(isLoadMore) {
+                            page++;
+                            if(size<10) {
+                                showLoadNoMore();
+                                return;
+                            }else{
+                                rewardData.addAll(currData);
+                            }
+                            backRebateAdapter.notifyDataSetChanged();
+                        }else{
+                            rewardData = currData;
+                            backRebateAdapter = new BackRebateAdapter(SeeWardsActivity.this, rewardData);
+                            rcvSeeWard.setAdapter(backRebateAdapter);
+                            backRebateAdapter.notifyDataSetChanged();
+                            page = 2;
+                        }
+                        rcvSeeWard.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                                    lastVisibleItem = fullyLinearLayoutManager
+                                            .findLastVisibleItemPosition();
+                                    if (lastVisibleItem + 1 == fullyLinearLayoutManager
+                                            .getItemCount()) {
+                                        isLoadMore = true;
+                                        showLoadMore();
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                LogUtil.e("page ======"+page);
+                                                pageNo = String.valueOf(page);
+                                                loadRewardData();
+                                            }
+                                        }, 1000);
+                                    }
+                                }
+                                super.onScrollStateChanged(recyclerView, newState);
+                            }
+
+                            @Override
+                            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                                super.onScrolled(recyclerView, dx, dy);
+                                lastVisibleItem = fullyLinearLayoutManager.findLastVisibleItemPosition();
+                            }
+                        });
+                        hindLoadMore();
                         break;
                     case 0:
-
+                        hindLoadMore();
                         break;
                 }
             }
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-
+                       hindLoadMore();
             }
         });
         rlExit.setOnClickListener(new MyOnclickListener());
@@ -137,11 +195,57 @@ public class SeeWardsActivity extends BaseActivity {
                             tv.setTextColor(Color.RED);
                         }
                     }
-                    int lei = finalI+1;
-                    type =String.valueOf(lei);
+                    int lei = finalI + 1;
+                    type = String.valueOf(lei);
+                    pageNo = "1";
+                    isLoadMore = false;
+                    showLoading();
                     loadRewardData();
                 }
             });
+        }
+    }
+
+    /**
+     * 显示加载更多
+     */
+    private void showLoadMore() {
+        if(llTaobaoLoadmore!=null) {
+            llTaobaoLoadmore.setVisibility(View.VISIBLE);
+            llTaobaoLoadmore.getChildAt(0).setVisibility(View.VISIBLE);
+            TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(1);
+            tvTitle.setText("加载更多...");
+        }
+    }
+    /**
+     * 显示正在加载中
+     */
+    private void showLoading() {
+        if(llTaobaoLoadmore!=null) {
+            llTaobaoLoadmore.setVisibility(View.VISIBLE);
+            llTaobaoLoadmore.getChildAt(0).setVisibility(View.VISIBLE);
+            TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(1);
+            tvTitle.setText("正在加载中...");
+        }
+    }
+
+    /**
+     * 显示没有更多的数据了
+     */
+    private void showLoadNoMore() {
+        if(llTaobaoLoadmore!=null) {
+            TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(1);
+            llTaobaoLoadmore.getChildAt(0).setVisibility(View.GONE);
+            tvTitle.setText("没有更多的数据了...");
+            llTaobaoLoadmore.setVisibility(View.VISIBLE);
+        }
+    }
+    /**
+     * 显示隐藏
+     */
+    private void hindLoadMore() {
+        if(llTaobaoLoadmore!=null) {
+            llTaobaoLoadmore.setVisibility(View.GONE);
         }
     }
 }

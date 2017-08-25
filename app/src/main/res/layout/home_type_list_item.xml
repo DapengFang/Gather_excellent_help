@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?><!--小商品区域-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x98"
+        android:paddingBottom="@dimen/x4"
+        android:paddingTop="@dimen/x4">
+
+        <LinearLayout
+            android:id="@+id/ll_activity_list_ware"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/x4"
+            android:paddingBottom="@dimen/x4"
+            android:paddingTop="@dimen/x4">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3">
+
+                <ImageView
+                    android:id="@+id/iv_activity_list_ware_img"
+                    android:layout_width="@dimen/x80"
+                    android:layout_height="@dimen/x80"
+                    android:layout_centerVertical="true"
+                    android:background="#11000000" />
+
+                <TextView
+                    android:id="@+id/tv_activity_ware_coupon"
+                    android:layout_width="@dimen/x40"
+                    android:layout_height="@dimen/x9"
+                    android:layout_alignTop="@id/iv_activity_list_ware_img"
+                    android:layout_alignRight="@id/iv_activity_list_ware_img"
+                    android:background="@drawable/juxing_coupon_shape"
+                    android:gravity="center"
+                    android:text="领券减200"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/x6"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/x2"
+                android:paddingRight="@dimen/x3"
+                android:paddingTop="@dimen/x3">
+
+                <TextView
+                    android:id="@+id/tv_activity_ware_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x36"
+                    android:lineSpacingExtra="@dimen/x2"
+                    android:text="正品长虹全自动洗衣机7.5KG家用大容量波正品长虹全自动洗衣机7.5KG家用大容量波"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/x14" />
+
+                <TextView
+                    android:id="@+id/tv_activity_ware_person"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x3"
+                    android:text="1588人已买"
+                    android:textColor="#CCCCCC"
+                    android:textSize="@dimen/x8"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/x4"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_activity_ware_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:text="￥69999.00"
+                        android:textColor="#FA2D3B"
+                        android:textSize="@dimen/x14"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="@dimen/x5"
+                        android:text="现价"
+                        android:textColor="#55000000"
+                        android:textSize="@dimen/x10" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_activity_list_ware_zhuan"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x12"
+                    android:layout_marginTop="@dimen/x6"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_activity_ware_zhuan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:text="￥22.55"
+                        android:textColor="#ff6600"
+                        android:textSize="@dimen/x7" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="@dimen/x2"
+                        android:text="赚"
+                        android:textColor="#ff6600"
+                        android:textSize="@dimen/x5" />
+
+                    <TextView
+                        android:id="@+id/tv_activity_ware_coast"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="@dimen/x4"
+                        android:text="￥1177.45"
+                        android:textColor="#ff6600"
+                        android:textSize="@dimen/x7" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="@dimen/x2"
+                        android:text="成本"
+                        android:textColor="#ff6600"
+                        android:textSize="@dimen/x5" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_activity_ware_coupon_second"
+            android:layout_width="@dimen/x50"
+            android:layout_height="@dimen/x15"
+            android:layout_alignBottom="@id/ll_activity_list_ware"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/x4"
+            android:layout_marginRight="@dimen/x3"
+            android:background="@drawable/activity_list_red_shape"
+            android:gravity="center"
+            android:text="点我还有券"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x8"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x5"
+        android:background="#EFEFEF"/>
+</LinearLayout>

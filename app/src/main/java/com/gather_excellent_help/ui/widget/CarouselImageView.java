@@ -282,7 +282,7 @@ public class CarouselImageView extends LinearLayout {
                 imageView = new ImageView(mContext);
                 imageView.setAdjustViewBounds(true);
                 imageView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                imageView.setImageResource(R.drawable.zhanwei_gray);
+                imageView.setImageResource(R.drawable.white_banner);
             } else {
                 imageView = mImageViewCacheList.remove(0);
             }

@@ -10,7 +10,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/x180"
+            android:layout_height="@dimen/x190"
             android:background="#eeff0000">
 
             <com.gather_excellent_help.ui.widget.CircularImage
@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/x20"
                     android:src="@drawable/white_left_arraw"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -841,7 +841,6 @@
                 android:layout_marginLeft="@dimen/x3"
                 android:background="#99000000" />
         </LinearLayout>
-
 
     </LinearLayout>
 </com.gather_excellent_help.ui.widget.MyNestedScrollView>

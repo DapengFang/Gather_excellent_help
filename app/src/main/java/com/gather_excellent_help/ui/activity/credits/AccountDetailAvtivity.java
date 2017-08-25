@@ -2,6 +2,7 @@ package com.gather_excellent_help.ui.activity.credits;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.gather_excellent_help.bean.AccountDetailBean;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.adapter.AcccountDetailAdapter;
+import com.gather_excellent_help.ui.adapter.ExtractDetailAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.utils.LogUtil;
@@ -48,9 +50,15 @@ public class AccountDetailAvtivity extends BaseActivity {
     private Map<String, String> map;
     private NetUtil netUtil;
     private List<AccountDetailBean.DataBean> accountData;
+    private List<AccountDetailBean.DataBean> currData;
     private String type;
-    private String pageSize = "5";
+    private String pageSize = "10";
     private String pageIndex = "1";
+    private int page = 1;
+    private boolean isLoadmore = false;
+    private int lastVisibleItem;
+    private FullyLinearLayoutManager layoutManager;
+    private AcccountDetailAdapter acccountDetailAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +72,8 @@ public class AccountDetailAvtivity extends BaseActivity {
         tvTopTitleName.setText("账户明细");
         tvAccountQueryTime.setSelected(true);
         tvAccountQueryProject.setSelected(false);
+        layoutManager = new FullyLinearLayoutManager(AccountDetailAvtivity.this);
+        rcvAccountDetail.setLayoutManager(layoutManager);
         netUtil = new NetUtil();
         type = "1";
         net2ServerByType(type);
@@ -76,7 +86,7 @@ public class AccountDetailAvtivity extends BaseActivity {
                 switch (statusCode) {
                     case 1:
                         AccountDetailBean accountDetailBean = new Gson().fromJson(response, AccountDetailBean.class);
-                        accountData = accountDetailBean.getData();
+                        currData = accountDetailBean.getData();
                         loadAccountData();
                         break;
                     case 0:
@@ -93,6 +103,34 @@ public class AccountDetailAvtivity extends BaseActivity {
         rlExit.setOnClickListener(new MyOnclickListener());
         tvAccountQueryTime.setOnClickListener(new MyOnclickListener());
         tvAccountQueryProject.setOnClickListener(new MyOnclickListener());
+        rcvAccountDetail.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    lastVisibleItem = layoutManager
+                            .findLastVisibleItemPosition();
+
+                    if (lastVisibleItem + 1 == layoutManager
+                            .getItemCount()) {
+                        isLoadmore = true;
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                pageIndex = String.valueOf(page);
+                               net2ServerByType(type);
+                            }
+                        }, 1000);
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+            }
+        });
     }
 
     private void net2ServerByType(String type) {
@@ -122,10 +160,21 @@ public class AccountDetailAvtivity extends BaseActivity {
      * 加载获取的数据
      */
     private void loadAccountData() {
-        FullyLinearLayoutManager layoutManager = new FullyLinearLayoutManager(AccountDetailAvtivity.this);
-        rcvAccountDetail.setLayoutManager(layoutManager);
-        AcccountDetailAdapter acccountDetailAdapter = new AcccountDetailAdapter(this, accountData);
-        rcvAccountDetail.setAdapter(acccountDetailAdapter);
+        if(isLoadmore) {
+            page++;
+            if(currData.size()<10) {
+                Toast.makeText(AccountDetailAvtivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
+                return;
+            }else{
+                accountData.addAll(currData);
+            }
+            acccountDetailAdapter.notifyDataSetChanged();
+        }else{
+            page = 2;
+            accountData = currData;
+            acccountDetailAdapter = new AcccountDetailAdapter(this, accountData);
+            rcvAccountDetail.setAdapter(acccountDetailAdapter);
+        }
     }
 
     public class MyOnclickListener implements View.OnClickListener {
@@ -137,12 +186,18 @@ public class AccountDetailAvtivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.tv_account_query_time:
+                    isLoadmore = false;
+                    page = 1;
+                    pageIndex = String.valueOf(page);
                     tvAccountQueryTime.setSelected(true);
                     tvAccountQueryProject.setSelected(false);
                     type = "1";
                     net2ServerByType(type);
                     break;
                 case R.id.tv_account_query_project:
+                    isLoadmore = false;
+                    page = 1;
+                    pageIndex = String.valueOf(page);
                     tvAccountQueryTime.setSelected(false);
                     tvAccountQueryProject.setSelected(true);
                     type = "2";

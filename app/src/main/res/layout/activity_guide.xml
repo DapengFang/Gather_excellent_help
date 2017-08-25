@@ -26,14 +26,29 @@
     <TextView
         android:id="@+id/tv_guidance_page"
         android:layout_width="@dimen/x120"
-        android:layout_height="@dimen/x40"
+        android:layout_height="@dimen/x38"
         android:gravity="center"
-        android:text="点击进入"
+        android:text="开始体验"
         android:textSize="16sp"
-        android:textColor="@color/white"
+        android:textColor="#fa2d3b"
         android:layout_gravity="bottom|center_horizontal"
-        android:background="@drawable/register_confirm_selector"
-        android:layout_marginBottom="80dp"
+        android:background="@drawable/guide_in_shape"
+        android:layout_marginBottom="@dimen/x45"
         android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ll_splash_ship"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_gravity="right"
+        android:paddingTop="@dimen/x30"
+        android:paddingRight="@dimen/x20">
+        <ImageView
+            android:layout_width="@dimen/x70"
+            android:layout_height="@dimen/x25"
+            android:src="@drawable/guide_skip_main" />
+    </LinearLayout>
 
 </FrameLayout>

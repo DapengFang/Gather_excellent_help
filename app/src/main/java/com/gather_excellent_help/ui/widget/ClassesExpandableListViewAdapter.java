@@ -150,9 +150,9 @@ public class ClassesExpandableListViewAdapter extends BaseExpandableListAdapter 
     private void arrawSetDirection(boolean isExpanded, ImageView arrawNavigator) {
         arrawNavigator.setVisibility(View.VISIBLE);
         if(isExpanded) {
-            arrawNavigator.setImageResource(R.drawable.down_red_arraw);
+            arrawNavigator.setImageResource(R.drawable.red_down_arraw_s);
         }else{
-            arrawNavigator.setImageResource(R.drawable.left_red_type_arraw);
+            arrawNavigator.setImageResource(R.drawable.gray_right_arraw_s);
         }
     }
 

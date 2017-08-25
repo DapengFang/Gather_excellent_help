@@ -10,6 +10,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gather_excellent_help.R;
@@ -17,6 +19,9 @@ import com.gather_excellent_help.bean.ListBean;
 import com.gather_excellent_help.utils.DensityUtil;
 
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class WareSelectorAdapter extends RecyclerView.Adapter<WareSelectorAdapter.WareSelectorViewHolder> {
 
@@ -30,16 +35,16 @@ public class WareSelectorAdapter extends RecyclerView.Adapter<WareSelectorAdapte
 
     @Override
     public WareSelectorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        TextView view = getGenericChildView();
-        return new WareSelectorViewHolder(view);
+        View  inflate = View.inflate(context, R.layout.item_tabao_shaixuan_city, null);
+        return new WareSelectorViewHolder(inflate);
     }
 
     @Override
     public void onBindViewHolder(WareSelectorViewHolder holder, final int position) {
         ListBean.DataBean dataBean = data.get(position);
         String title = dataBean.getTitle();
-        holder.tv_title.setText(title);
-        holder.tv_title.setOnClickListener(new View.OnClickListener() {
+        holder.tvTaobaoShaixuanText.setText(title);
+        holder.tvTaobaoShaixuanText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onItemClickListener.onItemClick(position);
@@ -53,29 +58,15 @@ public class WareSelectorAdapter extends RecyclerView.Adapter<WareSelectorAdapte
     }
 
     public class WareSelectorViewHolder extends RecyclerView.ViewHolder{
-        TextView tv_title;
+        @Bind(R.id.tv_taobao_shaixuan_text)
+        TextView tvTaobaoShaixuanText;
 
         public WareSelectorViewHolder(View itemView) {
             super(itemView);
-            tv_title = (TextView) itemView;
+            ButterKnife.bind(this,itemView);
         }
     }
 
-    private TextView getGenericChildView() {
-
-//        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(
-//                ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT);
-//
-//        TextView textView = new TextView(context);
-//        textView.setLayoutParams(layoutParams);
-//        textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-//        textView.setPadding(20, 30, 0, 30);
-//        textView.setTextSize(DensityUtil.dip2px(context,3));
-//        textView.setTextColor(Color.parseColor("#ffffff"));
-        TextView  inflate = (TextView) View.inflate(context, R.layout.item_text, null);
-        return inflate;
-    }
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener{

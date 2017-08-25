@@ -38,9 +38,13 @@ public class TaoQiangTimeAdapter extends RecyclerView.Adapter<TaoQiangTimeAdapte
         QiangTimeBean qiangTimeBean = data.get(position);
         boolean check = qiangTimeBean.isCheck();
         if(check) {
-            holder.ll_qiang_tao_show.setBackgroundColor(Color.RED);
+            holder.ll_qiang_tao_show.setBackgroundColor(Color.parseColor("#fa2d3b"));
+            holder.tv_qiang_tao_qiang.setTextColor(Color.WHITE);
+            holder.tv_qiang_tao_nav.setTextColor(Color.WHITE);
         }else{
-            holder.ll_qiang_tao_show.setBackgroundColor(Color.parseColor("#ee00ff00"));
+            holder.ll_qiang_tao_show.setBackgroundColor(Color.parseColor("#31353b"));
+            holder.tv_qiang_tao_qiang.setTextColor(Color.parseColor("#9d9d9d"));
+            holder.tv_qiang_tao_nav.setTextColor(Color.parseColor("#9d9d9d"));
         }
         int time = qiangTimeBean.getTime();
         if(time<10) {
@@ -49,9 +53,9 @@ public class TaoQiangTimeAdapter extends RecyclerView.Adapter<TaoQiangTimeAdapte
             holder.tv_qiang_tao_nav.setText(time+":00");
         }
         if(position == 0) {
-            holder.tv_qiang_tao_qiang.setVisibility(View.GONE);
+            holder.tv_qiang_tao_qiang.setText("抢购进行中");
         }else{
-            holder.tv_qiang_tao_qiang.setVisibility(View.VISIBLE);
+            holder.tv_qiang_tao_qiang.setText("即将开抢");
         }
         holder.ll_qiang_tao_show.setOnClickListener(new View.OnClickListener() {
             @Override

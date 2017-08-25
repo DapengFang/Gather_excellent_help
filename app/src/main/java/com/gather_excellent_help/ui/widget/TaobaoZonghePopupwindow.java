@@ -58,10 +58,10 @@ public class TaobaoZonghePopupwindow extends PopupWindow {
         this.setContentView(inflate);
         //设置SelectPicPopupWindow弹出窗体的宽
         int screenWidth = ScreenUtil.getScreenWidth(context);
-        this.setWidth(screenWidth/3);
+        this.setWidth(screenWidth);
         int screenHeight = ScreenUtil.getScreenHeight(context);
         //设置SelectPicPopupWindow弹出窗体的高
-        this.setHeight(screenHeight/5);
+        this.setHeight(screenHeight/4);
         //设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
         //实例化一个ColorDrawable颜色为半透明

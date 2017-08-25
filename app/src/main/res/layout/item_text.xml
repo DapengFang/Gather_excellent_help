@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/tv_single_item"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:padding="@dimen/x5"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/ll_single_item"
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+<TextView
+    android:id="@+id/tv_single_item"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/x40"
+    android:textSize="12sp"
+    android:textColor="#99000000"
+    android:gravity="center"/>
+
+</LinearLayout>

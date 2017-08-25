@@ -61,42 +61,53 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".ui.base.BaseFragmentActivity" />
-        <activity android:name=".MainActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan"
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".ui.activity.RegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activity.RegisterActivity"
+        <activity
+            android:name=".ui.activity.LoginActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.FindPswActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.FindPswActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.SetActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".ui.activity.SetActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.PersonInfoActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.PersonInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.WareListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.WareListActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".ui.activity.OrderActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.OrderActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.WebRecordActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.WebRecordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GuideActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".GuideActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.base.BaseFullScreenActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name=".SplashActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.base.BaseFullScreenActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name=".SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -105,15 +116,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.credits.ExtractCreditsActivity"
+        <activity
+            android:name=".ui.activity.credits.ExtractCreditsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.credits.AccountDetailAvtivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.credits.AccountDetailAvtivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.credits.InviteFriendsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.credits.InviteFriendsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name=".ui.receiver.AppRegister"
@@ -123,43 +137,55 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.activity.credits.ShopDetailActivity"
+        <activity
+            android:name=".ui.activity.credits.ShopDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait">
-
-        </activity>
-        <activity android:name=".ui.activity.wards.SeeWardsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.wards.SeeWardsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.wards.WardsStatisticsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.wards.WardsStatisticsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.credits.BackRebateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.credits.BackRebateActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.credits.MerchantEnterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.credits.MerchantEnterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.WebActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.WebActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="597eec3baed1797fcf0007cd" />
 
-        <activity android:name=".ui.activity.AlipayManagerActivity"
+        <activity
+            android:name=".ui.activity.AlipayManagerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
 
         </activity>
-        <activity android:name=".ui.activity.RuleHelpActivity"
+        <activity
+            android:name=".ui.activity.RuleHelpActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.QiangTaoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.QiangTaoActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
-        <service android:name=".ui.service.MyService"/>
+            android:screenOrientation="portrait" />
+
+        <service android:name=".ui.service.MyService" />
+
+        <activity android:name=".TestActivity"></activity>
+        <activity android:name=".TestActivity2"></activity>
+        <activity android:name=".ui.activity.credits.ExtractDetailActivity"></activity>
     </application>
 
 </manifest>

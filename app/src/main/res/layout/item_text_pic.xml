@@ -7,15 +7,15 @@
     android:padding="@dimen/x5">
     <ImageView
         android:id="@+id/iv_home_type_photo"
-        android:layout_width="@dimen/x20"
-        android:layout_height="@dimen/x20"
-        android:src="@drawable/dianshi"/>
+        android:layout_width="@dimen/x40"
+        android:layout_height="@dimen/x40"
+        android:src="@drawable/tv_icon"/>
     <TextView
         android:id="@+id/tv_home_type_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="#66000000"
+        android:textColor="#333333"
         android:layout_marginTop="@dimen/x3"/>
 
 </LinearLayout>

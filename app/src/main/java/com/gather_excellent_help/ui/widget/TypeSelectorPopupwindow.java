@@ -39,6 +39,7 @@ public class TypeSelectorPopupwindow extends PopupWindow {
         rcvWarePopup = (RecyclerView) inflate.findViewById(R.id.rcv_ware_popup);
         FullyLinearLayoutManager layoutManager = new FullyLinearLayoutManager(context);
         rcvWarePopup.setLayoutManager(layoutManager);
+        rcvWarePopup.addItemDecoration(new DividerItemDecoration(context,DividerItemDecoration.VERTICAL_LIST));
         WareSelectorAdapter wareSelectorAdapter = new WareSelectorAdapter(context, data);
         rcvWarePopup.setAdapter(wareSelectorAdapter);
         wareSelectorAdapter.setOnItemClickListener(new WareSelectorAdapter.OnItemClickListener() {
@@ -51,14 +52,14 @@ public class TypeSelectorPopupwindow extends PopupWindow {
         this.setContentView(inflate);
         //设置SelectPicPopupWindow弹出窗体的宽
         int screenWidth = ScreenUtil.getScreenWidth(context);
-        this.setWidth(screenWidth/3);
+        this.setWidth(screenWidth);
         int screenHeight = ScreenUtil.getScreenHeight(context);
         //设置SelectPicPopupWindow弹出窗体的高
-        this.setHeight(screenHeight/5);
+        this.setHeight(screenHeight/3);
         //设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
         //实例化一个ColorDrawable颜色为半透明
-        ColorDrawable dw = new ColorDrawable(Color.GRAY);
+        ColorDrawable dw = new ColorDrawable(Color.parseColor("#eeffffff"));
         //设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(dw);
     }

@@ -5,7 +5,7 @@
           <size
               android:width="@dimen/x5"
               android:height="@dimen/x5" />
-          <solid android:color="#55000000" />
+          <solid android:color="#cccccc" />
       </shape>
     </item>
     <item android:state_enabled="true">
@@ -14,7 +14,7 @@
             <size
                 android:width="@dimen/x5"
                 android:height="@dimen/x5" />
-            <solid android:color="#66ccff" />
+            <solid android:color="#fa2d3b" />
         </shape>
     </item>
 </selector>

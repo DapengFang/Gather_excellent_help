@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.gather_excellent_help.ui.widget.MyNestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.gather_excellent_help.TestActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <include layout="@layout/home_vip_zera"/>
+        <include layout="@layout/home_qiang_zera"/>
+        <include layout="@layout/home_group_zera"/>
+    </LinearLayout>
+
+</com.gather_excellent_help.ui.widget.MyNestedScrollView>
+

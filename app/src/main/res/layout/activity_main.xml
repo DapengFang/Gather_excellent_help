@@ -20,13 +20,12 @@
         android:id="@+id/rl_main_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/x5"
         android:background="#ffffff">
 
         <RadioGroup
             android:id="@+id/rg_main"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/x58"
+            android:layout_height="@dimen/x42"
             android:orientation="horizontal">
 
             <RadioButton

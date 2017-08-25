@@ -70,7 +70,7 @@ android:background="#ffffff">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="备注:用户"
+            android:text="备注:"
             android:textSize="12sp"
             android:textColor="#99000000"/>
         <TextView

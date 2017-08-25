@@ -226,6 +226,7 @@ public class LoginActivity extends Activity {
 //                Toast.makeText(LoginActivity.this, "绑定失败 ！",
 //                        Toast.LENGTH_LONG).show();
 //                Log.i("GGG", "错误码" + code + "原因" + msg);
+                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
             }
         });
     }

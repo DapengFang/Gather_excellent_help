@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_activity_ware"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="#fff"
+    android:paddingBottom="@dimen/x8">
+
+    <RelativeLayout
+        android:layout_width="@dimen/x106"
+        android:layout_height="@dimen/x106">
+        <ImageView
+            android:id="@+id/iv_activity_ware_img"
+            android:layout_width="@dimen/x90"
+            android:layout_height="@dimen/x90"
+            android:layout_centerInParent="true"
+            android:background="#11000000"/>
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tv_activity_ware_title"
+        android:layout_width="@dimen/x95"
+        android:layout_height="@dimen/x14"
+        android:text="Haier/海尔EC"
+        android:textSize="@dimen/x12"
+        android:textColor="#333333"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/x4">
+        <TextView
+            android:id="@+id/tv_activity_ware_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/x12"
+            android:layout_gravity="bottom"
+            android:text="￥2000.00"
+            android:textStyle="bold"
+            android:textColor="#FA2D3B"/>
+        <TextView
+            android:id="@+id/tv_activity_ware_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/x9"
+            android:textColor="#55000000"
+            android:text="成本"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="@dimen/x5"/>
+    </LinearLayout>
+
+</LinearLayout>

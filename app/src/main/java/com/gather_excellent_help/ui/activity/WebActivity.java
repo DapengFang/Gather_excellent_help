@@ -82,7 +82,9 @@ public class WebActivity extends BaseActivity {
     private String adverId = "";
     private String goods_price = "";
     private String goods_coupon = "";
-    private String goods_coupon_url;
+    private String goods_coupon_url = "";
+    private String news_img_url = "";
+    private String newsTitle = "";
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -101,6 +103,7 @@ public class WebActivity extends BaseActivity {
             }
         }
     };
+    private String web_url = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,15 +119,25 @@ public class WebActivity extends BaseActivity {
     private void initData() {
         Intent intent = getIntent();
         netUtil = new NetUtil();
-        String web_url = intent.getStringExtra("web_url");
+        web_url = intent.getStringExtra("web_url");
+        if(web_url == null) {
+            web_url = "";
+        }
         type = intent.getStringExtra("type");
+        rlShare.setVisibility(View.VISIBLE);
         if (type != null) {
             if (type.equals("detail")) {
                 tvTopTitleName.setText("新闻专区");
-                rlShare.setVisibility(View.GONE);
+                String news_img = intent.getStringExtra("news_img");
+                if(news_img!=null) {
+                    news_img_url = news_img;
+                }
+                String news_title = intent.getStringExtra("news_title");
+                if(news_title!=null) {
+                    newsTitle = news_title;
+                }
             } else {
                 tvTopTitleName.setText("优惠券专区");
-                rlShare.setVisibility(View.VISIBLE);
                 url = intent.getStringExtra("url");
                 goods_id = intent.getStringExtra("goods_id");
                 goods_img = intent.getStringExtra("goods_img");
@@ -391,17 +404,41 @@ public class WebActivity extends BaseActivity {
         sharePopupwindow.setOnItemClickListenr(new SharePopupwindow.OnItemClickListenr() {
             @Override
             public void onQQClick() {
-                showCopyDialog(SHARE_MEDIA.QQ);
+                if(type!=null) {
+                    if (type.equals("detail")) {
+                        shareDiffSolfplamNews(SHARE_MEDIA.QQ);
+                    }else{
+                        showCopyDialog(SHARE_MEDIA.QQ);
+                    }
+                }else{
+                    showCopyDialog(SHARE_MEDIA.QQ);
+                }
             }
 
             @Override
             public void onWeixinClick() {
-                showCopyDialog(SHARE_MEDIA.WEIXIN);
+                if(type!=null) {
+                    if (type.equals("detail")) {
+                        shareDiffSolfplamNews(SHARE_MEDIA.WEIXIN);
+                    }else{
+                        showCopyDialog(SHARE_MEDIA.WEIXIN);
+                    }
+                }else{
+                    showCopyDialog(SHARE_MEDIA.WEIXIN);
+                }
             }
 
             @Override
             public void onSinaClick() {
-                showCopyDialog(SHARE_MEDIA.SINA);
+                if(type!=null) {
+                    if (type.equals("detail")) {
+                        shareDiffSolfplamNews(SHARE_MEDIA.SINA);
+                    }else{
+                        showCopyDialog(SHARE_MEDIA.SINA);
+                    }
+                }else{
+                    showCopyDialog(SHARE_MEDIA.SINA);
+                }
             }
         });
     }
@@ -431,6 +468,24 @@ public class WebActivity extends BaseActivity {
         web.setTitle(goods_title);//标题
         web.setThumb(image);  //缩略图
         web.setDescription("我在聚优帮看到了一件不错的商品,你也看看吧");//描述
+        new ShareAction(this)
+                .setPlatform(platform)//传入平台
+                .withMedia(web)//分享内容
+                .setCallback(shareListener)//回调监听器
+                .share();
+    }
+    /**
+     * 分享淘口令链接到不同给的平台
+     * @param platform
+     */
+    private void shareDiffSolfplamNews(SHARE_MEDIA platform){
+        UMImage image = new UMImage(WebActivity.this,news_img_url);//网络图片
+        UMImage thumb =  new UMImage(this, R.mipmap.juyoubang_logo);
+        image.setThumb(thumb);
+        UMWeb web = new UMWeb(web_url);
+        web.setTitle(newsTitle);//标题
+        web.setThumb(image);  //缩略图
+        web.setDescription("快来看看这条新闻吧");//描述
         new ShareAction(this)
                 .setPlatform(platform)//传入平台
                 .withMedia(web)//分享内容

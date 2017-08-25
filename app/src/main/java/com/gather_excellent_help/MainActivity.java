@@ -15,6 +15,7 @@ import com.gather_excellent_help.ui.adapter.CustomPagerAdapter;
 import com.gather_excellent_help.ui.base.BaseFragmentActivity;
 import com.gather_excellent_help.ui.fragment.GoodscartFragment;
 import com.gather_excellent_help.ui.fragment.HomeFragment;
+import com.gather_excellent_help.ui.fragment.HomeUpdateFragment;
 import com.gather_excellent_help.ui.fragment.MineFragment;
 import com.gather_excellent_help.ui.fragment.TaobaoFragment;
 import com.gather_excellent_help.ui.fragment.TypeFragment;
@@ -84,7 +85,8 @@ public class MainActivity extends FragmentActivity {
      */
     private void loadViewPager() {
         fragments = new ArrayList<>();
-        fragments.add(new HomeFragment());
+        //fragments.add(new HomeFragment());
+        fragments.add(new HomeUpdateFragment());
         fragments.add(new TypeFragment());
         fragments.add(new TaobaoFragment());
         fragments.add(new GoodscartFragment());

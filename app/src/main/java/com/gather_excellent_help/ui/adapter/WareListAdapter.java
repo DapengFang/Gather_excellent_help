@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gather_excellent_help.R;
@@ -74,7 +75,7 @@ public class WareListAdapter extends BaseAdapter {
         SearchWareBean.DataBean dataBean = data.get(position);
         ViewHolder holder = null;
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.item_text_pic_grid, null);
+            convertView = inflater.inflate(R.layout.item_type_text_pic_grid, null);
             holder = new ViewHolder();
             holder.home_type_photo = (ImageView) convertView.findViewById(R.id.iv_home_type_photo);
             holder.home_type_name = (TextView) convertView.findViewById(R.id.tv_home_type_title);
@@ -83,17 +84,15 @@ public class WareListAdapter extends BaseAdapter {
             holder.tv_home_type_aprice = (TextView) convertView.findViewById(R.id.tv_rush_ware_aprice);
             holder.tv_rush_ware_coupons = (TextView) convertView.findViewById(R.id.tv_rush_ware_coupons);
             holder.tv_rush_ware_second_coupons = (TextView) convertView.findViewById(R.id.tv_type_second_coupons);
+            holder.ll_activity_list_ware_zhuan = (LinearLayout) convertView.findViewById(R.id.ll_activity_list_ware_zhuan);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        if(dataBean.getTitle().length()>10) {
-            String sTitle = dataBean.getTitle().substring(0, 10) + "...";
-            holder.home_type_name.setText(sTitle);
-        }else{
+        if(dataBean.getTitle()!=null) {
             holder.home_type_name.setText(dataBean.getTitle());
         }
-        mImageLoader.loadImage(dataBean.getImg_url(),holder.home_type_photo,true);
+        mImageLoader.loadImage(dataBean.getImg_url()+"_430x430q90.jpg",holder.home_type_photo,true);
         DecimalFormat df = new DecimalFormat("#0.00");
         int couponsPrice = dataBean.getCouponsPrice();
         double tkRate = dataBean.getTkRate() / 100;
@@ -107,7 +106,7 @@ public class WareListAdapter extends BaseAdapter {
         }else{
             if(couponsPrice>0) {
                 holder.tv_rush_ware_coupons.setVisibility(View.VISIBLE);
-                holder.tv_rush_ware_coupons.setText("领取优惠券"+couponsPrice);
+                holder.tv_rush_ware_coupons.setText("领券减"+couponsPrice);
                 holder.tv_rush_ware_coupons.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -126,32 +125,32 @@ public class WareListAdapter extends BaseAdapter {
                 holder.tv_rush_ware_second_coupons.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-//                        Intent intent = new Intent(context, WebActivity.class);
-//                        intent.putExtra("web_url",secondCouponsUrl);
-//                        context.startActivity(intent);
+                        Intent intent = new Intent(context, WebActivity.class);
+                        intent.putExtra("web_url",secondCouponsUrl);
+                        context.startActivity(intent);
                     }
                 });
             }else{
                 holder.tv_rush_ware_second_coupons.setVisibility(View.GONE);
             }
         }
-
-        holder.tv_home_type_sale.setText("赚:￥"+df.format(zhuan));
-        holder.tv_home_type_coast.setText("成本:"+df.format(coast));
-        holder.tv_home_type_aprice.setText("页面价："+df.format(dataBean.getSell_price()));
+        holder.tv_home_type_sale.setText("￥"+df.format(zhuan));
+        holder.tv_home_type_coast.setText("￥"+df.format(coast));
+        holder.tv_home_type_aprice.setText("￥"+df.format(dataBean.getSell_price()));
         //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
         if(shopType==1){
             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
             if(toggleShow) {
-                holder.tv_home_type_sale.setVisibility(View.GONE);
-                holder.tv_home_type_coast.setVisibility(View.GONE);
+               holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
             }else{
-                holder.tv_home_type_sale.setVisibility(View.VISIBLE);
-                holder.tv_home_type_coast.setVisibility(View.VISIBLE);
+                holder.ll_activity_list_ware_zhuan.setVisibility(View.VISIBLE);
             }
         }else{
-            holder.tv_home_type_sale.setVisibility(View.GONE);
-            holder.tv_home_type_coast.setVisibility(View.GONE);
+            holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
+        }
+
+        if(zhuan == 0) {
+            holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
         }
         return convertView;
     }
@@ -164,6 +163,7 @@ public class WareListAdapter extends BaseAdapter {
         TextView tv_home_type_aprice ;       //活动价
         TextView tv_rush_ware_coupons ;       //优惠券
         TextView tv_rush_ware_second_coupons ;       //优惠券2
+        LinearLayout ll_activity_list_ware_zhuan;     //赚和成本
     }
 
 }

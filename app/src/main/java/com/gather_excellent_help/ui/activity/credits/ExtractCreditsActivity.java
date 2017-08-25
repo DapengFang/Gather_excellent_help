@@ -117,6 +117,7 @@ public class ExtractCreditsActivity extends BaseActivity {
         netUtil2.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
+                LogUtil.e("---"+response+"----");
                 CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
                 int statusCode = codeStatueBean.getStatusCode();
                 switch (statusCode) {
@@ -125,7 +126,7 @@ public class ExtractCreditsActivity extends BaseActivity {
                         List<MineBean.DataBean> data = mineBean.getData();
                         if(data.size()>0) {
                             amount = mineBean.getData().get(0).getAmount();
-                            DecimalFormat df = new DecimalFormat("30.00");
+                            DecimalFormat df = new DecimalFormat("#.00");
                             tvExteactAccount.setText("可提取现金: " + df.format(amount));
                         }
                         break;
@@ -176,7 +177,8 @@ public class ExtractCreditsActivity extends BaseActivity {
      * 显示提取规则
      */
     private void showExtractRule() {
-
+         Intent intent = new Intent(this, ExtractDetailActivity.class);
+         startActivity(intent);
     }
 
     /**
@@ -184,17 +186,19 @@ public class ExtractCreditsActivity extends BaseActivity {
      */
     private void commitExtractCredits() {
         String etCredits = etExtractCash.getText().toString().trim();
-        Integer cret = Integer.valueOf(etCredits);
         if(TextUtils.isEmpty(etCredits)) {
             Toast.makeText(ExtractCreditsActivity.this, "请输入提取数量！", Toast.LENGTH_SHORT).show();
-        }else if(cret>0 && cret <= amount) {
-            String userLogin = Tools.getUserLogin(this);
-            map = new HashMap<>();
-            map.put("id",userLogin);
-            map.put("extract_count",etCredits);
-            netUtil.okHttp2Server2(extract_url,map);
         }else{
-            Toast.makeText(ExtractCreditsActivity.this, "输入数量不正确！", Toast.LENGTH_SHORT).show();
+            Integer cret = Integer.valueOf(etCredits);
+            if(cret>0 && cret <= amount) {
+                String userLogin = Tools.getUserLogin(this);
+                map = new HashMap<>();
+                map.put("id",userLogin);
+                map.put("extract_count",etCredits);
+                netUtil.okHttp2Server2(extract_url,map);
+            }else{
+                Toast.makeText(ExtractCreditsActivity.this, "输入数量不正确！", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

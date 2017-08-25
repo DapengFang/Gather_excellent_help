@@ -27,6 +27,8 @@ public class GuideActivity extends BaseFullScreenActivity {
     LinearLayout llWelcomePointLayout;
     @Bind(R.id.tv_guidance_page)
     TextView tvGuidancePage;
+    @Bind(R.id.ll_splash_ship)
+    LinearLayout ll_splash_ship;
 
     /**
      * 上一个页面的位置
@@ -108,6 +110,15 @@ public class GuideActivity extends BaseFullScreenActivity {
              */
             public void onPageScrollStateChanged(int state) {
 
+            }
+        });
+
+        ll_splash_ship.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GuideActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 

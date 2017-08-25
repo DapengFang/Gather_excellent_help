@@ -40,7 +40,7 @@ public class MyFillGridView extends GridView {
             if (h > height) //采用最大的view的高度。
                 height = h;
         }
-        height = DensityUtil.dip2px(getContext(),200);
+        height = DensityUtil.dip2px(getContext(),205);
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(height,
                 MeasureSpec.EXACTLY);
         setMeasuredDimension(widthMeasureSpec,heightMeasureSpec);
