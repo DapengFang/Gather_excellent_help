@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.HomeWareBean;
 import com.gather_excellent_help.utils.Tools;
@@ -28,7 +30,7 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
     
     private Context context;
     private List<HomeWareBean.DataBean.ItemBean> itemData;
-    private ImageLoader mImageLoader;
+    //private ImageLoader mImageLoader;
     private double user_rate;
     private int shopType;
     private boolean isToggle;
@@ -36,7 +38,7 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
     public HomeActivityWareAdapter(Context context, List<HomeWareBean.DataBean.ItemBean> itemData) {
         this.context = context;
         this.itemData = itemData;
-        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         shopType = Tools.getShopType(context);
         String userRate = Tools.getUserRate(context);
         if (!TextUtils.isEmpty(userRate)) {
@@ -78,7 +80,12 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
             }
         }
         if(holder.ivActivityWareImg!=null && img_url!=null) {
-            mImageLoader.loadImage(img_url,holder.ivActivityWareImg,true);
+            //mImageLoader.loadImage(img_url,holder.ivActivityWareImg,true);
+            Glide.with(context).load(img_url+"_320x320q90.jpg")
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                    .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                    .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                    .into(holder.ivActivityWareImg);//请求成功后把图片设置到的控件
         }
         if(holder.tvActivityWareTitle!=null && title!=null) {
            holder.tvActivityWareTitle.setText(title);

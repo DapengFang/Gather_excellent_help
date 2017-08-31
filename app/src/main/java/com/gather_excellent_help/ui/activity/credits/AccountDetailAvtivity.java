@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,14 +17,12 @@ import com.gather_excellent_help.bean.AccountDetailBean;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.adapter.AcccountDetailAdapter;
-import com.gather_excellent_help.ui.adapter.ExtractDetailAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +44,8 @@ public class AccountDetailAvtivity extends BaseActivity {
     TextView tvAccountQueryTime;
     @Bind(R.id.tv_account_query_project)
     TextView tvAccountQueryProject;
+    @Bind(R.id.iv_order_no_zhanwei)
+    ImageView ivOrderNoZhanwei;
 
     private String account_url = Url.BASE_URL + "AmountLog.aspx";
     private Map<String, String> map;
@@ -114,11 +115,15 @@ public class AccountDetailAvtivity extends BaseActivity {
                     if (lastVisibleItem + 1 == layoutManager
                             .getItemCount()) {
                         isLoadmore = true;
+                        if (currData.size() < 10) {
+                            Toast.makeText(AccountDetailAvtivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 pageIndex = String.valueOf(page);
-                               net2ServerByType(type);
+                                net2ServerByType(type);
                             }
                         }, 1000);
                     }
@@ -135,7 +140,7 @@ public class AccountDetailAvtivity extends BaseActivity {
 
     private void net2ServerByType(String type) {
         String userLogin = Tools.getUserLogin(this);
-        if(TextUtils.isEmpty(userLogin)) {
+        if (TextUtils.isEmpty(userLogin)) {
             toLogin();
             return;
         }
@@ -160,16 +165,18 @@ public class AccountDetailAvtivity extends BaseActivity {
      * 加载获取的数据
      */
     private void loadAccountData() {
-        if(isLoadmore) {
+        if (isLoadmore) {
             page++;
-            if(currData.size()<10) {
-                Toast.makeText(AccountDetailAvtivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
-                return;
-            }else{
-                accountData.addAll(currData);
-            }
+            accountData.addAll(currData);
             acccountDetailAdapter.notifyDataSetChanged();
-        }else{
+        } else {
+            if(currData!=null) {
+                if(currData.size() > 0) {
+                    ivOrderNoZhanwei.setVisibility(View.GONE);
+                }else{
+                    ivOrderNoZhanwei.setVisibility(View.VISIBLE);
+                }
+            }
             page = 2;
             accountData = currData;
             acccountDetailAdapter = new AcccountDetailAdapter(this, accountData);

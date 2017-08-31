@@ -1,18 +1,31 @@
 package com.gather_excellent_help.utils;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.util.Base64;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.gather_excellent_help.SplashActivity;
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by wuxin on 2017/7/11.
@@ -58,6 +71,10 @@ public class Tools {
      */
     public static String getAdverId(Context context){
         return CacheUtils.getString(context,CacheUtils.ADVER_ID,"");
+    }
+
+    public static String getSampleUser(Context context){
+        return CacheUtils.getString(context,CacheUtils.SAMPLE_VALUE,"");
     }
     /**
      * 用户登录后的佣金比率
@@ -175,5 +192,71 @@ public class Tools {
         SpannableStringBuilder style = new SpannableStringBuilder(str);
         style.setSpan(new ForegroundColorSpan(Color.RED),0, end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         tv.setText(style);
+    }
+
+    //获取当前版本号。
+    public static String getVersion(Context context) {
+        try {
+            PackageManager manager = context.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+            String version = info.versionName;
+            return version;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void downloadApk(String apkUrl, File apkFile,
+                                   ProgressDialog pd, Handler handler) throws Exception {
+        // 得到连接对象
+        URL url = new URL(apkUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        // 设置
+        connection.setConnectTimeout(3000);
+        connection.setReadTimeout(10000);
+        connection.setDoInput(true);
+        // 连接
+        connection.connect();
+
+        if (connection.getResponseCode() == 200) {
+            //设置最大进度
+            pd.setMax(connection.getContentLength());
+
+            //数据读取并保存到文件
+            FileOutputStream fos = new FileOutputStream(apkFile);
+            InputStream is = connection.getInputStream();
+            byte[] buffer = new byte[2048];
+            int len = -1;
+            while((len=is.read(buffer))>0) {
+
+
+                fos.write(buffer, 0, len);
+
+                pd.incrementProgressBy(len);//更新进度
+            }
+            is.close();
+            fos.close();
+            connection.disconnect();
+            handler.sendEmptyMessage(SplashActivity.REQUEST_DOWNLOAD_SUCCESS);
+        } else {
+            throw new RuntimeException("没能正常得到数据!");
+        }
+    }
+
+    public static void closeBoard(Context mcontext) {
+        InputMethodManager imm = (InputMethodManager) mcontext
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        // imm.hideSoftInputFromWindow(myEditText.getWindowToken(), 0);
+        if (imm.isActive())  //一直是true
+            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+
+    public static void hideSystemKeyBoard(Context mcontext,View v) {
+        InputMethodManager imm = (InputMethodManager) mcontext
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 }

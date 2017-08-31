@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.NewsListBean;
@@ -41,12 +43,12 @@ public class NewsFirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public static final int LOAD_END = 3;
     private static final int TYPE_FOOTER = -2;
     private int extra = 1;
-    private ImageLoader mIageLoader;
+    //private ImageLoader mIageLoader;
 
     public NewsFirstAdapter(Context context,List<NewsListBean.DataBean> newsData) {
         this.context = context;
         this.newsData = newsData;
-        mIageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        //mIageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
     @Override
@@ -96,7 +98,10 @@ public class NewsFirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
                 if(img_url!=null) {
                     if(newsHolder.ivNewsFirstPic!=null) {
-                        mIageLoader.loadImage(Url.IMG_URL+img_url,newsHolder.ivNewsFirstPic,true);
+                        //mIageLoader.loadImage(Url.IMG_URL+img_url,newsHolder.ivNewsFirstPic,true);
+                        Glide.with(context).load(Url.IMG_URL+img_url)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                                .into(newsHolder.ivNewsFirstPic);//请求成功后把图片设置到的控件
                     }
                 }
                 if(title!=null) {

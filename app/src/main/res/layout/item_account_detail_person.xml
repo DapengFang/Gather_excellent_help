@@ -1,96 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical"
-android:background="#ffffff">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/x5"
-        android:background="#11000000"/>
-<TextView
-    android:id="@+id/tv_account_detail_time"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/x40"
-    android:padding="@dimen/x5"
-    android:textSize="12sp"
-    android:gravity="center_vertical"
-    android:textColor="#99000000"/>
-<View
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/x2"
-    android:layout_marginLeft="@dimen/x3"
-    android:layout_marginRight="@dimen/x3"
-    android:background="@drawable/amount_detail_dash_line"/>
-<TextView
-    android:id="@+id/tv_account_detail_pro"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/x40"
-    android:padding="@dimen/x5"
-    android:textSize="12sp"
-    android:gravity="center_vertical"
-    android:textColor="#99000000"/>
-<View
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/x2"
-    android:layout_marginLeft="@dimen/x3"
-    android:layout_marginRight="@dimen/x3"
-    android:background="@drawable/amount_detail_dash_line"/>
-<TextView
-    android:id="@+id/tv_account_detail_money"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/x40"
-    android:padding="@dimen/x5"
-    android:textSize="12sp"
-    android:gravity="center_vertical"
-    android:textColor="#99000000"/>
-<View
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/x2"
-    android:layout_marginLeft="@dimen/x3"
-    android:layout_marginRight="@dimen/x3"
-    android:background="@drawable/amount_detail_dash_line"/>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/x80"
-    android:orientation="vertical"
-    android:padding="@dimen/x5"
-    android:gravity="center_vertical">
-    <TextView
-        android:id="@+id/tv_account_detail_salery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="#EBDD87"
-        android:padding="@dimen/x2"/>
+        android:background="#11000000" />
+
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="@dimen/x40"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
         <TextView
+            android:id="@+id/tv_account_first"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="备注:"
-            android:textSize="12sp"
-            android:textColor="#99000000"/>
+            android:text="日期:"
+            android:textSize="14sp"
+            android:textColor="#333333"
+            android:layout_marginLeft="@dimen/x8"/>
+
         <TextView
-            android:id="@+id/tv_account_detail_phone"
+            android:id="@+id/tv_account_detail_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="#99ff0000"/>
-        <TextView
-            android:id="@+id/tv_account_back_show"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="购买返佣"
-            android:textSize="12sp"
-            android:textColor="#99000000"/>
+            android:textColor="#666666"
+            android:textSize="14sp"
+            android:layout_marginLeft="@dimen/x3"/>
 
     </LinearLayout>
 
-</LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:layout_marginLeft="@dimen/x3"
+        android:layout_marginRight="@dimen/x3"
+        android:background="@drawable/xuxian_divide" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_account_second"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="项目:"
+            android:textSize="14sp"
+            android:textColor="#333333"
+            android:layout_marginLeft="@dimen/x8"/>
+
+        <TextView
+            android:id="@+id/tv_account_detail_pro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            android:layout_marginLeft="@dimen/x3"/>
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:layout_marginLeft="@dimen/x3"
+        android:layout_marginRight="@dimen/x3"
+        android:background="@drawable/xuxian_divide" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_account_third"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发生金额:"
+            android:textSize="14sp"
+            android:textColor="#333333"
+            android:layout_marginLeft="@dimen/x8"/>
+
+        <TextView
+            android:id="@+id/tv_account_detail_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            android:layout_marginLeft="@dimen/x3"/>
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:layout_marginLeft="@dimen/x3"
+        android:layout_marginRight="@dimen/x3"
+        android:background="@drawable/xuxian_divide" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x80"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_account_detail_salery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ff6600"
+            android:textSize="14sp"
+            android:layout_marginLeft="@dimen/x8"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/x8">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="备注:"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:layout_marginLeft="@dimen/x8"/>
+
+            <TextView
+                android:id="@+id/tv_account_detail_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:layout_marginLeft="@dimen/x3"/>
+
+            <TextView
+                android:id="@+id/tv_account_back_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="购买返佣"
+                android:textColor="#99000000"
+                android:textSize="14sp"
+                android:visibility="gone"
+                android:layout_marginLeft="@dimen/x3"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 
 </LinearLayout>

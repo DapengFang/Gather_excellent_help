@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -52,8 +54,6 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
     RelativeLayout rlExit;
     @Bind(R.id.et_ware_list_content)
     EditText etWareListContent;
-    @Bind(R.id.tv_ware_list_old)
-    TextView tvWareListOld;
     @Bind(R.id.rl_sousuo)
     RelativeLayout rlSousuo;
     @Bind(R.id.ll_ware_list_pingpai)
@@ -82,6 +82,8 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
     ProgressBar progress;
     @Bind(R.id.activity_ware_list)
     LinearLayout activityWareList;
+    @Bind(R.id.rl_edit_text_exit)
+    RelativeLayout rlEditTextExit;
 
     private NetUtil netUtil;//搜索条件列表的网络接口
     private NetUtil netUtil2;//搜索商品列表的网络接口
@@ -135,6 +137,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
      * 初始化数据
      */
     private void initData() {
+        rlEditTextExit.setVisibility(View.GONE);
         showLoading();
         netUtil = new NetUtil();
         netUtil2 = new NetUtil();
@@ -148,7 +151,6 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
         activity_id = intent.getStringExtra("activity_id");
         if (type_id != null && !TextUtils.isEmpty(type_id)) {
             Type = type_id;
-            tvWareListOld.setVisibility(View.GONE);
             etWareListContent.setHint("请输入商品名称");
             map = new HashMap<>();
             map.put("id", type_id);
@@ -161,7 +163,6 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
             map.put("pageIndex", "1");
             netUtil2.okHttp2Server2(ware_url, map);
         } else {
-            tvWareListOld.setVisibility(View.GONE);
             etWareListContent.setHint("请输入商品名称");
             if (sousuoStr.equals("isQiang")) {
                 map = new HashMap<>();
@@ -236,8 +237,9 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
         llWareListLeibie.setOnClickListener(new MyOnClickListener());
         llWareListPingpai.setOnClickListener(new MyOnClickListener());
         llWareListRongliang.setOnClickListener(new MyOnClickListener());
-        tvWareListOld.setOnClickListener(new MyOnClickListener());
         rlSousuo.setOnClickListener(new MyOnClickListener());
+        rlEditTextExit.setOnClickListener(new MyOnClickListener());
+        etWareListContent.addTextChangedListener(watcher);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -263,6 +265,33 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
             }
         });
     }
+
+    private TextWatcher watcher = new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // TODO Auto-generated method stub
+            int length = s.length();
+            if (length == 0) {
+                rlEditTextExit.setVisibility(View.GONE);
+            } else {
+                rlEditTextExit.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count,
+                                      int after) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // TODO Auto-generated method stub
+
+        }
+    };
 
     /**
      * @param response 解析搜索后的商品数据
@@ -528,6 +557,10 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 }
                 if (crr_click == 0) {
                     Type = String.valueOf(id);
+                    brandId = "";
+                    capacity = "";
+                    tvWareListPingpai.setText("品牌");
+                    tvWareListRongliang.setText("容量");
                     tvWareListLeibie.setText(title);
                 } else if (crr_click == 1) {
                     brandId = String.valueOf(id);
@@ -600,7 +633,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     if (Type != null && !TextUtils.isEmpty(Type)) {
                         map.put("id", Type);
                         netUtil.okHttp2Server2(pingpai_url, map);
-                    }else{
+                    } else {
                         Toast.makeText(WareListActivity.this, "请选择类别！", Toast.LENGTH_SHORT).show();
                     }
 
@@ -612,15 +645,9 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                         map = new HashMap<>();
                         map.put("sub_id", Type);
                         netUtil.okHttp2Server2(rongliang_url, map);
-                    }else{
-                       Toast.makeText(WareListActivity.this, "请选择类别！", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(WareListActivity.this, "请选择类别！", Toast.LENGTH_SHORT).show();
                     }
-                    break;
-                case R.id.tv_ware_list_old:
-                    tvWareListOld.setText("");
-                    sousuoStr = "";
-                    tvWareListOld.setVisibility(View.GONE);
-                    etWareListContent.setHint("请输入商品名称");
                     break;
                 case R.id.rl_sousuo:
                     Toast.makeText(WareListActivity.this, "正在搜索中，请稍后！", Toast.LENGTH_SHORT).show();
@@ -750,6 +777,9 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 case R.id.rl_exit:
                     finish();
                     break;
+                case R.id.rl_edit_text_exit:
+                    etWareListContent.setText("");
+                    break;
             }
         }
     }
@@ -774,7 +804,6 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
      */
     private void searchWareList() {
         if (type_id != null && !TextUtils.isEmpty(type_id)) {
-            tvWareListOld.setVisibility(View.GONE);
             etWareListContent.setHint("请输入商品名称");
             map = new HashMap<>();
             map.put("id", type_id);
@@ -787,7 +816,6 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
             map.put("capacity", capacity);
             netUtil2.okHttp2Server2(ware_url, map);
         } else {
-            tvWareListOld.setVisibility(View.GONE);
             etWareListContent.setHint("请输入商品名称");
             if (sousuoStr.equals("isQiang")) {
                 map = new HashMap<>();

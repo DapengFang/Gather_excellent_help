@@ -5,159 +5,187 @@
     android:background="@drawable/login_backgroud"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/x35"
-        android:layout_marginTop="@dimen/x120">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="@dimen/x10">
-
-            <ImageView
-                android:layout_width="@dimen/x22"
-                android:layout_height="@dimen/x22"
-                android:src="@drawable/phone_icon" />
-
-            <EditText
-                android:id="@+id/et_findpsw_user"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/x10"
-                android:background="@null"
-                android:hint="手机号"
-                android:cursorVisible="true"
-                android:textCursorDrawable="@drawable/edit_cursor_shape"
-                android:inputType="number"
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray_line_color" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="@dimen/x10">
-
-            <ImageView
-                android:layout_width="@dimen/x22"
-                android:layout_height="@dimen/x22"
-                android:src="@drawable/psw_icon" />
-
-            <EditText
-                android:id="@+id/et_findpsw_newPsw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/x10"
-                android:background="@null"
-                android:hint="新密码"
-                android:maxLength="12"
-                android:cursorVisible="true"
-                android:textCursorDrawable="@drawable/edit_cursor_shape"
-                android:inputType="textPassword"
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray_line_color" />
+        android:layout_height="match_parent">
 
         <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="@dimen/x60"
+            android:layout_height="@dimen/x60">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x8"
+                android:layout_marginTop="@dimen/x16"
+                android:src="@drawable/login_back_icon" />
+        </RelativeLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/x10">
+            android:layout_marginTop="@dimen/x200"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="@dimen/x10">
+                android:paddingBottom="@dimen/x10"
+                android:paddingLeft="@dimen/x26"
+                android:paddingRight="@dimen/x26"
+                android:paddingTop="@dimen/x10">
 
                 <ImageView
                     android:layout_width="@dimen/x22"
                     android:layout_height="@dimen/x22"
-                    android:src="@drawable/sms_icon" />
+                    android:src="@drawable/phone_icon" />
 
                 <EditText
-                    android:id="@+id/et_findpsw_smscode"
+                    android:id="@+id/et_findpsw_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/x10"
                     android:background="@null"
-                    android:hint="请输入验证码"
                     android:cursorVisible="true"
-                    android:textCursorDrawable="@drawable/edit_cursor_shape"
+                    android:hint="请输入手机号"
                     android:inputType="number"
-                    android:textColor="#ffffff"
-                    android:textColorHint="#ffffff"
+                    android:textColor="#a9a9a9"
+                    android:textColorHint="#a9a9a9"
                     android:textSize="16sp" />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_findpsw_getSms"
-                android:layout_width="@dimen/x80"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="@dimen/x26"
+                android:layout_marginRight="@dimen/x26"
+                android:background="#f2f2f2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="获取验证码"
-                android:textSize="16sp"
-                android:textColor="@color/white"
-                android:padding="@dimen/x3"
-                android:gravity="center"
-                android:cursorVisible="true"
-                android:textCursorDrawable="@drawable/edit_cursor_shape"
-                android:background="@drawable/sms_shape_background"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"/>
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/x10"
+                android:paddingLeft="@dimen/x26"
+                android:paddingRight="@dimen/x26"
+                android:paddingTop="@dimen/x10">
 
-        </RelativeLayout>
+                <ImageView
+                    android:layout_width="@dimen/x22"
+                    android:layout_height="@dimen/x22"
+                    android:src="@drawable/psw_icon" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray_line_color" />
+                <EditText
+                    android:id="@+id/et_findpsw_newPsw"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x10"
+                    android:background="@null"
+                    android:cursorVisible="true"
+                    android:hint="请输入新密码"
+                    android:inputType="textPassword"
+                    android:maxLength="12"
+                    android:textColor="#a9a9a9"
+                    android:textColorHint="#a9a9a9"
+                    android:textSize="16sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/x60"
-            android:padding="@dimen/x10"
-            android:layout_marginTop="@dimen/x150"
-            android:orientation="horizontal">
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_update"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginLeft="@dimen/x5"
-                android:layout_marginRight="@dimen/x5"
-                android:layout_alignParentRight="true"
-                android:text="确定"
-                android:textColor="@drawable/register_textcolor_confirm_selector"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:background="@drawable/register_confirm_selector"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="@dimen/x26"
+                android:layout_marginRight="@dimen/x26"
+                android:background="#f2f2f2" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/x10">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/x10"
+                    android:paddingLeft="@dimen/x26"
+                    android:paddingRight="@dimen/x26"
+                    android:paddingTop="@dimen/x10">
+
+                    <ImageView
+                        android:layout_width="@dimen/x22"
+                        android:layout_height="@dimen/x22"
+                        android:src="@drawable/sms_icon" />
+
+                    <EditText
+                        android:id="@+id/et_findpsw_smscode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/x10"
+                        android:background="@null"
+                        android:cursorVisible="true"
+                        android:hint="请输入验证码"
+                        android:inputType="number"
+                        android:textColor="#a9a9a9"
+                        android:textColorHint="#a9a9a9"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_findpsw_getSms"
+                    android:layout_width="@dimen/x90"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/x26"
+                    android:background="@drawable/sms_shape_background"
+                    android:gravity="center"
+                    android:padding="@dimen/x3"
+                    android:text="获取验证码"
+                    android:textColor="#a9a9a9"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="@dimen/x26"
+                android:layout_marginRight="@dimen/x26"
+                android:background="#f2f2f2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x60"
+                android:layout_marginTop="@dimen/x60"
+                android:orientation="horizontal"
+                android:padding="@dimen/x10">
+
+                <TextView
+                    android:id="@+id/tv_update"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_weight="1"
+                    android:background="@drawable/register_confirm_selector"
+                    android:gravity="center"
+                    android:text="确定"
+                    android:textColor="@drawable/register_textcolor_confirm_selector"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>
 

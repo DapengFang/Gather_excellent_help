@@ -38,13 +38,16 @@ public class ExtractDetailAdapter extends RecyclerView.Adapter<ExtractDetailAdap
     @Override
     public void onBindViewHolder(AccountDetailViewHolder holder, int position) {
         ExractDetailBean.DataBean dataBean = data.get(position);
+        holder.tv_account_first.setText("订单号:");
+        holder.tv_account_second.setText("审核日期:");
+        holder.tv_account_third.setText("提取金额:");
         if(dataBean.getWithdrawal_no()!=null) {
-            holder.tvAccountDetailTime.setText("订单号:"+dataBean.getWithdrawal_no());
+            holder.tvAccountDetailTime.setText(dataBean.getWithdrawal_no());
         }
         if(dataBean.getAudit_time()!=null) {
-            holder.tvAccountDetailPro.setText("审核日期:"+dataBean.getAudit_time());
+            holder.tvAccountDetailPro.setText(dataBean.getAudit_time());
         }
-        holder.tvAccountDetailMoney.setText("提取金额:￥" + dataBean.getValue());
+        holder.tvAccountDetailMoney.setText("￥" + dataBean.getValue());
         int status = dataBean.getStatus();
         if(status == 1) {
             holder.tvAccountDetailSalery.setText("状态:已完成");
@@ -75,6 +78,12 @@ public class ExtractDetailAdapter extends RecyclerView.Adapter<ExtractDetailAdap
         TextView tvAccountDetailSalery;
         @Bind(R.id.tv_account_detail_phone)
         TextView tvAccountDetailPhone;
+        @Bind(R.id.tv_account_first)
+        TextView tv_account_first;
+        @Bind(R.id.tv_account_second)
+        TextView tv_account_second;
+        @Bind(R.id.tv_account_third)
+        TextView tv_account_third;
 
         public AccountDetailViewHolder(View itemView) {
             super(itemView);

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
 
 
@@ -47,6 +48,7 @@ public class SharePopupwindow extends PopupWindow {
         LinearLayout llShareQQ = (LinearLayout) view.findViewById(R.id.ll_share_qq);
         LinearLayout llShareWeixin = (LinearLayout) view.findViewById(R.id.ll_share_weixin);
         LinearLayout llShareSina = (LinearLayout) view.findViewById(R.id.ll_share_sina);
+        TextView tv_share_cancel = (TextView) view.findViewById(R.id.tv_share_cancel);
         llShareQQ.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,12 +67,20 @@ public class SharePopupwindow extends PopupWindow {
                 onItemClickListenr.onSinaClick();
             }
         });
+        tv_share_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isShowing()) {
+                    dismiss();
+                }
+            }
+        });
         setContentView(view);
         setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        setHeight(ScreenUtil.getScreenHeight(context)/6);
+        setHeight(ScreenUtil.getScreenHeight(context) - DensityUtil.dip2px(context,20));
         //设置SelectPicPopupWindow弹出窗体动画效果
         this.setAnimationStyle(R.style.AnimBottom);
-        ColorDrawable dw = new ColorDrawable(Color.WHITE);
+        ColorDrawable dw = new ColorDrawable(Color.parseColor("#55000000"));
         //设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(dw);
     }

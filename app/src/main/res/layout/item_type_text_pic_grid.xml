@@ -10,7 +10,7 @@
         android:background="#ffffff"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/x3">
+        android:paddingBottom="@dimen/x9">
 
         <RelativeLayout
             android:layout_width="match_parent"

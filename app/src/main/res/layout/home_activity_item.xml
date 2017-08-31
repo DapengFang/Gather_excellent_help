@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/x8"
+        android:background="#33000000"
         android:gravity="center"
         android:orientation="horizontal"
-        android:background="#33000000">
+        android:padding="@dimen/x8">
+
         <ImageView
             android:layout_width="@dimen/x28"
             android:layout_height="@dimen/x16"
-            android:src="@drawable/rush_left"/>
+            android:src="@drawable/rush_left" />
+
         <TextView
             android:id="@+id/tv_rush_more_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x3"
             android:text="今日新品"
-            android:textStyle="bold"
             android:textSize="16sp"
-            android:layout_marginLeft="@dimen/x3"/>
+            android:textStyle="bold" />
+
         <ImageView
             android:layout_width="@dimen/x28"
             android:layout_height="@dimen/x16"
-            android:src="@drawable/rush_right"
-            android:layout_marginLeft="@dimen/x3"/>
+            android:layout_marginLeft="@dimen/x3"
+            android:src="@drawable/rush_right" />
 
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ImageView
             android:id="@+id/iv_rush_more_big"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/activity_home_img"
             android:adjustViewBounds="true"
-            android:paddingBottom="1px"/>
+            android:background="@drawable/activity_home_img"
+            android:paddingBottom="1px" />
+
         <com.gather_excellent_help.ui.widget.TrigleView
             android:layout_width="@dimen/x20"
             android:layout_height="@dimen/x10"
@@ -48,16 +53,11 @@
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rcv_activity_ware_list"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"></android.support.v7.widget.RecyclerView>
-    </RelativeLayout>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcv_activity_ware_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
 
 </LinearLayout>

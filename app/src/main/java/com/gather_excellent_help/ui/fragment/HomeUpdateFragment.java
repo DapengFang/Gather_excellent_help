@@ -77,6 +77,7 @@ public class HomeUpdateFragment extends BaseFragment {
     private boolean mIsRequestDataRefresh = false;
     public static final int TIME_DOWN = 1; //倒计时显示的标识
     public static final int STOP_REFRESH = 2; //加载数据的标识
+    public static final int TOTOP = 3; //加载数据的标识
     private boolean bannerRefresh = false;
     private boolean typeRefresh = false;
     private long time;
@@ -107,6 +108,11 @@ public class HomeUpdateFragment extends BaseFragment {
                         return;
                     }
                     handler.sendEmptyMessageDelayed(STOP_REFRESH,200);
+                    break;
+                case TOTOP:
+                    if(mynested_scrollview!=null) {
+                        mynested_scrollview.scrollTo(0,0);
+                    }
                     break;
             }
         }
@@ -172,6 +178,9 @@ public class HomeUpdateFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
+
+        handler.sendEmptyMessageDelayed(TOTOP,3000);
+
     }
 
     /**

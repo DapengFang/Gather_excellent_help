@@ -17,6 +17,8 @@ import java.net.URL;
 public class CacheUtils {
 	//登录标识
 	public static final String LOGIN_VALUE = "login_value";
+	//是否相同用户
+	public static final String SAMPLE_VALUE = "sample_value";
 	//登录状态。
 	public static final String LOGIN_STATE = "Login_State";
 	//绑定淘宝状态

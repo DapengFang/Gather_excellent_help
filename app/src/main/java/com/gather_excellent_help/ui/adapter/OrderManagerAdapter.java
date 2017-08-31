@@ -23,12 +23,10 @@ public class OrderManagerAdapter extends RecyclerView.Adapter<OrderManagerAdapte
 
     private Context context;
     private LayoutInflater inflater;    //布局填充器
-    private ImageLoader mImageLoader;
 
     public OrderManagerAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
-        mImageLoader =ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
     @Override

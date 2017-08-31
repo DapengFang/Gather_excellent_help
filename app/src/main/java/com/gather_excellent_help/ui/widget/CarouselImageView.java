@@ -282,7 +282,7 @@ public class CarouselImageView extends LinearLayout {
                 imageView = new ImageView(mContext);
                 imageView.setAdjustViewBounds(true);
                 imageView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                imageView.setImageResource(R.drawable.white_banner);
+                //imageView.setImageResource(R.drawable.white_banner);
             } else {
                 imageView = mImageViewCacheList.remove(0);
             }
@@ -293,7 +293,7 @@ public class CarouselImageView extends LinearLayout {
                     mImageCycleViewListener.onImageClick(position,v);
                 }
             });
-            imageView.setTag(imageUrl);
+            //imageView.setTag(imageUrl);
             container.addView(imageView);
             mImageCycleViewListener.displayImage(imageUrl, imageView);
             return imageView;

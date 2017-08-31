@@ -28,13 +28,11 @@ public class BrandListAdapter extends BaseAdapter {
     private Context context;
     private List<BrandBean.DataBean> data;
     private LayoutInflater inflater;    //布局填充器
-    private ImageLoader mImageLoader;
 
     public BrandListAdapter(Context context, List<BrandBean.DataBean> data) {
         this.context = context;
         this.data = data;
         inflater = LayoutInflater.from(context);
-        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
     @Override

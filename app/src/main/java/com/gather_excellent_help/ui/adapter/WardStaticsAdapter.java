@@ -30,16 +30,23 @@ public class WardStaticsAdapter extends RecyclerView.Adapter<WardStaticsAdapter.
 
     @Override
     public WardStaticsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View inflate = View.inflate(context, R.layout.item_ward_tongji, null);
+        View inflate = View.inflate(context, R.layout.ward_statics_item, null);
         return new WardStaticsViewHolder(inflate);
     }
 
     @Override
     public void onBindViewHolder(WardStaticsViewHolder holder, int position) {
         WardStaticsBean.DataBean dataBean = wardsData.get(position);
-        holder.tvTongjiName.setText(dataBean.getUsers_name());
-        holder.tvTongjiNumber.setText(dataBean.getCount()+"");
-        holder.tvWardCredits.setText(dataBean.getTotal()+"");
+        if(holder.tvTongjiName!=null && dataBean.getUsers_name()!=null) {
+            holder.tvTongjiName.setText(dataBean.getUsers_name());
+        }
+       if(holder.tvTongjiNumber!=null) {
+           holder.tvTongjiNumber.setText(dataBean.getCount()+"");
+       }
+        if(holder.tvWardCredits!=null) {
+            holder.tvWardCredits.setText(dataBean.getTotal()+"");
+        }
+
     }
 
     @Override

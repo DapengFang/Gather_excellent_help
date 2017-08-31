@@ -2,6 +2,7 @@ package com.gather_excellent_help.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -38,28 +39,37 @@ public class BackRebateAdapter extends RecyclerView.Adapter<BackRebateAdapter.Ac
     @Override
     public void onBindViewHolder(AccountDetailViewHolder holder, int position) {
         BackRebateBean.DataBean dataBean = data.get(position);
+        holder.tv_account_first.setText("返佣结算号:");
+        holder.tv_account_second.setText("审核日期:");
+        holder.tv_account_third.setText("当前状态:");
+        holder.tvAccountBackShow.setVisibility(View.GONE);
         if(dataBean.getRebate_no()!=null) {
-            holder.tvAccountDetailTime.setText("返佣结算号:"+dataBean.getRebate_no());
+            holder.tvAccountDetailTime.setText(dataBean.getRebate_no());
         }
         if(dataBean.getAudit_time()!=null) {
-            holder.tvAccountDetailPro.setText("审核日期:"+dataBean.getAudit_time());
+            holder.tvAccountDetailPro.setText(dataBean.getAudit_time());
         }
         int status = dataBean.getStatus();
         if(status==1) {
-            holder.tvAccountDetailMoney.setText("当前状态:通过" );
+            holder.tvAccountDetailMoney.setText("通过" );
         }else if(status ==2) {
-            holder.tvAccountDetailMoney.setText("当前状态:驳回" );
+            holder.tvAccountDetailMoney.setText("驳回" );
         }else if(status ==3) {
-            holder.tvAccountDetailMoney.setText("当前状态:待处理" );
+            holder.tvAccountDetailMoney.setText("待处理" );
         }else{
-            holder.tvAccountDetailMoney.setText("当前状态:已完成" );
+            holder.tvAccountDetailMoney.setText("已完成" );
         }
 
-        holder.tvAccountDetailSalery.setText("返佣:"+dataBean.getValue()+"现金");
+        holder.tvAccountDetailSalery.setText("返佣:￥"+dataBean.getValue()+"现金");
         if(dataBean.getRemark()!=null) {
-            holder.tvAccountDetailPhone.setText(dataBean.getRemark());
+            String remark = dataBean.getRemark();
+            if(TextUtils.isEmpty(remark)) {
+                holder.tvAccountDetailPhone.setText("无");
+            }else{
+                holder.tvAccountDetailPhone.setText(dataBean.getRemark());
+            }
+
         }
-        holder.tvAccountBackShow.setVisibility(View.GONE);
     }
 
     @Override
@@ -81,6 +91,12 @@ public class BackRebateAdapter extends RecyclerView.Adapter<BackRebateAdapter.Ac
         TextView tvAccountDetailPhone;
         @Bind(R.id.tv_account_back_show)
         TextView tvAccountBackShow;
+        @Bind(R.id.tv_account_first)
+        TextView tv_account_first;
+        @Bind(R.id.tv_account_second)
+        TextView tv_account_second;
+        @Bind(R.id.tv_account_third)
+        TextView tv_account_third;
 
         public AccountDetailViewHolder(View itemView) {
             super(itemView);

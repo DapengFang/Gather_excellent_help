@@ -22,6 +22,10 @@ public class RuleHelpActivity extends BaseActivity {
 
     @Bind(R.id.wv_banner)
     WebView wvBanner;
+    @Bind(R.id.rl_exit)
+    RelativeLayout rlExit;
+    @Bind(R.id.tv_top_title_name)
+    TextView tvTopTitleName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +38,17 @@ public class RuleHelpActivity extends BaseActivity {
     /**
      * 初始化数据
      */
-    private void initData(){
+    private void initData() {
         Intent intent = getIntent();
         String web_url = intent.getStringExtra("web_url");
+        String which = intent.getStringExtra("which");
+        if(which!=null) {
+            if(which.equals("help")) {
+                tvTopTitleName.setText("帮助");
+            }else if(which.equals("rule")) {
+                tvTopTitleName.setText("返佣规则");
+            }
+        }
         WebSettings webSettings = wvBanner.getSettings();
         //设置此属性，可任意比例缩放
         webSettings.setUseWideViewPort(true);
@@ -57,10 +69,16 @@ public class RuleHelpActivity extends BaseActivity {
         wvBanner.setWebViewClient(new MyWebViewClient());
         //加载需要显示的网页
         wvBanner.loadUrl(web_url);
+        rlExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
 
-    public class MyWebViewClient extends WebViewClient{
+    public class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
             return super.shouldOverrideKeyEvent(view, event);

@@ -1,10 +1,13 @@
 package com.gather_excellent_help.ui.activity.wards;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.WardStaticsBean;
+import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.adapter.WardStaticsAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
@@ -146,5 +150,24 @@ public class WardsStatisticsActivity extends BaseActivity {
             return;
         }
         net2Server();
+    }
+
+
+    private void showDateDialog() {
+        final DatePicker datePicker = new DatePicker(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("选择时间")
+                .setView(datePicker)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        int year = datePicker.getYear();
+                        int month = datePicker.getMonth() + 1;
+                        int day = datePicker.getDayOfMonth();
+                        Toast.makeText(WardsStatisticsActivity.this, year + "-" + month + "-" + day, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .show();
     }
 }

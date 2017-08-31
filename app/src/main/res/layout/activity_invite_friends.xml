@@ -9,14 +9,14 @@
     <LinearLayout
         android:id="@+id/ll_invite_firend"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x45"
+        android:layout_height="@dimen/x50"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:background="#ffffff"
         android:paddingLeft="@dimen/x10">
         <ImageView
-            android:layout_width="@dimen/x20"
-            android:layout_height="@dimen/x20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/weixin_orange_icon"/>
         <TextView
             android:layout_width="0dp"
@@ -25,7 +25,7 @@
             android:text="微信邀请"
             android:textSize="14sp"
             android:textColor="#ee000000"
-            android:layout_marginLeft="@dimen/x3"/>
+            android:layout_marginLeft="@dimen/x8"/>
         <RelativeLayout
             android:layout_width="@dimen/x45"
             android:layout_height="match_parent">
@@ -39,21 +39,20 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x1"
-        android:background="#11000000"
-        android:layout_marginLeft="@dimen/x50"/>
+        android:layout_height="1px"
+        android:background="#efefef" />
 
     <LinearLayout
         android:id="@+id/ll_see_ward"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x45"
+        android:layout_height="@dimen/x50"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:background="#ffffff"
         android:paddingLeft="@dimen/x10">
         <ImageView
-            android:layout_width="@dimen/x20"
-            android:layout_height="@dimen/x20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/see_rewad_icon"/>
         <TextView
             android:layout_width="0dp"
@@ -61,7 +60,7 @@
             android:layout_weight="1"
             android:text="查看奖励"
             android:textSize="14sp"
-            android:layout_marginLeft="@dimen/x3"
+            android:layout_marginLeft="@dimen/x8"
             android:textColor="#ee000000"/>
         <RelativeLayout
             android:layout_width="@dimen/x45"
@@ -76,20 +75,19 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x1"
-        android:background="#11000000"
-        android:layout_marginLeft="@dimen/x50"/>
+        android:layout_height="1px"
+        android:background="#efefef" />
     <LinearLayout
         android:id="@+id/ll_ward_statistics"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x45"
+        android:layout_height="@dimen/x50"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:background="#ffffff"
         android:paddingLeft="@dimen/x10">
         <ImageView
-            android:layout_width="@dimen/x20"
-            android:layout_height="@dimen/x20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/reward_statise_icon"/>
         <TextView
             android:layout_width="0dp"
@@ -97,7 +95,7 @@
             android:layout_weight="1"
             android:text="奖励统计"
             android:textSize="14sp"
-            android:layout_marginLeft="@dimen/x3"
+            android:layout_marginLeft="@dimen/x8"
             android:textColor="#ee000000"/>
         <RelativeLayout
             android:layout_width="@dimen/x45"

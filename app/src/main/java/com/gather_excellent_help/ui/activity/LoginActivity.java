@@ -26,6 +26,7 @@ import com.gather_excellent_help.utils.Check;
 import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
 
@@ -206,7 +207,6 @@ public class LoginActivity extends Activity {
     public void bindTaobao(final String s) {
 
         AlibcLogin alibcLogin = AlibcLogin.getInstance();
-
         alibcLogin.showLogin(new AlibcLoginCallback() {
             @Override
             public void onSuccess(int i) {

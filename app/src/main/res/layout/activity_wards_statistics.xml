@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/x45"
         android:orientation="horizontal"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:visibility="gone">
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -27,7 +28,6 @@
                 android:textColor="#ee000000"
                 android:layout_marginLeft="@dimen/x7"/>
             <EditText
-                android:id="@+id/et_ward_statics_starttime"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/x30"
                 android:background="@drawable/gray_cordor_stroke_shape"
@@ -48,7 +48,6 @@
                 android:textColor="#ee000000"
                 android:layout_marginLeft="@dimen/x7"/>
             <EditText
-                android:id="@+id/et_ward_statics_endtime"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/x30"
                 android:background="@drawable/gray_cordor_stroke_shape"
@@ -56,40 +55,134 @@
                 android:layout_marginRight="@dimen/x3"/>
         </LinearLayout>
     </LinearLayout>
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/x1"
         android:background="#11000000"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x60"
+        android:orientation="horizontal"
+        android:background="#ffffff">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/x8">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="开始时间"
+                android:textSize="@dimen/x12"
+                android:textColor="#333333"/>
+            <EditText
+                android:id="@+id/et_ward_statics_starttime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/type_sosuo_white_troke"
+                android:paddingRight="@dimen/x3"
+                android:textSize="@dimen/x10"
+                android:textColor="#55000000"
+                android:cursorVisible="true"
+                android:layout_marginTop="@dimen/x3"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wards_calender_shape"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/x3"
+                android:src="@drawable/wards_point_shape"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/x8">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="结束时间"
+                android:textSize="@dimen/x12"
+                android:textColor="#333333"/>
+            <EditText
+                android:id="@+id/et_ward_statics_endtime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/type_sosuo_white_troke"
+                android:paddingRight="@dimen/x3"
+                android:textSize="@dimen/x10"
+                android:textColor="#55000000"
+                android:cursorVisible="true"
+                android:layout_marginTop="@dimen/x3"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/x45"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:background="#f4f2f2">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="用户名"
-            android:textSize="16sp"
+            android:textSize="@dimen/x16"
             android:textColor="#ee000000"
-            android:layout_marginLeft="@dimen/x7"/>
-        <EditText
-            android:id="@+id/et_ward_statics_user"
+            android:layout_marginLeft="@dimen/x10"
+            />
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="@dimen/x30"
             android:layout_weight="1"
             android:background="@drawable/gray_cordor_stroke_shape"
-            android:layout_marginLeft="@dimen/x15"/>
+            android:layout_marginLeft="@dimen/x15"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/black_sousuo"
+                android:layout_marginLeft="@dimen/x8"/>
+            <EditText
+                android:id="@+id/et_ward_statics_user"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:textSize="@dimen/x12"
+                android:textColor="#55000000"
+                android:cursorVisible="true"/>
+        </LinearLayout>
         <TextView
             android:id="@+id/tv_ward_statistics_search"
             android:layout_width="@dimen/x45"
             android:layout_height="@dimen/x35"
             android:text="搜索"
-            android:textSize="14sp"
+            android:textSize="@dimen/x16"
             android:gravity="center"
-            android:textColor="@color/white"
-            android:layout_marginLeft="@dimen/x7"
-            android:layout_marginRight="@dimen/x3"
-            android:background="#CD8500"/>
+            android:textColor="#ce0101"
+            android:layout_marginLeft="@dimen/x6"
+            android:layout_marginRight="@dimen/x18" />
 
     </LinearLayout>
 

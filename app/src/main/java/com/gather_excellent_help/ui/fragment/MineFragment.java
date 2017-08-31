@@ -17,6 +17,8 @@ import com.alibaba.baichuan.android.trade.model.AlibcShowParams;
 import com.alibaba.baichuan.android.trade.model.OpenType;
 import com.alibaba.baichuan.android.trade.page.AlibcMyOrdersPage;
 import com.alibaba.baichuan.trade.biz.core.taoke.AlibcTaokeParams;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.aliapi.DemoTradeCallback;
 import com.gather_excellent_help.api.Url;
@@ -35,6 +37,7 @@ import com.gather_excellent_help.ui.activity.credits.ExtractCreditsActivity;
 import com.gather_excellent_help.ui.activity.credits.InviteFriendsActivity;
 import com.gather_excellent_help.ui.activity.credits.MerchantEnterActivity;
 import com.gather_excellent_help.ui.activity.credits.ShopDetailActivity;
+import com.gather_excellent_help.ui.activity.shop.ShopInfoUpadateActivity;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.widget.CircularImage;
 import com.gather_excellent_help.ui.widget.MyToggleButton;
@@ -167,7 +170,7 @@ public class MineFragment extends BaseFragment {
     private NetUtil netUtils2;
     private Map<String, String> map;
     private String url = Url.BASE_URL + "Mine.aspx";
-    private ImageLoader mImageLoader;
+    //private ImageLoader mImageLoader;
     private int group_id = -1;
 
     private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
@@ -187,6 +190,7 @@ public class MineFragment extends BaseFragment {
     private String help_url = Url.BASE_URL + "UserHelp.aspx";
     private String rule_url = Url.BASE_URL + "RebateRules.aspx";
     private double user_earn;
+    private String which;
 
     @Override
     public View initView() {
@@ -225,7 +229,7 @@ public class MineFragment extends BaseFragment {
         netUtils = new NetUtil();
         netUtils2 = new NetUtil();
         defaultSet();
-        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         if (login) {
             String userLogin = Tools.getUserLogin(getActivity());
             map = new HashMap<>();
@@ -390,7 +394,10 @@ public class MineFragment extends BaseFragment {
             return;
         }
         if (avatar != null && !TextUtils.isEmpty(avatar)) {
-            mImageLoader.loadImage(avatar, civMeHeadIcon, true);
+            //mImageLoader.loadImage(avatar, civMeHeadIcon, true);
+            Glide.with(getContext()).load(avatar)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                    .into(civMeHeadIcon);//请求成功后把图片设置到的控件
         } else {
             civMeHeadIcon.setImageResource(R.drawable.default_person_icon);
         }
@@ -523,6 +530,7 @@ public class MineFragment extends BaseFragment {
                         toAccountDetail();
                     } else {
                         //条帮助
+                        which = "help";
                         netUtils2.okHttp2Server2(help_url, null);
                     }
                     break;
@@ -557,10 +565,12 @@ public class MineFragment extends BaseFragment {
                     break;
                 case R.id.ll_mine_huiyuan_statis:
                     //条帮助
+                    which = "help";
                     netUtils2.okHttp2Server2(help_url, null);
                     break;
                 case R.id.ll_mine_fanyong_rule:
                     //条返佣规则
+                    which = "rule";
                     netUtils2.okHttp2Server2(rule_url, null);
                     break;
                 case R.id.civ_me_head_icon:
@@ -577,6 +587,7 @@ public class MineFragment extends BaseFragment {
     private void toHelp(String url) {
         Intent intent = new Intent(getContext(), RuleHelpActivity.class);
         intent.putExtra("web_url", url);
+        intent.putExtra("which",which);
         startActivity(intent);
     }
 
@@ -584,7 +595,7 @@ public class MineFragment extends BaseFragment {
      * 跳转到商家入驻界面
      */
     private void toMerchantEnter() {
-        Intent intent = new Intent(getContext(), MerchantEnterActivity.class);
+        Intent intent = new Intent(getContext(), ShopInfoUpadateActivity.class);
         startActivity(intent);
     }
 

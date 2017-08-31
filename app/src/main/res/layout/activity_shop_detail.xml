@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:text="门店名称"
                     android:textSize="12sp"
-                    android:textColor="#55000000"
+                    android:textColor="#333333"
                     android:paddingLeft="@dimen/x10"/>
                 <EditText
                     android:id="@+id/et_shop_detail_name"
@@ -87,9 +87,9 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:hint="请输入门店名称"
-                    android:textColorHint="#55000000"
+                    android:textColorHint="#999999"
                     android:textSize="12sp"
-                    android:textColor="#55000000"
+                    android:textColor="#999999"
                     android:cursorVisible="true"
                     android:inputType="number"/>
 
@@ -114,7 +114,7 @@
             android:layout_height="wrap_content"
             android:text="固定电话"
             android:textSize="12sp"
-            android:textColor="#55000000"
+            android:textColor="#333333"
             android:paddingLeft="@dimen/x10"/>
         <EditText
             android:id="@+id/et_shop_detail_tel"
@@ -122,9 +122,9 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:hint="请输入电话号码"
-            android:textColorHint="#55000000"
+            android:textColorHint="#999999"
             android:textSize="12sp"
-            android:textColor="#55000000"
+            android:textColor="#999999"
             android:cursorVisible="true"
             android:inputType="number"/>
 
@@ -149,7 +149,7 @@
             android:layout_height="wrap_content"
             android:text="主营业务"
             android:textSize="12sp"
-            android:textColor="#55000000"
+            android:textColor="#333333"
             android:paddingLeft="@dimen/x10"/>
         <EditText
             android:id="@+id/et_shop_detail_yewu"
@@ -157,9 +157,9 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:hint="请输入业务类型"
-            android:textColorHint="#55000000"
+            android:textColorHint="#999999"
             android:textSize="12sp"
-            android:textColor="#55000000"
+            android:textColor="#999999"
             android:cursorVisible="true"
             android:inputType="number"/>
 
@@ -184,7 +184,7 @@
             android:layout_height="wrap_content"
             android:text="营业时间"
             android:textSize="12sp"
-            android:textColor="#55000000"
+            android:textColor="#333333"
             android:paddingLeft="@dimen/x10"/>
         <TextView
             android:id="@+id/tv_shop_time_am"
@@ -192,14 +192,14 @@
             android:layout_height="wrap_content"
             android:text="早上9:00"
             android:textSize="12sp"
-            android:textColor="#55000000" />
+            android:textColor="#999999" />
         <TextView
             android:layout_width="@dimen/x10"
             android:layout_height="wrap_content"
             android:text="-"
             android:textSize="12sp"
             android:gravity="center"
-            android:textColor="#55000000" />
+            android:textColor="#999999" />
 
         <TextView
             android:id="@+id/tv_shop_time_pm"
@@ -207,7 +207,7 @@
             android:layout_height="wrap_content"
             android:text="晚上18:00"
             android:textSize="12sp"
-            android:textColor="#55000000" />
+            android:textColor="#999999" />
 
     </LinearLayout>
     <View
@@ -230,7 +230,7 @@
             android:layout_height="wrap_content"
             android:text="详细介绍"
             android:textSize="12sp"
-            android:textColor="#55000000"
+            android:textColor="#333333"
             android:paddingLeft="@dimen/x10"/>
 
         <RelativeLayout
@@ -244,14 +244,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
-                android:textColor="#55000000"
+                android:textColor="#999999"
                 android:layout_centerVertical="true"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="60 | 编辑"
                 android:textSize="12sp"
-                android:textColor="#55000000"
+                android:textColor="#999999"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"/>
         </RelativeLayout>
@@ -277,7 +277,7 @@
             android:layout_height="wrap_content"
             android:text="详细地址"
             android:textSize="12sp"
-            android:textColor="#55000000"
+            android:textColor="#333333"
             android:paddingLeft="@dimen/x10"/>
 
         <RelativeLayout
@@ -290,12 +290,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
-                android:textColor="#55000000"
+                android:textColor="#999999"
                 android:layout_centerVertical="true"/>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/right_jiantou"
+                android:src="@drawable/arraw_right_jiantou"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"/>
         </RelativeLayout>
@@ -310,11 +310,9 @@
                 android:textSize="14sp"
                 android:textColor="@color/white"
                 android:gravity="center"
-                android:background="@drawable/register_confirm_selector"
-                android:layout_marginLeft="@dimen/x10"
-                android:layout_marginRight="@dimen/x10"
-                android:layout_marginTop="@dimen/x30"
-                android:layout_marginBottom="@dimen/x30"/>
+                android:background="#ee0000"
+                android:layout_marginTop="@dimen/x50"
+                />
         </LinearLayout>
     </com.gather_excellent_help.ui.widget.MyNestedScrollView>
 

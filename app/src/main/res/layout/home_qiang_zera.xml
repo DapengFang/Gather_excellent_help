@@ -126,7 +126,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/x2"
-                    android:text="2 ? ? ?"
                     android:textColor="#FA2D3B"
                     android:textSize="@dimen/x12"
                     android:textStyle="bold" />

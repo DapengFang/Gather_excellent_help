@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.OrderAllBean;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
@@ -28,7 +30,7 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
 
     private Context context;
     private LayoutInflater inflater;    //布局填充器
-    private ImageLoader mImageLoader;
+    //private ImageLoader mImageLoader;
     private List<OrderAllBean.DataBean> allData;
     private int curr_statue;
     private int order_type;
@@ -39,7 +41,7 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
         this.curr_statue = curr_statue;
         this.order_type = order_type;
         inflater = LayoutInflater.from(context);
-        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
     @Override
@@ -66,7 +68,12 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
         String goodsImg = dataBean.getGoodsImg();
         String tk_status = dataBean.getTk_status();
         if(goodsImg!=null && !TextUtils.isEmpty(goodsImg)) {
-            mImageLoader.loadImage(goodsImg,holder.ivOrderAllImg,true);
+            //mImageLoader.loadImage(goodsImg,holder.ivOrderAllImg,true);
+            Glide.with(context).load(goodsImg)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                    .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                    .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                    .into(holder.ivOrderAllImg);//请求成功后把图片设置到的控件
         }
         if(curr_statue == 1) {
             holder.tvOrderAllStatue.setText("待付款");

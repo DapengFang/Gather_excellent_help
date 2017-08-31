@@ -145,29 +145,34 @@ public class WebActivity extends BaseActivity {
                 goods_price = intent.getStringExtra("goods_price");
                 goods_coupon = intent.getStringExtra("goods_coupon");
                 goods_coupon_url = intent.getStringExtra("goods_coupon_url");
-                boolean login = Tools.isLogin(this);
-                adverId = Tools.getAdverId(this);
-                if(login) {
-                    boolean bindTao = Tools.isBindTao(this);
-                    if(bindTao) {
+                if(goods_id==null || goods_img == null) {
+                      rlShare.setVisibility(View.GONE);
+                }else{
+                    rlShare.setVisibility(View.VISIBLE);
+                    boolean login = Tools.isLogin(this);
+                    adverId = Tools.getAdverId(this);
+                    if(login) {
+                        boolean bindTao = Tools.isBindTao(this);
+                        if(bindTao) {
 //                        LogUtil.e("adverId = "+ adverId);
 //                        which = "change_url";
 //                        map = new HashMap<>();
 //                        map.put("goodsId",goods_id);
 //                        map.put("adzoneId", adverId);
 //                        netUtil.okHttp2Server2(chang_url,map);
-                        click_url = goods_coupon_url;
-                        handler.sendEmptyMessage(GET_URL);
-                    }else{
-                        Toast.makeText(WebActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
-                        String userLogin = Tools.getUserLogin(this);
-                        bindTaobao(userLogin);
-                    }
-                }else{
-                    toLogin();
-                    finish();
-                }
 
+                            click_url = goods_coupon_url;
+                            handler.sendEmptyMessage(GET_URL);
+                        }else{
+                            Toast.makeText(WebActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
+                            String userLogin = Tools.getUserLogin(this);
+                            bindTaobao(userLogin);
+                        }
+                    }else{
+                        toLogin();
+                        finish();
+                    }
+                }
             }
         } else {
             tvTopTitleName.setText("优惠券专区");
@@ -179,27 +184,32 @@ public class WebActivity extends BaseActivity {
             goods_price = intent.getStringExtra("goods_price");
             goods_coupon = intent.getStringExtra("goods_coupon");
             goods_coupon_url = intent.getStringExtra("goods_coupon_url");
-            boolean login = Tools.isLogin(this);
-            adverId = Tools.getAdverId(this);
-            if(login) {
-                boolean bindTao = Tools.isBindTao(this);
-                if(bindTao) {
+            if(goods_id == null || goods_img==null) {
+                rlShare.setVisibility(View.GONE);
+            }else{
+                rlShare.setVisibility(View.VISIBLE);
+                boolean login = Tools.isLogin(this);
+                adverId = Tools.getAdverId(this);
+                if(login) {
+                    boolean bindTao = Tools.isBindTao(this);
+                    if(bindTao) {
 //                    LogUtil.e("adverId = "+ adverId);
 //                    which = "change_url";
 //                    map = new HashMap<>();
 //                    map.put("goodsId",goods_id);
 //                    map.put("adzoneId", adverId);
 //                    netUtil.okHttp2Server2(chang_url,map);
-                    click_url = goods_coupon_url;
-                    handler.sendEmptyMessage(GET_URL);
+                        click_url = goods_coupon_url;
+                        handler.sendEmptyMessage(GET_URL);
+                    }else{
+                        Toast.makeText(WebActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
+                        String userLogin = Tools.getUserLogin(this);
+                        bindTaobao(userLogin);
+                    }
                 }else{
-                    Toast.makeText(WebActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
-                    String userLogin = Tools.getUserLogin(this);
-                    bindTaobao(userLogin);
+                    toLogin();
+                    finish();
                 }
-            }else{
-                toLogin();
-                finish();
             }
         }
         WebSettings webSettings = wvBanner.getSettings();

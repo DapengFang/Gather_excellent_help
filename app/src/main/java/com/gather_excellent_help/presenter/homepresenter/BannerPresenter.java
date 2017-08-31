@@ -6,6 +6,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.HomeBannerBean;
 import com.gather_excellent_help.presenter.BasePresenter;
@@ -30,13 +33,13 @@ public class BannerPresenter  extends BasePresenter{
     private CarouselImageView civHomeGanner;
     private NetUtil netUtils;
     private String banner_url = Url.BASE_URL + "IndexBanner.aspx";
-    private ImageLoader mImageLoader;
+    //private ImageLoader mImageLoader;
 
     public BannerPresenter(Context context, CarouselImageView civHomeGanner) {
         this.context = context;
         this.civHomeGanner = civHomeGanner;
         netUtils = new NetUtil();
-        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
     @Override
@@ -114,7 +117,12 @@ public class BannerPresenter  extends BasePresenter{
 
             @Override
             public void displayImage(String imageURL, ImageView imageView) {
-                mImageLoader.loadImage(imageURL, imageView, true);
+                //mImageLoader.loadImage(imageURL, imageView, true);
+                Glide.with(context).load(imageURL)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                        .placeholder(R.drawable.white_banner)//加载过程中的图片
+                        .error(R.drawable.white_banner)//加载失败的时候显示的图片
+                        .into(imageView);//请求成功后把图片设置到的控件
             }
         };
         civHomeGanner.setImageResources(data, mAdCycleViewListener);

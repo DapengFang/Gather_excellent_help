@@ -18,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.UserinfoBean;
@@ -70,7 +72,7 @@ public class PersonInfoActivity extends BaseActivity {
     private String url = Url.BASE_URL + "UserInfo.aspx";
     private String head_url = Url.BASE_URL + "ChangeFace.aspx";
     private String userLogin;//用户登录后的标识
-    private ImageLoader mImageLoader;//图片加载类
+    //private ImageLoader mImageLoader;//图片加载类
 
     public static final int TAKE_PICTURE = 0;
     public static final int CHOOSE_PICTURE = 1;
@@ -90,7 +92,7 @@ public class PersonInfoActivity extends BaseActivity {
      */
     private void initData() {
         netUtils = new NetUtil();
-        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         getUserInfo();
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
@@ -311,7 +313,12 @@ public class PersonInfoActivity extends BaseActivity {
             tvPersonNick.setText(nick_name);
         }
         if(avatar!=null && !avatar.equals("")) {
-            mImageLoader.loadImage(avatar,civPersonHead,true);
+            //mImageLoader.loadImage(avatar,civPersonHead,true);
+            Glide.with(this).load(avatar)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                    .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                    .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                    .into(civPersonHead);//请求成功后把图片设置到的控件
         }
         if(mobile!=null && !mobile.equals("")) {
             tvPersonPhone.setText(mobile);
@@ -336,6 +343,5 @@ public class PersonInfoActivity extends BaseActivity {
             netUtils.okHttp2Server2(url,map);
         }
     }
-
 
 }

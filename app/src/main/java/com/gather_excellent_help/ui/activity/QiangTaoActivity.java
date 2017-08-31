@@ -49,8 +49,6 @@ public class QiangTaoActivity extends BaseActivity {
 
     @Bind(R.id.rl_exit)
     RelativeLayout rlExit;
-    @Bind(R.id.tv_top_title_name)
-    TextView tvTopTitleName;
     @Bind(R.id.rcv_horizational_time_navigator)
     RecyclerView rcvHorizationalTimeNavigator;
     @Bind(R.id.gv_wart_list)
@@ -94,7 +92,6 @@ public class QiangTaoActivity extends BaseActivity {
      */
     private void initData() {
         showLoading();
-        tvTopTitleName.setText("淘抢购");
         rlExit.setOnClickListener(new MyOnclickListener());
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         rcvHorizationalTimeNavigator.setLayoutManager(mLayoutManager);

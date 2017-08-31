@@ -42,8 +42,10 @@ public class ExtractDetailActivity extends BaseActivity {
     RelativeLayout rlShare;
     @Bind(R.id.rcv_account_detail)
     RecyclerView rcvAccountDetail;
+    @Bind(R.id.iv_order_no_zhanwei)
+    ImageView ivOrderNoZhanwei;
     private NetUtil netUtil;
-    private Map<String,String> map;
+    private Map<String, String> map;
     private String id;
     private String pageSize = "10";
     private String pageIndex = "1";
@@ -65,7 +67,7 @@ public class ExtractDetailActivity extends BaseActivity {
 
     }
 
-    private void initData(){
+    private void initData() {
         tvTopTitleName.setText("提取明细");
         rlShare.setVisibility(View.GONE);
         rlExit.setOnClickListener(new View.OnClickListener() {
@@ -79,10 +81,10 @@ public class ExtractDetailActivity extends BaseActivity {
         netUtil = new NetUtil();
         id = Tools.getUserLogin(this);
         map = new HashMap<>();
-        map.put("id",id);
-        map.put("pageSize",pageSize);
-        map.put("pageIndex",pageIndex);
-        netUtil.okHttp2Server2(url,map);
+        map.put("id", id);
+        map.put("pageSize", pageSize);
+        map.put("pageIndex", pageIndex);
+        netUtil.okHttp2Server2(url, map);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -101,20 +103,22 @@ public class ExtractDetailActivity extends BaseActivity {
         ExractDetailBean exractDetailBean = new Gson().fromJson(response, ExractDetailBean.class);
         int statusCode = exractDetailBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
-                if(isLoadmore) {
+            case 1:
+                if (isLoadmore) {
                     page++;
                     currData = exractDetailBean.getData();
-                    if(currData.size()<10) {
-                        Toast.makeText(ExtractDetailActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
-                        return;
-                    }else{
-                        extractData.addAll(currData);
-                    }
+                    extractData.addAll(currData);
                     extractDetailAdapter.notifyDataSetChanged();
-                }else{
+                } else {
                     page = 2;
                     currData = exractDetailBean.getData();
+                    if(currData!=null) {
+                        if(currData.size() > 0) {
+                            ivOrderNoZhanwei.setVisibility(View.GONE);
+                        }else{
+                            ivOrderNoZhanwei.setVisibility(View.VISIBLE);
+                        }
+                    }
                     extractData = currData;
                     extractDetailAdapter = new ExtractDetailAdapter(ExtractDetailActivity.this, extractData);
                     rcvAccountDetail.setAdapter(extractDetailAdapter);
@@ -130,16 +134,20 @@ public class ExtractDetailActivity extends BaseActivity {
                             if (lastVisibleItem + 1 == layoutManager
                                     .getItemCount()) {
                                 isLoadmore = true;
+                                if (currData.size() < 10) {
+                                    Toast.makeText(ExtractDetailActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
                                         pageIndex = String.valueOf(page);
                                         //联网请求数据
                                         map = new HashMap<>();
-                                        map.put("id",id);
-                                        map.put("pageSize",pageSize);
-                                        map.put("pageIndex",pageIndex);
-                                        netUtil.okHttp2Server2(url,map);
+                                        map.put("id", id);
+                                        map.put("pageSize", pageSize);
+                                        map.put("pageIndex", pageIndex);
+                                        netUtil.okHttp2Server2(url, map);
                                     }
                                 }, 1000);
                             }

@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.SearchTaobaoBean;
 import com.gather_excellent_help.bean.SearchWareBean;
@@ -32,7 +34,7 @@ public class TaobaoWareListAdapter extends BaseAdapter {
     private Context context;
     private List<SearchTaobaoBean.DataBean> data;
     private LayoutInflater inflater;    //布局填充器
-    private ImageLoader mImageLoader;
+    //private ImageLoader mImageLoader;
     private double user_rate;
     private int shopType;
 
@@ -41,7 +43,7 @@ public class TaobaoWareListAdapter extends BaseAdapter {
         this.data = data;
         inflater = LayoutInflater.from(context);
         shopType =Tools.getShopType(context);
-        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         String userRate = Tools.getUserRate(context);
         if(!TextUtils.isEmpty(userRate)) {
             double v = Double.parseDouble(userRate);
@@ -88,7 +90,12 @@ public class TaobaoWareListAdapter extends BaseAdapter {
             holder.home_type_name.setText(dataBean.getTitle());
         }
         if(holder.home_type_photo!=null && dataBean.getImg_url()!=null) {
-            mImageLoader.loadImage(dataBean.getImg_url()+"_430x430q90.jpg",holder.home_type_photo,true);
+            //mImageLoader.loadImage(dataBean.getImg_url()+"_430x430q90.jpg",holder.home_type_photo,true);
+            Glide.with(context).load(dataBean.getImg_url()+"_430x430q90.jpg")
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                    .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                    .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                    .into(holder.home_type_photo);//请求成功后把图片设置到的控件
         }
         holder.tv_home_type_aprice.setText("￥"+dataBean.getSell_price());
         final SearchTaobaoBean.DataBean.CouponInfoBean coupon_info = dataBean.getCoupon_info();

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,9 +23,7 @@ import com.gather_excellent_help.ui.widget.ViewpagerIndicator;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
-import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,9 +44,11 @@ public class OrderActivity extends BaseActivity {
 
     @Bind(R.id.vid_order_manager)
     ViewpagerIndicator vid_order_manager;
+    @Bind(R.id.iv_order_no_zhanwei)
+    ImageView ivOrderNoZhanwei;
 
 
-    private String[] tabs = {"全部","待付款", "已付款", "已完成", "退款/售后"};
+    private String[] tabs = {"全部", "待付款", "已付款", "已完成", "退款/售后"};
     private OrderManagerAdapter orderManagerAdapter;
     private OrderAllAdapter orderAllAdapter;
     private int tab_p = 0;//当前的订单的位置
@@ -57,7 +56,7 @@ public class OrderActivity extends BaseActivity {
     private String order_url = Url.BASE_URL + "OrderShow.aspx";
     private String tui_url = Url.BASE_URL + "EarnOrder.aspx";
     private NetUtil netUtil;
-    private Map<String,String> map;
+    private Map<String, String> map;
     private int curr_statue;//订单类型
     private String pageSize = "10";
     private String loginId;
@@ -87,7 +86,7 @@ public class OrderActivity extends BaseActivity {
         Intent intent = getIntent();
         order_type = intent.getIntExtra("order_type", 7);
         tab_p = intent.getIntExtra("tab_p", -1);
-        if(tab_p!=-1) {
+        if (tab_p != -1) {
             vid_order_manager.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -95,11 +94,11 @@ public class OrderActivity extends BaseActivity {
                     TextView tv = (TextView) vid_order_manager.getChildAt(tab_p);
                     tv.setTextColor(Color.RED);
                 }
-            },20);
-            if(tab_p==0) {
+            }, 20);
+            if (tab_p == 0) {
                 curr_statue = 5;
-            }else {
-                curr_statue =tab_p;
+            } else {
+                curr_statue = tab_p;
             }
             isLoaderMore = false;
             net2ServerOrder(curr_statue);
@@ -112,7 +111,7 @@ public class OrderActivity extends BaseActivity {
                 CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
                 int statusCode = codeStatueBean.getStatusCode();
                 switch (statusCode) {
-                    case 1 :
+                    case 1:
                         LogUtil.e(response);
                         pareAllData(response);
                         break;
@@ -126,7 +125,7 @@ public class OrderActivity extends BaseActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-                LogUtil.e(call.toString() +"==" +e.getMessage());
+                LogUtil.e(call.toString() + "==" + e.getMessage());
             }
         });
         rcvOrderManager.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -173,26 +172,33 @@ public class OrderActivity extends BaseActivity {
 
     /**
      * 解析所有订单信息
+     *
      * @param response
      */
     private void pareAllData(String response) {
         OrderAllBean orderAllBean = new Gson().fromJson(response, OrderAllBean.class);
         List<OrderAllBean.DataBean> data = orderAllBean.getData();
-
-        if(isLoaderMore) {
-            if(data.size()<10) {
+        if (isLoaderMore) {
+            if (data.size() < 10) {
                 Toast.makeText(OrderActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
                 return;
-            }else{
+            } else {
                 allData.addAll(data);
             }
             orderAllAdapter.notifyDataSetChanged();
-        }else{
+        } else {
+            if(data!=null) {
+                if(data.size() > 0) {
+                    ivOrderNoZhanwei.setVisibility(View.GONE);
+                }else{
+                    ivOrderNoZhanwei.setVisibility(View.VISIBLE);
+                }
+            }
             allData = data;
-            if(order_type == -1) {
-                orderAllAdapter = new OrderAllAdapter(OrderActivity.this, allData,curr_statue,-1);
-            }else if(order_type == -2) {
-                orderAllAdapter = new OrderAllAdapter(OrderActivity.this, allData,curr_statue,-2);
+            if (order_type == -1) {
+                orderAllAdapter = new OrderAllAdapter(OrderActivity.this, allData, curr_statue, -1);
+            } else if (order_type == -2) {
+                orderAllAdapter = new OrderAllAdapter(OrderActivity.this, allData, curr_statue, -2);
             }
             rcvOrderManager.setAdapter(orderAllAdapter);
             orderAllAdapter.notifyDataSetChanged();
@@ -201,32 +207,31 @@ public class OrderActivity extends BaseActivity {
     }
 
     /**
-     * @param curr_statue
-     * 联网请求订单信息
+     * @param curr_statue 联网请求订单信息
      */
     private void net2ServerOrder(int curr_statue) {
         String curr_url = "";
-        if(order_type == -1) {
+        if (order_type == -1) {
             curr_url = order_url;
-        }else if(order_type == -2) {
+        } else if (order_type == -2) {
             curr_url = tui_url;
         }
         loginId = CacheUtils.getString(this, CacheUtils.LOGIN_VALUE, "");
         map = new HashMap<>();
-        map.put("Id",loginId);
-        map.put("Type",String.valueOf(curr_statue));
-        map.put("pageSize",pageSize);
-        map.put("pageIndex",pageIndex);
-        netUtil.okHttp2Server2(curr_url,map);
+        map.put("Id", loginId);
+        map.put("Type", String.valueOf(curr_statue));
+        map.put("pageSize", pageSize);
+        map.put("pageIndex", pageIndex);
+        netUtil.okHttp2Server2(curr_url, map);
     }
 
 
-    public class MyOnclickListener implements View.OnClickListener{
+    public class MyOnclickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.rl_exit :
+                case R.id.rl_exit:
                     finish();
                     break;
             }
@@ -239,18 +244,18 @@ public class OrderActivity extends BaseActivity {
     private void vidacatorControll() {
         vid_order_manager.setCount(5);
         final int childCount = vid_order_manager.getChildCount();
-        for (int i=0;i<childCount;i++){
+        for (int i = 0; i < childCount; i++) {
             View child = vid_order_manager.getChildAt(i);
             final int finalI = i;
             child.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     vid_order_manager.checkMove(finalI);
-                    for (int j=0;j<childCount;j++){
-                        if(j!=finalI) {
+                    for (int j = 0; j < childCount; j++) {
+                        if (j != finalI) {
                             TextView tv = (TextView) vid_order_manager.getChildAt(j);
                             tv.setTextColor(Color.parseColor("#55000000"));
-                        }else{
+                        } else {
                             TextView tv = (TextView) v;
                             tv.setTextColor(Color.RED);
                         }
@@ -259,7 +264,7 @@ public class OrderActivity extends BaseActivity {
                     pageIndex = "1";
                     isLoaderMore = false;
                     switch (tab_p) {
-                        case 0 :
+                        case 0:
                             curr_statue = 5;
                             net2ServerOrder(curr_statue);
                             break;

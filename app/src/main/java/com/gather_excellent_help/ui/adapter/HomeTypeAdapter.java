@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.HomeTypeBean;
@@ -27,13 +29,13 @@ public class HomeTypeAdapter extends BaseAdapter {
     private List<HomeTypeBean> datas;
     private LayoutInflater inflater;    //布局填充器
     private List<TyepIndexBean.DataBean> typeData;
-    private ImageLoader mImageLoader;
+    //private ImageLoader mImageLoader;
 
     public HomeTypeAdapter(Context context, List<HomeTypeBean> datas, List<TyepIndexBean.DataBean> typeData) {
         this.context = context;
         this.datas = datas;
         this.typeData = typeData;
-        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         inflater = LayoutInflater.from(context);
     }
 
@@ -73,7 +75,10 @@ public class HomeTypeAdapter extends BaseAdapter {
         }
         if(holder.home_type_photo!=null) {
             if(dataBean.getImg_url()!=null) {
-                mImageLoader.loadImage(Url.IMG_URL+dataBean.getImg_url(),holder.home_type_photo,true);
+                //mImageLoader.loadImage(Url.IMG_URL+dataBean.getImg_url(),holder.home_type_photo,true);
+                Glide.with(context).load(Url.IMG_URL+dataBean.getImg_url())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                        .into(holder.home_type_photo);//请求成功后把图片设置到的控件
             }else{
                 LogUtil.e("img==null");
             }

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -42,6 +43,7 @@ public class MyToggleButton extends View {
      * 当前开关的状态
      */
     private boolean currentState = false;
+    private String which = "";
 
     /**
      * 在代码里面创建对象的时候，使用此构造方法
@@ -87,7 +89,10 @@ public class MyToggleButton extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         // super.onDraw(canvas);
-
+        if(TextUtils.isEmpty(which)) {
+            slideBtn_left = backgroundBitmap.getWidth()
+                    - slideButton.getWidth();
+        }
         Paint paint = new Paint();
         // 打开抗锯齿
         paint.setAntiAlias(true);
@@ -138,8 +143,7 @@ public class MyToggleButton extends View {
      */
     protected void flushState() {
         if (currentState) {
-            slideBtn_left = backgroundBitmap.getWidth()
-                    - slideButton.getWidth();
+            slideBtn_left = 0;
             backgroundBitmap = BitmapFactory.decodeResource(getResources(),
                     R.drawable.switch_background_gray);
             backgroundBitmap = Tools.zoomBitmap(backgroundBitmap, DensityUtil.dip2px(getContext(),45), DensityUtil.dip2px(getContext(),23));
@@ -147,7 +151,8 @@ public class MyToggleButton extends View {
                     R.drawable.slide_button);
             slideButton = Tools.zoomBitmap(slideButton,DensityUtil.dip2px(getContext(),23),DensityUtil.dip2px(getContext(),23));
         } else {
-            slideBtn_left = 0;
+            slideBtn_left = backgroundBitmap.getWidth()
+                    - slideButton.getWidth();
             backgroundBitmap = BitmapFactory.decodeResource(getResources(),
                     R.drawable.switch_background);
             backgroundBitmap = Tools.zoomBitmap(backgroundBitmap, DensityUtil.dip2px(getContext(),45), DensityUtil.dip2px(getContext(),23));
@@ -163,6 +168,7 @@ public class MyToggleButton extends View {
 
     public void setCurrentState(boolean currentState) {
         this.currentState = currentState;
+        which = "click";
         flushState();
         flushView();
     }

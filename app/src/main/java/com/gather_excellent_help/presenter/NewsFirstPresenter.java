@@ -208,7 +208,13 @@ public class NewsFirstPresenter {
                      }else if(whick.equals("detail")) {
                          LogUtil.e("新闻详情"+response);
                          NewsDetailBean newsDetailBean = new Gson().fromJson(response, NewsDetailBean.class);
-                         String link_url = newsDetailBean.getData().get(0).getLink_url();
+                         String link_url = "";
+                         List<NewsDetailBean.DataBean> data = newsDetailBean.getData();
+                         if(data!=null) {
+                             if(data.size()>0) {
+                                 link_url = data.get(0).getLink_url();
+                             }
+                         }
                          String imgurl = "";
                          String newsTitle = "";
                          if(currData!=null) {

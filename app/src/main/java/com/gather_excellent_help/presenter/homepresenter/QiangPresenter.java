@@ -11,6 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.QiangTaoBean;
@@ -48,7 +50,7 @@ public class QiangPresenter extends BasePresenter {
     private double user_rate;
     private int shopType;
     private boolean isToggle;
-    private ImageLoader mImageLoader;
+    //private ImageLoader mImageLoader;
     private RelativeLayout rl_item_laod_more;
     private TextView tv_item_home_title;
     private long curr_time;
@@ -71,7 +73,7 @@ public class QiangPresenter extends BasePresenter {
         initView();
         netUtil = new NetUtil();
         shopType = Tools.getShopType(context);
-        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         String userRate = Tools.getUserRate(context);
         if (!TextUtils.isEmpty(userRate)) {
             double v = Double.parseDouble(userRate);
@@ -224,7 +226,6 @@ public class QiangPresenter extends BasePresenter {
         QiangTaoBean.DataBean leftData = qiangData.get(0);
         String sell_prices = leftData.getSell_price();
         String img_urls = leftData.getImg_url();
-
         if(tv_qiang_left_price!=null && sell_prices!=null) {
             int price = (int) Double.parseDouble(sell_prices);
             if(price<10) {
@@ -239,7 +240,12 @@ public class QiangPresenter extends BasePresenter {
             }
         }
         if(iv_qiang_left_img!=null && img_urls!=null) {
-            mImageLoader.loadImage(img_urls,iv_qiang_left_img,true);
+            //mImageLoader.loadImage(img_urls,iv_qiang_left_img,true);
+            Glide.with(context).load(img_urls+"_320x320q90.jpg")
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                    .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                    .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                    .into(iv_qiang_left_img);//请求成功后把图片设置到的控件
         }
 
         /*
@@ -298,7 +304,12 @@ public class QiangPresenter extends BasePresenter {
             }
             final String link_url = dataBean.getLink_url();
             if(iv_qiang_ware_img!=null && img_url!=null) {
-                mImageLoader.loadImage(img_url+"_320x320q90.jpg",iv_qiang_ware_img,true);
+                //mImageLoader.loadImage(img_url+"_320x320q90.jpg",iv_qiang_ware_img,true);
+                Glide.with(context).load(img_url+"_320x320q90.jpg")
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                        .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                        .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                        .into(iv_qiang_ware_img);//请求成功后把图片设置到的控件
             }
             if(tv_qiang_ware_coupon!=null) {
                 tv_qiang_ware_coupon.setText("领券减"+coupon_p);

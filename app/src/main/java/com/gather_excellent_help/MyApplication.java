@@ -80,8 +80,6 @@ public class MyApplication extends Application {
             }
         }.start();
 
-
-
     }
 
     public class MyOnsetServerLisetener implements NetUtil.OnServerResponseListener{

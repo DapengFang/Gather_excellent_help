@@ -18,6 +18,7 @@ import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.activity.wards.SeeWardsActivity;
 import com.gather_excellent_help.ui.activity.wards.WardsStatisticsActivity;
+import com.gather_excellent_help.ui.activity.wards.WardsStatisticsUpdateActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -162,7 +163,7 @@ public class InviteFriendsActivity extends BaseActivity {
      * 跳转到奖励统计
      */
     private void toStatisticsWards() {
-        Intent intent = new Intent(InviteFriendsActivity.this, WardsStatisticsActivity.class);
+        Intent intent = new Intent(InviteFriendsActivity.this, WardsStatisticsUpdateActivity.class);
         startActivity(intent);
     }
 

@@ -33,7 +33,7 @@
             android:layout_centerInParent="true"
             android:text="设置"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="@dimen/x16" />
         <RelativeLayout
             android:id="@+id/rl_share"
             android:layout_width="@dimen/x40"

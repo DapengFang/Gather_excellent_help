@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,6 +43,8 @@ public class SeeWardsActivity extends BaseActivity {
     RecyclerView rcvSeeWard;
     @Bind(R.id.ll_taobao_loadmore)
     LinearLayout llTaobaoLoadmore;
+    @Bind(R.id.iv_order_no_zhanwei)
+    ImageView ivOrderNoZhanwei;
 
     private NetUtil netUtil;
     private Map<String, String> map;
@@ -88,16 +91,23 @@ public class SeeWardsActivity extends BaseActivity {
                         BackRebateBean backRebateBean = new Gson().fromJson(response, BackRebateBean.class);
                         currData = backRebateBean.getData();
                         int size = currData.size();
-                        if(isLoadMore) {
+                        if (isLoadMore) {
                             page++;
-                            if(size<10) {
+                            if (size < 10) {
                                 showLoadNoMore();
                                 return;
-                            }else{
+                            } else {
                                 rewardData.addAll(currData);
                             }
                             backRebateAdapter.notifyDataSetChanged();
-                        }else{
+                        } else {
+                            if(currData!=null) {
+                                if(currData.size() > 0) {
+                                    ivOrderNoZhanwei.setVisibility(View.GONE);
+                                }else{
+                                    ivOrderNoZhanwei.setVisibility(View.VISIBLE);
+                                }
+                            }
                             rewardData = currData;
                             backRebateAdapter = new BackRebateAdapter(SeeWardsActivity.this, rewardData);
                             rcvSeeWard.setAdapter(backRebateAdapter);
@@ -117,7 +127,7 @@ public class SeeWardsActivity extends BaseActivity {
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                LogUtil.e("page ======"+page);
+                                                LogUtil.e("page ======" + page);
                                                 pageNo = String.valueOf(page);
                                                 loadRewardData();
                                             }
@@ -143,7 +153,7 @@ public class SeeWardsActivity extends BaseActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-                       hindLoadMore();
+                hindLoadMore();
             }
         });
         rlExit.setOnClickListener(new MyOnclickListener());
@@ -210,18 +220,19 @@ public class SeeWardsActivity extends BaseActivity {
      * 显示加载更多
      */
     private void showLoadMore() {
-        if(llTaobaoLoadmore!=null) {
+        if (llTaobaoLoadmore != null) {
             llTaobaoLoadmore.setVisibility(View.VISIBLE);
             llTaobaoLoadmore.getChildAt(0).setVisibility(View.VISIBLE);
             TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(1);
             tvTitle.setText("加载更多...");
         }
     }
+
     /**
      * 显示正在加载中
      */
     private void showLoading() {
-        if(llTaobaoLoadmore!=null) {
+        if (llTaobaoLoadmore != null) {
             llTaobaoLoadmore.setVisibility(View.VISIBLE);
             llTaobaoLoadmore.getChildAt(0).setVisibility(View.VISIBLE);
             TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(1);
@@ -233,18 +244,19 @@ public class SeeWardsActivity extends BaseActivity {
      * 显示没有更多的数据了
      */
     private void showLoadNoMore() {
-        if(llTaobaoLoadmore!=null) {
+        if (llTaobaoLoadmore != null) {
             TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(1);
             llTaobaoLoadmore.getChildAt(0).setVisibility(View.GONE);
             tvTitle.setText("没有更多的数据了...");
             llTaobaoLoadmore.setVisibility(View.VISIBLE);
         }
     }
+
     /**
      * 显示隐藏
      */
     private void hindLoadMore() {
-        if(llTaobaoLoadmore!=null) {
+        if (llTaobaoLoadmore != null) {
             llTaobaoLoadmore.setVisibility(View.GONE);
         }
     }

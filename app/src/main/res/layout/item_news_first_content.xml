@@ -3,17 +3,19 @@
     android:id="@+id/ll_news_detail"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff">
+    android:background="#f2f2f2"
+    android:padding="@dimen/x9">
     <TextView
         android:id="@+id/tv_news_first_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="#ee000000"/>
+        android:textColor="#1a1a1a"/>
     <ImageView
         android:id="@+id/iv_news_first_pic"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/x9" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/x40">

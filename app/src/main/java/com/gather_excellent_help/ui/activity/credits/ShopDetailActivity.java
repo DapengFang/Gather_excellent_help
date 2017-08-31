@@ -23,6 +23,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
@@ -81,7 +83,7 @@ public class ShopDetailActivity extends BaseActivity {
 
     private NetUtil netUtil;
     private Map<String, String> map;
-    private ImageLoader mImageLoader;
+    //private ImageLoader mImageLoader;
     private String upload = "";
 
     private int which = 0;//区分展示还是修改
@@ -144,7 +146,7 @@ public class ShopDetailActivity extends BaseActivity {
      */
     public void initData() {
         netUtil = new NetUtil();
-        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         which = 0;
         String loginId = Tools.getUserLogin(this);
         if(TextUtils.isEmpty(loginId)) {
@@ -176,7 +178,12 @@ public class ShopDetailActivity extends BaseActivity {
                                 String endBusinessTime = dataBean.getEndBusinessTime();
                                 tvShopTimeAm.setText("早上"+starBusinessTime);
                                 tvShopTimePm.setText("晚上"+endBusinessTime);
-                                mImageLoader.loadImage(Url.IMG_URL + dataBean.getStore_url(),ivShopPicture,true);
+                                //mImageLoader.loadImage(Url.IMG_URL + dataBean.getStore_url(),ivShopPicture,true);
+                                Glide.with(ShopDetailActivity.this).load(Url.IMG_URL + dataBean.getStore_url())
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                                        .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                                        .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                                        .into(ivShopPicture);//请求成功后把图片设置到的控件
                             }
                         }else{
                              Toast.makeText(ShopDetailActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();

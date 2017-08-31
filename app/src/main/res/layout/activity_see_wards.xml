@@ -47,11 +47,28 @@
             android:gravity="center" />
     </com.gather_excellent_help.ui.widget.ViewpagerIndicator>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rcv_see_ward"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"></android.support.v7.widget.RecyclerView>
+        android:layout_weight="1"
+        android:background="#f2f2f2">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcv_see_ward"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+        <ImageView
+            android:id="@+id/iv_order_no_zhanwei"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/x60"
+            android:src="@drawable/juyoubang_no_zhanwei"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
 
     <LinearLayout
         android:id="@+id/ll_taobao_loadmore"

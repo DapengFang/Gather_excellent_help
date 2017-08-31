@@ -132,7 +132,7 @@ public class TypeFragment extends BaseFragment {
         requestDataRefresh();
         swipeRefresh.setRefreshing(mIsRequestDataRefresh);
         tvTopTitleName.setText("商品分类");
-        ivZhuangtaiExit.setVisibility(View.GONE);
+        rlExit.setVisibility(View.GONE);
         getNavigatorData();
         map = new HashMap<>();
         map.put("pageSize",pageSize);

@@ -12,17 +12,17 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/x48"
                 android:background="#fa2d3b"
                 android:gravity="center_vertical"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#eeff0000">
+                    android:layout_height="wrap_content">
 
                     <RelativeLayout
                         android:id="@+id/rl_exit"
@@ -103,26 +103,27 @@
             <RelativeLayout
                 android:id="@+id/rl_type_sousuo"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/x50"
-                android:background="#f2f2f2">
+                android:layout_height="@dimen/x45"
+                android:background="#fa2d3b">
                 <LinearLayout
-                    android:layout_width="@dimen/x240"
-                    android:layout_height="@dimen/x26"
-                    android:background="@drawable/type_sosuo_white_troke"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x30"
+                    android:background="@drawable/search_frame_before"
                     android:orientation="horizontal"
                     android:gravity="center"
+                    android:layout_marginLeft="@dimen/x10"
+                    android:layout_marginRight="@dimen/x10"
                     android:layout_centerInParent="true">
                     <ImageView
-                        android:layout_width="@dimen/x18"
-                        android:layout_height="@dimen/x18"
-                        android:src="@drawable/type_sousuo_shape"/>
+                        android:layout_width="@dimen/x14"
+                        android:layout_height="@dimen/x14"
+                        android:src="@drawable/search_before"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="输入商品搜索"
                         android:textSize="@dimen/x12"
-                        android:textStyle="bold"
-                        android:textColor="#dcdcdc"
+                        android:textColor="#b2b1b1"
                         android:layout_marginLeft="@dimen/x3"/>
 
                 </LinearLayout>

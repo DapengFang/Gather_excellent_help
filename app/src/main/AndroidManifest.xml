@@ -110,11 +110,13 @@
             android:name=".SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".ui.activity.credits.ExtractCreditsActivity"
@@ -169,9 +171,7 @@
         <activity
             android:name=".ui.activity.AlipayManagerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" >
-
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.RuleHelpActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -183,9 +183,26 @@
 
         <service android:name=".ui.service.MyService" />
 
-        <activity android:name=".TestActivity"></activity>
+        <activity android:name=".TestActivity" />
         <activity android:name=".TestActivity2"></activity>
-        <activity android:name=".ui.activity.credits.ExtractDetailActivity"></activity>
+        <activity android:name=".ui.activity.credits.ExtractDetailActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.activity.shop.ShopInfoUpadateActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" ></activity>
+        <activity android:name=".ui.activity.shop.ShopBrandUpdateActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.activity.shop.ShopPhotoUpdateActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.activity.wards.WardsStatisticsUpdateActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|stateUnchanged"  >
+
+        </activity>
     </application>
 
 </manifest>

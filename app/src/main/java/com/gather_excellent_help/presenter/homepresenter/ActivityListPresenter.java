@@ -123,7 +123,6 @@ public class ActivityListPresenter extends BasePresenter {
                     page = 2;
                 }
                 ll_home_loadmore.setVisibility(View.GONE);
-
                 myNestedScrollView.setOnTouchListener(new MyOnTouchClickListener());
 
                 homeActivityListAdapter.setOnItemclickListener(new HomeActivityListAdapter.OnItemclickListener() {
@@ -211,5 +210,15 @@ public class ActivityListPresenter extends BasePresenter {
             return false;
 
         }
+    }
+
+    private OnActivityListCompleteListener onActivityListCompleteListener;
+
+    public interface OnActivityListCompleteListener{
+        void onComplete();
+    }
+
+    public void setOnActivityListCompleteListener(OnActivityListCompleteListener onActivityListCompleteListener) {
+        this.onActivityListCompleteListener = onActivityListCompleteListener;
     }
 }

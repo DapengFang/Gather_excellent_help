@@ -127,7 +127,11 @@ public class ExtractCreditsActivity extends BaseActivity {
                         if(data.size()>0) {
                             amount = mineBean.getData().get(0).getAmount();
                             DecimalFormat df = new DecimalFormat("#.00");
-                            tvExteactAccount.setText("可提取现金: " + df.format(amount));
+                            if(amount == 0) {
+                                tvExteactAccount.setText("可提取现金: 0");
+                            }else{
+                                tvExteactAccount.setText("可提取现金: " + df.format(amount));
+                            }
                         }
                         break;
                     case 0:

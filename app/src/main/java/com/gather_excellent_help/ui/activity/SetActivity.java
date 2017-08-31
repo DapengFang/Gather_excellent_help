@@ -103,17 +103,17 @@ public class SetActivity extends BaseActivity {
      */
     private void initData() {
         boolean bindTao = Tools.isBindTao(this);
-        if(bindTao) {
-            nick = CacheUtils.getString(SetActivity.this,CacheUtils.TAOBAO_NICK,"");
-            tvSetBindTaobao.setText("绑定/解绑淘宝账号("+nick+")");
-        }else{
+        if (bindTao) {
+            nick = CacheUtils.getString(SetActivity.this, CacheUtils.TAOBAO_NICK, "");
+            tvSetBindTaobao.setText("绑定/解绑淘宝账号(" + nick + ")");
+        } else {
             tvSetBindTaobao.setText("绑定/解绑淘宝账号");
         }
 
-        if(isPay()) {
-            account = CacheUtils.getString(SetActivity.this,CacheUtils.ALIPAY_ACCOUNT,"");
-            tvSetBindAlipay.setText("绑定/解绑支付宝账号("+account+")");
-        }else{
+        if (isPay()) {
+            account = CacheUtils.getString(SetActivity.this, CacheUtils.ALIPAY_ACCOUNT, "");
+            tvSetBindAlipay.setText("绑定/解绑支付宝账号(" + account + ")");
+        } else {
             tvSetBindAlipay.setText("绑定/解绑支付宝账号");
         }
         if (isLogin()) {
@@ -146,25 +146,25 @@ public class SetActivity extends BaseActivity {
                     case 1:
                         if (which.equals("bind")) {
                             Toast.makeText(SetActivity.this, "绑定成功！", Toast.LENGTH_LONG).show();
-                            tvSetBindTaobao.setText("绑定/解绑淘宝账号("+nick+")");
+                            tvSetBindTaobao.setText("绑定/解绑淘宝账号(" + nick + ")");
                             CacheUtils.putBoolean(SetActivity.this, CacheUtils.BIND_STATE, true);
-                            CacheUtils.putString(SetActivity.this,CacheUtils.TAOBAO_NICK,nick);
+                            CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK, nick);
                             EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "绑定成功！"));
                         } else if (which.equals("unbind")) {
                             Toast.makeText(SetActivity.this, "解绑成功！", Toast.LENGTH_LONG).show();
                             tvSetBindTaobao.setText("绑定/解绑淘宝账号");
-                            CacheUtils.putString(SetActivity.this,CacheUtils.TAOBAO_NICK,"");
+                            CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK, "");
                             CacheUtils.putBoolean(SetActivity.this, CacheUtils.BIND_STATE, false);
                             EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "解绑成功！"));
                         } else if (which.equals("pay")) {
-                            tvSetBindAlipay.setText("绑定/解绑支付宝账号("+account+")");
+                            tvSetBindAlipay.setText("绑定/解绑支付宝账号(" + account + ")");
                             CacheUtils.putBoolean(SetActivity.this, CacheUtils.PAY_STATE, true);
-                            CacheUtils.putString(SetActivity.this,CacheUtils.ALIPAY_ACCOUNT,account);
+                            CacheUtils.putString(SetActivity.this, CacheUtils.ALIPAY_ACCOUNT, account);
                         } else if (which.equals("unpay")) {
                             tvSetBindAlipay.setText("绑定/解绑支付宝账号");
                             CacheUtils.putBoolean(SetActivity.this, CacheUtils.PAY_STATE, false);
-                            CacheUtils.putString(SetActivity.this,CacheUtils.ALIPAY_ACCOUNT,"");
-                        }else if(which.equals("sms")) {
+                            CacheUtils.putString(SetActivity.this, CacheUtils.ALIPAY_ACCOUNT, "");
+                        } else if (which.equals("sms")) {
                             parseSmsData(response);
                         }
                         break;
@@ -183,6 +183,7 @@ public class SetActivity extends BaseActivity {
 
     /**
      * 解析短信验证数据
+     *
      * @param response
      */
     private void parseSmsData(String response) {
@@ -191,11 +192,11 @@ public class SetActivity extends BaseActivity {
         int statusCode = smsCodeBean.getStatusCode();
         switch (statusCode) {
             case 0:
-                Toast.makeText(SetActivity.this, "获取验证码失败！" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(SetActivity.this, "获取验证码失败！", Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 List<SmsCodeBean.DataBean> data = smsCodeBean.getData();
-                if(data.size()>0) {
+                if (data.size() > 0) {
                     sms_code_s = data.get(0).getSms_code();
                 }
                 Toast.makeText(SetActivity.this, "验证码已发送你的手机，请查收！", Toast.LENGTH_SHORT).show();
@@ -219,7 +220,8 @@ public class SetActivity extends BaseActivity {
                     if (isPay()) {
                         unBindPay();
                     } else {
-                        showPayAcount();
+                        //showPayAcount();
+                        showAlipayAccount();
                     }
                     break;
                 case R.id.rl_set_bindtaobao:
@@ -273,6 +275,7 @@ public class SetActivity extends BaseActivity {
                 .setNegativeButton("取消", null)
                 .show();
     }
+
     /**
      * 是否退出的dialog
      */
@@ -287,13 +290,17 @@ public class SetActivity extends BaseActivity {
                         try {
                             CacheUtils.putBoolean(SetActivity.this, CacheUtils.LOGIN_STATE, false);
                             CacheUtils.putString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
-                            CacheUtils.putInteger(SetActivity.this,CacheUtils.GROUP_TYPE,-1);
-                            CacheUtils.putInteger(SetActivity.this,CacheUtils.SHOP_TYPE,-1);
-                            CacheUtils.putBoolean(SetActivity.this,CacheUtils.BIND_STATE,false);
-                            CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK,"");
-                            CacheUtils.putString(SetActivity.this,CacheUtils.ALIPAY_ACCOUNT,"");
-                            CacheUtils.putString(SetActivity.this,CacheUtils.USER_RATE,"");
-                            CacheUtils.putString(SetActivity.this,CacheUtils.LOGIN_PHONE,"");
+                            CacheUtils.putInteger(SetActivity.this, CacheUtils.GROUP_TYPE, -1);
+                            CacheUtils.putInteger(SetActivity.this, CacheUtils.SHOP_TYPE, -1);
+                            if (isBind()) {
+                                unBindTaobao();
+                            } else {
+                                CacheUtils.putBoolean(SetActivity.this, CacheUtils.BIND_STATE, false);
+                                CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK, "");
+                            }
+                            CacheUtils.putString(SetActivity.this, CacheUtils.ALIPAY_ACCOUNT, "");
+                            CacheUtils.putString(SetActivity.this, CacheUtils.USER_RATE, "");
+                            CacheUtils.putString(SetActivity.this, CacheUtils.LOGIN_PHONE, "");
                             EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "退出登录！"));
                             finish();
                             loginUser();
@@ -418,6 +425,71 @@ public class SetActivity extends BaseActivity {
         return CacheUtils.getBoolean(SetActivity.this, CacheUtils.PAY_STATE, false);
     }
 
+
+    /**
+     * 设置用户支付宝账号新
+     */
+    private void showAlipayAccount() {
+        View inflate = View.inflate(this, R.layout.bind_alipay_dailog, null);
+        final EditText etAccount = (EditText) inflate.findViewById(R.id.et_pay_account);
+        final EditText etName = (EditText) inflate.findViewById(R.id.et_pay_name);
+        final EditText etSmsCode = (EditText) inflate.findViewById(R.id.et_alipay_smscode);
+        final TextView tvAlipayGetSms = (TextView) inflate.findViewById(R.id.tv_alipay_getSms);
+        TextView tvBindAlipayCancel = (TextView) inflate.findViewById(R.id.tv_bind_alipay_cancel);
+        TextView tvBindAlipayConfirm = (TextView) inflate.findViewById(R.id.tv_bind_alipay_confirm);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog alertDialog = builder.setView(inflate).create();
+        alertDialog.show();
+        tvAlipayGetSms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String user_account = etAccount.getText().toString().trim();
+                String userPhone = Tools.getUserPhone(SetActivity.this);
+                LogUtil.e(userPhone);
+                getSmsCode(userPhone, user_account, tvAlipayGetSms);
+            }
+        });
+
+        tvBindAlipayCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (alertDialog.isShowing()) {
+                    alertDialog.dismiss();
+                }
+            }
+        });
+        tvBindAlipayConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                account = etAccount.getText().toString().trim();
+                String name = etName.getText().toString().trim();
+                String smscode = etSmsCode.getText().toString().trim();
+
+                if (TextUtils.isEmpty(account)) {
+                    Toast.makeText(SetActivity.this, "请输入支付宝账号!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(name)) {
+                    Toast.makeText(SetActivity.this, "请输入用户名!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(smscode)) {
+                    Toast.makeText(SetActivity.this, "请输入短信验证码!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (smscode.equals(sms_code_s)) {
+                    bindPay(account, name);
+                    alertDialog.dismiss();
+                } else {
+                    Toast.makeText(SetActivity.this, "短信验证码不正确！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+        });
+
+    }
+
     /**
      * 设置用户支付宝账号
      */
@@ -435,14 +507,14 @@ public class SetActivity extends BaseActivity {
                 String user_account = etAccount.getText().toString().trim();
                 String userPhone = Tools.getUserPhone(SetActivity.this);
                 LogUtil.e(userPhone);
-                getSmsCode(userPhone,user_account,tvAlipayGetSms);
+                getSmsCode(userPhone, user_account, tvAlipayGetSms);
             }
         });
         final AlertDialog alertDialog = builder.setTitle("绑定支付宝")
                 .setView(view)
-                .setPositiveButton("确定",null)
+                .setPositiveButton("确定", null)
                 .setNegativeButton("取消", null).create();
-                alertDialog.show();
+        alertDialog.show();
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -521,31 +593,30 @@ public class SetActivity extends BaseActivity {
     /**
      * 获取验证码的方法
      */
-    private void getSmsCode(String userPhone,String user, final TextView tv) {
+    private void getSmsCode(String userPhone, String user, final TextView tv) {
 
         tv.setClickable(false);
-        tv.setTextColor(Color.parseColor("#99000000"));
-        countDownTimer =new CountDownTimer(60*1000,1000) {
+        tv.setTextColor(Color.parseColor("#ffffff"));
+        countDownTimer = new CountDownTimer(60 * 1000, 1000) {
             @Override
             public void onTick(long l) {
-                tv.setText(l/1000+"s后重新获取");
+                tv.setText(l / 1000 + "s后重新获取");
             }
 
             @Override
             public void onFinish() {
                 tv.setClickable(true);
                 tv.setText("获取验证码");
-                tv.setTextColor(Color.parseColor("#99000000"));
+                tv.setTextColor(Color.parseColor("#ffffff"));
             }
         };
         which = "sms";
         map = new HashMap<>();
-        map.put("sms_code",userPhone);
-        map.put("type","3");
-        netUtils.okHttp2Server2(sms_url,map);
+        map.put("sms_code", userPhone);
+        map.put("type", "3");
+        netUtils.okHttp2Server2(sms_url, map);
         countDownTimer.start();
     }
-
 
 
     @Override

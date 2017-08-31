@@ -10,6 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.HomeVipBean;
@@ -33,7 +35,7 @@ import okhttp3.Call;
  */
 
 public class VipPresenter extends BasePresenter {
-    private final ImageLoader mImageLoader;
+    //private final ImageLoader mImageLoader;
     private Context context;
     private LinearLayout llHomeVipZera;
     private RelativeLayout rl_item_laod_more;
@@ -53,7 +55,7 @@ public class VipPresenter extends BasePresenter {
         initView();
         netUtil = new NetUtil();
         shopType = Tools.getShopType(context);
-        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         String userRate = Tools.getUserRate(context);
         if(!TextUtils.isEmpty(userRate)) {
             double v = Double.parseDouble(userRate);
@@ -166,7 +168,12 @@ public class VipPresenter extends BasePresenter {
                       tv_vip_ware_title.setText(title);
                   }
                   if(img_url!=null && iv_vip_ware_img!=null) {
-                      mImageLoader.loadImage(img_url+"_320x320q90.jpg",iv_vip_ware_img,true);
+                      //mImageLoader.loadImage(img_url+"_320x320q90.jpg",iv_vip_ware_img,true);
+                      Glide.with(context).load(img_url+"_320x320q90.jpg")
+                              .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                              .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                              .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                              .into(iv_vip_ware_img);//请求成功后把图片设置到的控件
                   }
                   if(tv_vip_ware_coupon!=null) {
                       tv_vip_ware_coupon.setText("领券减"+couponsPrice);

@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.ActivityListBean;
 import com.gather_excellent_help.ui.activity.WebActivity;
@@ -30,7 +32,7 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
 
     private Context context;
     private List<ActivityListBean.DataBean> activityData;
-    private ImageLoader mImageLoader;
+    //private ImageLoader mImageLoader;
     private double user_rate;
     private int shopType;
     private boolean isToggle;
@@ -45,7 +47,7 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
             user_rate = v/100;
         }
         isToggle = Tools.isToggleShow(context);
-        mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
+        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
     @Override
@@ -70,7 +72,12 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
         final String goods_id = String.valueOf(dataBean.getProductId());
         final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
         if(holder.ivActivityListWareImg!=null  && img_url!=null) {
-            mImageLoader.loadImage(img_url+"_320x320q90.jpg",holder.ivActivityListWareImg,true);
+            //mImageLoader.loadImage(img_url+"_320x320q90.jpg",holder.ivActivityListWareImg,true);
+            Glide.with(context).load(img_url+"_320x320q90.jpg")
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                    .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                    .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                    .into(holder.ivActivityListWareImg);//请求成功后把图片设置到的控件
         }
         if(holder.tvActivityWareCoupon!=null) {
             holder.tvActivityWareCoupon.setText("领券减"+couponsPrice);
