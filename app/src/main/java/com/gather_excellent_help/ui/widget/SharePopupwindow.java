@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -30,13 +31,15 @@ public class SharePopupwindow extends PopupWindow {
 
     private Context context;
     private LayoutInflater inflater;
+    private View vShadow;
 
 
-    public SharePopupwindow(Context context){
+    public SharePopupwindow(Context context, View vShadow) {
         super(context);
         setFocusable(true);
         this.context = context;
-        inflater =LayoutInflater.from(context);
+        this.vShadow = vShadow;
+        inflater = LayoutInflater.from(context);
         init();
     }
 
@@ -44,7 +47,7 @@ public class SharePopupwindow extends PopupWindow {
      * 初始化控件
      */
     private void init() {
-        View view= inflater.inflate(R.layout.item_share_friend,null);
+        View view = inflater.inflate(R.layout.item_share_friend, null);
         LinearLayout llShareQQ = (LinearLayout) view.findViewById(R.id.ll_share_qq);
         LinearLayout llShareWeixin = (LinearLayout) view.findViewById(R.id.ll_share_weixin);
         LinearLayout llShareSina = (LinearLayout) view.findViewById(R.id.ll_share_sina);
@@ -70,8 +73,9 @@ public class SharePopupwindow extends PopupWindow {
         tv_share_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isShowing()) {
+                if (isShowing()) {
                     dismiss();
+                    vShadow.setVisibility(View.GONE);
                 }
             }
         });
@@ -80,7 +84,7 @@ public class SharePopupwindow extends PopupWindow {
         setHeight(ScreenUtil.getScreenHeight(context) - DensityUtil.dip2px(context,20));
         //设置SelectPicPopupWindow弹出窗体动画效果
         this.setAnimationStyle(R.style.AnimBottom);
-        ColorDrawable dw = new ColorDrawable(Color.parseColor("#55000000"));
+        ColorDrawable dw = new ColorDrawable(Color.parseColor("#00000000"));
         //设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(dw);
     }
@@ -89,7 +93,9 @@ public class SharePopupwindow extends PopupWindow {
 
     public interface OnItemClickListenr {
         void onQQClick();
+
         void onWeixinClick();
+
         void onSinaClick();
     }
 

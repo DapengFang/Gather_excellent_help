@@ -130,15 +130,15 @@ public class TaobaoWareListAdapter extends BaseAdapter {
             if(shopType==1){
                 boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                 if(toggleShow) {
-                   holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
+                   holder.ll_activity_list_ware_zhuan.setVisibility(View.INVISIBLE);
                 }else{
                    holder.ll_activity_list_ware_zhuan.setVisibility(View.VISIBLE);
                 }
             }else{
-               holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
+               holder.ll_activity_list_ware_zhuan.setVisibility(View.INVISIBLE);
             }
             if(zhuan == 0) {
-                holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
+                holder.ll_activity_list_ware_zhuan.setVisibility(View.INVISIBLE);
             }
         }
         return convertView;

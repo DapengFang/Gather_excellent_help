@@ -5,10 +5,23 @@
     android:orientation="vertical">
     <include layout="@layout/top_zhuangai_bar"/>
 
-    <WebView
-        android:id="@+id/wv_banner"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none"></WebView>
+        android:layout_height="match_parent">
+
+        <WebView
+            android:id="@+id/wv_banner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"></WebView>
+        <View
+            android:id="@+id/v_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#55000000"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+
 
 </LinearLayout>

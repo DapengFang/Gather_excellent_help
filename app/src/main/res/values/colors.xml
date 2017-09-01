@@ -18,4 +18,7 @@
     <color name="colorSecond">#E066FF</color>
     <color name="colorThird">#FFDAB9</color>
     <color name="transparent">#00000000</color>
+    <color name="green_11B57C">#11B57C</color>
+    <color name="black_333333">#333333</color>
+    <color name="line_DDDDDD">#DDDDDD</color>
 </resources>

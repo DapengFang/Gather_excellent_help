@@ -4,9 +4,10 @@ buildscript {
     repositories {
         jcenter()
         maven {
-            url "http://repo.baichuan-android.taobao.com/content/groups/BaichuanRepositories/"
-        }
+        url "http://repo.baichuan-android.taobao.com/content/groups/BaichuanRepositories/"
     }
+        maven { url 'https://jitpack.io' }
+}
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'//Added line
@@ -21,6 +22,7 @@ allprojects {
         maven {
             url "http://repo.baichuan-android.taobao.com/content/groups/BaichuanRepositories/"
         }
+        maven { url 'https://jitpack.io' }
     }
 }
 

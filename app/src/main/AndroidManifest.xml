@@ -110,13 +110,11 @@
             android:name=".SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".ui.activity.credits.ExtractCreditsActivity"
@@ -184,7 +182,9 @@
         <service android:name=".ui.service.MyService" />
 
         <activity android:name=".TestActivity" />
-        <activity android:name=".TestActivity2"></activity>
+        <activity android:name=".TestActivity2">
+
+        </activity>
         <activity android:name=".ui.activity.credits.ExtractDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />

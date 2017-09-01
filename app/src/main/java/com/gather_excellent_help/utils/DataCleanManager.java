@@ -73,9 +73,9 @@ public class DataCleanManager {
     public static void cleanApplicationCache(Context context) {
         cleanInternalCache(context);
         cleanExternalCache(context);
-        //cleanDatabases(context);
+        cleanDatabases(context);
         //cleanSharedPreference(context);
-        //cleanFiles(context);
+        cleanFiles(context);
     }
 
     /** * 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理 * * @param directory */

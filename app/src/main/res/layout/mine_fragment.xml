@@ -62,7 +62,7 @@
 
             <RelativeLayout
                 android:id="@+id/rl_me_nickname"
-                android:layout_width="@dimen/x80"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/civ_me_head_icon"
                 android:layout_centerHorizontal="true"

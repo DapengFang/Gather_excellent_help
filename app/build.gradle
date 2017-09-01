@@ -9,8 +9,8 @@ android {
         applicationId "com.gather_excellent_help"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //选择要添加的对应cpu类型的.so库。
@@ -101,5 +101,5 @@ dependencies {
     compile 'cn.jiguang.sdk:jpush:3.0.3'  // 此处以JPush 3.0.3 版本为例。
     compile 'cn.jiguang.sdk:jcore:1.1.1'  // 此处以JCore 1.1.1 版本为例。
     compile 'com.android.support:percent:24.2.0'
-
+    //compile 'com.github.Blincheng:AddressSelector:v1.0.4'
 }

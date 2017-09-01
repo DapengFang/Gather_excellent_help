@@ -19,12 +19,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.baichuan.android.trade.AlibcTrade;
-import com.alibaba.baichuan.android.trade.page.AlibcPage;
 import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
 import com.alibaba.baichuan.trade.biz.login.AlibcLoginCallback;
 import com.gather_excellent_help.R;
-import com.gather_excellent_help.aliapi.DemoTradeCallback;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.ChangeUrlBean;
 import com.gather_excellent_help.bean.CodeStatueBean;
@@ -60,6 +57,8 @@ public class WebActivity extends BaseActivity {
     WebView wvBanner;
     @Bind(R.id.rl_share)
     RelativeLayout rlShare;
+    @Bind(R.id.v_shadow)
+    View vShadow;
     private String type = "";
     private SharePopupwindow sharePopupwindow;
     private String url;
@@ -450,12 +449,14 @@ public class WebActivity extends BaseActivity {
                     showCopyDialog(SHARE_MEDIA.SINA);
                 }
             }
+
         });
     }
 
     private void showPopMenu() {
+        vShadow.setVisibility(View.VISIBLE);
         if (sharePopupwindow == null) {
-            sharePopupwindow = new SharePopupwindow(WebActivity.this);
+            sharePopupwindow = new SharePopupwindow(WebActivity.this, vShadow);
             sharePopupwindow.showAtLocation(wvBanner, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         } else if (sharePopupwindow != null
                 && sharePopupwindow.isShowing()) {
