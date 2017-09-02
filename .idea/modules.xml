@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Gather_excellent_help.iml" filepath="$PROJECT_DIR$/Gather_excellent_help.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Gather_excellent_help_dapeng.iml" filepath="$PROJECT_DIR$/Gather_excellent_help_dapeng.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
