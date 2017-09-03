@@ -4,10 +4,12 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -189,7 +191,14 @@ public class SplashActivity extends BaseFullScreenActivity {
      */
     private void installApk() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.parse("file://" + apkFile.toString()), "application/vnd.android.package-archive");
+        Uri data;
+        if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.N) {;
+            data = FileProvider.getUriForFile(this,"com.gather_excellent_help.fileprovider",apkFile);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }else {
+            data = Uri.fromFile(apkFile);
+        }
+        intent.setDataAndType(data,"application/vnd.android.package-archive");
         startActivity(intent);
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);

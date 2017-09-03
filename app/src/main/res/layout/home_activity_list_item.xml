@@ -34,7 +34,6 @@
                 android:layout_alignRight="@id/iv_activity_list_ware_img"
                 android:background="@drawable/juxing_coupon_shape"
                 android:gravity="center"
-                android:text="领券减200"
                 android:textColor="@color/white"
                 android:textSize="@dimen/x8"
                 android:textStyle="bold" />
@@ -55,7 +54,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/x36"
                 android:lineSpacingExtra="@dimen/x2"
-                android:text="正品长虹全自动洗衣机7.5KG家用大容量波正品长虹全自动洗衣机7.5KG家用大容量波"
                 android:textColor="#333333"
                 android:textSize="@dimen/x14" />
 
@@ -64,7 +62,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/x3"
-                android:text="1588人已买"
                 android:textColor="#CCCCCC"
                 android:textSize="@dimen/x8"
                 android:visibility="gone" />
@@ -81,7 +78,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:text="￥69999.00"
                     android:textColor="#FA2D3B"
                     android:textSize="@dimen/x16"
                     android:textStyle="bold" />

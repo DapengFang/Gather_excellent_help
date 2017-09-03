@@ -32,7 +32,6 @@
                 android:layout_alignTop="@id/iv_home_type_photo"
                 android:background="@drawable/juxing_coupon_shape"
                 android:gravity="center"
-                android:text="领券减200"
                 android:textColor="@color/white"
                 android:textSize="@dimen/x10"
                 android:textStyle="bold" />
@@ -67,7 +66,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:text="￥69999.00"
                     android:textColor="#FA2D3B"
                     android:textSize="@dimen/x14"
                     android:textStyle="bold" />
@@ -94,7 +92,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:text="￥22.55"
                     android:textColor="#ff6600"
                     android:textSize="@dimen/x8" />
 
@@ -113,7 +110,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginLeft="@dimen/x3"
-                    android:text="￥1177.45"
                     android:textColor="#ff6600"
                     android:textSize="@dimen/x8" />
 

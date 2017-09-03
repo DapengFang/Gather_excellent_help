@@ -142,11 +142,15 @@ public class LoginActivity extends Activity {
                     Integer id = data.get(0).getId();
                     int group_type = data.get(0).getGroup_type();
                     double user_rate = data.get(0).getUser_get_ratio();
+                    String advertising = data.get(0).getAdvertising();
                     CacheUtils.putBoolean(LoginActivity.this,CacheUtils.LOGIN_STATE,true);
                     CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_VALUE,id+"");
                     CacheUtils.putInteger(LoginActivity.this,CacheUtils.SHOP_TYPE,group_type);
                     CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_PHONE,user);
                     CacheUtils.putString(LoginActivity.this,CacheUtils.USER_RATE,user_rate+"");
+                    if (advertising != null) {
+                        CacheUtils.putString(LoginActivity.this, CacheUtils.ADVER_ID, advertising);
+                    }
                     bindTaobao(id+"");
                     finish();
                 }

@@ -50,6 +50,7 @@ public class CodeBean {
         private Integer id;
         private int group_type;
         private double user_get_ratio;
+        private String advertising;
 
         public Integer getId() {
             return id;
@@ -73,6 +74,14 @@ public class CodeBean {
 
         public void setUser_get_ratio(double user_get_ratio) {
             this.user_get_ratio = user_get_ratio;
+        }
+
+        public String getAdvertising() {
+            return advertising;
+        }
+
+        public void setAdvertising(String advertising) {
+            this.advertising = advertising;
         }
     }
 }

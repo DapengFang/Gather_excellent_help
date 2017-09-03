@@ -187,11 +187,12 @@ public class VipPresenter extends BasePresenter {
                   if(tv_vip_ware_coast!=null) {
                       tv_vip_ware_coast.setText("￥"+df.format(coast));
                   }
-                  if(couponsPrice>0) {
-                      tv_vip_ware_coupon.setVisibility(View.VISIBLE);
-                  }else{
-                      tv_vip_ware_coupon.setVisibility(View.GONE);
-                  }
+                  tv_vip_ware_coupon.setVisibility(View.GONE);
+//                  if(couponsPrice>0) {
+//                      tv_vip_ware_coupon.setVisibility(View.VISIBLE);
+//                  }else{
+//                      tv_vip_ware_coupon.setVisibility(View.GONE);
+//                  }
                   if (shopType == 1) {
                       if (isToggle) {
                           ll_vip_zera_zhuan.setVisibility(View.GONE);

@@ -140,6 +140,8 @@ public class TaobaoWareListAdapter extends BaseAdapter {
             if(zhuan == 0) {
                 holder.ll_activity_list_ware_zhuan.setVisibility(View.INVISIBLE);
             }
+        }else {
+            holder.tv_rush_ware_coupons.setVisibility(View.INVISIBLE);
         }
         return convertView;
     }

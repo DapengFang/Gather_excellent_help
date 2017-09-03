@@ -70,7 +70,7 @@ public class WebActivity extends BaseActivity {
     private String nick = "";
 
     public static final int GET_URL = 1;
-    private String chang_url = Url.BASE_URL + "GoodsConvert.aspx";
+    private String chang_url = Url.BASE_URL + "GetCouponUrl.aspx";
     private String get_url = Url.BASE_URL + "GetTpwd.aspx";
     private String bind_url = Url.BASE_URL + "bindTaobao.aspx";//绑定淘宝
     private NetUtil netUtil;
@@ -153,15 +153,12 @@ public class WebActivity extends BaseActivity {
                     if(login) {
                         boolean bindTao = Tools.isBindTao(this);
                         if(bindTao) {
-//                        LogUtil.e("adverId = "+ adverId);
-//                        which = "change_url";
-//                        map = new HashMap<>();
-//                        map.put("goodsId",goods_id);
-//                        map.put("adzoneId", adverId);
-//                        netUtil.okHttp2Server2(chang_url,map);
-
-                            click_url = goods_coupon_url;
-                            handler.sendEmptyMessage(GET_URL);
+                        LogUtil.e("adverId = "+ adverId);
+                        which = "change_url";
+                        map = new HashMap<>();
+                        map.put("goodsId",goods_id);
+                        map.put("adzoneId", adverId);
+                        netUtil.okHttp2Server2(chang_url,map);
                         }else{
                             Toast.makeText(WebActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
                             String userLogin = Tools.getUserLogin(this);
@@ -192,14 +189,12 @@ public class WebActivity extends BaseActivity {
                 if(login) {
                     boolean bindTao = Tools.isBindTao(this);
                     if(bindTao) {
-//                    LogUtil.e("adverId = "+ adverId);
-//                    which = "change_url";
-//                    map = new HashMap<>();
-//                    map.put("goodsId",goods_id);
-//                    map.put("adzoneId", adverId);
-//                    netUtil.okHttp2Server2(chang_url,map);
-                        click_url = goods_coupon_url;
-                        handler.sendEmptyMessage(GET_URL);
+                    LogUtil.e("adverId = "+ adverId);
+                    which = "change_url";
+                    map = new HashMap<>();
+                    map.put("goodsId",goods_id);
+                    map.put("adzoneId", adverId);
+                    netUtil.okHttp2Server2(chang_url,map);
                     }else{
                         Toast.makeText(WebActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
                         String userLogin = Tools.getUserLogin(this);
@@ -229,8 +224,6 @@ public class WebActivity extends BaseActivity {
 
         //设置Web视图
         wvBanner.setWebViewClient(new MyWebViewClient());
-        //加载需要显示的网页
-        wvBanner.loadUrl(web_url);
         rlExit.setOnClickListener(new MyOnclickListener());
         rlShare.setOnClickListener(new MyOnclickListener());
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
@@ -266,13 +259,11 @@ public class WebActivity extends BaseActivity {
             case 1 :
                 CacheUtils.putBoolean(WebActivity.this, CacheUtils.BIND_STATE, true);
                 CacheUtils.putString(WebActivity.this,CacheUtils.TAOBAO_NICK,nick);
-//                which = "change_url";
-//                map = new HashMap<>();
-//                map.put("goodsId",goods_id);
-//                map.put("adzoneId",adverId);
-//                netUtil.okHttp2Server2(chang_url,map);
-                click_url = goods_coupon_url;
-                handler.sendEmptyMessage(GET_URL);
+                which = "change_url";
+                map = new HashMap<>();
+                map.put("goodsId",goods_id);
+                map.put("adzoneId",adverId);
+                netUtil.okHttp2Server2(chang_url,map);
                 break;
             case 0:
                 Toast.makeText(WebActivity.this, "绑定淘宝失败", Toast.LENGTH_SHORT).show();
@@ -309,6 +300,8 @@ public class WebActivity extends BaseActivity {
                 List<ChangeUrlBean.DataBean> data = changeUrlBean.getData();
                 if(data!=null && data.size()>0) {
                     click_url = changeUrlBean.getData().get(0).getClick_url();
+                    //加载需要显示的网页
+                    wvBanner.loadUrl(click_url);
                     handler.sendEmptyMessage(GET_URL);
                 }
                 break;
