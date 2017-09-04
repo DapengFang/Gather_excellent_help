@@ -211,12 +211,16 @@ public class TypeFragment extends BaseFragment {
                                     ll_type_loadmore.getChildAt(0).setVisibility(View.GONE);
                                     TextView tv = (TextView) ll_type_loadmore.getChildAt(1);
                                     tv.setText("没有更多的数据了");
-                                    ll_type_loadmore.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            ll_type_loadmore.setVisibility(View.GONE);
-                                        }
-                                    },1000);
+                                    if(ll_type_loadmore!=null) {
+                                        ll_type_loadmore.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if(ll_type_loadmore!=null) {
+                                                    ll_type_loadmore.setVisibility(View.GONE);
+                                                }
+                                            }
+                                        },1000);
+                                    }
                                 }else{
                                     pageIndex = String.valueOf(page);
                                     //联网请求数据

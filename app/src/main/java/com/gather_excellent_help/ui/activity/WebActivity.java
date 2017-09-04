@@ -135,6 +135,11 @@ public class WebActivity extends BaseActivity {
                 if(news_title!=null) {
                     newsTitle = news_title;
                 }
+                wvBanner.loadUrl(web_url);
+            } else if(type.equals("second")) {
+                tvTopTitleName.setText("优惠券专区");
+                wvBanner.loadUrl(web_url);
+                rlShare.setVisibility(View.GONE);
             } else {
                 tvTopTitleName.setText("优惠券专区");
                 url = intent.getStringExtra("url");
@@ -168,6 +173,7 @@ public class WebActivity extends BaseActivity {
                         toLogin();
                         finish();
                     }
+
                 }
             }
         } else {

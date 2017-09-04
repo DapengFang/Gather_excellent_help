@@ -217,12 +217,12 @@ public class NewsFirstPresenter {
                          }
                          String imgurl = "";
                          String newsTitle = "";
-                         if(currData!=null) {
-                             String img_url = currData.get(curr_click).getImg_url();
+                         if(newsData!=null) {
+                             String img_url = newsData.get(curr_click).getImg_url();
                              if(img_url!=null) {
                                  imgurl = Url.IMG_URL + img_url;
                              }
-                             String title = currData.get(curr_click).getTitle();
+                             String title = newsData.get(curr_click).getTitle();
                              if(title!=null) {
                                  newsTitle = title;
                              }

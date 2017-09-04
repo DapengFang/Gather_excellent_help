@@ -253,6 +253,7 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
         intent.putExtra("outputX", 150);
         intent.putExtra("outputY", 150);
         intent.putExtra("return-data", true);
+
         startActivityForResult(intent, SELECT_PIC_BY_PICK_PHOTO);
     }
     /**

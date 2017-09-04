@@ -1,16 +1,24 @@
 package com.gather_excellent_help.ui.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,12 +30,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
+import com.gather_excellent_help.bean.UserAvatarBean;
 import com.gather_excellent_help.bean.UserinfoBean;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.CircularImage;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.PhotoUtils;
+import com.gather_excellent_help.utils.ToastUtils;
 import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
@@ -72,12 +83,19 @@ public class PersonInfoActivity extends BaseActivity {
     private String url = Url.BASE_URL + "UserInfo.aspx";
     private String head_url = Url.BASE_URL + "ChangeFace.aspx";
     private String userLogin;//用户登录后的标识
-    //private ImageLoader mImageLoader;//图片加载类
 
     public static final int TAKE_PICTURE = 0;
     public static final int CHOOSE_PICTURE = 1;
     public static final int DO_PICTURE = 2;
     private String whick;
+    private File tempfile;
+
+    private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo.jpg");
+    private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
+    private Uri imageUri;
+    private Uri cropImageUri;
+    private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
+    private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +139,31 @@ public class PersonInfoActivity extends BaseActivity {
      */
     private void parseHead(String response) {
         LogUtil.e(response);
+        UserAvatarBean userAvatarBean = new Gson().fromJson(response, UserAvatarBean.class);
+        int statusCode = userAvatarBean.getStatusCode();
+        switch (statusCode){
+            case 1:
+                List<UserAvatarBean.DataBean> data = userAvatarBean.getData();
+                if(data!=null) {
+                    if(data.size()>0) {
+                        UserAvatarBean.DataBean dataBean = data.get(0);
+                        if(dataBean!=null) {
+                            String avatar = dataBean.getAvatar();
+                            if(avatar!=null) {
+                                Glide.with(this).load(avatar)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                                        .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                                        .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                                        .into(civPersonHead);//请求成功后把图片设置到的控件
+                            }
+                        }
+                    }
+                }
+                break;
+            case 0:
+                Toast.makeText(PersonInfoActivity.this, userAvatarBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     public class MyOnclickListener implements View.OnClickListener{
@@ -137,6 +180,8 @@ public class PersonInfoActivity extends BaseActivity {
             }
         }
     }
+    private static final int output_X = 480;
+    private static final int output_Y = 480;
 
     /**
      * 修改用户头像
@@ -151,26 +196,86 @@ public class PersonInfoActivity extends BaseActivity {
                 Intent intent = null;
                 switch (which) {
                    case TAKE_PICTURE:
-                       intent = new Intent(
-                               MediaStore.ACTION_IMAGE_CAPTURE);
-                       //下面这句指定调用相机拍照后的照片存储的路径
-                       intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                               .fromFile(new File(Environment
-                                       .getExternalStorageDirectory(),
-                                       "temp.jpg")));
-                       startActivityForResult(intent, TAKE_PICTURE);
+                       autoObtainCameraPermission();
                        break;
                    case CHOOSE_PICTURE:
-                       intent = new Intent(Intent.ACTION_PICK, null);
-                       intent.setDataAndType(
-                               MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                               "image/*");
-                       startActivityForResult(intent, CHOOSE_PICTURE);
+                       autoObtainStoragePermission();
                        break;
                }
             }
         });
         builder.create().show();
+    }
+
+
+    /**
+     * 自动获取sdk权限
+     */
+
+    private void autoObtainStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSIONS_REQUEST_CODE);
+        } else {
+            PhotoUtils.openPic(this, CHOOSE_PICTURE);
+        }
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case CAMERA_PERMISSIONS_REQUEST_CODE: {//调用系统相机申请拍照权限回调
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (hasSdcard()) {
+                        imageUri = Uri.fromFile(fileUri);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                            imageUri = FileProvider.getUriForFile(PersonInfoActivity.this, "com.gather_excellent_help.fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
+                        PhotoUtils.takePicture(this, imageUri, TAKE_PICTURE);
+                    } else {
+                        ToastUtils.showShort(this, "设备没有SD卡！");
+                    }
+                } else {
+
+                    ToastUtils.showShort(this, "请允许打开相机！！");
+                }
+                break;
+            }
+            case STORAGE_PERMISSIONS_REQUEST_CODE://调用系统相册申请Sdcard权限回调
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    PhotoUtils.openPic(this, CHOOSE_PICTURE);
+                } else {
+
+                    ToastUtils.showShort(this, "请允许打操作SDCard！！");
+                }
+                break;
+        }
+    }
+
+    /**
+     * 自动获取相机权限
+     */
+    private void autoObtainCameraPermission() {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                ToastUtils.showShort(this, "您已经拒绝过一次");
+            }
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, CAMERA_PERMISSIONS_REQUEST_CODE);
+        } else {//有权限直接调用系统相机拍照
+            if (hasSdcard()) {
+                imageUri = Uri.fromFile(fileUri);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                    imageUri = FileProvider.getUriForFile(PersonInfoActivity.this, "com.gather_excellent_help.fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
+                PhotoUtils.takePicture(this, imageUri, TAKE_PICTURE);
+            } else {
+                ToastUtils.showShort(this, "设备没有SD卡！");
+            }
+        }
     }
 
     /**
@@ -186,6 +291,7 @@ public class PersonInfoActivity extends BaseActivity {
 		 * 制做的了...吼吼
 		 */
         Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setDataAndType(uri, "image/*");
         //下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
         intent.putExtra("crop", "true");
@@ -199,6 +305,7 @@ public class PersonInfoActivity extends BaseActivity {
         startActivityForResult(intent, DO_PICTURE);
     }
 
+
     /**
      * 保存裁剪之后的图片数据
      * @param picdata
@@ -210,6 +317,7 @@ public class PersonInfoActivity extends BaseActivity {
             Drawable drawable = new BitmapDrawable(photo);
             civPersonHead.setImageDrawable(drawable);
             String upload = Tools.BitmapToBase64(photo);
+            LogUtil.e(upload);
             if(!TextUtils.isEmpty(upload)) {
                 map = new HashMap<>();
                 map.put("id",userLogin);
@@ -217,27 +325,10 @@ public class PersonInfoActivity extends BaseActivity {
                 whick = "head";
                 netUtils.okHttp2Server2(head_url,map);
             }
-            /**
-             * 下面注释的方法是将裁剪之后的图片以Base64Coder的字符方式上
-             * 传到服务器，QQ头像上传采用的方法跟这个类似
-             */
-
-			/*ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			photo.compress(Bitmap.CompressFormat.JPEG, 60, stream);
-			byte[] b = stream.toByteArray();
-			// 将图片流以字符串形式存储下来
-
-			tp = new String(Base64Coder.encodeLines(b));
-			这个地方大家可以写下给服务器上传图片的实现，直接把tp直接上传就可以了，
-			服务器处理的方法是服务器那边的事了，吼吼
-
-			如果下载到的服务器的数据还是以Base64Coder的形式的话，可以用以下方式转换
-			为我们可以用的图片类型就OK啦...吼吼
-			Bitmap dBitmap = BitmapFactory.decodeFile(tp);
-			Drawable drawable = new BitmapDrawable(dBitmap);
-			*/
         }
     }
+
+    private static final int CODE_RESULT_REQUEST = 0xa2;
 
 
     @Override
@@ -246,13 +337,21 @@ public class PersonInfoActivity extends BaseActivity {
             switch (requestCode) {
                 // 如果是直接从相册获取
                 case CHOOSE_PICTURE:
-                    startPhotoZoom(data.getData());
+                    //startPhotoZoom(data.getData());
+                    if (hasSdcard()) {
+                        cropImageUri = Uri.fromFile(fileCropUri);
+                        Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                            newUri = FileProvider.getUriForFile(this, "com.gather_excellent_help.fileprovider", new File(newUri.getPath()));
+                        PhotoUtils.cropImageUri(this, newUri, cropImageUri, 1, 1, output_X, output_Y, CODE_RESULT_REQUEST);
+                    } else {
+                        ToastUtils.showShort(this, "设备没有SD卡！");
+                    }
                     break;
                 // 如果是调用相机拍照时
                 case TAKE_PICTURE:
-                    File temp = new File(Environment.getExternalStorageDirectory()
-                            + "/temp.jpg");
-                    startPhotoZoom(Uri.fromFile(temp));
+                    cropImageUri = Uri.fromFile(fileCropUri);
+                    PhotoUtils.cropImageUri(this, imageUri, cropImageUri, 1, 1, output_X, output_Y, CODE_RESULT_REQUEST);
                     break;
                 // 取得裁剪后的图片
                 case DO_PICTURE:
@@ -268,6 +367,21 @@ public class PersonInfoActivity extends BaseActivity {
                         setPicToView(data);
                     }
                     break;
+                case CODE_RESULT_REQUEST:
+                    Bitmap bitmap = PhotoUtils.getBitmapFromUri(cropImageUri, this);
+                    if (bitmap != null) {
+                        Drawable drawable = new BitmapDrawable(bitmap);
+                        civPersonHead.setImageDrawable(drawable);
+                        String upload = Tools.BitmapToBase64(bitmap);
+                        LogUtil.e(upload);
+                        if(!TextUtils.isEmpty(upload)) {
+                            map = new HashMap<>();
+                            map.put("id",userLogin);
+                            map.put("file",upload);
+                            whick = "head";
+                            netUtils.okHttp2Server2(head_url,map);
+                        }
+                    }
                 default:
                     break;
 
@@ -276,11 +390,13 @@ public class PersonInfoActivity extends BaseActivity {
 
         }
     }
+
     /**
      * 解析用户信息
      * @param response
      */
     private void parseData(String response) {
+        LogUtil.e(response);
         Gson gson = new Gson();
         UserinfoBean userinfoBean = gson.fromJson(response, UserinfoBean.class);
         int statusCode = userinfoBean.getStatusCode();
@@ -342,6 +458,14 @@ public class PersonInfoActivity extends BaseActivity {
             whick = "info";
             netUtils.okHttp2Server2(url,map);
         }
+    }
+
+    /**
+     * 检查设备是否存在SDCard的工具方法
+     */
+    public static boolean hasSdcard() {
+        String state = Environment.getExternalStorageState();
+        return state.equals(Environment.MEDIA_MOUNTED);
     }
 
 }

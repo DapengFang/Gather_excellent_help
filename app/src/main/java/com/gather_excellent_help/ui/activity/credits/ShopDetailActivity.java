@@ -1,18 +1,25 @@
 package com.gather_excellent_help.ui.activity.credits;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -36,6 +43,8 @@ import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.DataCleanManager;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.PhotoUtils;
+import com.gather_excellent_help.utils.ToastUtils;
 import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
@@ -96,9 +105,17 @@ public class ShopDetailActivity extends BaseActivity {
     /***
      * 使用相册中的图片
      */
+    private static final int CODE_RESULT_REQUEST = 0xa2;
+    private static final int CODE_GALLERY_REQUEST = 0xa0;
+    private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
     public static final int SELECT_PIC_BY_PICK_PHOTO = 2;
     public static final int SELECT_PIC_BY_TAKE_CROP = 3;
     public static final int SELECT_PIC_BY_PICK_CROP = 4;
+
+
+    private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
+
+    private Uri cropImageUri;
     @Bind(R.id.tv_shop_time_am)
     TextView tvShopTimeAm;
     @Bind(R.id.tv_shop_time_pm)
@@ -373,12 +390,46 @@ public class ShopDetailActivity extends BaseActivity {
      * 从相册中取图片
      */
     private void pickPhoto() {
-        Intent intent = new Intent(Intent.ACTION_PICK, null);
-        intent.setDataAndType(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                "image/*");
-        startActivityForResult(intent, SELECT_PIC_BY_PICK_CROP);
+//        Intent intent = new Intent(Intent.ACTION_PICK, null);
+//        intent.setDataAndType(
+//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                "image/*");
+//        startActivityForResult(intent, SELECT_PIC_BY_PICK_CROP);
+        autoObtainStoragePermission();
     }
+
+    /**
+     * 自动获取sdk权限
+     */
+
+    private void autoObtainStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSIONS_REQUEST_CODE);
+        } else {
+            PhotoUtils.openPic(this, CODE_GALLERY_REQUEST);
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+
+            case STORAGE_PERMISSIONS_REQUEST_CODE://调用系统相册申请Sdcard权限回调
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    PhotoUtils.openPic(this, CODE_GALLERY_REQUEST);
+                } else {
+
+                    ToastUtils.showShort(this, "请允许打操作SDCard！！");
+                }
+                break;
+        }
+    }
+
+    private static final int output_X = 480;
+    private static final int output_Y = 480;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -407,6 +458,25 @@ public class ShopDetailActivity extends BaseActivity {
                      */
                     if(data != null){
                         setPicToView(data);
+                    }
+                    break;
+                case CODE_GALLERY_REQUEST://访问相册完成回调
+                    if (hasSdcard()) {
+                        cropImageUri = Uri.fromFile(fileCropUri);
+                        Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                            newUri = FileProvider.getUriForFile(this, "com.zz.fileprovider", new File(newUri.getPath()));
+                        PhotoUtils.cropImageUri(this, newUri, cropImageUri, 1, 1, output_X, output_Y, CODE_RESULT_REQUEST);
+                    } else {
+                        ToastUtils.showShort(this, "设备没有SD卡！");
+                    }
+                    break;
+                case CODE_RESULT_REQUEST:
+                    Bitmap bitmap = PhotoUtils.getBitmapFromUri(cropImageUri, this);
+                    if (bitmap != null) {
+                        String sphoto = Tools.BitmapToBase64(bitmap);
+                        upload = sphoto;
+                        ivShopPicture.setImageBitmap(bitmap);
                     }
                     break;
                 default:
@@ -497,6 +567,7 @@ public class ShopDetailActivity extends BaseActivity {
             Drawable drawable = new BitmapDrawable(photo);
             String sphoto = Tools.BitmapToBase64(photo);
             upload = sphoto;
+            ivShopPicture.setImageBitmap(photo);
             /**
              * 下面注释的方法是将裁剪之后的图片以Base64Coder的字符方式上
              * 传到服务器，QQ头像上传采用的方法跟这个类似
@@ -518,7 +589,15 @@ public class ShopDetailActivity extends BaseActivity {
 			*/
 //            ib.setBackgroundDrawable(drawable);
 //            iv.setBackgroundDrawable(drawable);
-            ivShopPicture.setImageBitmap(photo);
+
         }
+    }
+
+    /**
+     * 检查设备是否存在SDCard的工具方法
+     */
+    public static boolean hasSdcard() {
+        String state = Environment.getExternalStorageState();
+        return state.equals(Environment.MEDIA_MOUNTED);
     }
 }

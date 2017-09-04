@@ -192,7 +192,7 @@ public class SplashActivity extends BaseFullScreenActivity {
     private void installApk() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         Uri data;
-        if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.N) {;
+        if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.N) {
             data = FileProvider.getUriForFile(this,"com.gather_excellent_help.fileprovider",apkFile);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }else {

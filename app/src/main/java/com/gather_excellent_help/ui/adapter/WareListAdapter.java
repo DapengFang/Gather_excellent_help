@@ -136,6 +136,7 @@ public class WareListAdapter extends BaseAdapter {
                     public void onClick(View view) {
                         Intent intent = new Intent(context, WebActivity.class);
                         intent.putExtra("web_url",secondCouponsUrl);
+                        intent.putExtra("type","second");
                         context.startActivity(intent);
                     }
                 });
