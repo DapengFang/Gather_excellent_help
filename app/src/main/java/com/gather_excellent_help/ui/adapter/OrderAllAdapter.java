@@ -30,7 +30,6 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
 
     private Context context;
     private LayoutInflater inflater;    //布局填充器
-    //private ImageLoader mImageLoader;
     private List<OrderAllBean.DataBean> allData;
     private int curr_statue;
     private int order_type;
@@ -41,7 +40,6 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
         this.curr_statue = curr_statue;
         this.order_type = order_type;
         inflater = LayoutInflater.from(context);
-        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
     @Override
@@ -68,7 +66,6 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
         String goodsImg = dataBean.getGoodsImg();
         String tk_status = dataBean.getTk_status();
         if(goodsImg!=null && !TextUtils.isEmpty(goodsImg)) {
-            //mImageLoader.loadImage(goodsImg,holder.ivOrderAllImg,true);
             Glide.with(context).load(goodsImg)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                     .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
@@ -76,27 +73,28 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
                     .into(holder.ivOrderAllImg);//请求成功后把图片设置到的控件
         }
         if(curr_statue == 1) {
-            holder.tvOrderAllStatue.setText("待付款");
+            holder.tvOrderAllStatue.setText("结算");
         }else if(curr_statue == 2){
-            holder.tvOrderAllStatue.setText("已付款");
+            holder.tvOrderAllStatue.setText("付款");
         }else if(curr_statue == 3) {
-            holder.tvOrderAllStatue.setText("已完成");
+            holder.tvOrderAllStatue.setText("完成");
         }else if(curr_statue == 4) {
-            holder.tvOrderAllStatue.setText("退款/售后");
+            holder.tvOrderAllStatue.setText("失效");
         }else {
             if(tk_status.equals("3")) {
-                holder.tvOrderAllStatue.setText("待付款");
+                holder.tvOrderAllStatue.setText("结算");
             }
             if(tk_status.equals("12")) {
-                holder.tvOrderAllStatue.setText("已付款");
+                holder.tvOrderAllStatue.setText("付款");
             }
             if(tk_status.equals("14")) {
-                holder.tvOrderAllStatue.setText("已完成");
+                holder.tvOrderAllStatue.setText("完成");
             }
             if(tk_status.equals("13")) {
-                holder.tvOrderAllStatue.setText("退款/售后");
+                holder.tvOrderAllStatue.setText("失效");
             }
         }
+
 
     }
 

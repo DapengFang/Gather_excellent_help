@@ -148,9 +148,15 @@ public class HomeUpdateFragment extends BaseFragment {
         qiangPresenter.setOnLoadSuccessListener(new QiangPresenter.OnLoadSuccessListener() {
             @Override
             public void onSuccessResponse(long t) {
+                llHomeQiangZera.setVisibility(View.VISIBLE);
                 time = t;
                 rushDownTimer = new RushDownTimer(getContext());
                 handler.sendEmptyMessage(TIME_DOWN);
+            }
+
+            @Override
+            public void onResponseNoData() {
+                llHomeQiangZera.setVisibility(View.GONE);
             }
         });
         groupPresenter = new GroupPresenter(getContext(), llHomeGroupZera);

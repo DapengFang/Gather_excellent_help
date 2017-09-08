@@ -25,6 +25,7 @@ import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -35,7 +36,6 @@ import okhttp3.Call;
  */
 
 public class VipPresenter extends BasePresenter {
-    //private final ImageLoader mImageLoader;
     private Context context;
     private LinearLayout llHomeVipZera;
     private RelativeLayout rl_item_laod_more;
@@ -55,7 +55,6 @@ public class VipPresenter extends BasePresenter {
         initView();
         netUtil = new NetUtil();
         shopType = Tools.getShopType(context);
-        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         String userRate = Tools.getUserRate(context);
         if(!TextUtils.isEmpty(userRate)) {
             double v = Double.parseDouble(userRate);
@@ -168,7 +167,6 @@ public class VipPresenter extends BasePresenter {
                       tv_vip_ware_title.setText(title);
                   }
                   if(img_url!=null && iv_vip_ware_img!=null) {
-                      //mImageLoader.loadImage(img_url+"_320x320q90.jpg",iv_vip_ware_img,true);
                       Glide.with(context).load(img_url+"_320x320q90.jpg")
                               .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                               .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片

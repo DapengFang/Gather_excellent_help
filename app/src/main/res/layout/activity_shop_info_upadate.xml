@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/x10"
                     android:text="省/市/区："
-                    android:textColor="#99000000"
+                    android:textColor="#333333"
                     android:textSize="14sp" />
 
                 <TextView
@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/x10"
                     android:text="详细地址："
-                    android:textColor="#99000000"
+                    android:textColor="#333333"
                     android:textSize="14sp" />
 
                 <EditText
@@ -102,6 +102,7 @@
                     android:hint="请输入详细地址"
                     android:cursorVisible="true"
                     android:textColorHint="#55000000"
+                    android:textColor="#88000000"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -129,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/x10"
                     android:text="店铺简介："
-                    android:textColor="#99000000"
+                    android:textColor="#333333"
                     android:textSize="14sp" />
 
                 <EditText
@@ -140,6 +141,7 @@
                     android:hint="请输入店铺简介"
                     android:cursorVisible="true"
                     android:textColorHint="#55000000"
+                    android:textColor="#88000000"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -167,7 +169,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/x10"
                     android:text="电话："
-                    android:textColor="#99000000"
+                    android:textColor="#333333"
                     android:textSize="14sp" />
 
                 <EditText
@@ -179,6 +181,7 @@
                     android:hint="请输入电话号码"
                     android:cursorVisible="true"
                     android:textColorHint="#55000000"
+                    android:textColor="#88000000"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -206,7 +209,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/x10"
                     android:text="店名："
-                    android:textColor="#99000000"
+                    android:textColor="#333333"
                     android:textSize="14sp" />
 
                 <EditText
@@ -217,6 +220,7 @@
                     android:hint="请输入店名"
                     android:cursorVisible="true"
                     android:textColorHint="#55000000"
+                    android:textColor="#88000000"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -248,7 +252,7 @@
                     android:layout_height="wrap_content"
                     android:text="营业时间"
                     android:textSize="12sp"
-                    android:textColor="#99000000"
+                    android:textColor="#333333"
                     android:paddingLeft="@dimen/x10"/>
                 <TextView
                     android:id="@+id/tv_shop_time_am"

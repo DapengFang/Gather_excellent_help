@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_wards_statistics_update"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.gather_excellent_help.ui.activity.wards.WardsStatisticsUpdateActivity">
 
     <include layout="@layout/top_zhuangai_bar"/>
-
     <LinearLayout
-        android:id="@+id/ll_wards_statics_show"
+        android:id="@+id/ll_lower_member_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -93,7 +91,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/x12"
                 android:singleLine="true"
-                android:background="@null" />
+                android:background="@null"/>
         </RelativeLayout>
 
         <View

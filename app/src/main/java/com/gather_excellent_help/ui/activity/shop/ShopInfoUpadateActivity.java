@@ -2,6 +2,7 @@ package com.gather_excellent_help.ui.activity.shop;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -133,6 +134,7 @@ public class ShopInfoUpadateActivity extends BaseActivity {
                 pcs = address;
                 LogUtil.e(address);
                 tvMerchantPcsChoice.setText(address);
+                tvMerchantPcsChoice.setTextColor(Color.parseColor("#88000000"));
                 if (pcsChoicePopupwindow.isShowing()) {
                     pcsChoicePopupwindow.dismiss();
                 }

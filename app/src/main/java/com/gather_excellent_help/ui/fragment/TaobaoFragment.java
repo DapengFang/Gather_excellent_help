@@ -7,9 +7,11 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -275,6 +277,36 @@ public class TaobaoFragment extends BaseFragment {
         rlNewsSearchBefore.setOnClickListener(new MyOnclickListener());
         rlEditTextExit.setOnClickListener(new MyOnclickListener());
         etTaobaoSearchContent.addTextChangedListener(watcher);
+        etTaobaoSearchContent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                    String sousuoStr = etTaobaoSearchContent.getText().toString().trim();
+                    if (TextUtils.isEmpty(sousuoStr)) {
+                        rlNewsSearchBefore.setVisibility(View.VISIBLE);
+                        llNewsSearchAfter.setVisibility(View.GONE);
+                        return true;
+                    }
+                    initChoice();
+                    Toast.makeText(getContext(), "正在搜索中，请稍后！", Toast.LENGTH_SHORT).show();
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(etTaobaoSearchContent.getWindowToken(), 0);
+                    keyword = sousuoStr;
+                    isLoadmore = -1;
+                    page_no = "1";
+                    page = 1;
+                    city = "";//城市
+                    String type = "";//排序
+                    is_tmall = "";//是否是天猫
+                    start_price = "";//范围下限
+                    end_price = "";//范围上限
+                    searchTaobaoWare(keyword, city, type, is_tmall, start_price, end_price, page_no);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**
@@ -294,6 +326,7 @@ public class TaobaoFragment extends BaseFragment {
         if (llTaobaoLoadmore != null) {
             llTaobaoLoadmore.setVisibility(View.VISIBLE);
             TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(1);
+            llTaobaoLoadmore.getChildAt(0).setVisibility(View.VISIBLE);
             tvTitle.setText("加载更多...");
         }
     }
@@ -305,6 +338,7 @@ public class TaobaoFragment extends BaseFragment {
         if (llTaobaoLoadmore != null) {
             llTaobaoLoadmore.setVisibility(View.VISIBLE);
             TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(1);
+            llTaobaoLoadmore.getChildAt(0).setVisibility(View.VISIBLE);
             tvTitle.setText("正在加载中...");
         }
     }
@@ -315,6 +349,7 @@ public class TaobaoFragment extends BaseFragment {
     private void showLoadNoMore() {
         if (llTaobaoLoadmore != null) {
             TextView tvTitle = (TextView) llTaobaoLoadmore.getChildAt(1);
+            llTaobaoLoadmore.getChildAt(0).setVisibility(View.GONE);
             tvTitle.setText("没有更多的数据了...");
             llTaobaoLoadmore.setVisibility(View.VISIBLE);
         }
@@ -419,6 +454,8 @@ public class TaobaoFragment extends BaseFragment {
                     imm.hideSoftInputFromWindow(etTaobaoSearchContent.getWindowToken(), 0);
                     keyword = sousuoStr;
                     page_no = "1";
+                    page = 1;
+                    isLoadmore = -1;
                     city = "";//城市
                     String type = "";//排序
                     is_tmall = "";//是否是天猫

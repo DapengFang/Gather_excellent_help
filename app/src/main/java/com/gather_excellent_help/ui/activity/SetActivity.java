@@ -218,15 +218,14 @@ public class SetActivity extends BaseActivity {
                     break;
                 case R.id.rl_set_payaccount:
                     if (isPay()) {
-                        unBindPay();
+                        showUnBindAlipayDialog();
                     } else {
-                        //showPayAcount();
                         showAlipayAccount();
                     }
                     break;
                 case R.id.rl_set_bindtaobao:
                     if (isBind()) {
-                        unBindTaobao();
+                        showUnbindTaobaoDialog();
                     } else {
                         bindTaobao();
                     }
@@ -250,6 +249,42 @@ public class SetActivity extends BaseActivity {
                     break;
             }
         }
+    }
+
+    /**
+     * 解除淘宝绑定的dialog
+     */
+    private void showUnbindTaobaoDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("温馨提示")
+                .setMessage("你确定要解除淘宝绑定吗?")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        unBindTaobao();
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
+    /**
+     * 解除支付宝绑定的dialog
+     */
+    private void showUnBindAlipayDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("温馨提示")
+                .setMessage("你确定要解除支付宝绑定吗?")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        unBindPay();
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .show();
     }
 
     /**
@@ -299,6 +334,7 @@ public class SetActivity extends BaseActivity {
                                 CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK, "");
                             }
                             CacheUtils.putString(SetActivity.this, CacheUtils.ALIPAY_ACCOUNT, "");
+                            CacheUtils.putBoolean(SetActivity.this, CacheUtils.PAY_STATE, false);
                             CacheUtils.putString(SetActivity.this, CacheUtils.USER_RATE, "");
                             CacheUtils.putString(SetActivity.this, CacheUtils.LOGIN_PHONE, "");
                             EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "退出登录！"));

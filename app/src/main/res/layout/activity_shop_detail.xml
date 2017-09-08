@@ -91,7 +91,7 @@
                     android:textSize="12sp"
                     android:textColor="#999999"
                     android:cursorVisible="true"
-                    android:inputType="number"/>
+                    android:inputType="text"/>
 
             </LinearLayout>
     <View
@@ -161,7 +161,7 @@
             android:textSize="12sp"
             android:textColor="#999999"
             android:cursorVisible="true"
-            android:inputType="number"/>
+            android:inputType="text"/>
 
     </LinearLayout>
     <View
@@ -245,6 +245,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:textColor="#999999"
+                android:singleLine="true"
+                android:layout_marginRight="@dimen/x60"
                 android:layout_centerVertical="true"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -291,6 +293,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:textColor="#999999"
+                android:singleLine="true"
+                android:layout_marginRight="@dimen/x60"
                 android:layout_centerVertical="true"/>
             <ImageView
                 android:layout_width="wrap_content"
@@ -302,17 +306,46 @@
 
     </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_shop_detail_confirm"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/x40"
-                android:text="保存"
-                android:textSize="14sp"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:background="#ee0000"
-                android:layout_marginTop="@dimen/x50"
-                />
+                android:layout_marginTop="@dimen/x50" >
+
+                <TextView
+                    android:id="@+id/tv_shop_detail_confirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x40"
+                    android:text="保存"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:background="#ee0000" />
+
+                <LinearLayout
+                    android:id="@+id/ll_shop_remind"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x40"
+                    android:background="#ffffff"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    android:layout_alignParentBottom="true">
+                    <ProgressBar
+                        android:id="@+id/progress"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="正在保存修改信息"
+                        android:textColor="#55000000"
+                        android:textSize="14sp"/>
+
+                </LinearLayout>
+
+            </FrameLayout>
+
         </LinearLayout>
     </com.gather_excellent_help.ui.widget.MyNestedScrollView>
 

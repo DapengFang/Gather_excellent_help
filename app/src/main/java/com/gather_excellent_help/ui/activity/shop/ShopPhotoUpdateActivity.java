@@ -1,16 +1,25 @@
 package com.gather_excellent_help.ui.activity.shop;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.os.Environment;
+import android.os.SystemClock;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,13 +31,17 @@ import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.AlipayManagerActivity;
 import com.gather_excellent_help.ui.activity.LoginActivity;
-import com.gather_excellent_help.ui.activity.credits.MerchantEnterActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.PhotoUtils;
+import com.gather_excellent_help.utils.ToastUtils;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,14 +74,14 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
     ImageView ivMerchantPictureL4;
     @Bind(R.id.tv_merchant_last_next)
     TextView tvMerchantLastNext;
+    @Bind(R.id.ll_shop_remind)
+    LinearLayout llShopRemind;
     private String name;
     private String telephone;
     private String address;
     private String info;
     private String business_time;
     private String brand;
-    public static final int SELECT_PIC_BY_PICK_PHOTO = 1;
-    public static final int CROP_PIC_BY_PICK_PHOTO = 2;
     private String which;//哪一个选择图片
     private boolean left_pic;//左边的图片是否设置
     private String upload1 = "";
@@ -78,6 +91,13 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
     private String merchant_url = Url.BASE_URL + "StoreApply.aspx";
     private NetUtil netUtil;
     private Map<String, String> map;
+
+    private static final int CODE_GALLERY_REQUEST = 0xa0;
+    private static final int CODE_RESULT_REQUEST = 0xa2;
+    private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
+    private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
+
+    private Uri cropImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,20 +134,20 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
         info = intent.getStringExtra("info");
         business_time = intent.getStringExtra("business_time");
         brand = intent.getStringExtra("brand");
-        LogUtil.e(name + "--" + telephone + "--" + address + "--" + info + "--" + business_time + "--" +brand);
+        LogUtil.e(name + "--" + telephone + "--" + address + "--" + info + "--" + business_time + "--" + brand);
     }
 
-    public class MyOnclickListener implements View.OnClickListener{
+    public class MyOnclickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.rl_exit :
+                case R.id.rl_exit:
                     finish();
                     break;
                 case R.id.tv_merchant_choice1:
                     which = "l1";
-                    pickPhoto();
+                    autoObtainStoragePermission();
                     break;
                 case R.id.tv_merchant_choice2:
                     if (!left_pic) {
@@ -135,11 +155,11 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
                     } else {
                         which = "l3";
                     }
-                    pickPhoto();
+                    autoObtainStoragePermission();
                     break;
                 case R.id.tv_merchant_choice3:
                     which = "l4";
-                    pickPhoto();
+                    autoObtainStoragePermission();
                     break;
                 case R.id.tv_merchant_last_next:
                     upLoadMerchantInfo();
@@ -152,74 +172,133 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
      * 上传商户信息
      */
     private void upLoadMerchantInfo() {
-        String userLogin = Tools.getUserLogin(this);
-        if(TextUtils.isEmpty(userLogin)) {
+        final String userLogin = Tools.getUserLogin(this);
+        if (TextUtils.isEmpty(userLogin)) {
             toLogin();
             return;
         }
-        LogUtil.e(upload1);
-        LogUtil.e(upload2);
-        LogUtil.e(upload3);
-        LogUtil.e(upload4);
-        if(TextUtils.isEmpty(upload1) || TextUtils.isEmpty(upload2) || TextUtils.isEmpty(upload3) || TextUtils.isEmpty(upload4)) {
+        if (TextUtils.isEmpty(upload1) || TextUtils.isEmpty(upload2) || TextUtils.isEmpty(upload3) || TextUtils.isEmpty(upload4)) {
             Toast.makeText(ShopPhotoUpdateActivity.this, "请上传图片！", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        map = new HashMap<>();
-        map.put("user_id", userLogin);
-        map.put("name", name);
-        map.put("telephone", telephone);
-        map.put("address", address);
-        map.put("info", info);
-        map.put("business_time", business_time);
-        map.put("business", brand);
-        map.put("file",upload1.trim());
-        map.put("file2",upload2.trim());
-        map.put("file3",upload3.trim());
-        map.put("file4",upload4.trim());
-        netUtil.okHttp2Server2(merchant_url,map);
+        if(name == null) {
+            name = "";
+        }
+        if(telephone == null) {
+            telephone = "";
+        }
+        if(address == null) {
+            address = "";
+        }
+        if(info == null) {
+            info = "";
+        }
+        if(business_time == null) {
+            business_time = "";
+        }
+        if(brand == null) {
+            brand = "";
+        }
+        llShopRemind.setVisibility(View.VISIBLE);
+        new Thread(){
+            public void run(){
+                map = new HashMap<>();
+                map.put("user_id", userLogin);
+                map.put("name", name);
+                map.put("telephone", telephone);
+                map.put("address", address);
+                map.put("info", info);
+                map.put("business_time", business_time);
+                map.put("bussiness", brand);
+                map.put("file", upload1.trim());
+                map.put("file2", upload2.trim());
+                map.put("file3", upload3.trim());
+                map.put("file4", upload4.trim());
+                netUtil.okHttp2Server2(merchant_url, map);
+            }
+        }.start();
     }
 
-    /***
-     * 从相册中取图片
+    /**
+     * 自动获取sdk权限
      */
-    private void pickPhoto() {
 
-        Intent intent = new Intent(Intent.ACTION_PICK, null);
-        intent.setDataAndType(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                "image/*");
-        startActivityForResult(intent, CROP_PIC_BY_PICK_PHOTO);
+    private void autoObtainStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSIONS_REQUEST_CODE);
+        } else {
+            PhotoUtils.openPic(this, CODE_GALLERY_REQUEST);
+        }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+
+            case STORAGE_PERMISSIONS_REQUEST_CODE://调用系统相册申请Sdcard权限回调
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    PhotoUtils.openPic(this, CODE_GALLERY_REQUEST);
+                } else {
+                    ToastUtils.showShort(this, "请允许打开操作SDCard的权限！！");
+                }
+                break;
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            //doPhoto(requestCode, data);
             switch (requestCode) {
-                // 如果是直接从相册获取
-                case CROP_PIC_BY_PICK_PHOTO:
-                    if (which.equals("l2") || which.equals("l3")) {
-                        startPhotoZoom(data.getData());
+                case CODE_GALLERY_REQUEST://访问相册完成回调
+                    if (hasSdcard()) {
+                        cropImageUri = Uri.fromFile(fileCropUri);
+                        Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                            newUri = FileProvider.getUriForFile(this, "com.gather_excellent_help.fileprovider", new File(newUri.getPath()));
+//                        if (which.equals("l2") || which.equals("l3")) {
+//                            PhotoUtils.cropImageUri(this, newUri, cropImageUri, 1, 1, 480, 480, CODE_RESULT_REQUEST);
+//                        } else if(which.equals("l1")) {
+//                            PhotoUtils.cropImageUri(this, newUri, cropImageUri, 2, 1, 480, 240, CODE_RESULT_REQUEST);
+//                        }else if(which.equals("l4")) {
+//                            Bitmap bitmap = PhotoUtils.getBitmapFromUri(newUri, this);
+//                            if(bitmap!=null) {
+//                                String sphoto = Tools.BitmapToBase64(bitmap);
+//                                ivMerchantPictureL4.setImageBitmap(bitmap);
+//                                upload4 =sphoto;
+//                            }
+//                        }
+                        PhotoUtils.cropImageUri2(this, newUri, cropImageUri, CODE_RESULT_REQUEST);
                     } else {
-                        startPhotoZoom2(data.getData());
+                        ToastUtils.showShort(this, "设备没有SD卡！");
                     }
                     break;
-                // 如果是调用相机拍照时
-                // 取得裁剪后的图片
-                case SELECT_PIC_BY_PICK_PHOTO:
-                    /**
-                     * 非空判断大家一定要验证，如果不验证的话，
-                     * 在剪裁之后如果发现不满意，要重新裁剪，丢弃
-                     * 当前功能时，会报NullException，小马只
-                     * 在这个地方加下，大家可以根据不同情况在合适的
-                     * 地方做判断处理类似情况
-                     *
-                     */
-                    if(data != null){
-                        setPicToView(data);
+                case CODE_RESULT_REQUEST:
+                    try {
+                        Bitmap bitmap = PhotoUtils.getBitmapFormUri(this, cropImageUri);
+                        if (bitmap != null) {
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            String sphoto = Tools.BitmapToBase64(bitmap);
+                            if (which.equals("l1")) {
+                                ivMerchantPictureL1.setImageBitmap(bitmap);
+                                upload1 = sphoto;
+                            } else if (which.equals("l2")) {
+                                ivMerchantPictureL2.setImageBitmap(bitmap);
+                                left_pic = true;
+                                upload2 = sphoto;
+                            } else if (which.equals("l3")) {
+                                ivMerchantPictureL3.setImageBitmap(bitmap);
+                                upload3 = sphoto;
+                            } else if (which.equals("l4")) {
+                                ivMerchantPictureL4.setImageBitmap(bitmap);
+                                upload4 = sphoto;
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                     break;
                 default:
@@ -231,59 +310,8 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
     }
 
     /**
-     * 裁剪图片方法实现
-     * @param uri
-     */
-    public void startPhotoZoom(Uri uri) {
-		/*
-		 * 至于下面这个Intent的ACTION是怎么知道的，大家可以看下自己路径下的如下网页
-		 * yourself_sdk_path/docs/reference/android/content/Intent.html
-		 * 直接在里面Ctrl+F搜：CROP ，之前小马没仔细看过，其实安卓系统早已经有自带图片裁剪功能,
-		 * 是直接调本地库的，小马不懂C C++  这个不做详细了解去了，有轮子就用轮子，不再研究轮子是怎么
-		 * 制做的了...吼吼
-		 */
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        //下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
-        intent.putExtra("crop", "true");
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 150);
-        intent.putExtra("outputY", 150);
-        intent.putExtra("return-data", true);
-
-        startActivityForResult(intent, SELECT_PIC_BY_PICK_PHOTO);
-    }
-    /**
-     * 裁剪图片方法实现
-     * @param uri
-     */
-    public void startPhotoZoom2(Uri uri) {
-		/*
-		 * 至于下面这个Intent的ACTION是怎么知道的，大家可以看下自己路径下的如下网页
-		 * yourself_sdk_path/docs/reference/android/content/Intent.html
-		 * 直接在里面Ctrl+F搜：CROP ，之前小马没仔细看过，其实安卓系统早已经有自带图片裁剪功能,
-		 * 是直接调本地库的，小马不懂C C++  这个不做详细了解去了，有轮子就用轮子，不再研究轮子是怎么
-		 * 制做的了...吼吼
-		 */
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        //下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
-        intent.putExtra("crop", "true");
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 2);
-        intent.putExtra("aspectY", 1);
-        // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 300);
-        intent.putExtra("outputY", 150);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent, SELECT_PIC_BY_PICK_PHOTO);
-    }
-
-    /**
      * 保存裁剪之后的图片数据
+     *
      * @param picdata
      */
     private void setPicToView(Intent picdata) {
@@ -308,7 +336,7 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
                 upload3 = sphoto;
             } else if (which.equals("l4")) {
                 ivMerchantPictureL4.setImageBitmap(photo);
-                upload4 =sphoto;
+                upload4 = sphoto;
             }
         }
     }
@@ -322,21 +350,24 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
         finish();
     }
 
-    public class OnServerResponseListener implements NetUtil.OnServerResponseListener{
+    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
-          pareMerchantData(response);
+            llShopRemind.setVisibility(View.GONE);
+            pareMerchantData(response);
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-           LogUtil.e(call.toString() + "--" +e.getMessage());
+            LogUtil.e(call.toString() + "--" + e.getMessage());
+            llShopRemind.setVisibility(View.GONE);
         }
     }
 
     /**
      * 解析商家入驻信息
+     *
      * @param response
      */
     private void pareMerchantData(String response) {
@@ -344,7 +375,7 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
         CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
         int statusCode = codeStatueBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
+            case 1:
                 toAlipay();
                 break;
             case 0:
@@ -360,6 +391,14 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
         Intent intent = new Intent(ShopPhotoUpdateActivity.this, AlipayManagerActivity.class);
         startActivity(intent);
         finish();
-        EventBus.getDefault().post(new AnyEvent(EventType.EVENT_EXIT,"退出之前的界面"));
+        EventBus.getDefault().post(new AnyEvent(EventType.EVENT_EXIT, "退出之前的界面"));
+    }
+
+    /**
+     * 检查设备是否存在SDCard的工具方法
+     */
+    public static boolean hasSdcard() {
+        String state = Environment.getExternalStorageState();
+        return state.equals(Environment.MEDIA_MOUNTED);
     }
 }

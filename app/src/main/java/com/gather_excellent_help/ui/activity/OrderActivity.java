@@ -13,16 +13,19 @@ import android.widget.Toast;
 
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
+import com.gather_excellent_help.bean.CodeBean;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.OrderAllBean;
 import com.gather_excellent_help.ui.adapter.OrderAllAdapter;
 import com.gather_excellent_help.ui.adapter.OrderManagerAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
+import com.gather_excellent_help.ui.widget.MyNestedScrollView;
 import com.gather_excellent_help.ui.widget.ViewpagerIndicator;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.PhotoUtils;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -48,8 +51,6 @@ public class OrderActivity extends BaseActivity {
     ImageView ivOrderNoZhanwei;
 
 
-    private String[] tabs = {"全部", "待付款", "已付款", "已完成", "退款/售后"};
-    private OrderManagerAdapter orderManagerAdapter;
     private OrderAllAdapter orderAllAdapter;
     private int tab_p = 0;//当前的订单的位置
 
@@ -77,12 +78,15 @@ public class OrderActivity extends BaseActivity {
         initData();
     }
 
+    /**
+     * 初始化数据
+     */
     private void initData() {
         netUtil = new NetUtil();
         fullyLinearLayoutManager = new FullyLinearLayoutManager(OrderActivity.this);
         rcvOrderManager.setLayoutManager(fullyLinearLayoutManager);
         vidacatorControll();
-        tvTopTitleName.setText("商品订单");
+        tvTopTitleName.setText("推广赚订单");
         Intent intent = getIntent();
         order_type = intent.getIntExtra("order_type", 7);
         tab_p = intent.getIntExtra("tab_p", -1);
@@ -160,17 +164,6 @@ public class OrderActivity extends BaseActivity {
     }
 
     /**
-     * 解析其他订单信息
-     * @param response
-     */
-//    private void parseOtherData(String response) {
-//        orderManagerAdapter = new OrderManagerAdapter(OrderActivity.this);
-//        FullyLinearLayoutManager fullyLinearLayoutManager =  new FullyLinearLayoutManager(OrderActivity.this);
-//        rcvOrderManager.setLayoutManager(fullyLinearLayoutManager);
-//        rcvOrderManager.setAdapter(orderManagerAdapter);
-//    }
-
-    /**
      * 解析所有订单信息
      *
      * @param response
@@ -187,10 +180,10 @@ public class OrderActivity extends BaseActivity {
             }
             orderAllAdapter.notifyDataSetChanged();
         } else {
-            if(data!=null) {
-                if(data.size() > 0) {
+            if (data != null) {
+                if (data.size() > 0) {
                     ivOrderNoZhanwei.setVisibility(View.GONE);
-                }else{
+                } else {
                     ivOrderNoZhanwei.setVisibility(View.VISIBLE);
                 }
             }
@@ -226,6 +219,9 @@ public class OrderActivity extends BaseActivity {
     }
 
 
+    /**
+     * 监听全局点击事件的类
+     */
     public class MyOnclickListener implements View.OnClickListener {
 
         @Override
@@ -254,7 +250,7 @@ public class OrderActivity extends BaseActivity {
                     for (int j = 0; j < childCount; j++) {
                         if (j != finalI) {
                             TextView tv = (TextView) vid_order_manager.getChildAt(j);
-                            tv.setTextColor(Color.parseColor("#55000000"));
+                            tv.setTextColor(Color.parseColor("#333333"));
                         } else {
                             TextView tv = (TextView) v;
                             tv.setTextColor(Color.RED);

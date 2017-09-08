@@ -143,11 +143,13 @@ public class LoginActivity extends Activity {
                     int group_type = data.get(0).getGroup_type();
                     double user_rate = data.get(0).getUser_get_ratio();
                     String advertising = data.get(0).getAdvertising();
+                    int group_id = data.get(0).getGroup_id();
                     CacheUtils.putBoolean(LoginActivity.this,CacheUtils.LOGIN_STATE,true);
                     CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_VALUE,id+"");
                     CacheUtils.putInteger(LoginActivity.this,CacheUtils.SHOP_TYPE,group_type);
                     CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_PHONE,user);
                     CacheUtils.putString(LoginActivity.this,CacheUtils.USER_RATE,user_rate+"");
+                    CacheUtils.putInteger(LoginActivity.this, CacheUtils.GROUP_TYPE, group_id);
                     if (advertising != null) {
                         CacheUtils.putString(LoginActivity.this, CacheUtils.ADVER_ID, advertising);
                     }

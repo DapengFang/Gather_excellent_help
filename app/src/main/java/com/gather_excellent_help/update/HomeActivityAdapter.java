@@ -43,12 +43,10 @@ public class HomeActivityAdapter extends RecyclerView.Adapter<HomeActivityAdapte
 
     private Context context;
     private List<HomeWareBean.DataBean> rushData;
-    //private ImageLoader mImageLoader;
 
     public HomeActivityAdapter(Context context, List<HomeWareBean.DataBean> rushData) {
         this.context = context;
         this.rushData = rushData;
-        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
     @Override
@@ -69,7 +67,6 @@ public class HomeActivityAdapter extends RecyclerView.Adapter<HomeActivityAdapte
             holder.tv_rush_more_title.setText(style);
         }
         if(img_url!=null && holder.iv_rush_more_big!=null) {
-            //mImageLoader.loadImage(Url.IMG_URL + img_url,holder.iv_rush_more_big,true);
             Glide.with(context).load(Url.IMG_URL + img_url)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                     .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
@@ -88,7 +85,6 @@ public class HomeActivityAdapter extends RecyclerView.Adapter<HomeActivityAdapte
         }
 
         if (holder.rcv_activity_ware_list!=null && itemData != null && itemData.size() > 2) {
-            //LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
             GridLayoutManager gridLayoutManager=new GridLayoutManager(context,3);
             holder.rcv_activity_ware_list.setLayoutManager(gridLayoutManager);
             HomeActivityWareAdapter homeActivityWareAdapter = new HomeActivityWareAdapter(context,itemData);

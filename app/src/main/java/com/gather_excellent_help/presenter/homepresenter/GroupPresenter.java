@@ -179,7 +179,6 @@ public class GroupPresenter extends BasePresenter {
                     tv_group_ware_title.setText(title);
                 }
                 if(img_url!=null && iv_group_ware_img!=null) {
-                    //mImageLoader.loadImage(img_url+"_320x320q90.jpg",iv_group_ware_img,true);
                     Glide.with(context).load(img_url+"_320x320q90.jpg")
                             .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                             .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
@@ -268,7 +267,6 @@ public class GroupPresenter extends BasePresenter {
             tv_group_ware_title.setText(title);
         }
         if(img_url!=null && iv_group_ware_img!=null) {
-            //mImageLoader.loadImage(img_url+"_320x320q90.jpg",iv_group_ware_img,true);
             Glide.with(context).load(img_url+"_320x320q90.jpg")
                     .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                     .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片

@@ -35,7 +35,7 @@ import com.gather_excellent_help.ui.activity.credits.AccountDetailAvtivity;
 import com.gather_excellent_help.ui.activity.credits.BackRebateActivity;
 import com.gather_excellent_help.ui.activity.credits.ExtractCreditsActivity;
 import com.gather_excellent_help.ui.activity.credits.InviteFriendsActivity;
-import com.gather_excellent_help.ui.activity.credits.MerchantEnterActivity;
+import com.gather_excellent_help.ui.activity.credits.LowerMemberStaticsActivity;
 import com.gather_excellent_help.ui.activity.credits.ShopDetailActivity;
 import com.gather_excellent_help.ui.activity.shop.ShopInfoUpadateActivity;
 import com.gather_excellent_help.ui.base.BaseFragment;
@@ -45,7 +45,6 @@ import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
-import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
@@ -80,26 +79,8 @@ public class MineFragment extends BaseFragment {
     TextView tvAccountMoney;
     @Bind(R.id.tv_account_money2)
     TextView tvAccountMoney2;
-    @Bind(R.id.iv_me_daifukuan)
-    ImageView ivMeDaifukuan;
-    @Bind(R.id.iv_me_daifahuo)
-    ImageView ivMeDaifahuo;
-    @Bind(R.id.iv_me_daishouhuo)
-    ImageView ivMeDaishouhuo;
-    @Bind(R.id.iv_me_daipinjia)
-    ImageView ivMeDaipinjia;
     @Bind(R.id.tv_mine_mobietype)
     TextView tvMineMobietype;
-    @Bind(R.id.ll_mine_see_allorder)
-    LinearLayout llMineSeeAllorder;
-    @Bind(R.id.ll_mine_see_daifukuan)
-    LinearLayout llMineSeeDaifukuan;
-    @Bind(R.id.ll_mine_see_yifukuan)
-    LinearLayout llMineSeeYifukuan;
-    @Bind(R.id.ll_mine_see_yiwancheng)
-    LinearLayout llMineSeeYiwancheng;
-    @Bind(R.id.ll_mine_see_shouhou)
-    LinearLayout llMineSeeShouhou;
     @Bind(R.id.ll_mine_extract_credits)
     LinearLayout llMineExtractCredits;
     @Bind(R.id.ll_mine_find_friends)
@@ -164,13 +145,22 @@ public class MineFragment extends BaseFragment {
     View vMine;
     @Bind(R.id.ll_mine_back_show)
     LinearLayout llMineBackShow;
+    @Bind(R.id.v_lower_member_up)
+    View vLowerMemberUp;
+    @Bind(R.id.ll_lower_member_statics)
+    LinearLayout llLowerMemberStatics;
+    @Bind(R.id.v_lower_member_down)
+    View vLowerMemberDown;
+    @Bind(R.id.v_tui_zhuan_line)
+    View vTuiZhuanLine;
+    @Bind(R.id.v_toggle_line)
+    View vToggleLine;
     private String mseg = "";
 
     private NetUtil netUtils;
     private NetUtil netUtils2;
     private Map<String, String> map;
     private String url = Url.BASE_URL + "Mine.aspx";
-    //private ImageLoader mImageLoader;
     private int group_id = -1;
 
     private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
@@ -186,9 +176,8 @@ public class MineFragment extends BaseFragment {
     private int groupId;
     private int shopType;
 
-
-    private String help_url = Url.BASE_URL + "UserHelp.aspx";
-    private String rule_url = Url.BASE_URL + "RebateRules.aspx";
+    private String help_url = Url.BASE_URL + "UserHelp.aspx";//帮助
+    private String rule_url = Url.BASE_URL + "RebateRules.aspx";//返佣
     private double user_earn;
     private String which;
 
@@ -211,6 +200,7 @@ public class MineFragment extends BaseFragment {
             tvAccountMoney2.setVisibility(View.VISIBLE);
             llMineZhuanOrder.setVisibility(View.VISIBLE);
             tvAccountMoney.setVisibility(View.VISIBLE);
+            vTuiZhuanLine.setVisibility(View.VISIBLE);
         } else {
             loadCuserDefault();
             tvAccountMoneyTitle1.setText("余额");
@@ -218,8 +208,13 @@ public class MineFragment extends BaseFragment {
             tvAccountMoney.setVisibility(View.GONE);
             tvAccountMoney2.setVisibility(View.GONE);
             llMineZhuanOrder.setVisibility(View.GONE);
+            vTuiZhuanLine.setVisibility(View.GONE);
         }
-        llMineZhuanOrder.setVisibility(View.GONE);
+        if(groupId == 5) {
+            loadLowerMermberShow();
+        }else{
+            loadLowerMermberhind();
+        }
         boolean toggle_show = CacheUtils.getBoolean(getContext(), CacheUtils.TOGGLE_SHOW, false);
         tbnMineControl.setCurrentState(toggle_show);
         alibcShowParams = new AlibcShowParams(OpenType.H5, false);
@@ -229,24 +224,13 @@ public class MineFragment extends BaseFragment {
         netUtils = new NetUtil();
         netUtils2 = new NetUtil();
         defaultSet();
-        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         if (login) {
             String userLogin = Tools.getUserLogin(getActivity());
             map = new HashMap<>();
             map.put("Id", userLogin);
             netUtils.okHttp2Server2(url, map);
-        } else {
-            if (TextUtils.isEmpty(mseg)) {
-                //Toast.makeText(getContext(), "请先登录！", Toast.LENGTH_SHORT).show();
-            }
         }
         rlMineSet.setOnClickListener(new MyOnClickListener());
-        llMineSeeAllorder.setOnClickListener(new MyOnClickListener());
-        llMineSeeDaifukuan.setOnClickListener(new MyOnClickListener());
-        llMineSeeYifukuan.setOnClickListener(new MyOnClickListener());
-        llMineSeeYiwancheng.setOnClickListener(new MyOnClickListener());
-        llMineSeeShouhou.setOnClickListener(new MyOnClickListener());
-
         llMineExtractCredits.setOnClickListener(new MyOnClickListener());
         llMineFindFriends.setOnClickListener(new MyOnClickListener());
         llMineAccountDetails.setOnClickListener(new MyOnClickListener());
@@ -260,6 +244,7 @@ public class MineFragment extends BaseFragment {
         llMineUserSalery.setOnClickListener(new MyOnClickListener());
         llMineUserBack.setOnClickListener(new MyOnClickListener());
         civMeHeadIcon.setOnClickListener(new MyOnClickListener());
+        llLowerMemberStatics.setOnClickListener(new MyOnClickListener());
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -306,6 +291,25 @@ public class MineFragment extends BaseFragment {
     }
 
     /**
+     * 隐藏下级会员统计
+     */
+    private void loadLowerMermberhind() {
+        llLowerMemberStatics.setVisibility(View.GONE);
+        vLowerMemberUp.setVisibility(View.GONE);
+        vLowerMemberDown.setVisibility(View.GONE);
+    }
+
+    /**
+     * 显示下级会员统计
+     */
+    private void loadLowerMermberShow() {
+        llLowerMemberStatics.setVisibility(View.VISIBLE);
+        vLowerMemberUp.setVisibility(View.VISIBLE);
+        vLowerMemberDown.setVisibility(View.VISIBLE);
+    }
+
+
+    /**
      * 解析帮助和返佣规则的数据
      *
      * @param response
@@ -320,11 +324,13 @@ public class MineFragment extends BaseFragment {
     private void loadCuserDefault() {
         llMineCompontFirst.setVisibility(View.VISIBLE);
         llMineCompontSecond.setVisibility(View.GONE);
-        tvMineCompontL01.setText("实体申请入驻");
+        tvMineCompontL01.setText("申请加盟一起赚钱");
         tvMineCompontL03.setText("帮助");
         llMineUserBack.setVisibility(View.INVISIBLE);
         llMineZhuanOrder.setVisibility(View.GONE);
         rlMineToggle.setVisibility(View.GONE);
+        vTuiZhuanLine.setVisibility(View.GONE);
+        vToggleLine.setVisibility(View.GONE);
     }
 
     private void loadGroupuserDefault() {
@@ -332,13 +338,15 @@ public class MineFragment extends BaseFragment {
         llMineCompontSecond.setVisibility(View.VISIBLE);
         tvMineCompontL01.setText("提取现金");
         tvMineCompontL02.setText("邀请好友赚钱啦");
-        tvMineCompontL03.setText("账号明细");
+        tvMineCompontL03.setText("账户明细");
         tvMineCompontL04.setText("商家信息");
         tvMineCompontL05.setText("帮助");
         tvMineCompontL06.setText("返佣规则");
         llMineUserBack.setVisibility(View.VISIBLE);
         rlMineToggle.setVisibility(View.VISIBLE);
         llMineZhuanOrder.setVisibility(View.VISIBLE);
+        vTuiZhuanLine.setVisibility(View.VISIBLE);
+        vToggleLine.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -383,8 +391,8 @@ public class MineFragment extends BaseFragment {
         group_id = dataBean.getGroup_id();
         advertising = dataBean.getAdvertising();
         String user_get_ratio = dataBean.getUser_get_ratio();
-        if(user_get_ratio!=null) {
-            CacheUtils.putString(getContext(),CacheUtils.USER_RATE,user_get_ratio);
+        if (user_get_ratio != null) {
+            CacheUtils.putString(getContext(), CacheUtils.USER_RATE, user_get_ratio);
         }
         if (advertising != null) {
             CacheUtils.putString(getContext(), CacheUtils.ADVER_ID, advertising);
@@ -394,7 +402,9 @@ public class MineFragment extends BaseFragment {
             return;
         }
         if (avatar != null && !TextUtils.isEmpty(avatar)) {
-            //mImageLoader.loadImage(avatar, civMeHeadIcon, true);
+            if (!avatar.contains("http")) {
+                avatar = Url.IMG_URL + avatar;
+            }
             Glide.with(getContext()).load(avatar)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                     .into(civMeHeadIcon);//请求成功后把图片设置到的控件
@@ -411,7 +421,7 @@ public class MineFragment extends BaseFragment {
         } else {
             tvMineMobietype.setText("用户类型 + (" + mobile + ")");
         }
-        if (shopType== 1) {
+        if (shopType == 1) {
             tvAccountMoneyTitle1.setText("余额/提现中");
             DecimalFormat df = new DecimalFormat("0.00");
             tvAccountMoney.setText(df.format(amount) + "/" + df.format(frostAmount));
@@ -420,12 +430,10 @@ public class MineFragment extends BaseFragment {
             Tools.setPartTextColor2(tvAccountMoney, df.format(amount) + "/" + df.format(frostAmount), "/");
             tvAccountMoneyTitle2.setText("赚(冻结期)");
             tvAccountMoney2.setVisibility(View.VISIBLE);
-            //llMineZhuanOrder.setVisibility(View.VISIBLE);
         } else {
             tvAccountMoneyTitle1.setText("余额");
             tvAccountMoneyTitle2.setText("充值");
             tvAccountMoney2.setVisibility(View.GONE);
-            //llMineZhuanOrder.setVisibility(View.GONE);
         }
         if (shopType == 1) {
             loadGroupuserDefault();
@@ -473,41 +481,6 @@ public class MineFragment extends BaseFragment {
                         toSetActivity();
                     } else {
                         toLogin();
-                    }
-                    break;
-                case R.id.ll_mine_see_allorder:
-                    if (!Tools.isLogin(getContext())) {
-                        toLogin();
-                    } else {
-                        toOrderPager(0);
-                    }
-                    break;
-                case R.id.ll_mine_see_daifukuan:
-                    if (!Tools.isLogin(getContext())) {
-                        toLogin();
-                    } else {
-                        toOrderPager(1);
-                    }
-                    break;
-                case R.id.ll_mine_see_yifukuan:
-                    if (!Tools.isLogin(getContext())) {
-                        toLogin();
-                    } else {
-                        toOrderPager(2);
-                    }
-                    break;
-                case R.id.ll_mine_see_yiwancheng:
-                    if (!Tools.isLogin(getContext())) {
-                        toLogin();
-                    } else {
-                        toOrderPager(3);
-                    }
-                    break;
-                case R.id.ll_mine_see_shouhou:
-                    if (!Tools.isLogin(getContext())) {
-                        toLogin();
-                    } else {
-                        toOrderPager(4);
                     }
                     break;
                 case R.id.ll_mine_extract_credits:
@@ -574,20 +547,31 @@ public class MineFragment extends BaseFragment {
                     netUtils2.okHttp2Server2(rule_url, null);
                     break;
                 case R.id.civ_me_head_icon:
-                    if(login) {
+                    if (login) {
                         toSetActivity();
-                    }else{
+                    } else {
                         toLogin();
                     }
+                    break;
+                case R.id.ll_lower_member_statics:
+                    toLowerMemberStatics();
                     break;
             }
         }
     }
 
+    /**
+     * 跳转到下级会员统计界面
+     */
+    private void toLowerMemberStatics() {
+        Intent intent = new Intent(getContext(), LowerMemberStaticsActivity.class);
+        startActivity(intent);
+    }
+
     private void toHelp(String url) {
         Intent intent = new Intent(getContext(), RuleHelpActivity.class);
         intent.putExtra("web_url", url);
-        intent.putExtra("which",which);
+        intent.putExtra("which", which);
         startActivity(intent);
     }
 
@@ -613,7 +597,7 @@ public class MineFragment extends BaseFragment {
      */
     private void toJuyouOrder() {
         Intent intent = new Intent(getActivity(), OrderActivity.class);
-        intent.putExtra("order_type",-1);
+        intent.putExtra("order_type", -1);
         intent.putExtra("tab_p", 0);
         startActivity(intent);
     }
@@ -623,7 +607,7 @@ public class MineFragment extends BaseFragment {
      */
     private void toZhuanOrder() {
         Intent intent = new Intent(getActivity(), OrderActivity.class);
-        intent.putExtra("order_type",-2);
+        intent.putExtra("order_type", -2);
         intent.putExtra("tab_p", 0);
         startActivity(intent);
     }

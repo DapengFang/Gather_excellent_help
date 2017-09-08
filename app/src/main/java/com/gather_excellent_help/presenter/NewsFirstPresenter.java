@@ -97,6 +97,9 @@ public class NewsFirstPresenter {
      */
     public void searchData(String keyWords) {
         whick = "news";
+        isLoadMore = false;
+        page = 1;
+        pageIndex = "1";
         rcv_news_first.setLayoutManager(layoutManager);
         map = new HashMap<>();
         map.put("pageSize",pageSize);
@@ -218,13 +221,15 @@ public class NewsFirstPresenter {
                          String imgurl = "";
                          String newsTitle = "";
                          if(newsData!=null) {
-                             String img_url = newsData.get(curr_click).getImg_url();
-                             if(img_url!=null) {
-                                 imgurl = Url.IMG_URL + img_url;
-                             }
-                             String title = newsData.get(curr_click).getTitle();
-                             if(title!=null) {
-                                 newsTitle = title;
+                             if(newsData.size()>0) {
+                                 String img_url = newsData.get(curr_click).getImg_url();
+                                 if(img_url!=null) {
+                                     imgurl = Url.IMG_URL + img_url;
+                                 }
+                                 String title = newsData.get(curr_click).getTitle();
+                                 if(title!=null) {
+                                     newsTitle = title;
+                                 }
                              }
                          }
                          if(link_url!=null && !TextUtils.isEmpty(link_url)) {

@@ -42,6 +42,15 @@ public class Tools {
         return CacheUtils.getBoolean(context,CacheUtils.LOGIN_STATE,false);
     }
 
+    /**
+     * 用户是否绑定支付宝
+     * @param context
+     * @return
+     */
+    public static boolean isBindAlipay(Context context){
+        return CacheUtils.getBoolean(context,CacheUtils.PAY_STATE,false);
+    }
+
 
     /**
      * 用户是否登录
@@ -223,16 +232,14 @@ public class Tools {
             //设置最大进度
             pd.setMax(connection.getContentLength());
 
+            LogUtil.e(apkFile.getAbsolutePath());
             //数据读取并保存到文件
             FileOutputStream fos = new FileOutputStream(apkFile);
             InputStream is = connection.getInputStream();
             byte[] buffer = new byte[2048];
             int len = -1;
             while((len=is.read(buffer))>0) {
-
-
                 fos.write(buffer, 0, len);
-
                 pd.incrementProgressBy(len);//更新进度
             }
             is.close();

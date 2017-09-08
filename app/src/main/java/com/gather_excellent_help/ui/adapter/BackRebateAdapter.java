@@ -40,7 +40,7 @@ public class BackRebateAdapter extends RecyclerView.Adapter<BackRebateAdapter.Ac
     public void onBindViewHolder(AccountDetailViewHolder holder, int position) {
         BackRebateBean.DataBean dataBean = data.get(position);
         holder.tv_account_first.setText("返佣结算号:");
-        holder.tv_account_second.setText("审核日期:");
+        holder.tv_account_second.setText("解冻日期:");
         holder.tv_account_third.setText("当前状态:");
         holder.tvAccountBackShow.setVisibility(View.GONE);
         if(dataBean.getRebate_no()!=null) {
@@ -60,7 +60,7 @@ public class BackRebateAdapter extends RecyclerView.Adapter<BackRebateAdapter.Ac
             holder.tvAccountDetailMoney.setText("已完成" );
         }
 
-        holder.tvAccountDetailSalery.setText("返佣:￥"+dataBean.getValue()+"现金");
+        holder.tvAccountDetailSalery.setText("赚:￥"+dataBean.getValue()+"现金");
         if(dataBean.getRemark()!=null) {
             String remark = dataBean.getRemark();
             if(TextUtils.isEmpty(remark)) {

@@ -73,7 +73,6 @@ public class QiangPresenter extends BasePresenter {
         initView();
         netUtil = new NetUtil();
         shopType = Tools.getShopType(context);
-        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         String userRate = Tools.getUserRate(context);
         if (!TextUtils.isEmpty(userRate)) {
             double v = Double.parseDouble(userRate);
@@ -207,7 +206,7 @@ public class QiangPresenter extends BasePresenter {
                 onLoadSuccessListener.onSuccessResponse(endtime-curr_time);
                 break;
             case 0:
-                Toast.makeText(context, qiangTaoBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                onLoadSuccessListener.onResponseNoData();
                 break;
         }
     }
@@ -400,5 +399,6 @@ public class QiangPresenter extends BasePresenter {
 
     public interface OnLoadSuccessListener{
         void onSuccessResponse(long time);
+        void onResponseNoData();
     }
 }

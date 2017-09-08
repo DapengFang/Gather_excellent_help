@@ -32,6 +32,8 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.UserAvatarBean;
 import com.gather_excellent_help.bean.UserinfoBean;
+import com.gather_excellent_help.event.AnyEvent;
+import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.CircularImage;
 import com.gather_excellent_help.utils.CacheUtils;
@@ -51,6 +53,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
 public class PersonInfoActivity extends BaseActivity {
@@ -149,12 +152,16 @@ public class PersonInfoActivity extends BaseActivity {
                         UserAvatarBean.DataBean dataBean = data.get(0);
                         if(dataBean!=null) {
                             String avatar = dataBean.getAvatar();
-                            if(avatar!=null) {
+                            if(avatar!=null && !TextUtils.isEmpty(avatar)) {
+                                if(!avatar.contains("http:")) {
+                                    avatar = Url.IMG_URL + avatar;
+                                }
                                 Glide.with(this).load(avatar)
                                         .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                                         .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
                                         .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
                                         .into(civPersonHead);//请求成功后把图片设置到的控件
+                                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
                             }
                         }
                     }
@@ -248,7 +255,7 @@ public class PersonInfoActivity extends BaseActivity {
                     PhotoUtils.openPic(this, CHOOSE_PICTURE);
                 } else {
 
-                    ToastUtils.showShort(this, "请允许打操作SDCard！！");
+                    ToastUtils.showShort(this, "请允许打开操作SDCard权限！！");
                 }
                 break;
         }
@@ -276,33 +283,6 @@ public class PersonInfoActivity extends BaseActivity {
                 ToastUtils.showShort(this, "设备没有SD卡！");
             }
         }
-    }
-
-    /**
-     * 裁剪图片方法实现
-     * @param uri
-     */
-    public void startPhotoZoom(Uri uri) {
-		/*
-		 * 至于下面这个Intent的ACTION是怎么知道的，大家可以看下自己路径下的如下网页
-		 * yourself_sdk_path/docs/reference/android/content/Intent.html
-		 * 直接在里面Ctrl+F搜：CROP ，之前小马没仔细看过，其实安卓系统早已经有自带图片裁剪功能,
-		 * 是直接调本地库的，小马不懂C C++  这个不做详细了解去了，有轮子就用轮子，不再研究轮子是怎么
-		 * 制做的了...吼吼
-		 */
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.setDataAndType(uri, "image/*");
-        //下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
-        intent.putExtra("crop", "true");
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 150);
-        intent.putExtra("outputY", 150);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent, DO_PICTURE);
     }
 
 
@@ -337,7 +317,6 @@ public class PersonInfoActivity extends BaseActivity {
             switch (requestCode) {
                 // 如果是直接从相册获取
                 case CHOOSE_PICTURE:
-                    //startPhotoZoom(data.getData());
                     if (hasSdcard()) {
                         cropImageUri = Uri.fromFile(fileCropUri);
                         Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
@@ -353,24 +332,11 @@ public class PersonInfoActivity extends BaseActivity {
                     cropImageUri = Uri.fromFile(fileCropUri);
                     PhotoUtils.cropImageUri(this, imageUri, cropImageUri, 1, 1, output_X, output_Y, CODE_RESULT_REQUEST);
                     break;
-                // 取得裁剪后的图片
-                case DO_PICTURE:
-                    /**
-                     * 非空判断大家一定要验证，如果不验证的话，
-                     * 在剪裁之后如果发现不满意，要重新裁剪，丢弃
-                     * 当前功能时，会报NullException，小马只
-                     * 在这个地方加下，大家可以根据不同情况在合适的
-                     * 地方做判断处理类似情况
-                     *
-                     */
-                    if (data != null) {
-                        setPicToView(data);
-                    }
-                    break;
                 case CODE_RESULT_REQUEST:
                     Bitmap bitmap = PhotoUtils.getBitmapFromUri(cropImageUri, this);
                     if (bitmap != null) {
                         Drawable drawable = new BitmapDrawable(bitmap);
+                        Glide.clear(civPersonHead);
                         civPersonHead.setImageDrawable(drawable);
                         String upload = Tools.BitmapToBase64(bitmap);
                         LogUtil.e(upload);
@@ -387,7 +353,6 @@ public class PersonInfoActivity extends BaseActivity {
 
             }
             super.onActivityResult(requestCode, resultCode, data);
-
         }
     }
 
@@ -429,7 +394,9 @@ public class PersonInfoActivity extends BaseActivity {
             tvPersonNick.setText(nick_name);
         }
         if(avatar!=null && !avatar.equals("")) {
-            //mImageLoader.loadImage(avatar,civPersonHead,true);
+            if(!avatar.contains("http")){
+                avatar = Url.IMG_URL + avatar;
+            }
             Glide.with(this).load(avatar)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                     .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片

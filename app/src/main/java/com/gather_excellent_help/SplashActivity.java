@@ -1,18 +1,25 @@
 package com.gather_excellent_help;
 
+import android.*;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -26,6 +33,8 @@ import com.gather_excellent_help.ui.widget.SplashView;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.PhotoUtils;
+import com.gather_excellent_help.utils.ToastUtils;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 
@@ -52,6 +61,7 @@ public class SplashActivity extends BaseFullScreenActivity {
     public static final int REQUEST_DOWNLOAD_SUCCESS = 3;
     public static final int REQUEST_DOWNLOAD_ERROR = 4;
     private String check_url = Url.BASE_URL + "GetAppVersion.aspx";
+    private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
 
     private int time=2;
 
@@ -70,8 +80,8 @@ public class SplashActivity extends BaseFullScreenActivity {
                     finish();
                     break;
                 case REQUEST_DOWNLOAD_SUCCESS:
-                    installApk();
-                    finish();
+                    //installApk();
+                    autoObtainStoragePermission();
                     break;
             }
         }
@@ -114,14 +124,48 @@ public class SplashActivity extends BaseFullScreenActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(pd!=null) {
+            if(pd.isShowing()) {
+                pd.dismiss();
+            }
+        }
         mHandler.removeCallbacksAndMessages(null);
+    }
+
+    /**
+     * 自动获取sdk权限
+     */
+
+    private void autoObtainStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSIONS_REQUEST_CODE);
+        } else {
+            installApk();
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+
+            case STORAGE_PERMISSIONS_REQUEST_CODE://调用系统相册申请Sdcard权限回调
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    installApk();
+                } else {
+                    ToastUtils.showShort(this, "请允许打开操作SDCard的权限！！");
+                }
+                break;
+        }
     }
 
     /**
      * 向用户展示更新下载的对话框
      */
     private void showUpdateDialog() {
-        new AlertDialog.Builder(this)
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle("提示")
                 .setMessage("有新版本，请立即更新！")
                 .setCancelable(false)
@@ -130,8 +174,8 @@ public class SplashActivity extends BaseFullScreenActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         showloadApkDialog();
                     }
-                })
-                .show();
+                }).create();
+        alertDialog.show();
     }
 
     /**
@@ -171,6 +215,7 @@ public class SplashActivity extends BaseFullScreenActivity {
                 apkFile.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
+                LogUtil.e(e.getMessage());
             }
         }
     }
@@ -179,12 +224,13 @@ public class SplashActivity extends BaseFullScreenActivity {
      * 对话框进度条的初始化展示
      */
     private void showDownloadDialog() {
-        pd = new ProgressDialog(this);
+        pd =  new ProgressDialog(this);
         pd.setTitle("提示");
         pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         pd.setCancelable(false);
         pd.show();
     }
+
 
     /**
      * 安装下载的APK文件

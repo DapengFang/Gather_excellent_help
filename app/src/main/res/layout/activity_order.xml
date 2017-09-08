@@ -17,39 +17,39 @@
             android:layout_weight="1"
             android:text="全部"
             android:textSize="12sp"
-            android:textColor="#55000000"
+            android:textColor="#333333"
             android:gravity="center" />
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="待付款"
+            android:text="结算"
             android:textSize="12sp"
-            android:textColor="#55000000"
+            android:textColor="#333333"
             android:gravity="center" />
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="已付款"
+            android:text="付款"
             android:textSize="12sp"
-            android:textColor="#55000000"
+            android:textColor="#333333"
             android:gravity="center" />
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="已完成"
+            android:text="完成"
             android:textSize="12sp"
-            android:textColor="#55000000"
+            android:textColor="#333333"
             android:gravity="center" />
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="退款/售后"
+            android:text="失效"
             android:textSize="12sp"
-            android:textColor="#55000000"
+            android:textColor="#333333"
             android:gravity="center" />
 
 

@@ -1,14 +1,16 @@
-package com.gather_excellent_help.ui.activity.wards;
+package com.gather_excellent_help.ui.activity.credits;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.OvershootInterpolator;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,12 +19,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
-import com.gather_excellent_help.bean.WardStaticsBean;
-import com.gather_excellent_help.ui.activity.credits.AccountDetailAvtivity;
-import com.gather_excellent_help.ui.adapter.AcccountDetailAdapter;
-import com.gather_excellent_help.ui.adapter.WardStaticsAdapter;
+
+import com.gather_excellent_help.bean.LowerMermberBean;
+import com.gather_excellent_help.ui.adapter.LowerMemberAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.utils.LogUtil;
@@ -38,12 +40,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 
-public class WardsStatisticsUpdateActivity extends BaseActivity {
+public class LowerMemberStaticsActivity extends BaseActivity {
 
-    @Bind(R.id.rcv_wards_statistics_s)
-    RecyclerView rcvWardsStatisticsS;
-    @Bind(R.id.iv_order_no_zhanwei)
-    ImageView ivOrderNoZhanwei;
     @Bind(R.id.rl_exit)
     RelativeLayout rlExit;
     @Bind(R.id.tv_top_title_name)
@@ -60,15 +58,19 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
     EditText etWardStaticsUsername;
     @Bind(R.id.tv_ward_statics_confirm)
     TextView tvWardStaticsConfirm;
-    @Bind(R.id.ll_wards_statics_show)
-    LinearLayout llWardsStaticsShow;
+    @Bind(R.id.rcv_wards_statistics_s)
+    RecyclerView rcvWardsStatisticsS;
+    @Bind(R.id.iv_order_no_zhanwei)
+    ImageView ivOrderNoZhanwei;
+    @Bind(R.id.ll_lower_member_show)
+    LinearLayout ll_lower_member_show;
 
     private String startTime = "";
     private String endTime = "";
 
     private int whick = 0;
 
-    private String url = Url.BASE_URL + "RewardSearch.aspx";
+    private String url = Url.BASE_URL + "LowerMemberQuery.aspx";
     private NetUtil netUtil;
     private Map<String, String> map;
     private String Id;//用户ID
@@ -78,35 +80,34 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
     private String end_time = "";//------------结束时间
     private String user_name = "";//-----------用户名
 
+    private List<LowerMermberBean.DataBean> lowerData;
+    private List<LowerMermberBean.DataBean> currData;
+    private LowerMemberAdapter lowerMemberAdapter;
+
     private boolean isLoadMore = false;
     private int page = 1;
-    private List<WardStaticsBean.DataBean> wardsData;
-    private List<WardStaticsBean.DataBean> currData;
-    private WardStaticsAdapter wardStaticsAdapter;
     private FullyLinearLayoutManager layoutManager;
-    private double lastVisibleItem;
+    private int lastVisibleItem;
     private String whicks = "";
+    private int firstVisbleItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wards_statistics_update);
+        setContentView(R.layout.activity_lower_member_statics);
         ButterKnife.bind(this);
         initData();
     }
 
-    /**
-     * 解析数据
-     */
-    private void initData() {
-        tvTopTitleName.setText("奖励统计");
+    private void initData(){
+        tvTopTitleName.setText("下级会员统计");
         netUtil = new NetUtil();
         Id = Tools.getUserLogin(this);
         net2Server();
         ivOrderNoZhanwei.setVisibility(View.VISIBLE);
         layoutManager = new FullyLinearLayoutManager(this);
         rcvWardsStatisticsS.setLayoutManager(layoutManager);
-        netUtil.setOnServerResponseListener(new OnServerResponseListener());
+        netUtil.setOnServerResponseListener(new LowerMemberStaticsActivity.OnServerResponseListener());
         rlExit.setOnClickListener(new MyOnclikListener());
         rlWardTimeStart.setOnClickListener(new MyOnclikListener());
         rlWardTimeEnd.setOnClickListener(new MyOnclikListener());
@@ -118,16 +119,12 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     lastVisibleItem = layoutManager
                             .findLastVisibleItemPosition();
-
                     if (lastVisibleItem + 1 == layoutManager
                             .getItemCount()) {
-                        if (TextUtils.isEmpty(whicks)) {
-                            return;
-                        }
                         isLoadMore = true;
                         if (currData != null) {
                             if (currData.size() < 10) {
-                                Toast.makeText(WardsStatisticsUpdateActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LowerMemberStaticsActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
                                 return;
                             }
                         }
@@ -148,44 +145,68 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
                 super.onScrolled(recyclerView, dx, dy);
                 lastVisibleItem = layoutManager.findLastVisibleItemPosition();
                 int top = rcvWardsStatisticsS.getChildAt(0).getTop();
-                LogUtil.e("top == " + top);
-                if (top < 0) {
-                    llWardsStaticsShow.setVisibility(View.GONE);
-                } else {
-                    llWardsStaticsShow.setVisibility(View.VISIBLE);
+                if(top<0) {
+                    ll_lower_member_show.setVisibility(View.GONE);
+                }else{
+                    ll_lower_member_show.setVisibility(View.VISIBLE);
                 }
             }
         });
+
     }
 
+    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
 
-    private void showDateDialog(final int which) {
-        final DatePicker datePicker = new DatePicker(this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("选择日期")
-                .setView(datePicker)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        int year = datePicker.getYear();
-                        int month = datePicker.getMonth() + 1;
-                        int day = datePicker.getDayOfMonth();
-                        String time = year + "-" + month + "-" + day;
-                        if (which == -1) {
-                            startTime = time;
-                            tvWardStaticsStart.setText(startTime);
-                        } else {
-                            endTime = time;
-                            tvWardStaticsEnd.setText(endTime);
+        @Override
+        public void getSuccessResponse(String response) {
+            LogUtil.e(response);
+            LowerMermberBean lowerMermberBean = new Gson().fromJson(response, LowerMermberBean.class);
+            int statusCode = lowerMermberBean.getStatusCode();
+            switch (statusCode) {
+                case 1:
+                    currData = lowerMermberBean.getData();
+                    if (isLoadMore) {
+                        page++;
+                        lowerData.addAll(currData);
+                        lowerMemberAdapter.notifyDataSetChanged();
+                    } else {
+                        if (currData != null) {
+                            if (currData.size() > 0) {
+                                ivOrderNoZhanwei.setVisibility(View.GONE);
+                            } else {
+                                ivOrderNoZhanwei.setVisibility(View.VISIBLE);
+                            }
                         }
-
+                        page = 2;
+                        lowerData = currData;
+                        lowerMemberAdapter = new LowerMemberAdapter(LowerMemberStaticsActivity.this, lowerData);
+                        rcvWardsStatisticsS.setAdapter(lowerMemberAdapter);
                     }
-                })
-                .setNegativeButton("取消", null)
-                .show();
+                    break;
+                case 0:
+                    Toast.makeText(LowerMemberStaticsActivity.this, lowerMermberBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+
+        @Override
+        public void getFailResponse(Call call, Exception e) {
+            LogUtil.e(call.toString() + "--" + e.getMessage());
+        }
     }
 
-    public class MyOnclikListener implements View.OnClickListener {
+    private void net2Server() {
+        map = new HashMap<>();
+        map.put("Id", Id);
+        map.put("pageSize", pageSize);
+        map.put("pageIndex", pageNo);
+        map.put("start_time", start_time);
+        map.put("end_time", end_time);
+        map.put("user_name", user_name);
+        netUtil.okHttp2Server2(url, map);
+    }
+
+    public class MyOnclikListener implements View.OnClickListener{
 
         @Override
         public void onClick(View view) {
@@ -212,13 +233,13 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
      * 查询奖励统计信息
      */
     private void toQuery() {
-        Toast.makeText(WardsStatisticsUpdateActivity.this, "正在查询！", Toast.LENGTH_SHORT).show();
+        Toast.makeText(LowerMemberStaticsActivity.this, "正在查询！", Toast.LENGTH_SHORT).show();
         if (TextUtils.isEmpty(startTime)) {
-            Toast.makeText(WardsStatisticsUpdateActivity.this, "请选择开始年月", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LowerMemberStaticsActivity.this, "请选择开始年月", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(endTime)) {
-            Toast.makeText(WardsStatisticsUpdateActivity.this, "请选择结束年月", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LowerMemberStaticsActivity.this, "请选择结束年月", Toast.LENGTH_SHORT).show();
             return;
         }
         String username = etWardStaticsUsername.getText().toString().trim();
@@ -234,53 +255,30 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
 
     }
 
-    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
-
-        @Override
-        public void getSuccessResponse(String response) {
-            WardStaticsBean wardStaticsBean = new Gson().fromJson(response, WardStaticsBean.class);
-            int statusCode = wardStaticsBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    currData = wardStaticsBean.getData();
-                    if (isLoadMore) {
-                        page++;
-                        wardsData.addAll(currData);
-                        wardStaticsAdapter.notifyDataSetChanged();
-                    } else {
-                        if (currData != null) {
-                            if (currData.size() > 0) {
-                                ivOrderNoZhanwei.setVisibility(View.GONE);
-                            } else {
-                                ivOrderNoZhanwei.setVisibility(View.VISIBLE);
-                            }
+    private void showDateDialog(final int which) {
+        final DatePicker datePicker = new DatePicker(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("选择日期")
+                .setView(datePicker)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        int year = datePicker.getYear();
+                        int month = datePicker.getMonth() + 1;
+                        int day = datePicker.getDayOfMonth();
+                        String time = year + "-" + month + "-" + day;
+                        if (which == -1) {
+                            startTime = time;
+                            tvWardStaticsStart.setText(startTime);
+                        } else {
+                            endTime = time;
+                            tvWardStaticsEnd.setText(endTime);
                         }
-                        page = 2;
-                        wardsData = currData;
-                        wardStaticsAdapter = new WardStaticsAdapter(WardsStatisticsUpdateActivity.this, wardsData);
-                        rcvWardsStatisticsS.setAdapter(wardStaticsAdapter);
                     }
-                    break;
-                case 0:
-                    Toast.makeText(WardsStatisticsUpdateActivity.this, wardStaticsBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        }
-
-        @Override
-        public void getFailResponse(Call call, Exception e) {
-            LogUtil.e(call.toString() + "--" + e.getMessage());
-        }
+                })
+                .setNegativeButton("取消", null)
+                .show();
     }
 
-    private void net2Server() {
-        map = new HashMap<>();
-        map.put("Id", Id);
-        map.put("pageSize", pageSize);
-        map.put("pageNo", pageNo);
-        map.put("start_time", start_time);
-        map.put("end_time", end_time);
-        map.put("user_name", user_name);
-        netUtil.okHttp2Server2(url, map);
-    }
+
 }

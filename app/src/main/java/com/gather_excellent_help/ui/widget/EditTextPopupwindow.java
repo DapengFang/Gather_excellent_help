@@ -75,11 +75,12 @@ public class EditTextPopupwindow extends PopupWindow {
             public void onClick(View view) {
                 String cont = et_edittext_pop.getText().toString().trim();
                 if(!TextUtils.isEmpty(cont)) {
-                    if(cont.length()>12) {
-                        tv_train_dynamic_content.setText(cont.substring(0,12)+"...");
-                    }else{
-                        tv_train_dynamic_content.setText(cont);
-                    }
+//                    if(cont.length()>12) {
+//                        tv_train_dynamic_content.setText(cont.substring(0,12)+"...");
+//                    }else{
+//
+//                    }
+                    tv_train_dynamic_content.setText(cont);
                 }else{
                     tv_train_dynamic_content.setText("说点什么吧！");
                 }

@@ -108,7 +108,6 @@ public class ActivityListPresenter extends BasePresenter {
         int statusCode = activityListBean.getStatusCode();
         switch (statusCode) {
             case 1 :
-                //List<ActivityListBean.DataBean> currData = activityListBean.getData();
                 if(isLoadMore) {
                     page++;
                     LogUtil.e("page == "+page);

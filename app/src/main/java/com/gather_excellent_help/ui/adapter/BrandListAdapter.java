@@ -69,8 +69,8 @@ public class BrandListAdapter extends BaseAdapter {
             holder.home_brand_name.setTextColor(Color.WHITE);
             holder.cv_brand_list.setCardBackgroundColor(Color.RED);
         }else{
-            holder.home_brand_name.setTextColor(Color.parseColor("#55000000"));
-            holder.cv_brand_list.setCardBackgroundColor(Color.parseColor("#11000000"));
+            holder.home_brand_name.setTextColor(Color.parseColor("#88000000"));
+            holder.cv_brand_list.setCardBackgroundColor(Color.parseColor("#f2f2f2"));
         }
         return convertView;
     }

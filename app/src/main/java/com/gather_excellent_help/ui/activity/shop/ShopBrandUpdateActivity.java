@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -97,8 +98,8 @@ public class ShopBrandUpdateActivity extends BaseActivity {
                     cv.setCardBackgroundColor(Color.RED);
                     selectlists.add(dataBean);
                 } else {
-                    tv.setTextColor(Color.parseColor("#55000000"));
-                    cv.setCardBackgroundColor(Color.parseColor("#11000000"));
+                    tv.setTextColor(Color.parseColor("#88000000"));
+                    cv.setCardBackgroundColor(Color.parseColor("#f2f2f2"));
                     if (selectlists.contains(dataBean)) {
                         selectlists.remove(dataBean);
                     }
@@ -177,7 +178,7 @@ public class ShopBrandUpdateActivity extends BaseActivity {
         }
         if(selectlists.size()>0) {
             for (int i = 0; i < selectlists.size(); i++) {
-                brand += selectlists.get(i).getTitle() + "/";
+                brand += selectlists.get(i).getTitle() + "、";
             }
             brand = brand.substring(0, brand.length() - 1);
             intent.putExtra("brand",brand);

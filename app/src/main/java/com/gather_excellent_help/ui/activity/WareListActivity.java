@@ -7,11 +7,13 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -220,16 +222,6 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 netUtil2.okHttp2Server2(home_search_url, map);
             }
 
-//            else if(sousuoStr!=null && !TextUtils.isEmpty(sousuoStr)) {
-//                tvWareListOld.setVisibility(View.VISIBLE);
-//                tvWareListOld.setText(sousuoStr);
-//                etWareListContent.setHint("");
-//                keyword = sousuoStr;
-//                searchWareList(keyword);
-//            }else{
-//                etWareListContent.setHint("请输入商品名称");
-//                tvWareListOld.setVisibility(View.GONE);
-//            }
         }
 
         rlExit.setOnClickListener(new MyOnClickListener());
@@ -240,6 +232,44 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
         rlSousuo.setOnClickListener(new MyOnClickListener());
         rlEditTextExit.setOnClickListener(new MyOnClickListener());
         etWareListContent.addTextChangedListener(watcher);
+        etWareListContent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                    Toast.makeText(WareListActivity.this, "正在搜索中，请稍后！", Toast.LENGTH_SHORT).show();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(etWareListContent.getWindowToken(), 0);
+                    isLoadmore = -1;
+                    ll_ware_list_loadmore.setVisibility(View.GONE);
+                    content_et = etWareListContent.getText().toString().trim();
+                    if (content_et != null && !TextUtils.isEmpty(content_et)) {
+                        keyword = content_et;
+                        page = 1;
+                        PriceOder = "2";
+                        setSortPriceIcon(SortPrice.ASC.ordinal());
+                        Type = "";
+                        brandId = "";
+                        capacity = "";
+                        type_id = "";
+                        sousuoStr = "isHomeSou";
+                        map = new HashMap<>();
+                        map.put("key_words", keyword);
+                        map.put("pageSize", "10");
+                        map.put("pageIndex", "1");
+                        map.put("PriceOder", PriceOder);
+                        map.put("Type", Type);
+                        map.put("brandId", brandId);
+                        map.put("capacity", capacity);
+                        netUtil2.okHttp2Server2(home_search_url, map);
+                    } else {
+                        Toast.makeText(WareListActivity.this, "请输入关键字！", Toast.LENGTH_SHORT).show();
+                    }
+                   return true;
+                }
+                return false;
+            }
+        });
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -386,10 +416,6 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                             if (absListView.getLastVisiblePosition() == (absListView.getCount() - 1)) {
                                 isLoadmore = 0;
                                 if (type_id != null && !TextUtils.isEmpty(type_id)) {
-                                    //tvWareListOld.setVisibility(View.VISIBLE);
-                                    //tvWareListOld.setText(sousuoStr);
-                                    //etWareListContent.setHint("");
-                                    //keyword = sousuoStr;
                                     pageIndex = String.valueOf(page);
                                     LogUtil.e("newData.size() ==" + newData.size());
                                     if (newData.size() < Integer.valueOf(pageSize)) {
@@ -406,10 +432,6 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                                 } else {
                                     if (sousuoStr != null && !TextUtils.isEmpty(sousuoStr)) {
                                         LogUtil.e("page == " + page);
-                                        //tvWareListOld.setVisibility(View.VISIBLE);
-                                        //tvWareListOld.setText(sousuoStr);
-                                        //etWareListContent.setHint("");
-                                        //keyword = sousuoStr;
                                         pageIndex = String.valueOf(page);
                                         LogUtil.e("newData.size() ==" + newData.size());
                                         if (newData.size() < Integer.valueOf(pageSize)) {
@@ -424,30 +446,6 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                                             }, 500);
                                         }
                                     }
-//                                      else if(!TextUtils.isEmpty(content_et)) {
-//                                          page++;
-//                                          LogUtil.e("page == "+page);
-//                                          tvWareListOld.setVisibility(View.VISIBLE);
-//                                          tvWareListOld.setText(sousuoStr);
-//                                          etWareListContent.setHint("");
-//                                          keyword = sousuoStr;
-//                                          pageIndex = String.valueOf(page);
-//                                          LogUtil.e("newData.size() ==" + newData.size());
-//                                          if(newData.size() <Integer.valueOf(pageSize)) {
-//                                              showLoadNoMore();
-//                                          }else{
-//                                              showLoadMore();
-//                                              handler.postDelayed(new Runnable() {
-//                                                  @Override
-//                                                  public void run() {
-//                                                      searchWareList();
-//                                                  }
-//                                              },500);
-//                                          }
-//                                      }{
-//                                          etWareListContent.setHint("请输入商品名称");
-//                                          tvWareListOld.setVisibility(View.GONE);
-//                                      }
                                 }
                             } else {
                                 ll_ware_list_loadmore.setVisibility(View.GONE);
@@ -457,11 +455,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
 
                     @Override
                     public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-//                           if(i>0) {
-//                               ll_ware_list_sousuo.setVisibility(View.GONE);
-//                           }else{
-//                               ll_ware_list_sousuo.setVisibility(View.VISIBLE);
-//                           }
+
                     }
                 });
                 ll_ware_list_loadmore.setVisibility(View.GONE);
@@ -523,7 +517,12 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 && typeSelectorPopupwindow.isShowing()) {
             typeSelectorPopupwindow.dismiss();
         } else {
-            typeSelectorPopupwindow.showAsDropDown(llWareListPingpai, 5, 5);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    typeSelectorPopupwindow.showAsDropDown(llWareListPingpai, 5, 5);
+                }
+            },1000);
         }
 
     }
@@ -609,27 +608,16 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 case R.id.ll_ware_list_leibie:
                     isLoadmore = -1;
                     crr_click = 0;
+                    if(activity_id != null) {
+                        activity_id = "0";
+                    }
                     map = new HashMap<>();
-//                    if (type_id != null) {
-//                        LogUtil.e("type_id ============= " + type_id);
-//                        map.put("id", type_id);
-//                        netUtil.okHttp2Server2(leibie_url, map);
-//                    } else {
-//                        netUtil.okHttp2Server2(leibie_url, null);
-//                    }
                     netUtil.okHttp2Server2(leibie_url, null);
                     break;
                 case R.id.ll_ware_list_pingpai:
                     isLoadmore = -1;
                     crr_click = 1;
                     map = new HashMap<>();
-//                    if (type_id != null) {
-//                        LogUtil.e("type_id ============= " + type_id);
-//                        map.put("id", Type);
-//                        netUtil.okHttp2Server2(pingpai_url, map);
-//                    } else {
-//                        netUtil.okHttp2Server2(pingpai_url, null);
-//                    }
                     if (Type != null && !TextUtils.isEmpty(Type)) {
                         map.put("id", Type);
                         netUtil.okHttp2Server2(pingpai_url, map);
@@ -657,18 +645,6 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     isLoadmore = -1;
                     ll_ware_list_loadmore.setVisibility(View.GONE);
                     content_et = etWareListContent.getText().toString().trim();
-//                    if(sousuoStr!=null && !TextUtils.isEmpty(sousuoStr)) {
-//                        Toast.makeText(WareListActivity.this, sousuoStr, Toast.LENGTH_SHORT).show();
-//                        keyword = sousuoStr;
-//                        pageIndex = "1";
-//                        searchWareList(keyword);
-//                    }else if(content_et!=null && !TextUtils.isEmpty(content_et)) {
-//                        keyword =content_et;
-//                        pageIndex = "1";
-//                        searchWareList(keyword);
-//                    }else{
-//                        Toast.makeText(WareListActivity.this, "请输入搜索内容！", Toast.LENGTH_SHORT).show();
-//                    }
                     if (content_et != null && !TextUtils.isEmpty(content_et)) {
                         keyword = content_et;
                         page = 1;
@@ -824,6 +800,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 map.put("pageIndex", pageIndex);
                 map.put("PriceOder", PriceOder);
                 map.put("Type", Type);
+                map.put("id",Type);
                 map.put("brandId", brandId);
                 map.put("capacity", capacity);
                 String qiang_url = Url.BASE_URL + "GroupBuyList.aspx";
@@ -835,6 +812,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 map.put("pageIndex", pageIndex);
                 map.put("PriceOder", PriceOder);
                 map.put("Type", Type);
+                map.put("id",Type);
                 map.put("brandId", brandId);
                 map.put("capacity", capacity);
                 String vip_url = Url.BASE_URL + "ChannelPriceList.aspx";

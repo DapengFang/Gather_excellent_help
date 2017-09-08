@@ -6,9 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -68,6 +70,26 @@ public class GoodscartFragment extends BaseFragment {
         rlNewsSearchBefore.setOnClickListener(new MyOnclickListener());
         etTaobaoSearchContent.addTextChangedListener(watcher);
         rlEditTextExit.setOnClickListener(new MyOnclickListener());
+        etTaobaoSearchContent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                    String keyword = etTaobaoSearchContent.getText().toString().trim();
+                    if (TextUtils.isEmpty(keyword)) {
+                        rlNewsSearchBefore.setVisibility(View.VISIBLE);
+                        llNewsSearchAfter.setVisibility(View.GONE);
+                        return true;
+                    }
+                    Toast.makeText(getContext(), "正在搜索中，请稍后！", Toast.LENGTH_SHORT).show();
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(etTaobaoSearchContent.getWindowToken(), 0);
+                    newsFirstPresenter.searchData(keyword);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private TextWatcher watcher = new TextWatcher() {

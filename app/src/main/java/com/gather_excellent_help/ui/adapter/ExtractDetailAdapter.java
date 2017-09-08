@@ -39,7 +39,7 @@ public class ExtractDetailAdapter extends RecyclerView.Adapter<ExtractDetailAdap
     public void onBindViewHolder(AccountDetailViewHolder holder, int position) {
         ExractDetailBean.DataBean dataBean = data.get(position);
         holder.tv_account_first.setText("订单号:");
-        holder.tv_account_second.setText("审核日期:");
+        holder.tv_account_second.setText("提取日期:");
         holder.tv_account_third.setText("提取金额:");
         if(dataBean.getWithdrawal_no()!=null) {
             holder.tvAccountDetailTime.setText(dataBean.getWithdrawal_no());
