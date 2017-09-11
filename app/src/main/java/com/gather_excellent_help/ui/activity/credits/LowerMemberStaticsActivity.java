@@ -144,11 +144,13 @@ public class LowerMemberStaticsActivity extends BaseActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 lastVisibleItem = layoutManager.findLastVisibleItemPosition();
-                int top = rcvWardsStatisticsS.getChildAt(0).getTop();
-                if(top<0) {
-                    ll_lower_member_show.setVisibility(View.GONE);
-                }else{
-                    ll_lower_member_show.setVisibility(View.VISIBLE);
+                if(rcvWardsStatisticsS!=null) {
+                    int top = rcvWardsStatisticsS.getChildAt(0).getTop();
+                    if(top<0) {
+                        ll_lower_member_show.setVisibility(View.GONE);
+                    }else{
+                        ll_lower_member_show.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });

@@ -33,13 +33,11 @@ public class BannerPresenter  extends BasePresenter{
     private CarouselImageView civHomeGanner;
     private NetUtil netUtils;
     private String banner_url = Url.BASE_URL + "IndexBanner.aspx";
-    //private ImageLoader mImageLoader;
 
     public BannerPresenter(Context context, CarouselImageView civHomeGanner) {
         this.context = context;
         this.civHomeGanner = civHomeGanner;
         netUtils = new NetUtil();
-        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
     @Override

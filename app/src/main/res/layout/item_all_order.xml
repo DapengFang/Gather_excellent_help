@@ -81,6 +81,6 @@
     <View
         android:id="@+id/v_order_all_show"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x5"
+        android:layout_height="@dimen/x9"
         android:background="#11000000"/>
 </LinearLayout>
