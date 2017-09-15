@@ -39,6 +39,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,6 +104,8 @@ public class WebActivity extends BaseActivity {
         }
     };
     private String web_url = "";
+    private AlibcLogin alibcLogin;
+    private WeakReference<AlibcLogin> wef = new WeakReference<AlibcLogin>(alibcLogin);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,14 +245,11 @@ public class WebActivity extends BaseActivity {
                 }else if(which.equals("bind")) {
                     parseBindData(response);
                 }
-
             }
 
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "--" +e.getMessage());
-                // AlibcTrade.show(WebRecordActivity.this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback(WebRecordActivity.this));
-
             }
         });
     }
@@ -330,7 +330,7 @@ public class WebActivity extends BaseActivity {
      */
     public void bindTaobao(final String s) {
 
-        AlibcLogin alibcLogin = AlibcLogin.getInstance();
+        alibcLogin = AlibcLogin.getInstance();
 
         alibcLogin.showLogin(new AlibcLoginCallback() {
             @Override
@@ -575,4 +575,10 @@ public class WebActivity extends BaseActivity {
 
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        wef.clear();
+    }
 }

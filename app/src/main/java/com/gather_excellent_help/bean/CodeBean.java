@@ -52,6 +52,8 @@ public class CodeBean {
         private double user_get_ratio;
         private String advertising;
         private int group_id;
+        private int apply_status;
+        private int pay_status;
 
         public Integer getId() {
             return id;
@@ -91,6 +93,22 @@ public class CodeBean {
 
         public void setGroup_id(int group_id) {
             this.group_id = group_id;
+        }
+
+        public int getApply_status() {
+            return apply_status;
+        }
+
+        public void setApply_status(int apply_status) {
+            this.apply_status = apply_status;
+        }
+
+        public int getPay_status() {
+            return pay_status;
+        }
+
+        public void setPay_status(int pay_status) {
+            this.pay_status = pay_status;
         }
     }
 }

@@ -194,7 +194,7 @@
         <service android:name=".ui.service.MyService" />
 
         <activity android:name=".TestActivity" />
-        <activity android:name=".TestActivity2"></activity>
+        <activity android:name=".TestActivity2" />
         <activity
             android:name=".ui.activity.credits.ExtractDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -202,9 +202,7 @@
         <activity
             android:name=".ui.activity.shop.ShopInfoUpadateActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" >
-
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.shop.ShopBrandUpdateActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -212,16 +210,27 @@
         <activity
             android:name=".ui.activity.shop.ShopPhotoUpdateActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.wards.WardsStatisticsUpdateActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|stateUnchanged"></activity>
-        <activity android:name=".ui.activity.credits.LowerMemberStaticsActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity
+            android:name=".ui.activity.credits.LowerMemberStaticsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|stateUnchanged">
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity android:name=".ui.activity.pswset.UserPswsetActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" >
+
+        </activity>
+        <activity android:name=".ui.activity.pswset.UserPswCompleteActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" >
 
         </activity>
     </application>

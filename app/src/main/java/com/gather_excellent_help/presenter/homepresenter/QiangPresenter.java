@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
@@ -239,7 +240,6 @@ public class QiangPresenter extends BasePresenter {
             }
         }
         if(iv_qiang_left_img!=null && img_urls!=null) {
-            //mImageLoader.loadImage(img_urls,iv_qiang_left_img,true);
             Glide.with(context).load(img_urls+"_320x320q90.jpg")
                     .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                     .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片

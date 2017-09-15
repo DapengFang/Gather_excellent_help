@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -33,7 +34,7 @@ import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.adapter.TaobaoWareListAdapter;
-import com.gather_excellent_help.ui.base.BaseFragment;
+import com.gather_excellent_help.ui.base.LazyLoadFragment;
 import com.gather_excellent_help.ui.widget.TaobaoShaixuanPopupwindow;
 import com.gather_excellent_help.ui.widget.TaobaoZonghePopupwindow;
 import com.gather_excellent_help.utils.LogUtil;
@@ -53,7 +54,7 @@ import okhttp3.Call;
  * Created by wuxin on 2017/7/7.
  */
 
-public class TaobaoFragment extends BaseFragment {
+public class TaobaoFragment extends LazyLoadFragment {
     @Bind(R.id.et_taobao_search_content)
     EditText etTaobaoSearchContent;
     @Bind(R.id.rl_taobao_sousuo)
@@ -117,10 +118,29 @@ public class TaobaoFragment extends BaseFragment {
     private int isLoadmore = -1;//是否加载更多
     private int page = 1;//加载更多
 
-    private Handler handler = new Handler();
     private List<SearchTaobaoBean.DataBean> taobaodata;//要加载的数据
     private List<SearchTaobaoBean.DataBean> newData;//每次获取的数据
     private TaobaoWareListAdapter taobaoWareListAdapter;
+    public static final int CHECK_NULL = 4; //加载数据的标识
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case CHECK_NULL:
+                    if(rlNewsSearchBefore!=null && llNewsSearchAfter!=null
+                            && rlEditTextExit!=null && llTaobaoLoadmore != null
+                            && gvTaobaoList!=null) {
+                        loadTaobaoData();
+                        handler.removeMessages(CHECK_NULL);
+                    }else{
+                        handler.sendEmptyMessageDelayed(CHECK_NULL,500);
+                    }
+                    break;
+            }
+        }
+    };
 
     @Override
     public View initView() {
@@ -130,6 +150,13 @@ public class TaobaoFragment extends BaseFragment {
 
     @Override
     public void initData() {
+        handler.sendEmptyMessage(CHECK_NULL);
+    }
+
+    /**
+     * 导入淘宝数据
+     */
+    private void loadTaobaoData() {
         initSearch();
         netUtil = new NetUtil();
         showLoading();
@@ -313,9 +340,15 @@ public class TaobaoFragment extends BaseFragment {
      * 初始化搜索控件
      */
     private void initSearch() {
-        rlNewsSearchBefore.setVisibility(View.VISIBLE);
-        llNewsSearchAfter.setVisibility(View.GONE);
-        rlEditTextExit.setVisibility(View.GONE);
+        if(rlNewsSearchBefore!=null) {
+            rlNewsSearchBefore.setVisibility(View.VISIBLE);
+        }
+        if(llNewsSearchAfter!=null) {
+            llNewsSearchAfter.setVisibility(View.GONE);
+        }
+        if(rlEditTextExit!=null) {
+            rlEditTextExit.setVisibility(View.GONE);
+        }
     }
 
 
@@ -369,6 +402,9 @@ public class TaobaoFragment extends BaseFragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
+        if(handler!=null) {
+            handler.removeCallbacksAndMessages(null);
+        }
     }
 
     private void initChoice(){
@@ -658,4 +694,11 @@ public class TaobaoFragment extends BaseFragment {
 
         }
     };
+
+    @Override
+    protected void stopLoad() {
+        if(handler!=null) {
+            handler.removeCallbacksAndMessages(null);
+        }
+    }
 }

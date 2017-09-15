@@ -48,7 +48,7 @@
             <TextView
                 android:id="@+id/tv_home_type_title"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/x18"
+                android:layout_height="@dimen/x36"
                 android:lineSpacingExtra="@dimen/x2"
                 android:text="正品长虹全自动洗衣机7.5KG家用大容量波正品长虹全自动洗衣机7.5KG家用大容量波"
                 android:textColor="#333333"

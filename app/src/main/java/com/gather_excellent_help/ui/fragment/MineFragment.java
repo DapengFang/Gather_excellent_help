@@ -2,6 +2,8 @@ package com.gather_excellent_help.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ import com.gather_excellent_help.bean.HelpRuleBean;
 import com.gather_excellent_help.bean.MineBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
+import com.gather_excellent_help.ui.activity.AlipayManagerActivity;
 import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.activity.OrderActivity;
 import com.gather_excellent_help.ui.activity.RuleHelpActivity;
@@ -38,7 +41,9 @@ import com.gather_excellent_help.ui.activity.credits.InviteFriendsActivity;
 import com.gather_excellent_help.ui.activity.credits.LowerMemberStaticsActivity;
 import com.gather_excellent_help.ui.activity.credits.ShopDetailActivity;
 import com.gather_excellent_help.ui.activity.shop.ShopInfoUpadateActivity;
+import com.gather_excellent_help.ui.activity.shop.ShopPhotoUpdateActivity;
 import com.gather_excellent_help.ui.base.BaseFragment;
+import com.gather_excellent_help.ui.base.LazyLoadFragment;
 import com.gather_excellent_help.ui.widget.CircularImage;
 import com.gather_excellent_help.ui.widget.MyToggleButton;
 import com.gather_excellent_help.utils.CacheUtils;
@@ -61,7 +66,7 @@ import okhttp3.Call;
  * Created by wuxin on 2017/7/7.
  */
 
-public class MineFragment extends BaseFragment {
+public class MineFragment extends LazyLoadFragment {
 
     @Bind(R.id.civ_me_head_icon)
     CircularImage civMeHeadIcon;
@@ -175,11 +180,51 @@ public class MineFragment extends BaseFragment {
     private boolean login;
     private int groupId;
     private int shopType;
+    private int applyState;
+    private int payState;
 
     private String help_url = Url.BASE_URL + "UserHelp.aspx";//帮助
     private String rule_url = Url.BASE_URL + "RebateRules.aspx";//返佣
     private double user_earn;
     private String which;
+
+    public static final int CHECK_NULL = 4; //加载数据的标识
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case CHECK_NULL:
+                    llMineCompontFirst.setVisibility(View.VISIBLE);
+                    llMineCompontSecond.setVisibility(View.VISIBLE);
+                    tvMineCompontL01.setText("提取现金");
+                    tvMineCompontL02.setText("邀请好友赚钱啦");
+                    tvMineCompontL03.setText("账户明细");
+                    tvMineCompontL04.setText("商家信息");
+                    tvMineCompontL05.setText("帮助");
+                    tvMineCompontL06.setText("返佣规则");
+                    llMineUserBack.setVisibility(View.VISIBLE);
+                    rlMineToggle.setVisibility(View.VISIBLE);
+                    llMineZhuanOrder.setVisibility(View.VISIBLE);
+                    vTuiZhuanLine.setVisibility(View.VISIBLE);
+                    vToggleLine.setVisibility(View.VISIBLE);
+                    if(llMineCompontFirst!=null && llMineCompontSecond!=null
+                            && tvMineCompontL01!=null && tvMineCompontL02 != null
+                            && tvMineCompontL03!=null && tvMineCompontL04 !=null
+                            && tvMineCompontL05!=null && tvMineCompontL06!=null
+                            && llMineUserBack!=null && rlMineToggle!=null &&
+                            llMineZhuanOrder!=null && tvMeNickname!=null &&
+                            civMeHeadIcon!=null) {
+                        loadMineData();
+                        handler.removeMessages(CHECK_NULL);
+                    }else{
+                        handler.sendEmptyMessageDelayed(CHECK_NULL,500);
+                    }
+                    break;
+            }
+        }
+    };
 
     @Override
     public View initView() {
@@ -193,6 +238,13 @@ public class MineFragment extends BaseFragment {
         groupId = Tools.getGroupId(getContext());
         shopType = Tools.getShopType(getContext());
         LogUtil.e("groupId = " + groupId);
+        handler.sendEmptyMessage(CHECK_NULL);
+    }
+
+    /**
+     * 导入我的界面信息
+     */
+    private void loadMineData() {
         if (shopType == 1) {
             loadGroupuserDefault();
             tvAccountMoneyTitle1.setText("余额/提现中");
@@ -390,6 +442,8 @@ public class MineFragment extends BaseFragment {
         frostAmount = dataBean.getFrostAmount();
         group_id = dataBean.getGroup_id();
         advertising = dataBean.getAdvertising();
+        applyState = dataBean.getApply_status();
+        payState = dataBean.getPay_status();
         String user_get_ratio = dataBean.getUser_get_ratio();
         if (user_get_ratio != null) {
             CacheUtils.putString(getContext(), CacheUtils.USER_RATE, user_get_ratio);
@@ -466,6 +520,16 @@ public class MineFragment extends BaseFragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
+        if(handler!=null) {
+            handler.removeCallbacksAndMessages(null);
+        }
+    }
+
+    @Override
+    protected void stopLoad() {
+        if(handler!=null) {
+            handler.removeCallbacksAndMessages(null);
+        }
     }
 
     /**
@@ -491,7 +555,19 @@ public class MineFragment extends BaseFragment {
                     if (shopType == 1) {
                         toExtraCredits();
                     } else {
-                        toMerchantEnter();
+                        if(applyState ==1) {
+                            Toast.makeText(getContext(), "你已经申请成功", Toast.LENGTH_SHORT).show();
+                        }else if(applyState==2) {
+                            Toast.makeText(getContext(), "你的申请被驳回，请核对后重新申请！", Toast.LENGTH_SHORT).show();
+                            toMerchantEnter();
+                        }else if(applyState ==3) {
+                            if(payState ==1) {
+                                Toast.makeText(getContext(), "你的申请已提交，请等待工作人员审核！", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(getContext(), "请你支付加盟费用！", Toast.LENGTH_SHORT).show();
+                                toAlipay();
+                            }
+                        }
                     }
                     break;
                 case R.id.ll_mine_account_details:
@@ -684,6 +760,14 @@ public class MineFragment extends BaseFragment {
             LogUtil.e(msg);
             initData();
         }
+    }
+
+    /**
+     * 区支付宝支付页面
+     */
+    private void toAlipay() {
+        Intent intent = new Intent(getContext(), AlipayManagerActivity.class);
+        startActivity(intent);
     }
 
 }

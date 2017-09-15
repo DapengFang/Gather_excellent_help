@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -47,6 +46,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,6 +108,8 @@ public class WebRecordActivity extends BaseActivity {
     private String goods_img = "";
     private String goods_title = "";
     private String taoWord;
+    private DemoTradeCallback demoTradeCallback;
+    private WeakReference<DemoTradeCallback> wef = new WeakReference<DemoTradeCallback>(demoTradeCallback);
 
     private SharePopupwindow sharePopupwindow;
     private String openId = "";
@@ -202,8 +204,6 @@ public class WebRecordActivity extends BaseActivity {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "--" + e.getMessage());
-                // AlibcTrade.show(WebRecordActivity.this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback(WebRecordActivity.this));
-
             }
         });
 
@@ -236,12 +236,13 @@ public class WebRecordActivity extends BaseActivity {
         switch (statusCode) {
             case 1:
                 List<ChangeUrlBean.DataBean> data = changeUrlBean.getData();
+                demoTradeCallback = new DemoTradeCallback(WebRecordActivity.this);
                 if (data != null && data.size() > 0) {
                     click_url = changeUrlBean.getData().get(0).getClick_url();
                     handler.sendEmptyMessage(GET_URL);
-                    AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(click_url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback(WebRecordActivity.this));
+                    AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(click_url), alibcShowParams, alibcTaokeParams, null,demoTradeCallback);
                 } else {
-                    AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, new DemoTradeCallback(WebRecordActivity.this));
+                    AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, demoTradeCallback);
                 }
                 break;
             case 0:
@@ -521,7 +522,11 @@ public class WebRecordActivity extends BaseActivity {
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        wef.clear();
+    }
 }
 
 

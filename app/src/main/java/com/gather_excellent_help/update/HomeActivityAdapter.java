@@ -69,8 +69,6 @@ public class HomeActivityAdapter extends RecyclerView.Adapter<HomeActivityAdapte
         if(img_url!=null && holder.iv_rush_more_big!=null) {
             Glide.with(context).load(Url.IMG_URL + img_url)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
-                    .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
-                    .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
                     .into(holder.iv_rush_more_big);//请求成功后把图片设置到的控件
             holder.iv_rush_more_big.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -512,7 +512,12 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
     private void showPopMenu(List<ListBean.DataBean> data) {
         if (typeSelectorPopupwindow == null) {
             typeSelectorPopupwindow = new TypeSelectorPopupwindow(WareListActivity.this, data);
-            showPopupwindow();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showPopupwindow();
+                }
+            },1000);
         } else if (typeSelectorPopupwindow != null
                 && typeSelectorPopupwindow.isShowing()) {
             typeSelectorPopupwindow.dismiss();

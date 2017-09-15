@@ -1,6 +1,7 @@
 package com.gather_excellent_help;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
@@ -12,6 +13,8 @@ import com.gather_excellent_help.ui.service.MyService;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.ut.mini.internal.UTTeamWork;
@@ -31,7 +34,14 @@ public class MyApplication extends Application {
     private String url = Url.BASE_URL + "UsersLoginRecord.aspx";
     private String userLogin;
     private NetUtil netUtil;
-    private Map<String,String> map;
+    private Map<String, String> map;
+
+    public static RefWatcher getRefWatcher(Context context) {
+        MyApplication application = (MyApplication) context.getApplicationContext();
+        return application.refWatcher;
+    }
+
+    private RefWatcher refWatcher;
 
     @Override
     public void onCreate() {
@@ -39,31 +49,31 @@ public class MyApplication extends Application {
         application = this;
         netUtil = new NetUtil();
         boolean login = Tools.isLogin(application);
-        if(login) {
+        if (login) {
             userLogin = Tools.getUserLogin(application);
             map = new HashMap<>();
-            map.put("id",userLogin);
-            netUtil.okHttp2Server2(url,map);
+            map.put("id", userLogin);
+            netUtil.okHttp2Server2(url, map);
         }
         netUtil.setOnServerResponseListener(new MyOnsetServerLisetener());
-        new Thread(){
-            public void run(){
+        new Thread() {
+            public void run() {
                 //电商SDK初始化
                 AlibcTradeSDK.asyncInit(application, new AlibcTradeInitCallback() {
                     @Override
                     public void onSuccess() {
                         //Toast.makeText(MyApplication.this, "初始化成功", Toast.LENGTH_SHORT).show();
                         Map utMap = new HashMap<>();
-                        utMap.put("debug_api_url","http://muvp.alibaba-inc.com/online/UploadRecords.do");
-                        utMap.put("debug_key","baichuan_sdk_utDetection");
+                        utMap.put("debug_api_url", "http://muvp.alibaba-inc.com/online/UploadRecords.do");
+                        utMap.put("debug_key", "baichuan_sdk_utDetection");
                         UTTeamWork.getInstance().turnOnRealTimeDebug(utMap);
-                        AlibcUserTracker.getInstance().sendInitHit4DAU("19","3.1.1.100");
+                        AlibcUserTracker.getInstance().sendInitHit4DAU("19", "3.1.1.100");
 
                     }
 
                     @Override
                     public void onFailure(int code, String msg) {
-                        Toast.makeText(MyApplication.this, "初始化失败,错误码="+code+" / 错误消息="+msg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MyApplication.this, "初始化失败,错误码=" + code + " / 错误消息=" + msg, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -77,12 +87,14 @@ public class MyApplication extends Application {
                 UMShareAPI.get(application);
                 JPushInterface.setDebugMode(true);
                 JPushInterface.init(application);
+                refWatcher = LeakCanary.install(application);
             }
         }.start();
 
+
     }
 
-    public class MyOnsetServerLisetener implements NetUtil.OnServerResponseListener{
+    public class MyOnsetServerLisetener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
@@ -91,7 +103,7 @@ public class MyApplication extends Application {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-         LogUtil.e(call.toString()+"--"+e.getMessage());
+            LogUtil.e(call.toString() + "--" + e.getMessage());
         }
     }
 }

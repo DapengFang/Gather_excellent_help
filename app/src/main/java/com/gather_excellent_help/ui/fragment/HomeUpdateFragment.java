@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.event.AnyEvent;
@@ -27,6 +28,7 @@ import com.gather_excellent_help.presenter.homepresenter.TypePresenter;
 import com.gather_excellent_help.presenter.homepresenter.VipPresenter;
 import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.base.BaseFragment;
+import com.gather_excellent_help.ui.base.LazyLoadFragment;
 import com.gather_excellent_help.ui.widget.CarouselImageView;
 import com.gather_excellent_help.ui.widget.MyGridView;
 import com.gather_excellent_help.ui.widget.MyNestedScrollView;
@@ -44,7 +46,7 @@ import de.greenrobot.event.EventBus;
  * Created by Dapeng Fang on 2017/8/21.
  */
 
-public class HomeUpdateFragment extends BaseFragment {
+public class HomeUpdateFragment extends LazyLoadFragment {
 
     @Bind(R.id.civ_home_ganner)
     CarouselImageView civHomeGanner;
@@ -78,47 +80,60 @@ public class HomeUpdateFragment extends BaseFragment {
     public static final int TIME_DOWN = 1; //倒计时显示的标识
     public static final int STOP_REFRESH = 2; //加载数据的标识
     public static final int TOTOP = 3; //加载数据的标识
+    public static final int CHECK_NULL = 4; //加载数据的标识
     private boolean bannerRefresh = false;
     private boolean typeRefresh = false;
     private long time;
 
     private RushDownTimer rushDownTimer;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case TIME_DOWN :
-                    time-=1000;
+                case TIME_DOWN:
+                    time -= 1000;
                     rushDownTimer.calcuteDownTimer(time);
                     qiangPresenter.setRushDownTimer(rushDownTimer);
-                    if(time<=0) {
+                    if (time <= 0) {
                         handler.removeMessages(TIME_DOWN);
                         return;
                     }
-                    handler.sendEmptyMessageDelayed(TIME_DOWN,1000);
+                    handler.sendEmptyMessageDelayed(TIME_DOWN, 1000);
                     break;
                 case STOP_REFRESH:
-                    if(bannerRefresh==false && typeRefresh ==false) {
-                        if(mIsRequestDataRefresh ==true) {
+                    if (bannerRefresh == false && typeRefresh == false) {
+                        if (mIsRequestDataRefresh == true) {
                             stopDataRefresh();
                             setRefresh(mIsRequestDataRefresh);
                         }
                         handler.removeMessages(STOP_REFRESH);
                         return;
                     }
-                    handler.sendEmptyMessageDelayed(STOP_REFRESH,200);
+                    handler.sendEmptyMessageDelayed(STOP_REFRESH, 200);
                     break;
                 case TOTOP:
-                    if(mynested_scrollview!=null) {
-                        mynested_scrollview.scrollTo(0,0);
+                    if (mynested_scrollview != null) {
+                        mynested_scrollview.scrollTo(0, 0);
                     }
+                    break;
+                case CHECK_NULL:
+                    if (civHomeGanner != null && gvHomeType != null
+                            && llHomeVipZera != null && llHomeQiangZera != null
+                            && llHomeGroupZera != null && rcvHomeActivity != null
+                            && rcvHomeActivityList != null && mynested_scrollview != null && ll_home_loadmore != null) {
+                        loadHomeUpdateData();
+                        handler.removeMessages(CHECK_NULL);
+                    } else {
+                        handler.sendEmptyMessageDelayed(CHECK_NULL, 500);
+                    }
+
                     break;
             }
         }
     };
 
-    private WeakReference<Handler> wef =new WeakReference<Handler>(handler);
+    private WeakReference<Handler> wef = new WeakReference<Handler>(handler);
     private QiangPresenter qiangPresenter;
     private VipPresenter vipPresenter;
     private TypePresenter typePresenter;
@@ -137,18 +152,31 @@ public class HomeUpdateFragment extends BaseFragment {
     public void initData() {
         handler.removeMessages(TIME_DOWN);
         handler.removeMessages(STOP_REFRESH);
+        handler.sendEmptyMessage(CHECK_NULL);
+    }
+
+    /**
+     * 加载首页数据
+     */
+    private void loadHomeUpdateData() {
         bannerPresenter = new BannerPresenter(getContext(), civHomeGanner);
         bannerPresenter.initData();
+
         typePresenter = new TypePresenter(getContext(), gvHomeType);
         typePresenter.initData();
+
+
         vipPresenter = new VipPresenter(getContext(), llHomeVipZera);
         vipPresenter.initData();
+
+
         qiangPresenter = new QiangPresenter(getContext(), llHomeQiangZera);
         qiangPresenter.initData();
+
         qiangPresenter.setOnLoadSuccessListener(new QiangPresenter.OnLoadSuccessListener() {
             @Override
             public void onSuccessResponse(long t) {
-                if(llHomeQiangZera!=null) {
+                if (llHomeQiangZera != null) {
                     llHomeQiangZera.setVisibility(View.VISIBLE);
                 }
                 time = t;
@@ -158,22 +186,23 @@ public class HomeUpdateFragment extends BaseFragment {
 
             @Override
             public void onResponseNoData() {
-                if(llHomeQiangZera!=null) {
+                if (llHomeQiangZera != null) {
                     llHomeQiangZera.setVisibility(View.GONE);
                 }
             }
         });
+
         groupPresenter = new GroupPresenter(getContext(), llHomeGroupZera);
         groupPresenter.initData();
         activityPresenter = new ActivityPresenter(getContext(), rcvHomeActivity);
         activityPresenter.initData();
-        activityListPresenter = new ActivityListPresenter(getContext(), rcvHomeActivityList,mynested_scrollview,ll_home_loadmore);
+        activityListPresenter = new ActivityListPresenter(getContext(), rcvHomeActivityList, mynested_scrollview, ll_home_loadmore);
         activityListPresenter.initData();
         refreshCallBack(bannerPresenter, typePresenter);
         iv_home_back_top.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mynested_scrollview.scrollTo(0,0);
+                mynested_scrollview.scrollTo(0, 0);
             }
         });
         ll_home_sousuo.setOnClickListener(new View.OnClickListener() {
@@ -189,8 +218,7 @@ public class HomeUpdateFragment extends BaseFragment {
             }
         });
 
-        handler.sendEmptyMessageDelayed(TOTOP,3000);
-
+        handler.sendEmptyMessageDelayed(TOTOP, 3000);
     }
 
     /**
@@ -201,8 +229,8 @@ public class HomeUpdateFragment extends BaseFragment {
         bannerPresenter.setOnStopRefreshListener(new BannerPresenter.OnStopRefreshListener() {
             @Override
             public void stopSuccessRefresh() {
-                 bannerRefresh = false;
-                 handler.sendEmptyMessage(STOP_REFRESH);
+                bannerRefresh = false;
+                handler.sendEmptyMessage(STOP_REFRESH);
             }
 
             @Override
@@ -216,7 +244,7 @@ public class HomeUpdateFragment extends BaseFragment {
         typePresenter.setOnStopRefreshListener(new TypePresenter.OnStopRefreshListener() {
             @Override
             public void stopSuccessRefresh() {
-                  typeRefresh = false;
+                typeRefresh = false;
             }
 
             @Override
@@ -244,8 +272,7 @@ public class HomeUpdateFragment extends BaseFragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
-        handler.removeMessages(STOP_REFRESH);
-        handler.removeMessages(TIME_DOWN);
+        handler.removeCallbacksAndMessages(null);
         wef.clear();
     }
 
@@ -305,8 +332,9 @@ public class HomeUpdateFragment extends BaseFragment {
         }
     }
 
+
     public void onEvent(AnyEvent event) {
-        if(event.getType() == EventType.EVENT_LOGIN) {
+        if (event.getType() == EventType.EVENT_LOGIN) {
             String msg = "onEventMainThread收到了消息：" + event.getMessage();
             LogUtil.e(msg);
             int groupId = Tools.getGroupId(getContext());
@@ -314,4 +342,10 @@ public class HomeUpdateFragment extends BaseFragment {
         }
     }
 
+    @Override
+    protected void stopLoad() {
+        if(handler!=null) {
+            handler.removeCallbacksAndMessages(null);
+        }
+    }
 }

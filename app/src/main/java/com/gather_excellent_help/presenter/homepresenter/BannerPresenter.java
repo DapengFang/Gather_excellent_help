@@ -117,8 +117,6 @@ public class BannerPresenter  extends BasePresenter{
             public void displayImage(String imageURL, ImageView imageView) {
                 Glide.with(context).load(imageURL)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
-                        .placeholder(R.drawable.white_banner)//加载过程中的图片
-                        .error(R.drawable.white_banner)//加载失败的时候显示的图片
                         .into(imageView);//请求成功后把图片设置到的控件
             }
         };

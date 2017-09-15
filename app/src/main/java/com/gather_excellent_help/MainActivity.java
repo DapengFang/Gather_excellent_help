@@ -6,6 +6,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.gather_excellent_help.ui.adapter.CustomPagerAdapter;
 import com.gather_excellent_help.ui.base.BaseFragmentActivity;
+import com.gather_excellent_help.ui.base.LazyLoadFragment;
 import com.gather_excellent_help.ui.fragment.GoodscartFragment;
 import com.gather_excellent_help.ui.fragment.HomeFragment;
 import com.gather_excellent_help.ui.fragment.HomeUpdateFragment;
@@ -35,8 +37,10 @@ public class MainActivity extends FragmentActivity {
     NoScrollViewPager vp_main;
     @Bind(R.id.rg_main)
     RadioGroup rg_main;
+    @Bind(R.id.ll_main)
+    LinearLayout ll_main;
     private int currItem;//当前显示的界面
-    private ArrayList<Fragment> fragments;//存放fragment页面的工作
+    private ArrayList<LazyLoadFragment> fragments;//存放fragment页面的工作
     public static final int EXIT_APP =1;
     public static final int EXIT_APP_CONTINUE =2;
     private boolean isExit = false;
@@ -85,8 +89,8 @@ public class MainActivity extends FragmentActivity {
      */
     private void loadViewPager() {
         fragments = new ArrayList<>();
-        //fragments.add(new HomeFragment());
         fragments.add(new HomeUpdateFragment());
+        //fragments.add(new HomeFragment());
         fragments.add(new TypeFragment());
         fragments.add(new TaobaoFragment());
         fragments.add(new GoodscartFragment());

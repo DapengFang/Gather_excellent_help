@@ -42,6 +42,11 @@ public class CacheUtils {
 	public static final String USER_RATE = "user_rate";
 	public static final String LOGIN_PHONE = "login_phone";
 
+	public static final String APPLAY_STATUS = "applay_status";
+	public static final String PAY_STATUS = "pay_status";
+
+
+
 	public static SharedPreferences sp;
 
 	public static void putBoolean(Context context,String key,boolean value){

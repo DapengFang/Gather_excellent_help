@@ -67,6 +67,9 @@ public class MineBean {
         private double user_earn;
         private String user_get_ratio;
         private int group_type;
+        private int apply_status;
+        private int pay_status;
+
 
         public String getAvatar() {
             return avatar;
@@ -162,6 +165,22 @@ public class MineBean {
 
         public void setGroup_type(int group_type) {
             this.group_type = group_type;
+        }
+
+        public int getApply_status() {
+            return apply_status;
+        }
+
+        public void setApply_status(int apply_status) {
+            this.apply_status = apply_status;
+        }
+
+        public int getPay_status() {
+            return pay_status;
+        }
+
+        public void setPay_status(int pay_status) {
+            this.pay_status = pay_status;
         }
     }
 }

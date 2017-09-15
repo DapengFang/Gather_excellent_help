@@ -181,27 +181,27 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
             Toast.makeText(ShopPhotoUpdateActivity.this, "请上传图片！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(name == null) {
+        if (name == null) {
             name = "";
         }
-        if(telephone == null) {
+        if (telephone == null) {
             telephone = "";
         }
-        if(address == null) {
+        if (address == null) {
             address = "";
         }
-        if(info == null) {
+        if (info == null) {
             info = "";
         }
-        if(business_time == null) {
+        if (business_time == null) {
             business_time = "";
         }
-        if(brand == null) {
+        if (brand == null) {
             brand = "";
         }
         llShopRemind.setVisibility(View.VISIBLE);
-        new Thread(){
-            public void run(){
+        new Thread() {
+            public void run() {
                 map = new HashMap<>();
                 map.put("user_id", userLogin);
                 map.put("name", name);
@@ -258,18 +258,6 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
                         Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                             newUri = FileProvider.getUriForFile(this, "com.gather_excellent_help.fileprovider", new File(newUri.getPath()));
-//                        if (which.equals("l2") || which.equals("l3")) {
-//                            PhotoUtils.cropImageUri(this, newUri, cropImageUri, 1, 1, 480, 480, CODE_RESULT_REQUEST);
-//                        } else if(which.equals("l1")) {
-//                            PhotoUtils.cropImageUri(this, newUri, cropImageUri, 2, 1, 480, 240, CODE_RESULT_REQUEST);
-//                        }else if(which.equals("l4")) {
-//                            Bitmap bitmap = PhotoUtils.getBitmapFromUri(newUri, this);
-//                            if(bitmap!=null) {
-//                                String sphoto = Tools.BitmapToBase64(bitmap);
-//                                ivMerchantPictureL4.setImageBitmap(bitmap);
-//                                upload4 =sphoto;
-//                            }
-//                        }
                         PhotoUtils.cropImageUri2(this, newUri, cropImageUri, CODE_RESULT_REQUEST);
                     } else {
                         ToastUtils.showShort(this, "设备没有SD卡！");

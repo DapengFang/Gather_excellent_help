@@ -44,7 +44,6 @@ public class TaobaoWareListAdapter extends BaseAdapter {
         this.data = data;
         inflater = LayoutInflater.from(context);
         shopType =Tools.getShopType(context);
-        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         String userRate = Tools.getUserRate(context);
         if(!TextUtils.isEmpty(userRate)) {
             double v = Double.parseDouble(userRate);
@@ -91,7 +90,6 @@ public class TaobaoWareListAdapter extends BaseAdapter {
             holder.home_type_name.setText(dataBean.getTitle());
         }
         if(holder.home_type_photo!=null && dataBean.getImg_url()!=null) {
-            //mImageLoader.loadImage(dataBean.getImg_url()+"_430x430q90.jpg",holder.home_type_photo,true);
             Glide.with(context).load(dataBean.getImg_url()+"_430x430q90.jpg")
                     .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                     .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
@@ -122,12 +120,8 @@ public class TaobaoWareListAdapter extends BaseAdapter {
             holder.tv_rush_ware_coupons.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    Intent intent = new Intent(context, WebActivity.class);
-//                    intent.putExtra("web_url",coupon_info.getCoupon_click_url());
-//                    context.startActivity(intent);
                 }
             });
-            //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
             if(shopType==1){
                 boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                 if(toggleShow) {

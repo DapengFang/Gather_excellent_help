@@ -28,6 +28,7 @@ import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.adapter.HomeRushAllAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
+import com.gather_excellent_help.ui.base.LazyLoadFragment;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.RushDownTimer;
 import com.gather_excellent_help.utils.DataCleanManager;
@@ -54,7 +55,7 @@ import okhttp3.Call;
  * Created by Dapeng Fang on 2017/7/7.
  */
 
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends LazyLoadFragment {
 
     @Bind(R.id.rcv_home_fragment)
     RecyclerView rcvHomeFragment;

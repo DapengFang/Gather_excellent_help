@@ -23,21 +23,8 @@ public abstract class BaseFragment extends Fragment {
     private boolean isLoadDataCompleted;
 
     public BaseFragment() {
-        // Required empty public constructor
-    }
 
-//    @Override
-//    public void setUserVisibleHint(boolean isVisibleToUser) {
-//        super.setUserVisibleHint(isVisibleToUser);
-////        Log.d("TAG", "fragment->setUserVisibleHint");
-//        if (getUserVisibleHint()) {
-//            isVisible = true;
-//            lazyLoad();
-//        } else {
-//            isVisible = false;
-//            onInvisible();
-//        }
-//    }
+    }
 
 
     @Override
@@ -45,7 +32,6 @@ public abstract class BaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
         setHasOptionsMenu(true);
-//        Log.d("TAG", "fragment->onCreate");
     }
 
 
@@ -55,31 +41,16 @@ public abstract class BaseFragment extends Fragment {
         if (mRootView == null) {
             mRootView = initView();
         }
-//        Log.d("TAG", "fragment->onCreateView");
         return mRootView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        Log.d("TAG", "fragment->onActivityCreated");
         initData();
     }
 
-//    protected void lazyLoad() {
-//        if (!isPrepared || !isVisible || !isFirst) {
-//            return;
-//        }
-//        Log.d("TAG", getClass().getName() + "->initData()");
-//        initData();
-//        isFirst = false;
-//    }
 
-//    //do something
-//    protected void onInvisible() {
-//
-//
-//    }
 
     public abstract View initView();
 

@@ -61,7 +61,6 @@ public class QiangTaoActivity extends BaseActivity {
     private long endtime;
     private NetUtil netUtils;
     private List<QiangTaoBean.DataBean> qiangData;
-    //private WareListAdapter wareListAdapter;
     private String end_time;
     private String time_head;
     private String start_time;
@@ -72,8 +71,6 @@ public class QiangTaoActivity extends BaseActivity {
     private Handler handler = new Handler();
     private String page_no ="1";//第几页
     private String page_size = "10";//每页多少
-//    private List<SearchWareBean.DataBean> newData;
-//    private List<SearchWareBean.DataBean> taobaodata;
 
     private List<SearchTaobaoBean.DataBean> taobaodata;//要加载的数据
     private List<SearchTaobaoBean.DataBean> newData;//每次获取的数据

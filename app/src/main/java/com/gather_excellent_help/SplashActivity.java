@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.VersionBean;
 import com.gather_excellent_help.ui.base.BaseFullScreenActivity;
 import com.gather_excellent_help.ui.widget.SplashView;
+import com.gather_excellent_help.utils.BitmapUtil;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -86,6 +88,7 @@ public class SplashActivity extends BaseFullScreenActivity {
             }
         }
     };
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +102,10 @@ public class SplashActivity extends BaseFullScreenActivity {
      * start splash animation
      */
     private void startLoadingData(){
-        ivSplash.setBackgroundResource(R.drawable.splash_img);
+        bitmap = BitmapUtil.readBitMap(this, R.drawable.splash_img);
+        if(bitmap!=null) {
+            ivSplash.setImageBitmap(bitmap);
+        }
         netUtil = new NetUtil();
         checkUpdate();
     }
@@ -124,6 +130,9 @@ public class SplashActivity extends BaseFullScreenActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(bitmap!=null && !bitmap.isRecycled()) {
+           bitmap.recycle();
+        }
         if(pd!=null) {
             if(pd.isShowing()) {
                 pd.dismiss();

@@ -2,6 +2,8 @@ package com.gather_excellent_help.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.presenter.NewsFirstPresenter;
 import com.gather_excellent_help.ui.base.BaseFragment;
+import com.gather_excellent_help.ui.base.LazyLoadFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,7 +33,7 @@ import butterknife.ButterKnife;
  * Created by wuxin on 2017/7/7.
  */
 
-public class GoodscartFragment extends BaseFragment {
+public class GoodscartFragment extends LazyLoadFragment {
     @Bind(R.id.et_taobao_search_content)
     EditText etTaobaoSearchContent;
     @Bind(R.id.rl_taobao_sousuo)
@@ -50,6 +53,28 @@ public class GoodscartFragment extends BaseFragment {
     private Context context;
     private NewsFirstPresenter newsFirstPresenter;
 
+    public static final int CHECK_NULL = 4; //加载数据的标识
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case CHECK_NULL:
+                    if(rlNewsSearchBefore!=null && llNewsSearchAfter!=null
+                            && rlEditTextExit!=null && flNewsFrag != null
+                            && rlTaobaoSousuo!=null && etTaobaoSearchContent!=null
+                            && rcvNewsHorizational!=null) {
+                        loadNewsData();
+                        handler.removeMessages(CHECK_NULL);
+                    }else{
+                        handler.sendEmptyMessageDelayed(CHECK_NULL,500);
+                    }
+                    break;
+            }
+        }
+    };
+
 
     @Override
     public View initView() {
@@ -59,6 +84,13 @@ public class GoodscartFragment extends BaseFragment {
 
     @Override
     public void initData() {
+        handler.sendEmptyMessage(CHECK_NULL);
+    }
+
+    /**
+     * 导入新闻数据
+     */
+    private void loadNewsData() {
         initSearch();
         newsFirstPresenter = new NewsFirstPresenter(context);
         View rootView = newsFirstPresenter.getRootView();
@@ -140,6 +172,16 @@ public class GoodscartFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        if(handler!=null) {
+            handler.removeCallbacksAndMessages(null);
+        }
+    }
+
+    @Override
+    protected void stopLoad() {
+        if(handler!=null) {
+            handler.removeCallbacksAndMessages(null);
+        }
     }
 
     public class MyOnclickListener implements View.OnClickListener {

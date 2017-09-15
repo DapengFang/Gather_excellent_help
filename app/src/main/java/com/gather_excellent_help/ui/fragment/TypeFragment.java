@@ -3,6 +3,7 @@ package com.gather_excellent_help.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +40,7 @@ import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.adapter.TypeWareAdapter;
 import com.gather_excellent_help.ui.base.BaseFragment;
+import com.gather_excellent_help.ui.base.LazyLoadFragment;
 import com.gather_excellent_help.ui.widget.Classes;
 import com.gather_excellent_help.ui.widget.College;
 import com.gather_excellent_help.ui.widget.CustomExpandableListView;
@@ -67,7 +69,7 @@ import okhttp3.Call;
 /**
  * created by Dapeng Fang
  */
-public class TypeFragment extends BaseFragment {
+public class TypeFragment extends LazyLoadFragment {
     @Bind(R.id.iv_zhuangtai_exit)
     ImageView ivZhuangtaiExit;
     @Bind(R.id.rl_exit)
@@ -110,6 +112,26 @@ public class TypeFragment extends BaseFragment {
     private List<ActivityListBean.DataBean> activityData;
     private List<ActivityListBean.DataBean> currData;
     private TypeActivityListAdapter typeActivityListAdapter;
+    public static final int CHECK_NULL = 4; //加载数据的标识
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case CHECK_NULL:
+                    if(rcvTypeShow!=null && swipeRefresh!=null
+                            && tvTopTitleName!=null &&
+                            rlExit!=null) {
+                        loadTypeData();
+                        handler.removeMessages(CHECK_NULL);
+                    }else{
+                       handler.sendEmptyMessageDelayed(CHECK_NULL,500);
+                    }
+                    break;
+            }
+        }
+    };
 
     /**
      * @return 布局对象
@@ -127,6 +149,13 @@ public class TypeFragment extends BaseFragment {
     public void initData() {
         netUtil = new NetUtil();
         netUtil2 = new NetUtil();
+        handler.sendEmptyMessage(CHECK_NULL);
+    }
+
+    /**
+     * 导入分类数据
+     */
+    private void loadTypeData() {
         layoutManager = new LinearLayoutManager(getContext());
         rcvTypeShow.setLayoutManager(layoutManager);
         requestDataRefresh();
@@ -203,9 +232,10 @@ public class TypeFragment extends BaseFragment {
                         ll_type_loadmore.getChildAt(0).setVisibility(View.VISIBLE);
                         TextView tv = (TextView) ll_type_loadmore.getChildAt(1);
                         tv.setText("正在加载中");
-                        new Handler().postDelayed(new Runnable() {
+                        handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
+
                                 if(currData.size()<Integer.parseInt(pageSize)) {
                                     ll_type_loadmore.setVisibility(View.VISIBLE);
                                     ll_type_loadmore.getChildAt(0).setVisibility(View.GONE);
@@ -323,78 +353,6 @@ public class TypeFragment extends BaseFragment {
                 break;
         }
     }
-
-//    /**
-//     * 解析商品数据
-//     * @param response
-//     */
-//    private void parseData2(String response) {
-//        TypeWareBean typeWareBean = new Gson().fromJson(response, TypeWareBean.class);
-//        int statusCode = typeWareBean.getStatusCode();
-//        switch (statusCode) {
-//            case 1 :
-//                if(mIsRequestDataRefresh ==true) {
-//                    stopDataRefresh();
-//                    setRefresh(mIsRequestDataRefresh);
-//                }
-//                if(rcvTypeShow==null) {
-//                    return;
-//                }
-//                final List<TypeWareBean.DataBean> data = typeWareBean.getData();
-//                if(data ==null) {
-//                    return;
-//                }
-//                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-//                rcvTypeShow.setLayoutManager(layoutManager);
-//                TypeWareAdapter typeWareAdapter = new TypeWareAdapter(getContext(),data);
-//                rcvTypeShow.setAdapter(typeWareAdapter);
-//               if(getContext()==null) {
-//                   return;
-//               }
-//                typeWareAdapter.setOnItemClickListener(new TypeWareAdapter.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(int position) {
-//                        DecimalFormat df = new DecimalFormat("#0.00");
-//                        int couponsPrice = data.get(position).getCouponsPrice();
-//                        String link_url = data.get(position).getLink_url();
-//                        String goods_id = data.get(position).getProductId();
-//                        String goods_img = data.get(position).getImg_url();
-//                        String goods_title = data.get(position).getTitle();
-//                        double sell_price = data.get(position).getSell_price();
-//                        if(couponsPrice>0) {
-//                            String couponsUrl = data.get(position).getCouponsUrl();
-//                            if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
-//                                Intent intent = new Intent(getContext(), WebActivity.class);
-//                                intent.putExtra("web_url",couponsUrl);
-//                                intent.putExtra("url",link_url);
-//                                intent.putExtra("goods_id",goods_id);
-//                                intent.putExtra("goods_img",goods_img);
-//                                intent.putExtra("goods_title",goods_title);
-//                                intent.putExtra("goods_price", df.format(sell_price)+"");
-//                                intent.putExtra("goods_coupon",String.valueOf(couponsPrice));
-//                                intent.putExtra("goods_coupon_url",couponsUrl);
-//                                getContext().startActivity(intent);
-//                            }
-//                        }else{
-//                            Intent intent = new Intent(getContext(), WebRecordActivity.class);
-//                            intent.putExtra("url",link_url);
-//                            intent.putExtra("goods_id",goods_id);
-//                            intent.putExtra("goods_img",goods_img);
-//                            intent.putExtra("goods_title",goods_title);
-//                            intent.putExtra("goods_price", df.format(sell_price)+"");
-//                            getContext().startActivity(intent);
-//                        }
-//                    }
-//                });
-//                break;
-//            case 0:
-//                if(mIsRequestDataRefresh ==true) {
-//                    stopDataRefresh();
-//                    setRefresh(mIsRequestDataRefresh);
-//                }
-//                break;
-//        }
-//    }
 
     /**
      * 获取左边导航数据
@@ -573,6 +531,9 @@ public class TypeFragment extends BaseFragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
+        if(handler!=null) {
+            handler.removeCallbacksAndMessages(null);
+        }
     }
 
     public class MyOnScrollListener implements AbsListView.OnScrollListener {
@@ -595,11 +556,20 @@ public class TypeFragment extends BaseFragment {
         }
     }
 
+
+
     public void onEvent(AnyEvent event) {
         if (event.getType() == EventType.EVENT_LOGIN) {
             String msg = "onEventMainThread收到了消息：" + event.getMessage();
             LogUtil.e(msg);
             initData();
+        }
+    }
+
+    @Override
+    protected void stopLoad() {
+        if(handler!=null) {
+            handler.removeCallbacksAndMessages(null);
         }
     }
 }

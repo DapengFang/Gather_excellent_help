@@ -1,6 +1,7 @@
 package com.gather_excellent_help;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -11,13 +12,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.gather_excellent_help.api.Url;
+import com.gather_excellent_help.bean.CodeStatueBean;
+import com.gather_excellent_help.ui.activity.pswset.UserPswsetActivity;
 import com.gather_excellent_help.ui.base.BaseFullScreenActivity;
+import com.gather_excellent_help.utils.BitmapUtil;
+import com.gather_excellent_help.utils.LogUtil;
+import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.Call;
 
 public class GuideActivity extends BaseFullScreenActivity {
 
@@ -30,6 +42,8 @@ public class GuideActivity extends BaseFullScreenActivity {
     @Bind(R.id.ll_splash_ship)
     LinearLayout ll_splash_ship;
 
+    private int isUUid = -1;
+
     /**
      * 上一个页面的位置
      */
@@ -38,6 +52,12 @@ public class GuideActivity extends BaseFullScreenActivity {
 
     //图片地址
     private List<Integer> arrs;
+    private Bitmap bitmap;
+
+    private String advice_url = Url.BASE_URL + "GetDevice.aspx";
+    private NetUtil netUtil;
+    private Map<String,String> map;
+    private String deviceId;//设备号
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +71,13 @@ public class GuideActivity extends BaseFullScreenActivity {
      * 初始化数据
      */
     private void initData() {
-        arrs = new ArrayList<Integer>();
+        netUtil = new NetUtil();
+        deviceId = Tools.getDeviceId(this);
+        map = new HashMap<>();
+        map.put("device_number",deviceId);
+        netUtil.okHttp2Server2(advice_url,map);
+        netUtil.setOnServerResponseListener(new OnServerResponseListener());
+        arrs = new ArrayList<>();
         arrs.add(R.drawable.welcome1);
         arrs.add(R.drawable.welcome2);
         arrs.add(R.drawable.welcome3);
@@ -61,11 +87,41 @@ public class GuideActivity extends BaseFullScreenActivity {
         tvGuidancePage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(GuideActivity.this, MainActivity.class);
-                startActivity(intent);
+                if(isUUid ==0) {
+                    Intent intent = new Intent(GuideActivity.this, UserPswsetActivity.class);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(GuideActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
                 finish();
             }
         });
+    }
+
+    /**
+     * 联网请求的回调
+     */
+    public class OnServerResponseListener implements NetUtil.OnServerResponseListener{
+
+        @Override
+        public void getSuccessResponse(String response) {
+            CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
+            int statusCode = codeStatueBean.getStatusCode();
+            switch (statusCode) {
+                case 1 :
+                     isUUid = 1;
+                    break;
+                case 0:
+                    isUUid = 0;
+                    break;
+            }
+        }
+
+        @Override
+        public void getFailResponse(Call call, Exception e) {
+            LogUtil.e(call.toString()+"--"+e.getMessage());
+        }
     }
 
     private void initViewpage(final List<Integer> arrs) {
@@ -116,8 +172,13 @@ public class GuideActivity extends BaseFullScreenActivity {
         ll_splash_ship.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(GuideActivity.this, MainActivity.class);
-                startActivity(intent);
+                if(isUUid ==0) {
+                    Intent intent = new Intent(GuideActivity.this, UserPswsetActivity.class);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(GuideActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
                 finish();
             }
         });
@@ -154,8 +215,11 @@ public class GuideActivity extends BaseFullScreenActivity {
                     false);
             ImageView imageView = (ImageView) viewLayout
                     .findViewById(R.id.image);
-            imageView.setBackgroundResource(images.get(position));
-
+            bitmap = BitmapUtil.readBitMap(GuideActivity.this, images.get(position));
+            //imageView.setBackgroundResource(images.get(position));
+            if(bitmap!=null) {
+                imageView.setImageBitmap(bitmap);
+            }
             view.addView(viewLayout, 0); // 将图片增加到ViewPager
             return viewLayout;
         }
@@ -193,6 +257,14 @@ public class GuideActivity extends BaseFullScreenActivity {
                 point.setEnabled(false);
             }
             llWelcomePointLayout.addView(point);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(bitmap!=null && !bitmap.isRecycled()) {
+            bitmap.recycle();
         }
     }
 }

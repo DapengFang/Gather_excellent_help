@@ -150,6 +150,7 @@ public class LoginActivity extends Activity {
                     CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_PHONE,user);
                     CacheUtils.putString(LoginActivity.this,CacheUtils.USER_RATE,user_rate+"");
                     CacheUtils.putInteger(LoginActivity.this, CacheUtils.GROUP_TYPE, group_id);
+
                     if (advertising != null) {
                         CacheUtils.putString(LoginActivity.this, CacheUtils.ADVER_ID, advertising);
                     }
@@ -176,12 +177,12 @@ public class LoginActivity extends Activity {
         }
 
             password = password+"@@11fe468";
-            password = EncryptUtil.getMd5Value(password);
-            map= new HashMap<>();
-            map.put("UserName",user);
-            map.put("Password",password);
-            which = "login";
-            netUtils.okHttp2Server2(url,map);
+        password = EncryptUtil.getMd5Value(password);
+        map= new HashMap<>();
+        map.put("UserName",user);
+        map.put("Password",password);
+        which = "login";
+        netUtils.okHttp2Server2(url,map);
 
     }
 
