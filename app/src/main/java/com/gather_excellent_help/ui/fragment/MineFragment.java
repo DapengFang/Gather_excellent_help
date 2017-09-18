@@ -190,41 +190,7 @@ public class MineFragment extends LazyLoadFragment {
 
     public static final int CHECK_NULL = 4; //加载数据的标识
 
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case CHECK_NULL:
-                    llMineCompontFirst.setVisibility(View.VISIBLE);
-                    llMineCompontSecond.setVisibility(View.VISIBLE);
-                    tvMineCompontL01.setText("提取现金");
-                    tvMineCompontL02.setText("邀请好友赚钱啦");
-                    tvMineCompontL03.setText("账户明细");
-                    tvMineCompontL04.setText("商家信息");
-                    tvMineCompontL05.setText("帮助");
-                    tvMineCompontL06.setText("返佣规则");
-                    llMineUserBack.setVisibility(View.VISIBLE);
-                    rlMineToggle.setVisibility(View.VISIBLE);
-                    llMineZhuanOrder.setVisibility(View.VISIBLE);
-                    vTuiZhuanLine.setVisibility(View.VISIBLE);
-                    vToggleLine.setVisibility(View.VISIBLE);
-                    if(llMineCompontFirst!=null && llMineCompontSecond!=null
-                            && tvMineCompontL01!=null && tvMineCompontL02 != null
-                            && tvMineCompontL03!=null && tvMineCompontL04 !=null
-                            && tvMineCompontL05!=null && tvMineCompontL06!=null
-                            && llMineUserBack!=null && rlMineToggle!=null &&
-                            llMineZhuanOrder!=null && tvMeNickname!=null &&
-                            civMeHeadIcon!=null) {
-                        loadMineData();
-                        handler.removeMessages(CHECK_NULL);
-                    }else{
-                        handler.sendEmptyMessageDelayed(CHECK_NULL,500);
-                    }
-                    break;
-            }
-        }
-    };
+    private Handler handler;
 
     @Override
     public View initView() {
@@ -238,7 +204,49 @@ public class MineFragment extends LazyLoadFragment {
         groupId = Tools.getGroupId(getContext());
         shopType = Tools.getShopType(getContext());
         LogUtil.e("groupId = " + groupId);
-        handler.sendEmptyMessage(CHECK_NULL);
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case CHECK_NULL:
+                        llMineCompontFirst.setVisibility(View.VISIBLE);
+                        llMineCompontSecond.setVisibility(View.VISIBLE);
+                        tvMineCompontL01.setText("提取现金");
+                        tvMineCompontL02.setText("邀请好友赚钱啦");
+                        tvMineCompontL03.setText("账户明细");
+                        tvMineCompontL04.setText("商家信息");
+                        tvMineCompontL05.setText("帮助");
+                        tvMineCompontL06.setText("返佣规则");
+                        llMineUserBack.setVisibility(View.VISIBLE);
+                        rlMineToggle.setVisibility(View.VISIBLE);
+                        llMineZhuanOrder.setVisibility(View.VISIBLE);
+                        vTuiZhuanLine.setVisibility(View.VISIBLE);
+                        vToggleLine.setVisibility(View.VISIBLE);
+                        if (llMineCompontFirst != null && llMineCompontSecond != null
+                                && tvMineCompontL01 != null && tvMineCompontL02 != null
+                                && tvMineCompontL03 != null && tvMineCompontL04 != null
+                                && tvMineCompontL05 != null && tvMineCompontL06 != null
+                                && llMineUserBack != null && rlMineToggle != null &&
+                                llMineZhuanOrder != null && tvMeNickname != null &&
+                                civMeHeadIcon != null) {
+                            loadMineData();
+                            if (handler != null) {
+                                handler.removeMessages(CHECK_NULL);
+                            }
+                        } else {
+                            if (handler != null) {
+                                handler.sendEmptyMessageDelayed(CHECK_NULL, 600);
+                            }
+                        }
+                        break;
+                }
+            }
+        };
+        if (handler != null) {
+            handler.sendEmptyMessageDelayed(CHECK_NULL,500);
+        }
+
     }
 
     /**
@@ -262,9 +270,9 @@ public class MineFragment extends LazyLoadFragment {
             llMineZhuanOrder.setVisibility(View.GONE);
             vTuiZhuanLine.setVisibility(View.GONE);
         }
-        if(groupId == 5) {
+        if (groupId == 5) {
             loadLowerMermberShow();
-        }else{
+        } else {
             loadLowerMermberhind();
         }
         boolean toggle_show = CacheUtils.getBoolean(getContext(), CacheUtils.TOGGLE_SHOW, false);
@@ -520,15 +528,17 @@ public class MineFragment extends LazyLoadFragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
+            handler = null;
         }
     }
 
     @Override
     protected void stopLoad() {
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
+            handler = null;
         }
     }
 
@@ -555,15 +565,15 @@ public class MineFragment extends LazyLoadFragment {
                     if (shopType == 1) {
                         toExtraCredits();
                     } else {
-                        if(applyState ==1) {
+                        if (applyState == 1) {
                             Toast.makeText(getContext(), "你已经申请成功", Toast.LENGTH_SHORT).show();
-                        }else if(applyState==2) {
+                        } else if (applyState == 2) {
                             Toast.makeText(getContext(), "你的申请被驳回，请核对后重新申请！", Toast.LENGTH_SHORT).show();
                             toMerchantEnter();
-                        }else if(applyState ==3) {
-                            if(payState ==1) {
+                        } else if (applyState == 3) {
+                            if (payState == 1) {
                                 Toast.makeText(getContext(), "你的申请已提交，请等待工作人员审核！", Toast.LENGTH_SHORT).show();
-                            }else{
+                            } else {
                                 Toast.makeText(getContext(), "请你支付加盟费用！", Toast.LENGTH_SHORT).show();
                                 toAlipay();
                             }

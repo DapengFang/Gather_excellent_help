@@ -51,6 +51,7 @@ public class SharePopupwindow extends PopupWindow {
         LinearLayout llShareQQ = (LinearLayout) view.findViewById(R.id.ll_share_qq);
         LinearLayout llShareWeixin = (LinearLayout) view.findViewById(R.id.ll_share_weixin);
         LinearLayout llShareSina = (LinearLayout) view.findViewById(R.id.ll_share_sina);
+        LinearLayout llShareWeixinFriend = (LinearLayout) view.findViewById(R.id.ll_share_weixin_friend);
         TextView tv_share_cancel = (TextView) view.findViewById(R.id.tv_share_cancel);
         llShareQQ.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +69,12 @@ public class SharePopupwindow extends PopupWindow {
             @Override
             public void onClick(View view) {
                 onItemClickListenr.onSinaClick();
+            }
+        });
+        llShareWeixinFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onItemClickListenr.onWeixinFriendClick();
             }
         });
         tv_share_cancel.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +104,8 @@ public class SharePopupwindow extends PopupWindow {
         void onWeixinClick();
 
         void onSinaClick();
+
+        void onWeixinFriendClick();
     }
 
     public void setOnItemClickListenr(OnItemClickListenr onItemClickListenr) {

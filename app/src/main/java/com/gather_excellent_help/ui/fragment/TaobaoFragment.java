@@ -123,24 +123,7 @@ public class TaobaoFragment extends LazyLoadFragment {
     private TaobaoWareListAdapter taobaoWareListAdapter;
     public static final int CHECK_NULL = 4; //加载数据的标识
 
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case CHECK_NULL:
-                    if(rlNewsSearchBefore!=null && llNewsSearchAfter!=null
-                            && rlEditTextExit!=null && llTaobaoLoadmore != null
-                            && gvTaobaoList!=null) {
-                        loadTaobaoData();
-                        handler.removeMessages(CHECK_NULL);
-                    }else{
-                        handler.sendEmptyMessageDelayed(CHECK_NULL,500);
-                    }
-                    break;
-            }
-        }
-    };
+    private Handler handler;
 
     @Override
     public View initView() {
@@ -150,7 +133,27 @@ public class TaobaoFragment extends LazyLoadFragment {
 
     @Override
     public void initData() {
-        handler.sendEmptyMessage(CHECK_NULL);
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case CHECK_NULL:
+                        if(rlNewsSearchBefore!=null && llNewsSearchAfter!=null
+                                && rlEditTextExit!=null && llTaobaoLoadmore != null
+                                && gvTaobaoList!=null) {
+                            loadTaobaoData();
+                            handler.removeMessages(CHECK_NULL);
+                        }else{
+                            handler.sendEmptyMessageDelayed(CHECK_NULL,500);
+                        }
+                        break;
+                }
+            }
+        };
+        if(handler!=null) {
+            handler.sendEmptyMessageDelayed(CHECK_NULL,600);
+        }
     }
 
     /**
@@ -328,6 +331,9 @@ public class TaobaoFragment extends LazyLoadFragment {
                     is_tmall = "";//是否是天猫
                     start_price = "";//范围下限
                     end_price = "";//范围上限
+                    if(taobaoShaixuanPopupwindow!=null) {
+                        taobaoShaixuanPopupwindow.setNoChecked();
+                    }
                     searchTaobaoWare(keyword, city, type, is_tmall, start_price, end_price, page_no);
                     return true;
                 }
@@ -404,6 +410,7 @@ public class TaobaoFragment extends LazyLoadFragment {
         EventBus.getDefault().unregister(this);
         if(handler!=null) {
             handler.removeCallbacksAndMessages(null);
+            handler = null;
         }
     }
 
@@ -497,6 +504,9 @@ public class TaobaoFragment extends LazyLoadFragment {
                     is_tmall = "";//是否是天猫
                     start_price = "";//范围下限
                     end_price = "";//范围上限
+                    if(taobaoShaixuanPopupwindow!=null) {
+                        taobaoShaixuanPopupwindow.setNoChecked();
+                    }
                     searchTaobaoWare(keyword, city, type, is_tmall, start_price, end_price, page_no);
                     break;
                 case R.id.rl_news_search_before:
@@ -654,7 +664,10 @@ public class TaobaoFragment extends LazyLoadFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacksAndMessages(null);
+        if(handler!=null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
     }
 
     public void onEvent(AnyEvent event) {
@@ -699,6 +712,7 @@ public class TaobaoFragment extends LazyLoadFragment {
     protected void stopLoad() {
         if(handler!=null) {
             handler.removeCallbacksAndMessages(null);
+            handler = null;
         }
     }
 }

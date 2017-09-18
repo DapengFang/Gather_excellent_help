@@ -1,13 +1,17 @@
 package com.gather_excellent_help.ui.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -19,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.baichuan.android.trade.AlibcTradeSDK;
 import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
 import com.alibaba.baichuan.trade.biz.login.AlibcLoginCallback;
 import com.gather_excellent_help.R;
@@ -34,6 +39,7 @@ import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
@@ -85,27 +91,28 @@ public class WebActivity extends BaseActivity {
     private String goods_coupon_url = "";
     private String news_img_url = "";
     private String newsTitle = "";
-    private Handler handler = new Handler(){
+    private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case GET_URL :
+                case GET_URL:
                     which = "get_url";
                     String user_id = Tools.getUserLogin(WebActivity.this);
                     map = new HashMap<>();
-                    map.put("user_id",user_id);
-                    map.put("convert_url",click_url);
-                    map.put("img_url",goods_img);
-                    map.put("title",goods_title);
-                    netUtil.okHttp2Server2(get_url,map);
+                    map.put("user_id", user_id);
+                    map.put("convert_url", click_url);
+                    map.put("img_url", goods_img);
+                    map.put("title", goods_title);
+                    netUtil.okHttp2Server2(get_url, map);
                     break;
             }
         }
     };
     private String web_url = "";
     private AlibcLogin alibcLogin;
-    private WeakReference<AlibcLogin> wef = new WeakReference<AlibcLogin>(alibcLogin);
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +129,7 @@ public class WebActivity extends BaseActivity {
         Intent intent = getIntent();
         netUtil = new NetUtil();
         web_url = intent.getStringExtra("web_url");
-        if(web_url == null) {
+        if (web_url == null) {
             web_url = "";
         }
         type = intent.getStringExtra("type");
@@ -131,15 +138,15 @@ public class WebActivity extends BaseActivity {
             if (type.equals("detail")) {
                 tvTopTitleName.setText("新闻专区");
                 String news_img = intent.getStringExtra("news_img");
-                if(news_img!=null) {
+                if (news_img != null) {
                     news_img_url = news_img;
                 }
                 String news_title = intent.getStringExtra("news_title");
-                if(news_title!=null) {
+                if (news_title != null) {
                     newsTitle = news_title;
                 }
                 wvBanner.loadUrl(web_url);
-            } else if(type.equals("second")) {
+            } else if (type.equals("second")) {
                 tvTopTitleName.setText("优惠券专区");
                 wvBanner.loadUrl(web_url);
                 rlShare.setVisibility(View.GONE);
@@ -152,27 +159,27 @@ public class WebActivity extends BaseActivity {
                 goods_price = intent.getStringExtra("goods_price");
                 goods_coupon = intent.getStringExtra("goods_coupon");
                 goods_coupon_url = intent.getStringExtra("goods_coupon_url");
-                if(goods_id==null || goods_img == null) {
-                      rlShare.setVisibility(View.GONE);
-                }else{
+                if (goods_id == null || goods_img == null) {
+                    rlShare.setVisibility(View.GONE);
+                } else {
                     rlShare.setVisibility(View.VISIBLE);
                     boolean login = Tools.isLogin(this);
                     adverId = Tools.getAdverId(this);
-                    if(login) {
+                    if (login) {
                         boolean bindTao = Tools.isBindTao(this);
-                        if(bindTao) {
-                        LogUtil.e("adverId = "+ adverId);
-                        which = "change_url";
-                        map = new HashMap<>();
-                        map.put("goodsId",goods_id);
-                        map.put("adzoneId", adverId);
-                        netUtil.okHttp2Server2(chang_url,map);
-                        }else{
+                        if (bindTao) {
+                            LogUtil.e("adverId = " + adverId);
+                            which = "change_url";
+                            map = new HashMap<>();
+                            map.put("goodsId", goods_id);
+                            map.put("adzoneId", adverId);
+                            netUtil.okHttp2Server2(chang_url, map);
+                        } else {
                             Toast.makeText(WebActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
                             String userLogin = Tools.getUserLogin(this);
                             bindTaobao(userLogin);
                         }
-                    }else{
+                    } else {
                         toLogin();
                         finish();
                     }
@@ -189,27 +196,27 @@ public class WebActivity extends BaseActivity {
             goods_price = intent.getStringExtra("goods_price");
             goods_coupon = intent.getStringExtra("goods_coupon");
             goods_coupon_url = intent.getStringExtra("goods_coupon_url");
-            if(goods_id == null || goods_img==null) {
+            if (goods_id == null || goods_img == null) {
                 rlShare.setVisibility(View.GONE);
-            }else{
+            } else {
                 rlShare.setVisibility(View.VISIBLE);
                 boolean login = Tools.isLogin(this);
                 adverId = Tools.getAdverId(this);
-                if(login) {
+                if (login) {
                     boolean bindTao = Tools.isBindTao(this);
-                    if(bindTao) {
-                    LogUtil.e("adverId = "+ adverId);
-                    which = "change_url";
-                    map = new HashMap<>();
-                    map.put("goodsId",goods_id);
-                    map.put("adzoneId", adverId);
-                    netUtil.okHttp2Server2(chang_url,map);
-                    }else{
+                    if (bindTao) {
+                        LogUtil.e("adverId = " + adverId);
+                        which = "change_url";
+                        map = new HashMap<>();
+                        map.put("goodsId", goods_id);
+                        map.put("adzoneId", adverId);
+                        netUtil.okHttp2Server2(chang_url, map);
+                    } else {
                         Toast.makeText(WebActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
                         String userLogin = Tools.getUserLogin(this);
                         bindTaobao(userLogin);
                     }
-                }else{
+                } else {
                     toLogin();
                     finish();
                 }
@@ -238,38 +245,39 @@ public class WebActivity extends BaseActivity {
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                if(which.equals("change_url")) {
+                if (which.equals("change_url")) {
                     parseData(response);
-                }else if(which.equals("get_url")) {
+                } else if (which.equals("get_url")) {
                     getTaoWord(response);
-                }else if(which.equals("bind")) {
+                } else if (which.equals("bind")) {
                     parseBindData(response);
                 }
             }
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-                LogUtil.e(call.toString() + "--" +e.getMessage());
+                LogUtil.e(call.toString() + "--" + e.getMessage());
             }
         });
     }
 
     /**
      * 解析绑定淘宝的数据
+     *
      * @param response
      */
     private void parseBindData(String response) {
         CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
         int statusCode = codeStatueBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
+            case 1:
                 CacheUtils.putBoolean(WebActivity.this, CacheUtils.BIND_STATE, true);
-                CacheUtils.putString(WebActivity.this,CacheUtils.TAOBAO_NICK,nick);
+                CacheUtils.putString(WebActivity.this, CacheUtils.TAOBAO_NICK, nick);
                 which = "change_url";
                 map = new HashMap<>();
-                map.put("goodsId",goods_id);
-                map.put("adzoneId",adverId);
-                netUtil.okHttp2Server2(chang_url,map);
+                map.put("goodsId", goods_id);
+                map.put("adzoneId", adverId);
+                netUtil.okHttp2Server2(chang_url, map);
                 break;
             case 0:
                 Toast.makeText(WebActivity.this, "绑定淘宝失败", Toast.LENGTH_SHORT).show();
@@ -279,13 +287,14 @@ public class WebActivity extends BaseActivity {
 
     /**
      * 获取淘口令
+     *
      * @param response
      */
     private void getTaoWord(String response) {
         TaoWordBean taoWordBean = new Gson().fromJson(response, TaoWordBean.class);
         int statusCode = taoWordBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
+            case 1:
                 taoWord = taoWordBean.getData();
                 LogUtil.e(taoWord);
                 break;
@@ -294,24 +303,23 @@ public class WebActivity extends BaseActivity {
     }
 
     /**
-     * @param response
-     * 解析数据
+     * @param response 解析数据
      */
     private void parseData(String response) {
         LogUtil.e("click_url = " + response);
         ChangeUrlBean changeUrlBean = new Gson().fromJson(response, ChangeUrlBean.class);
         int statusCode = changeUrlBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
+            case 1:
                 List<ChangeUrlBean.DataBean> data = changeUrlBean.getData();
-                if(data!=null && data.size()>0) {
+                if (data != null && data.size() > 0) {
                     click_url = changeUrlBean.getData().get(0).getClick_url();
                     //加载需要显示的网页
                     wvBanner.loadUrl(click_url);
                     handler.sendEmptyMessage(GET_URL);
                 }
                 break;
-            case 0 :
+            case 0:
                 Toast.makeText(WebActivity.this, changeUrlBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -326,6 +334,7 @@ public class WebActivity extends BaseActivity {
 
     /**
      * 绑定淘宝
+     *
      * @param s
      */
     public void bindTaobao(final String s) {
@@ -357,6 +366,7 @@ public class WebActivity extends BaseActivity {
 
     /**
      * 上传用户信息
+     *
      * @param s
      */
     public void uploadUserInfo(String s) {
@@ -398,9 +408,28 @@ public class WebActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.rl_share:
-                     shareWareUrl();
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP, Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_APN_SETTINGS};
+                        ActivityCompat.requestPermissions(WebActivity.this, mPermissionList, STORAGE_PERMISSIONS_REQUEST_CODE);
+                    } else {
+                        shareWareUrl();
+                    }
                     break;
             }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case STORAGE_PERMISSIONS_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    shareWareUrl();
+                } else {
+                    Toast.makeText(WebActivity.this, "请允许打开操作SDCard权限！！", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 
@@ -412,43 +441,55 @@ public class WebActivity extends BaseActivity {
         sharePopupwindow.setOnItemClickListenr(new SharePopupwindow.OnItemClickListenr() {
             @Override
             public void onQQClick() {
-                if(type!=null) {
+                if (type != null) {
                     if (type.equals("detail")) {
                         shareDiffSolfplamNews(SHARE_MEDIA.QQ);
-                    }else{
+                    } else {
                         showCopyDialog(SHARE_MEDIA.QQ);
                     }
-                }else{
+                } else {
                     showCopyDialog(SHARE_MEDIA.QQ);
                 }
             }
 
             @Override
             public void onWeixinClick() {
-                if(type!=null) {
+                if (type != null) {
                     if (type.equals("detail")) {
                         shareDiffSolfplamNews(SHARE_MEDIA.WEIXIN);
-                    }else{
+                    } else {
                         showCopyDialog(SHARE_MEDIA.WEIXIN);
                     }
-                }else{
+                } else {
                     showCopyDialog(SHARE_MEDIA.WEIXIN);
                 }
             }
 
             @Override
             public void onSinaClick() {
-                if(type!=null) {
+                if (type != null) {
                     if (type.equals("detail")) {
                         shareDiffSolfplamNews(SHARE_MEDIA.SINA);
-                    }else{
+                    } else {
                         showCopyDialog(SHARE_MEDIA.SINA);
                     }
-                }else{
+                } else {
                     showCopyDialog(SHARE_MEDIA.SINA);
                 }
             }
 
+            @Override
+            public void onWeixinFriendClick() {
+                if (type != null) {
+                    if (type.equals("detail")) {
+                        shareDiffSolfplamNews(SHARE_MEDIA.WEIXIN_CIRCLE);
+                    } else {
+                        showCopyDialog(SHARE_MEDIA.WEIXIN_CIRCLE);
+                    }
+                } else {
+                    showCopyDialog(SHARE_MEDIA.WEIXIN_CIRCLE);
+                }
+            }
         });
     }
 
@@ -468,11 +509,12 @@ public class WebActivity extends BaseActivity {
 
     /**
      * 分享淘口令链接到不同给的平台
+     *
      * @param platform
      */
-    private void shareDiffSolfplam(SHARE_MEDIA platform){
-        UMImage image = new UMImage(WebActivity.this,goods_img);//网络图片
-        UMImage thumb =  new UMImage(this, R.mipmap.juyoubang_logo);
+    private void shareDiffSolfplam(SHARE_MEDIA platform) {
+        UMImage image = new UMImage(WebActivity.this, goods_img);//网络图片
+        UMImage thumb = new UMImage(this, R.mipmap.juyoubang_logo);
         image.setThumb(thumb);
         UMWeb web = new UMWeb(click_url);
         web.setTitle(goods_title);//标题
@@ -484,13 +526,15 @@ public class WebActivity extends BaseActivity {
                 .setCallback(shareListener)//回调监听器
                 .share();
     }
+
     /**
      * 分享淘口令链接到不同给的平台
+     *
      * @param platform
      */
-    private void shareDiffSolfplamNews(SHARE_MEDIA platform){
-        UMImage image = new UMImage(WebActivity.this,news_img_url);//网络图片
-        UMImage thumb =  new UMImage(this, R.mipmap.juyoubang_logo);
+    private void shareDiffSolfplamNews(SHARE_MEDIA platform) {
+        UMImage image = new UMImage(WebActivity.this, news_img_url);//网络图片
+        UMImage thumb = new UMImage(this, R.mipmap.juyoubang_logo);
         image.setThumb(thumb);
         UMWeb web = new UMWeb(web_url);
         web.setTitle(newsTitle);//标题
@@ -505,23 +549,24 @@ public class WebActivity extends BaseActivity {
 
     /**
      * 剪切板剪切淘口令
+     *
      * @param paltform
      */
-    private void showCopyDialog(final SHARE_MEDIA paltform){
+    private void showCopyDialog(final SHARE_MEDIA paltform) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View inflate = View.inflate(this, R.layout.item_copy_taoword_dialog, null);
         TextView tvCopyContent = (TextView) inflate.findViewById(R.id.tv_copy_taoword_content);
         TextView tvCopyDismiss = (TextView) inflate.findViewById(R.id.tv_copy_taoword_dismiss);
         TextView tvCopyShare = (TextView) inflate.findViewById(R.id.tv_copy_taoword_share);
-        final String share_content = "商品名称:"+goods_title+"\n商品价格￥"+goods_price+"\n优惠券"+goods_coupon+"元"+"\n复制这条消息:"+taoWord+"\n去打开手机淘宝";
+        final String share_content = "商品名称:" + goods_title + "\n商品价格￥" + goods_price + "\n优惠券" + goods_coupon + "元" + "\n复制这条消息:" + taoWord + "\n去打开手机淘宝";
         tvCopyContent.setText(share_content);
-        final AlertDialog dialog = builder.setView(inflate)
+        dialog = builder.setView(inflate)
                 .show();
 
         tvCopyDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(dialog.isShowing()) {
+                if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
             }
@@ -529,7 +574,7 @@ public class WebActivity extends BaseActivity {
         tvCopyShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ClipboardManager cmb = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 cmb.setText(share_content);
                 shareDiffSolfplam(paltform);
             }
@@ -552,7 +597,16 @@ public class WebActivity extends BaseActivity {
          */
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            Toast.makeText(WebActivity.this,"成功了",Toast.LENGTH_LONG).show();
+            Toast.makeText(WebActivity.this, "分享成功", Toast.LENGTH_LONG).show();
+            if (dialog != null && dialog.isShowing()) {
+                    dialog.dismiss();
+            }
+            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+                sharePopupwindow.dismiss();
+            }
+            if(vShadow!=null) {
+                vShadow.setVisibility(View.GONE);
+            }
         }
 
         /**
@@ -562,7 +616,16 @@ public class WebActivity extends BaseActivity {
          */
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            Toast.makeText(WebActivity.this,"失败"+t.getMessage(),Toast.LENGTH_LONG).show();
+            Toast.makeText(WebActivity.this, "分享失败" + t.getMessage(), Toast.LENGTH_LONG).show();
+            if (dialog != null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+                sharePopupwindow.dismiss();
+            }
+            if(vShadow!=null) {
+                vShadow.setVisibility(View.GONE);
+            }
         }
 
         /**
@@ -571,14 +634,31 @@ public class WebActivity extends BaseActivity {
          */
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(WebActivity.this,"取消了",Toast.LENGTH_LONG).show();
-
+            Toast.makeText(WebActivity.this, "分享取消", Toast.LENGTH_LONG).show();
+            if (dialog != null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+                sharePopupwindow.dismiss();
+            }
+            if(vShadow!=null) {
+                vShadow.setVisibility(View.GONE);
+            }
         }
     };
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        wef.clear();
+        UMShareAPI.get(this).release();
+        if(alibcLogin!=null){
+            alibcLogin = null;
+        }
+        AlibcTradeSDK.destory();
+        if(handler!=null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
+        System.gc();
     }
 }

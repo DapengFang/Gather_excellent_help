@@ -1,13 +1,17 @@
 package com.gather_excellent_help.ui.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -20,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.baichuan.android.trade.AlibcTrade;
+import com.alibaba.baichuan.android.trade.AlibcTradeSDK;
 import com.alibaba.baichuan.android.trade.model.AlibcShowParams;
 import com.alibaba.baichuan.android.trade.model.OpenType;
 import com.alibaba.baichuan.android.trade.page.AlibcPage;
@@ -76,6 +81,7 @@ public class WebRecordActivity extends BaseActivity {
     private String goods_id = "";
     public static final int GET_URL = 1;
     private String which = "";
+    private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -109,7 +115,6 @@ public class WebRecordActivity extends BaseActivity {
     private String goods_title = "";
     private String taoWord;
     private DemoTradeCallback demoTradeCallback;
-    private WeakReference<DemoTradeCallback> wef = new WeakReference<DemoTradeCallback>(demoTradeCallback);
 
     private SharePopupwindow sharePopupwindow;
     private String openId = "";
@@ -117,6 +122,8 @@ public class WebRecordActivity extends BaseActivity {
     private String nick = "";
     private String adverId = "";
     private String goods_price = "";
+    private AlibcLogin alibcLogin;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,6 +248,7 @@ public class WebRecordActivity extends BaseActivity {
                     click_url = changeUrlBean.getData().get(0).getClick_url();
                     handler.sendEmptyMessage(GET_URL);
                     AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(click_url), alibcShowParams, alibcTaokeParams, null,demoTradeCallback);
+
                 } else {
                     AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, demoTradeCallback);
                 }
@@ -292,12 +300,32 @@ public class WebRecordActivity extends BaseActivity {
                         return;
                     }
                     if (!TextUtils.isEmpty(click_url)) {
-                        shareWareUrl();
+                        if(Build.VERSION.SDK_INT>=23){
+                            String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.CALL_PHONE,Manifest.permission.READ_LOGS,Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.SET_DEBUG_APP,Manifest.permission.SYSTEM_ALERT_WINDOW,Manifest.permission.GET_ACCOUNTS,Manifest.permission.WRITE_APN_SETTINGS};
+                            ActivityCompat.requestPermissions(WebRecordActivity.this,mPermissionList,STORAGE_PERMISSIONS_REQUEST_CODE);
+                        }else{
+                            shareWareUrl();   
+                        }
                     } else {
                         Toast.makeText(WebRecordActivity.this, "商品已下架，无法分享！", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case  STORAGE_PERMISSIONS_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    shareWareUrl();
+                }else{
+                    Toast.makeText(WebRecordActivity.this, "请允许打开操作SDCard权限！！", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 
@@ -329,6 +357,10 @@ public class WebRecordActivity extends BaseActivity {
                 showCopyDialog(SHARE_MEDIA.SINA);
             }
 
+            @Override
+            public void onWeixinFriendClick() {
+                showCopyDialog(	SHARE_MEDIA.WEIXIN_CIRCLE);
+            }
         });
     }
 
@@ -345,7 +377,7 @@ public class WebRecordActivity extends BaseActivity {
         TextView tvCopyShare = (TextView) inflate.findViewById(R.id.tv_copy_taoword_share);
         final String share_content = "商品名称:" + goods_title + "\n商品价格￥" + goods_price + "\n复制这条消息:" + taoWord + "\n去打开手机淘宝";
         tvCopyContent.setText(share_content);
-        final AlertDialog dialog = builder.setView(inflate)
+        dialog = builder.setView(inflate)
                 .show();
 
         tvCopyDismiss.setOnClickListener(new View.OnClickListener() {
@@ -425,7 +457,16 @@ public class WebRecordActivity extends BaseActivity {
          */
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            Toast.makeText(WebRecordActivity.this, "成功了", Toast.LENGTH_LONG).show();
+            Toast.makeText(WebRecordActivity.this, "分享成功", Toast.LENGTH_LONG).show();
+            if(dialog!=null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+                sharePopupwindow.dismiss();
+            }
+            if(vShadow!=null) {
+                vShadow.setVisibility(View.GONE);
+            }
         }
 
         /**
@@ -435,7 +476,16 @@ public class WebRecordActivity extends BaseActivity {
          */
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            Toast.makeText(WebRecordActivity.this, "失败" + t.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(WebRecordActivity.this, "分享失败" + t.getMessage(), Toast.LENGTH_LONG).show();
+            if(dialog!=null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+                sharePopupwindow.dismiss();
+            }
+            if(vShadow!=null) {
+                vShadow.setVisibility(View.GONE);
+            }
         }
 
         /**
@@ -444,8 +494,16 @@ public class WebRecordActivity extends BaseActivity {
          */
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(WebRecordActivity.this, "取消了", Toast.LENGTH_LONG).show();
-
+            Toast.makeText(WebRecordActivity.this, "分享取消", Toast.LENGTH_LONG).show();
+            if(dialog!=null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+                sharePopupwindow.dismiss();
+            }
+            if(vShadow!=null) {
+                vShadow.setVisibility(View.GONE);
+            }
         }
     };
 
@@ -456,7 +514,7 @@ public class WebRecordActivity extends BaseActivity {
      */
     public void bindTaobao(final String s) {
 
-        AlibcLogin alibcLogin = AlibcLogin.getInstance();
+        alibcLogin = AlibcLogin.getInstance();
 
         alibcLogin.showLogin(new AlibcLoginCallback() {
             @Override
@@ -525,7 +583,19 @@ public class WebRecordActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        wef.clear();
+        UMShareAPI.get(this).release();
+        if(demoTradeCallback!=null) {
+            demoTradeCallback = null;
+        }
+        if(alibcLogin!=null) {
+            alibcLogin = null;
+        }
+        AlibcTradeSDK.destory();
+        if(handler!=null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
+        System.gc();
     }
 }
 

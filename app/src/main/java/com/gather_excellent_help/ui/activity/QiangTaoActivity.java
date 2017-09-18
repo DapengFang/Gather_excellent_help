@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -75,6 +76,8 @@ public class QiangTaoActivity extends BaseActivity {
     private List<SearchTaobaoBean.DataBean> taobaodata;//要加载的数据
     private List<SearchTaobaoBean.DataBean> newData;//每次获取的数据
     private TaobaoWareListAdapter taobaoWareListAdapter;
+    private boolean hasMeasured;
+    private int childWidth;//时间选择孩子的宽度
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,10 +101,29 @@ public class QiangTaoActivity extends BaseActivity {
         final ArrayList<QiangTimeBean> timeData = loadTimeNavData();
         final TaoQiangTimeAdapter taoQiangTimeAdapter = new TaoQiangTimeAdapter(this, timeData);
         rcvHorizationalTimeNavigator.setAdapter(taoQiangTimeAdapter);
+
+        ViewTreeObserver vto = rcvHorizationalTimeNavigator.getViewTreeObserver();
+
+        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
+        {
+            public boolean onPreDraw()
+            {
+                if (hasMeasured == false)
+                {
+                    int childCount = rcvHorizationalTimeNavigator.getChildCount();
+                    if(childCount>0) {
+                        childWidth = rcvHorizationalTimeNavigator.getChildAt(0).getMeasuredWidth();
+                    }
+                    hasMeasured = true;
+                }
+                return true;
+            }
+        });
         taoQiangTimeAdapter.setOnItemclickListener(new TaoQiangTimeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
                 curr_click = position;
+                int lastCheckPosition = taoQiangTimeAdapter.getLastCheckPosition();
                 for (int i = 0; i < timeData.size(); i++) {
                     QiangTimeBean qiangTimeBean = timeData.get(i);
                     if (i == position) {
@@ -109,6 +131,14 @@ public class QiangTaoActivity extends BaseActivity {
                     } else {
                         qiangTimeBean.setCheck(false);
                     }
+                }
+                int distance = 0;
+                if(position>lastCheckPosition) {
+                    distance = (position-lastCheckPosition) * childWidth;
+                    rcvHorizationalTimeNavigator.scrollBy(distance,0);
+                }else{
+                    distance = (lastCheckPosition - position) * childWidth;
+                    rcvHorizationalTimeNavigator.scrollBy(-distance,0);
                 }
                 taoQiangTimeAdapter.notifyDataSetChanged();
                 QiangTimeBean qiangTimeBean = timeData.get(position);

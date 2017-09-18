@@ -86,54 +86,8 @@ public class HomeUpdateFragment extends LazyLoadFragment {
     private long time;
 
     private RushDownTimer rushDownTimer;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case TIME_DOWN:
-                    time -= 1000;
-                    rushDownTimer.calcuteDownTimer(time);
-                    qiangPresenter.setRushDownTimer(rushDownTimer);
-                    if (time <= 0) {
-                        handler.removeMessages(TIME_DOWN);
-                        return;
-                    }
-                    handler.sendEmptyMessageDelayed(TIME_DOWN, 1000);
-                    break;
-                case STOP_REFRESH:
-                    if (bannerRefresh == false && typeRefresh == false) {
-                        if (mIsRequestDataRefresh == true) {
-                            stopDataRefresh();
-                            setRefresh(mIsRequestDataRefresh);
-                        }
-                        handler.removeMessages(STOP_REFRESH);
-                        return;
-                    }
-                    handler.sendEmptyMessageDelayed(STOP_REFRESH, 200);
-                    break;
-                case TOTOP:
-                    if (mynested_scrollview != null) {
-                        mynested_scrollview.scrollTo(0, 0);
-                    }
-                    break;
-                case CHECK_NULL:
-                    if (civHomeGanner != null && gvHomeType != null
-                            && llHomeVipZera != null && llHomeQiangZera != null
-                            && llHomeGroupZera != null && rcvHomeActivity != null
-                            && rcvHomeActivityList != null && mynested_scrollview != null && ll_home_loadmore != null) {
-                        loadHomeUpdateData();
-                        handler.removeMessages(CHECK_NULL);
-                    } else {
-                        handler.sendEmptyMessageDelayed(CHECK_NULL, 500);
-                    }
+    private Handler handler;
 
-                    break;
-            }
-        }
-    };
-
-    private WeakReference<Handler> wef = new WeakReference<Handler>(handler);
     private QiangPresenter qiangPresenter;
     private VipPresenter vipPresenter;
     private TypePresenter typePresenter;
@@ -150,9 +104,57 @@ public class HomeUpdateFragment extends LazyLoadFragment {
 
     @Override
     public void initData() {
-        handler.removeMessages(TIME_DOWN);
-        handler.removeMessages(STOP_REFRESH);
-        handler.sendEmptyMessage(CHECK_NULL);
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case TIME_DOWN:
+                        time -= 1000;
+                        rushDownTimer.calcuteDownTimer(time);
+                        qiangPresenter.setRushDownTimer(rushDownTimer);
+                        if (time <= 0) {
+                            handler.removeMessages(TIME_DOWN);
+                            return;
+                        }
+                        handler.sendEmptyMessageDelayed(TIME_DOWN, 1000);
+                        break;
+                    case STOP_REFRESH:
+                        if (bannerRefresh == false && typeRefresh == false) {
+                            if (mIsRequestDataRefresh == true) {
+                                stopDataRefresh();
+                                setRefresh(mIsRequestDataRefresh);
+                            }
+                            handler.removeMessages(STOP_REFRESH);
+                            return;
+                        }
+                        handler.sendEmptyMessageDelayed(STOP_REFRESH, 200);
+                        break;
+                    case TOTOP:
+                        if (mynested_scrollview != null) {
+                            mynested_scrollview.scrollTo(0, 0);
+                        }
+                        break;
+                    case CHECK_NULL:
+                        if (civHomeGanner != null && gvHomeType != null
+                                && llHomeVipZera != null && llHomeQiangZera != null
+                                && llHomeGroupZera != null && rcvHomeActivity != null
+                                && rcvHomeActivityList != null && mynested_scrollview != null && ll_home_loadmore != null) {
+                            loadHomeUpdateData();
+                            handler.removeMessages(CHECK_NULL);
+                        } else {
+                            handler.sendEmptyMessageDelayed(CHECK_NULL, 500);
+                        }
+
+                        break;
+                }
+            }
+        };
+        if(handler!=null) {
+            handler.removeMessages(TIME_DOWN);
+            handler.removeMessages(STOP_REFRESH);
+            handler.sendEmptyMessageDelayed(CHECK_NULL,600);
+        }
     }
 
     /**
@@ -181,7 +183,10 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                 }
                 time = t;
                 rushDownTimer = new RushDownTimer(getContext());
-                handler.sendEmptyMessage(TIME_DOWN);
+                if(handler!=null) {
+                    handler.removeMessages(TIME_DOWN);
+                    handler.sendEmptyMessage(TIME_DOWN);
+                }
             }
 
             @Override
@@ -218,7 +223,9 @@ public class HomeUpdateFragment extends LazyLoadFragment {
             }
         });
 
-        handler.sendEmptyMessageDelayed(TOTOP, 3000);
+        if(handler!=null) {
+            handler.sendEmptyMessageDelayed(TOTOP, 3000);
+        }
     }
 
     /**
@@ -230,7 +237,9 @@ public class HomeUpdateFragment extends LazyLoadFragment {
             @Override
             public void stopSuccessRefresh() {
                 bannerRefresh = false;
-                handler.sendEmptyMessage(STOP_REFRESH);
+                if(handler!=null) {
+                    handler.sendEmptyMessage(STOP_REFRESH);
+                }
             }
 
             @Override
@@ -272,8 +281,11 @@ public class HomeUpdateFragment extends LazyLoadFragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
-        handler.removeCallbacksAndMessages(null);
-        wef.clear();
+        if(handler!=null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
+
     }
 
     private void setupSwipeRefresh(View view) {
@@ -346,6 +358,7 @@ public class HomeUpdateFragment extends LazyLoadFragment {
     protected void stopLoad() {
         if(handler!=null) {
             handler.removeCallbacksAndMessages(null);
+            handler = null;
         }
     }
 }

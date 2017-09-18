@@ -144,4 +144,10 @@ public class TaobaoShaixuanPopupwindow extends PopupWindow {
     public void setOnPopupClickListener(OnPopupClickListener onPopupClickListener) {
         this.onPopupClickListener = onPopupClickListener;
     }
+
+    public void setNoChecked(){
+        if(cb_shaixuan_choice!=null) {
+            cb_shaixuan_choice.setChecked(false);
+        }
+    }
 }

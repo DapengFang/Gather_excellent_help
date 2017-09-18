@@ -106,7 +106,7 @@ public class TypeFragment extends LazyLoadFragment {
 
     private boolean isLoadMore = false;
     private int page = 1;
-    private Map<String,String> map;
+    private Map<String, String> map;
     private LinearLayoutManager layoutManager;
     private int lastVisibleItem;
     private List<ActivityListBean.DataBean> activityData;
@@ -114,24 +114,7 @@ public class TypeFragment extends LazyLoadFragment {
     private TypeActivityListAdapter typeActivityListAdapter;
     public static final int CHECK_NULL = 4; //加载数据的标识
 
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case CHECK_NULL:
-                    if(rcvTypeShow!=null && swipeRefresh!=null
-                            && tvTopTitleName!=null &&
-                            rlExit!=null) {
-                        loadTypeData();
-                        handler.removeMessages(CHECK_NULL);
-                    }else{
-                       handler.sendEmptyMessageDelayed(CHECK_NULL,500);
-                    }
-                    break;
-            }
-        }
-    };
+    private Handler handler;
 
     /**
      * @return 布局对象
@@ -149,7 +132,31 @@ public class TypeFragment extends LazyLoadFragment {
     public void initData() {
         netUtil = new NetUtil();
         netUtil2 = new NetUtil();
-        handler.sendEmptyMessage(CHECK_NULL);
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case CHECK_NULL:
+                        if (rcvTypeShow != null && swipeRefresh != null
+                                && tvTopTitleName != null &&
+                                rlExit != null) {
+                            loadTypeData();
+                            if (handler != null) {
+                                handler.removeMessages(CHECK_NULL);
+                            }
+                        } else {
+                            if (handler != null) {
+                                handler.sendEmptyMessageDelayed(CHECK_NULL, 500);
+                            }
+                        }
+                        break;
+                }
+            }
+        };
+        if (handler != null) {
+            handler.sendEmptyMessageDelayed(CHECK_NULL,600);
+        }
     }
 
     /**
@@ -164,8 +171,8 @@ public class TypeFragment extends LazyLoadFragment {
         rlExit.setVisibility(View.GONE);
         getNavigatorData();
         map = new HashMap<>();
-        map.put("pageSize",pageSize);
-        map.put("pageIndex",pageIndex);
+        map.put("pageSize", pageSize);
+        map.put("pageIndex", pageIndex);
         netUtil2.okHttp2Server2(ware_url, map);
         netUtil2.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
@@ -232,38 +239,41 @@ public class TypeFragment extends LazyLoadFragment {
                         ll_type_loadmore.getChildAt(0).setVisibility(View.VISIBLE);
                         TextView tv = (TextView) ll_type_loadmore.getChildAt(1);
                         tv.setText("正在加载中");
+                        if (handler == null) {
+                            return;
+                        }
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
 
-                                if(currData.size()<Integer.parseInt(pageSize)) {
+                                if (currData.size() < Integer.parseInt(pageSize)) {
                                     ll_type_loadmore.setVisibility(View.VISIBLE);
                                     ll_type_loadmore.getChildAt(0).setVisibility(View.GONE);
                                     TextView tv = (TextView) ll_type_loadmore.getChildAt(1);
                                     tv.setText("没有更多的数据了");
-                                    if(ll_type_loadmore!=null) {
+                                    if (ll_type_loadmore != null) {
                                         ll_type_loadmore.postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                if(ll_type_loadmore!=null) {
+                                                if (ll_type_loadmore != null) {
                                                     ll_type_loadmore.setVisibility(View.GONE);
                                                 }
                                             }
-                                        },1000);
+                                        }, 1000);
                                     }
-                                }else{
+                                } else {
                                     pageIndex = String.valueOf(page);
                                     //联网请求数据
-                                    if(isAll) {
+                                    if (isAll) {
                                         Map<String, String> map = new HashMap<>();
                                         map.put("id", type_id);
-                                        map.put("pageSize",pageSize);
-                                        map.put("pageIndex",pageIndex);
+                                        map.put("pageSize", pageSize);
+                                        map.put("pageIndex", pageIndex);
                                         netUtil2.okHttp2Server2(ware_url, map);
-                                    }else{
+                                    } else {
                                         Map<String, String> map = new HashMap<>();
-                                        map.put("pageSize",pageSize);
-                                        map.put("pageIndex",pageIndex);
+                                        map.put("pageSize", pageSize);
+                                        map.put("pageIndex", pageIndex);
                                         netUtil2.okHttp2Server2(ware_url, map);
                                     }
                                 }
@@ -293,19 +303,19 @@ public class TypeFragment extends LazyLoadFragment {
                 if (rcvTypeShow == null) {
                     return;
                 }
-                if(isLoadMore) {
+                if (isLoadMore) {
                     page++;
-                    LogUtil.e("page == "+page);
+                    LogUtil.e("page == " + page);
                     currData = activityListBean.getData();
                     activityData.addAll(currData);
                     typeActivityListAdapter.notifyDataSetChanged();
-                }else{
+                } else {
                     currData = activityListBean.getData();
                     activityData = currData;
                     typeActivityListAdapter = new TypeActivityListAdapter(getContext(), activityData);
                     rcvTypeShow.setAdapter(typeActivityListAdapter);
                     page = 2;
-                    if(currData.size() == 0) {
+                    if (currData.size() == 0) {
                         Toast.makeText(getContext(), "该条目下没有商品信息。", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -322,26 +332,26 @@ public class TypeFragment extends LazyLoadFragment {
                         String goods_title = dataBean.getTitle();
                         double sell_price = dataBean.getSell_price();
                         int couponsPrice = dataBean.getCouponsPrice();
-                        if(couponsPrice>0) {
-                            if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
+                        if (couponsPrice > 0) {
+                            if (couponsUrl != null && !TextUtils.isEmpty(couponsUrl)) {
                                 Intent intent = new Intent(getContext(), WebActivity.class);
-                                intent.putExtra("web_url",couponsUrl);
+                                intent.putExtra("web_url", couponsUrl);
                                 intent.putExtra("url", link_url);
                                 intent.putExtra("goods_id", goods_id);
                                 intent.putExtra("goods_img", goods_img);
                                 intent.putExtra("goods_title", goods_title);
-                                intent.putExtra("goods_price", df.format(sell_price)+"");
+                                intent.putExtra("goods_price", df.format(sell_price) + "");
                                 intent.putExtra("goods_coupon", String.valueOf(couponsPrice));
                                 intent.putExtra("goods_coupon_url", couponsUrl);
                                 getContext().startActivity(intent);
                             }
-                        } else{
+                        } else {
                             Intent intent = new Intent(getContext(), WebRecordActivity.class);
                             intent.putExtra("url", link_url);
                             intent.putExtra("goods_id", goods_id);
                             intent.putExtra("goods_img", goods_img);
                             intent.putExtra("goods_title", goods_title);
-                            intent.putExtra("goods_price", df.format(sell_price)+"");
+                            intent.putExtra("goods_price", df.format(sell_price) + "");
                             getContext().startActivity(intent);
                         }
 
@@ -404,8 +414,8 @@ public class TypeFragment extends LazyLoadFragment {
                             pageIndex = String.valueOf(page);
                             Map<String, String> map = new HashMap<>();
                             map.put("id", type_id);
-                            map.put("pageSize",pageSize);
-                            map.put("pageIndex",pageIndex);
+                            map.put("pageSize", pageSize);
+                            map.put("pageIndex", pageIndex);
                             netUtil2.okHttp2Server2(ware_url, map);
                         }
                     });
@@ -422,8 +432,8 @@ public class TypeFragment extends LazyLoadFragment {
                             pageIndex = String.valueOf(page);
                             Map<String, String> map = new HashMap<>();
                             map.put("id", type_id);
-                            map.put("pageSize",pageSize);
-                            map.put("pageIndex",pageIndex);
+                            map.put("pageSize", pageSize);
+                            map.put("pageIndex", pageIndex);
                             netUtil2.okHttp2Server2(ware_url, map);
                         }
 
@@ -438,16 +448,16 @@ public class TypeFragment extends LazyLoadFragment {
                             pageIndex = String.valueOf(page);
                             Map<String, String> map = new HashMap<>();
                             map.put("id", type_id);
-                            map.put("pageSize",pageSize);
-                            map.put("pageIndex",pageIndex);
+                            map.put("pageSize", pageSize);
+                            map.put("pageIndex", pageIndex);
                             netUtil2.okHttp2Server2(ware_url, map);
                         }
                     });
 
                     if (mIsRequestDataRefresh == true) {
                         map = new HashMap<>();
-                        map.put("pageSize",pageSize);
-                        map.put("pageIndex",pageIndex);
+                        map.put("pageSize", pageSize);
+                        map.put("pageIndex", pageIndex);
                         netUtil2.okHttp2Server2(ware_url, map);
                     }
                 }
@@ -531,8 +541,9 @@ public class TypeFragment extends LazyLoadFragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
+            handler = null;
         }
     }
 
@@ -557,7 +568,6 @@ public class TypeFragment extends LazyLoadFragment {
     }
 
 
-
     public void onEvent(AnyEvent event) {
         if (event.getType() == EventType.EVENT_LOGIN) {
             String msg = "onEventMainThread收到了消息：" + event.getMessage();
@@ -568,8 +578,9 @@ public class TypeFragment extends LazyLoadFragment {
 
     @Override
     protected void stopLoad() {
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
+            handler = null;
         }
     }
 }

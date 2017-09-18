@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.baichuan.android.trade.AlibcTradeSDK;
 import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
 import com.alibaba.baichuan.trade.biz.login.AlibcLoginCallback;
 import com.gather_excellent_help.R;
@@ -30,6 +31,7 @@ import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +66,7 @@ public class LoginActivity extends Activity {
     private String avatarUrl;
     private String nick;
     private String which;
+    private AlibcLogin alibcLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,7 +216,7 @@ public class LoginActivity extends Activity {
      */
     public void bindTaobao(final String s) {
 
-        AlibcLogin alibcLogin = AlibcLogin.getInstance();
+        alibcLogin = AlibcLogin.getInstance();
         alibcLogin.showLogin(new AlibcLoginCallback() {
             @Override
             public void onSuccess(int i) {
@@ -254,4 +257,9 @@ public class LoginActivity extends Activity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AlibcTradeSDK.destory();
+    }
 }

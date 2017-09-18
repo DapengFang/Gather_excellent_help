@@ -55,25 +55,7 @@ public class GoodscartFragment extends LazyLoadFragment {
 
     public static final int CHECK_NULL = 4; //加载数据的标识
 
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case CHECK_NULL:
-                    if(rlNewsSearchBefore!=null && llNewsSearchAfter!=null
-                            && rlEditTextExit!=null && flNewsFrag != null
-                            && rlTaobaoSousuo!=null && etTaobaoSearchContent!=null
-                            && rcvNewsHorizational!=null) {
-                        loadNewsData();
-                        handler.removeMessages(CHECK_NULL);
-                    }else{
-                        handler.sendEmptyMessageDelayed(CHECK_NULL,500);
-                    }
-                    break;
-            }
-        }
-    };
+    private Handler handler;
 
 
     @Override
@@ -84,7 +66,33 @@ public class GoodscartFragment extends LazyLoadFragment {
 
     @Override
     public void initData() {
-        handler.sendEmptyMessage(CHECK_NULL);
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case CHECK_NULL:
+                        if(rlNewsSearchBefore!=null && llNewsSearchAfter!=null
+                                && rlEditTextExit!=null && flNewsFrag != null
+                                && rlTaobaoSousuo!=null && etTaobaoSearchContent!=null
+                                && rcvNewsHorizational!=null) {
+                            loadNewsData();
+                            if(handler!=null) {
+                                handler.removeMessages(CHECK_NULL);
+                            }
+                        }else{
+                            if(handler!=null) {
+                                handler.sendEmptyMessageDelayed(CHECK_NULL,500);
+                            }
+                        }
+                        break;
+                }
+            }
+        };
+        if(handler!=null) {
+            handler.sendEmptyMessageDelayed(CHECK_NULL,600);
+        }
+
     }
 
     /**
@@ -174,6 +182,7 @@ public class GoodscartFragment extends LazyLoadFragment {
         ButterKnife.unbind(this);
         if(handler!=null) {
             handler.removeCallbacksAndMessages(null);
+            handler = null;
         }
     }
 
@@ -181,6 +190,7 @@ public class GoodscartFragment extends LazyLoadFragment {
     protected void stopLoad() {
         if(handler!=null) {
             handler.removeCallbacksAndMessages(null);
+            handler = null;
         }
     }
 

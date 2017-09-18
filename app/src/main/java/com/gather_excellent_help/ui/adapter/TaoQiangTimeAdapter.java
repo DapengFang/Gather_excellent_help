@@ -21,6 +21,7 @@ public class TaoQiangTimeAdapter extends RecyclerView.Adapter<TaoQiangTimeAdapte
 
     private Context context;
     private ArrayList<QiangTimeBean> data;
+    private int lastCheck;
 
     public TaoQiangTimeAdapter(Context context, ArrayList<QiangTimeBean> data) {
         this.context = context;
@@ -41,6 +42,7 @@ public class TaoQiangTimeAdapter extends RecyclerView.Adapter<TaoQiangTimeAdapte
             holder.ll_qiang_tao_show.setBackgroundColor(Color.parseColor("#fa2d3b"));
             holder.tv_qiang_tao_qiang.setTextColor(Color.WHITE);
             holder.tv_qiang_tao_nav.setTextColor(Color.WHITE);
+            lastCheck = position;
         }else{
             holder.ll_qiang_tao_show.setBackgroundColor(Color.parseColor("#31353b"));
             holder.tv_qiang_tao_qiang.setTextColor(Color.parseColor("#9d9d9d"));
@@ -92,5 +94,8 @@ public class TaoQiangTimeAdapter extends RecyclerView.Adapter<TaoQiangTimeAdapte
 
     public void setOnItemclickListener(OnItemClickListener onItemclickListener) {
         this.onItemclickListener = onItemclickListener;
+    }
+    public int getLastCheckPosition(){
+        return lastCheck;
     }
 }

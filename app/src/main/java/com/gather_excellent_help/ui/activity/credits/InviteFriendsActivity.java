@@ -1,9 +1,12 @@
 package com.gather_excellent_help.ui.activity.credits;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -11,10 +14,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.InviteFriendBean;
 import com.gather_excellent_help.ui.activity.LoginActivity;
+import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.activity.wards.SeeWardsActivity;
 import com.gather_excellent_help.ui.activity.wards.WardsStatisticsActivity;
@@ -24,6 +29,7 @@ import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
+import com.tencent.mm.opensdk.constants.Build;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
@@ -31,9 +37,11 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +67,8 @@ public class InviteFriendsActivity extends BaseActivity {
     private NetUtil netUtil;
     private Map<String,String> map;
     private String share_url;
+
+    private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
 
 
     @Override
@@ -139,7 +149,12 @@ public class InviteFriendsActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.ll_invite_firend:
-                    showWeixin();
+                    if(android.os.Build.VERSION.SDK_INT>=23){
+                        String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.CALL_PHONE,Manifest.permission.READ_LOGS,Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.SET_DEBUG_APP,Manifest.permission.SYSTEM_ALERT_WINDOW,Manifest.permission.GET_ACCOUNTS,Manifest.permission.WRITE_APN_SETTINGS};
+                        ActivityCompat.requestPermissions(InviteFriendsActivity.this,mPermissionList,STORAGE_PERMISSIONS_REQUEST_CODE);
+                    }else{
+                        showWeixin();
+                    }
                     break;
                 case R.id.ll_see_ward:
                     toSeeWards();
@@ -148,6 +163,20 @@ public class InviteFriendsActivity extends BaseActivity {
                     toStatisticsWards();
                     break;
             }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case STORAGE_PERMISSIONS_REQUEST_CODE :
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    showWeixin();
+                }else{
+                    Toast.makeText(InviteFriendsActivity.this, "请允许打开操作SDCard权限！！", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 
@@ -179,10 +208,6 @@ public class InviteFriendsActivity extends BaseActivity {
                     .setCallback(shareListener)//回调监听器
                     .share();
         }
-    }
-
-    private String buildTransaction(final String type) {
-        return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
     }
 
     private UMShareListener shareListener = new UMShareListener() {
@@ -225,4 +250,10 @@ public class InviteFriendsActivity extends BaseActivity {
         }
     };
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UMShareAPI.get(this).release();
+    }
 }

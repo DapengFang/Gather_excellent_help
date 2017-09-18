@@ -68,6 +68,7 @@ public class OrderActivity extends BaseActivity {
     private FullyLinearLayoutManager fullyLinearLayoutManager;
     private int lastVisibleItem;
     private List<OrderAllBean.DataBean> allData;
+    private Handler handler = new Handler();
 
 
     @Override
@@ -144,7 +145,7 @@ public class OrderActivity extends BaseActivity {
                             .getItemCount()) {
                         isLoaderMore = true;
                         page++;
-                        new Handler().postDelayed(new Runnable() {
+                        handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 pageIndex = String.valueOf(page);
@@ -286,4 +287,12 @@ public class OrderActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(handler!=null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
+    }
 }
