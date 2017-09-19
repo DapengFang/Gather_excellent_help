@@ -1,0 +1,19 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="push.jerry.cn.scan">
+
+    <application
+        android:allowBackup="false"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+
+        <!-- //判断权限的页面 -->
+        <activity android:name=".permisson.AcpActivity" />
+
+        <activity android:name=".CaptureActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait">
+        </activity>
+
+    </application>
+
+</manifest>

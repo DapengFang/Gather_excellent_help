@@ -61,6 +61,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 import okhttp3.Call;
+import push.jerry.cn.scan.CaptureActivity;
+import push.jerry.cn.scan.permisson.ToastUtil;
 
 /**
  * Created by wuxin on 2017/7/7.
@@ -305,6 +307,7 @@ public class MineFragment extends LazyLoadFragment {
         llMineUserBack.setOnClickListener(new MyOnClickListener());
         civMeHeadIcon.setOnClickListener(new MyOnClickListener());
         llLowerMemberStatics.setOnClickListener(new MyOnClickListener());
+        ivMePersonLingdang.setOnClickListener(new MyOnClickListener());
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -641,6 +644,15 @@ public class MineFragment extends LazyLoadFragment {
                     break;
                 case R.id.ll_lower_member_statics:
                     toLowerMemberStatics();
+                    break;
+
+                case R.id.iv_me_person_lingdang:
+                    CaptureActivity.open(getContext(), new CaptureActivity.OnScanResultListener() {
+                        @Override
+                        public void onResult(String result) {
+                            ToastUtil.show(getContext(), result);
+                        }
+                    });
                     break;
             }
         }

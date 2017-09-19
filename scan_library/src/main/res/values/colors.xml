@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="scan_possible_result_points">#c0ffbd21</color>
+    <color name="scan_white">#ffffff</color>
+</resources>
