@@ -668,6 +668,12 @@ public class TaobaoFragment extends LazyLoadFragment {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
+        if(taobaoShaixuanPopupwindow!=null && taobaoShaixuanPopupwindow.isShowing()) {
+            taobaoShaixuanPopupwindow.dismiss();
+        }
+        if(taobaoZonghePopupwindow!=null && taobaoZonghePopupwindow.isShowing()) {
+            taobaoZonghePopupwindow.dismiss();
+        }
     }
 
     public void onEvent(AnyEvent event) {

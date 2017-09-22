@@ -490,6 +490,10 @@ public class SetActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if (alertDialog.isShowing()) {
+                    if(countDownTimer!=null) {
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                    }
                     alertDialog.dismiss();
                 }
             }
@@ -515,7 +519,12 @@ public class SetActivity extends BaseActivity {
                 }
                 if (smscode.equals(sms_code_s)) {
                     bindPay(account, name);
+                    if(countDownTimer!=null) {
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                    }
                     alertDialog.dismiss();
+
                 } else {
                     Toast.makeText(SetActivity.this, "短信验证码不正确！", Toast.LENGTH_SHORT).show();
                     return;
@@ -651,12 +660,18 @@ public class SetActivity extends BaseActivity {
         map.put("sms_code", userPhone);
         map.put("type", "3");
         netUtils.okHttp2Server2(sms_url, map);
-        countDownTimer.start();
+        if(countDownTimer!=null) {
+            countDownTimer.start();
+        }
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(countDownTimer!=null) {
+            countDownTimer.cancel();
+            countDownTimer = null;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.gather_excellent_help.presenter.homepresenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -36,7 +37,7 @@ import okhttp3.Call;
  */
 
 public class VipPresenter extends BasePresenter {
-    private Context context;
+    private Activity context;
     private LinearLayout llHomeVipZera;
     private RelativeLayout rl_item_laod_more;
     private TextView tv_item_home_title;
@@ -49,7 +50,7 @@ public class VipPresenter extends BasePresenter {
     private int shopType;
     private boolean isToggle;
 
-    public VipPresenter(Context context, LinearLayout llHomeVipZera) {
+    public VipPresenter(Activity context, LinearLayout llHomeVipZera) {
         this.context = context;
         this.llHomeVipZera = llHomeVipZera;
         initView();
@@ -167,11 +168,13 @@ public class VipPresenter extends BasePresenter {
                       tv_vip_ware_title.setText(title);
                   }
                   if(img_url!=null && iv_vip_ware_img!=null) {
-                      Glide.with(context).load(img_url+"_320x320q90.jpg")
-                              .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
-                              .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
-                              .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
-                              .into(iv_vip_ware_img);//请求成功后把图片设置到的控件
+                      if(context!=null && !context.isFinishing()) {
+                          Glide.with(context).load(img_url+"_320x320q90.jpg")
+                                  .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                                  .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                                  .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                                  .into(iv_vip_ware_img);//请求成功后把图片设置到的控件
+                      }
                   }
                   if(tv_vip_ware_coupon!=null) {
                       tv_vip_ware_coupon.setText("领券减"+couponsPrice);

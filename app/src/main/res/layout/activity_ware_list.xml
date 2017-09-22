@@ -259,7 +259,7 @@
                     android:id="@+id/tv_ware_list_rongliang"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="容量"
+                    android:text="规格"
                     android:textColor="#333333"
                     android:textSize="14sp" />
 

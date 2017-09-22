@@ -137,7 +137,9 @@ public class ShopBrandUpdateActivity extends BaseActivity {
                     if (!isExpand) {
                         brandData = new ArrayList<>();
                         for (int i = 0; i < 8; i++) {
-                            brandData.add(newDatas.get(i));
+                            if(newDatas!=null && newDatas.size()>0) {
+                                brandData.add(newDatas.get(i));
+                            }
                         }
                         ivMerchantBrandArraw.setImageResource(R.drawable.left_black_arraw);
                     } else {

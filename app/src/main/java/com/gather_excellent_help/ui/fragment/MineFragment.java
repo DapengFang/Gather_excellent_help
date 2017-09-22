@@ -33,7 +33,9 @@ import com.gather_excellent_help.ui.activity.AlipayManagerActivity;
 import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.activity.OrderActivity;
 import com.gather_excellent_help.ui.activity.RuleHelpActivity;
+import com.gather_excellent_help.ui.activity.ScannerWebActivity;
 import com.gather_excellent_help.ui.activity.SetActivity;
+import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.credits.AccountDetailAvtivity;
 import com.gather_excellent_help.ui.activity.credits.BackRebateActivity;
 import com.gather_excellent_help.ui.activity.credits.ExtractCreditsActivity;
@@ -647,12 +649,7 @@ public class MineFragment extends LazyLoadFragment {
                     break;
 
                 case R.id.iv_me_person_lingdang:
-                    CaptureActivity.open(getContext(), new CaptureActivity.OnScanResultListener() {
-                        @Override
-                        public void onResult(String result) {
-                            ToastUtil.show(getContext(), result);
-                        }
-                    });
+
                     break;
             }
         }

@@ -75,13 +75,13 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".ui.base.BaseFragmentActivity" />
 
-        <!-- wechat callback-->
+        <!-- wechat callback -->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -211,7 +211,9 @@
         <activity
             android:name=".ui.activity.shop.ShopInfoUpadateActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+
+        </activity>
         <activity
             android:name=".ui.activity.shop.ShopBrandUpdateActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -230,18 +232,19 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
-        <activity android:name=".ui.activity.pswset.UserPswsetActivity"
+        <activity
+            android:name=".ui.activity.pswset.UserPswsetActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|stateUnchanged" >
-
-        </activity>
-        <activity android:name=".ui.activity.pswset.UserPswCompleteActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged"></activity>
+        <activity
+            android:name=".ui.activity.pswset.UserPswCompleteActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|stateUnchanged" >
-
-        </activity>
+            android:windowSoftInputMode="stateHidden|stateUnchanged"></activity>
+        <activity android:name=".ui.activity.ScannerWebActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

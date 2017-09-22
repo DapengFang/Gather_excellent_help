@@ -12,6 +12,7 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.HomeBannerBean;
 import com.gather_excellent_help.presenter.BasePresenter;
+import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.widget.CarouselImageView;
 import com.gather_excellent_help.utils.LogUtil;
@@ -27,7 +28,7 @@ import okhttp3.Call;
  * Created by Dapeng Fang on 2017/8/21.
  */
 
-public class BannerPresenter  extends BasePresenter{
+public class BannerPresenter extends BasePresenter {
 
     private Context context;
     private CarouselImageView civHomeGanner;
@@ -53,7 +54,7 @@ public class BannerPresenter  extends BasePresenter{
     }
 
 
-    public class MyOnServerResponseListener implements NetUtil.OnServerResponseListener{
+    public class MyOnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
@@ -63,7 +64,7 @@ public class BannerPresenter  extends BasePresenter{
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-           LogUtil.e(call.toString()+"----"+e.getMessage());
+            LogUtil.e(call.toString() + "----" + e.getMessage());
             onStopRefreshListener.stopFailRefresh();
         }
     }
@@ -75,6 +76,7 @@ public class BannerPresenter  extends BasePresenter{
      * @param civHomeGanner
      */
     private void parseData(String response, CarouselImageView civHomeGanner) {
+        LogUtil.e("banner-------" + response);
         Gson gson = new Gson();
         HomeBannerBean homeBannerBean = gson.fromJson(response, HomeBannerBean.class);
         int statusCode = homeBannerBean.getStatusCode();
@@ -101,16 +103,26 @@ public class BannerPresenter  extends BasePresenter{
         CarouselImageView.ImageCycleViewListener mAdCycleViewListener = new CarouselImageView.ImageCycleViewListener() {
             @Override
             public void onImageClick(int position, View imageView) {
+                int banner_activity_id = data.get(position % data.size()).getBanner_activity_id();
                 String link_url = data.get(position % data.size()).getLink_url();
                 String goods_id = data.get(position % data.size()).getProductId();
                 String goods_img = Url.IMG_URL + data.get(position % data.size()).getImg_url();
                 String goods_title = data.get(position % data.size()).getTitle();
-                Intent intent = new Intent(context, WebRecordActivity.class);
-                intent.putExtra("url", link_url);
-                intent.putExtra("goods_id", goods_id);
-                intent.putExtra("goods_img", goods_img);
-                intent.putExtra("goods_title", goods_title);
-                context.startActivity(intent);
+                Intent intent = null;
+                if (banner_activity_id > 0) {
+                    intent = new Intent(context, WareListActivity.class);
+                    intent.putExtra("activity_id", String.valueOf(banner_activity_id));
+                    intent.putExtra("content", "activity");
+                    context.startActivity(intent);
+                } else {
+                    intent = new Intent(context, WebRecordActivity.class);
+                    intent.putExtra("url", link_url);
+                    intent.putExtra("goods_id", goods_id);
+                    intent.putExtra("goods_img", goods_img);
+                    intent.putExtra("goods_title", goods_title);
+                    context.startActivity(intent);
+                }
+
             }
 
             @Override
@@ -126,8 +138,9 @@ public class BannerPresenter  extends BasePresenter{
 
     private OnStopRefreshListener onStopRefreshListener;
 
-    public interface  OnStopRefreshListener{
+    public interface OnStopRefreshListener {
         void stopSuccessRefresh();
+
         void stopFailRefresh();
     }
 

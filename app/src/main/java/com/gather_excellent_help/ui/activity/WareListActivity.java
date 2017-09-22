@@ -107,7 +107,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
     private List<ListBean.DataBean> conditionData; //查询条件数据
     private List<SearchWareBean.DataBean> wareData;
     private int page = 1;//显示第几页
-    private static Handler handler = new Handler();
+    private Handler handler = new Handler();
 
     private String type_id;
     private String ware_url = Url.BASE_URL + "CategoryGoodList.aspx";
@@ -252,6 +252,12 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                         brandId = "";
                         capacity = "";
                         type_id = "";
+                        if(tvWareListRongliang!=null) {
+                            tvWareListRongliang.setText("规格");
+                        }
+                        if(tvWareListPingpai!=null) {
+                            tvWareListPingpai.setText("品牌");
+                        }
                         sousuoStr = "isHomeSou";
                         map = new HashMap<>();
                         map.put("key_words", keyword);
@@ -422,12 +428,14 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                                         showLoadNoMore();
                                     } else {
                                         showLoadMore();
-                                        handler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                searchWareList();
-                                            }
-                                        }, 500);
+                                        if(handler!=null) {
+                                            handler.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    searchWareList();
+                                                }
+                                            }, 500);
+                                        }
                                     }
                                 } else {
                                     if (sousuoStr != null && !TextUtils.isEmpty(sousuoStr)) {
@@ -438,12 +446,14 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                                             showLoadNoMore();
                                         } else {
                                             showLoadMore();
-                                            handler.postDelayed(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    searchWareList();
-                                                }
-                                            }, 500);
+                                            if(handler!=null) {
+                                                handler.postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        searchWareList();
+                                                    }
+                                                }, 500);
+                                            }
                                         }
                                     }
                                 }
@@ -512,22 +522,26 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
     private void showPopMenu(List<ListBean.DataBean> data) {
         if (typeSelectorPopupwindow == null) {
             typeSelectorPopupwindow = new TypeSelectorPopupwindow(WareListActivity.this, data);
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showPopupwindow();
-                }
-            },1000);
+            if(handler!=null) {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showPopupwindow();
+                    }
+                },300);
+            }
         } else if (typeSelectorPopupwindow != null
                 && typeSelectorPopupwindow.isShowing()) {
             typeSelectorPopupwindow.dismiss();
         } else {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    typeSelectorPopupwindow.showAsDropDown(llWareListPingpai, 5, 5);
-                }
-            },1000);
+            if(handler!=null) {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        typeSelectorPopupwindow.showAsDropDown(llWareListPingpai, 5, 5);
+                    }
+                },300);
+            }
         }
 
     }
@@ -564,7 +578,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     brandId = "";
                     capacity = "";
                     tvWareListPingpai.setText("品牌");
-                    tvWareListRongliang.setText("容量");
+                    tvWareListRongliang.setText("规格");
                     tvWareListLeibie.setText(title);
                 } else if (crr_click == 1) {
                     brandId = String.valueOf(id);
@@ -660,6 +674,12 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                         capacity = "";
                         type_id = "";
                         sousuoStr = "isHomeSou";
+                        if(tvWareListRongliang!=null) {
+                            tvWareListRongliang.setText("规格");
+                        }
+                        if(tvWareListPingpai!=null) {
+                            tvWareListPingpai.setText("品牌");
+                        }
                         map = new HashMap<>();
                         map.put("key_words", keyword);
                         map.put("pageSize", "10");
@@ -880,6 +900,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
         super.onDestroy();
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
+            handler = null;
         }
     }
 

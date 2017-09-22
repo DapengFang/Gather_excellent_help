@@ -139,7 +139,7 @@ public class RegisterActivity extends Activity {
      */
     private void getSmsCode() {
         getPhone();
-        if (phone == null && TextUtils.isEmpty(phone)) {
+        if (phone == null || TextUtils.isEmpty(phone)) {
             Toast.makeText(RegisterActivity.this, "手机号不能为空！", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -163,8 +163,9 @@ public class RegisterActivity extends Activity {
         hashMap.put("sms_code", phone);
         hashMap.put("type", "1");
         netUtils.okHttp2Server2(sms_url, hashMap);
-        countDownTimer.start();
-
+        if(countDownTimer!=null) {
+            countDownTimer.start();
+        }
     }
 
     /**
@@ -231,4 +232,12 @@ public class RegisterActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(countDownTimer!=null) {
+            countDownTimer.cancel();
+            countDownTimer = null;
+        }
+    }
 }

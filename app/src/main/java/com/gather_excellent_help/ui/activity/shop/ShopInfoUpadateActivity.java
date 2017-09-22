@@ -20,6 +20,7 @@ import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.PcsChoicePopupwindow;
 import com.gather_excellent_help.utils.LogUtil;
+import com.gather_excellent_help.utils.Tools;
 
 import java.util.Calendar;
 
@@ -78,6 +79,7 @@ public class ShopInfoUpadateActivity extends BaseActivity {
      * 初始化数据加载
      */
     private void initData() {
+        defaultInfo();
         tvTopTitleName.setText("基本信息");
         rlShare.setVisibility(View.GONE);
         rlExit.setOnClickListener(new MyOnClickListener());
@@ -85,6 +87,21 @@ public class ShopInfoUpadateActivity extends BaseActivity {
         tvShopTimePm.setOnClickListener(new MyOnClickListener());
         tvShopInfoNext.setOnClickListener(new MyOnClickListener());
         tvMerchantPcsChoice.setOnClickListener(new MyOnClickListener());
+    }
+
+    /**
+     * 初始化用户填写信息
+     */
+    private void defaultInfo() {
+        pcs = "四川省成都市市辖区";
+        if(tvMerchantPcsChoice!=null) {
+            tvMerchantPcsChoice.setText(pcs);
+        }
+        String userPhone = Tools.getUserPhone(this);
+        telephone = userPhone;
+        if(etMerchantPhone!=null) {
+            etMerchantPhone.setText(telephone);
+        }
     }
 
     /**

@@ -62,6 +62,7 @@ public class HomeBannerBean {
          * tkRate : 20
          */
 
+        private int banner_activity_id;
         private int activity_id;
         private String title;
         private String link_url;
@@ -181,6 +182,14 @@ public class HomeBannerBean {
 
         public void setStock_quantity(int stock_quantity) {
             this.stock_quantity = stock_quantity;
+        }
+
+        public int getBanner_activity_id() {
+            return banner_activity_id;
+        }
+
+        public void setBanner_activity_id(int banner_activity_id) {
+            this.banner_activity_id = banner_activity_id;
         }
 
         public double getMarket_price() {

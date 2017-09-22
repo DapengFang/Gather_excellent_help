@@ -133,3 +133,5 @@
 
 -keep class com.soundcloud.android.crop.** { *; }
 -dontwarn com.soundcloud.android.crop.**
+
+-keepattributes EnclosingMethod

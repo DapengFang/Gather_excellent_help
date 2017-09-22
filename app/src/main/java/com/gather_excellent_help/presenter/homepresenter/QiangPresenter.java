@@ -1,5 +1,6 @@
 package com.gather_excellent_help.presenter.homepresenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -22,6 +23,7 @@ import com.gather_excellent_help.ui.activity.QiangTaoActivity;
 import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.widget.RushDownTimer;
+import com.gather_excellent_help.ui.widget.SaleProgressView;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
@@ -44,7 +46,7 @@ import okhttp3.Call;
  */
 
 public class QiangPresenter extends BasePresenter {
-    private Context context;
+    private Activity context;
     private LinearLayout llHomeQiangZera;
     private String qiang_url = Url.BASE_URL + "RushBuy.aspx";
     private NetUtil netUtil;
@@ -68,7 +70,7 @@ public class QiangPresenter extends BasePresenter {
     private RushDownTimer rushDownTimer;
     private int currHour;
 
-    public QiangPresenter(Context context, LinearLayout llHomeQiangZera) {
+    public QiangPresenter(Activity context, LinearLayout llHomeQiangZera) {
         this.context = context;
         this.llHomeQiangZera = llHomeQiangZera;
         initView();
@@ -105,9 +107,9 @@ public class QiangPresenter extends BasePresenter {
         rl_item_laod_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(currHour>=0 && currHour<8) {
+                if (currHour >= 0 && currHour < 8) {
                     Toast.makeText(context, "活动在早上8点准时开启，请耐心等待！", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Intent intent = new Intent(context, QiangTaoActivity.class);
                     context.startActivity(intent);
                 }
@@ -116,9 +118,9 @@ public class QiangPresenter extends BasePresenter {
         ll_qiang_left_zera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(currHour>=0 && currHour<8) {
+                if (currHour >= 0 && currHour < 8) {
                     Toast.makeText(context, "活动在早上8点准时开启，请耐心等待！", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Intent intent = new Intent(context, QiangTaoActivity.class);
                     context.startActivity(intent);
                 }
@@ -158,11 +160,12 @@ public class QiangPresenter extends BasePresenter {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        tv_qinag_left_count.setText("距离第"+(currHour +1)+"场倒计时");
+        tv_qinag_left_count.setText("距离第" + (currHour + 1) + "场倒计时");
     }
 
     /**
      * 设置倒计时
+     *
      * @param rushDownTimer
      */
     public void setRushDownTimer(RushDownTimer rushDownTimer) {
@@ -189,9 +192,9 @@ public class QiangPresenter extends BasePresenter {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-          if(context!=null) {
-              Toast.makeText(context, "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
-          }
+            if (context != null) {
+                Toast.makeText(context, "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -199,12 +202,12 @@ public class QiangPresenter extends BasePresenter {
         QiangTaoBean qiangTaoBean = new Gson().fromJson(response, QiangTaoBean.class);
         int statusCode = qiangTaoBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
+            case 1:
                 qiangData = qiangTaoBean.getData();
-                if(qiangData!=null) {
+                if (qiangData != null) {
                     loadData(qiangData);
                 }
-                onLoadSuccessListener.onSuccessResponse(endtime-curr_time);
+                onLoadSuccessListener.onSuccessResponse(endtime - curr_time);
                 break;
             case 0:
                 onLoadSuccessListener.onResponseNoData();
@@ -214,37 +217,40 @@ public class QiangPresenter extends BasePresenter {
 
     /**
      * 加载抢购区数据
+     *
      * @param qiangData
      */
     private void loadData(List<QiangTaoBean.DataBean> qiangData) {
         /*
         * 加载左边区域
         * */
-        if(qiangData.size()<3) {
+        if (qiangData.size() < 3) {
             return;
         }
         QiangTaoBean.DataBean leftData = qiangData.get(0);
         String sell_prices = leftData.getSell_price();
         String img_urls = leftData.getImg_url();
-        if(tv_qiang_left_price!=null && sell_prices!=null) {
+        if (tv_qiang_left_price != null && sell_prices != null) {
             int price = (int) Double.parseDouble(sell_prices);
-            if(price<10) {
+            if (price < 10) {
                 tv_qiang_left_price.setText("?");
-            }else{
+            } else {
                 String s = String.valueOf(price);
                 String str = s.substring(0, 1);
-                for (int i=0;i<s.length()-1;i++){
-                 str+="?";
+                for (int i = 0; i < s.length() - 1; i++) {
+                    str += "?";
                 }
                 tv_qiang_left_price.setText(str);
             }
         }
-        if(iv_qiang_left_img!=null && img_urls!=null) {
-            Glide.with(context).load(img_urls+"_320x320q90.jpg")
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
-                    .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
-                    .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
-                    .into(iv_qiang_left_img);//请求成功后把图片设置到的控件
+        if (iv_qiang_left_img != null && img_urls != null) {
+            if(context!=null && !context.isFinishing()) {
+                Glide.with(context).load(img_urls + "_320x320q90.jpg")
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                        .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                        .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                        .into(iv_qiang_left_img);//请求成功后把图片设置到的控件
+            }
         }
 
         /*
@@ -252,16 +258,16 @@ public class QiangPresenter extends BasePresenter {
         * */
         DecimalFormat df = new DecimalFormat("#0.00");
         int childCount = ll_qiang_right_zera.getChildCount();
-        for (int i=0;i<childCount-1;i++){
+        for (int i = 0; i < childCount - 1; i++) {
             View childAt = ll_qiang_right_zera.getChildAt(2 * i);
             LinearLayout ll_qiang_right_ware = (LinearLayout) childAt.findViewById(R.id.ll_qiang_right_ware);
             ImageView iv_qiang_ware_img = (ImageView) childAt.findViewById(R.id.iv_qiang_ware_img);
             TextView tv_qiang_ware_coupon = (TextView) childAt.findViewById(R.id.tv_qiang_ware_coupon);
-            TextView tv_qiang_ware_title = (TextView) childAt.findViewById(R.id.tv_qiang_ware_title);
-            RelativeLayout rl_qiang_ware_count = (RelativeLayout) childAt.findViewById(R.id.rl_qiang_ware_count);
-            View v_qiang_ware_progress = childAt.findViewById(R.id.v_qiang_ware_progress);
-            TextView tv_qiang_ware_percent = (TextView) childAt.findViewById(R.id.tv_qiang_ware_percent);
-            TextView tv_qiang_ware_number = (TextView) childAt.findViewById(R.id.tv_qiang_ware_number);
+            TextView tv_qiang_ware_title = (TextView) childAt.findViewById(R.id.tv_qiang_ware_title);//           RelativeLayout rl_qiang_ware_count = (RelativeLayout) childAt.findViewById(R.id.rl_qiang_ware_count);
+//            View v_qiang_ware_progress = childAt.findViewById(R.id.v_qiang_ware_progress);
+//            TextView tv_qiang_ware_percent = (TextView) childAt.findViewById(R.id.tv_qiang_ware_percent);
+//            TextView tv_qiang_ware_number = (TextView) childAt.findViewById(R.id.tv_qiang_ware_number);
+            SaleProgressView saleProgressView = (SaleProgressView) childAt.findViewById(R.id.spv_qiang_ware_progress);
             TextView tv_qiang_ware_price = (TextView) childAt.findViewById(R.id.tv_qiang_ware_price);
             TextView tv_qiang_ware_zhuan = (TextView) childAt.findViewById(R.id.tv_qiang_ware_zhuan);
             TextView tv_qiang_ware_coast = (TextView) childAt.findViewById(R.id.tv_qiang_ware_coast);
@@ -270,8 +276,8 @@ public class QiangPresenter extends BasePresenter {
             final String img_url = dataBean.getImg_url();
             QiangTaoBean.DataBean.CouponInfoBean coupon_info = dataBean.getCoupon_info();
             final String title = dataBean.getTitle();
-            double sold_num = dataBean.getSold_num();
-            double total_amount = dataBean.getTotal_amount();
+            int sold_num = dataBean.getSold_num();
+            int total_amount = dataBean.getTotal_amount();
             final String sell_price = dataBean.getSell_price();
             final String goods_id = String.valueOf(dataBean.getProductId());
             double sell_price_s = Double.parseDouble(sell_price);
@@ -279,11 +285,11 @@ public class QiangPresenter extends BasePresenter {
             String coupon_click_url = null;
             String max_commission_rate = null;
             double rate = 0;
-            if(coupon_info!=null) {
-                coupon_info_s =  coupon_info.getCoupon_info();
+            if (coupon_info != null) {
+                coupon_info_s = coupon_info.getCoupon_info();
                 coupon_click_url = coupon_info.getCoupon_click_url();
                 max_commission_rate = coupon_info.getMax_commission_rate();
-                rate = Double.parseDouble(max_commission_rate)/100;
+                rate = Double.parseDouble(max_commission_rate) / 100;
             }
             int coupon_p = 0;
 
@@ -302,48 +308,52 @@ public class QiangPresenter extends BasePresenter {
                 percent = (int) (st * 100);
             }
             final String link_url = dataBean.getLink_url();
-            if(iv_qiang_ware_img!=null && img_url!=null) {
-                //mImageLoader.loadImage(img_url+"_320x320q90.jpg",iv_qiang_ware_img,true);
-                Glide.with(context).load(img_url+"_320x320q90.jpg")
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
-                        .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
-                        .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
-                        .into(iv_qiang_ware_img);//请求成功后把图片设置到的控件
+            if (iv_qiang_ware_img != null && img_url != null) {
+                if(context!=null && !context.isFinishing()) {
+                    Glide.with(context.getApplicationContext()).load(img_url + "_320x320q90.jpg")
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                            .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                            .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                            .into(iv_qiang_ware_img);//请求成功后把图片设置到的控件
+                }
             }
-            if(tv_qiang_ware_coupon!=null) {
-                tv_qiang_ware_coupon.setText("领券减"+coupon_p);
+            if (tv_qiang_ware_coupon != null) {
+                tv_qiang_ware_coupon.setText("领券减" + coupon_p);
             }
-            if(tv_qiang_ware_title!=null && title!=null) {
+            if (tv_qiang_ware_title != null && title != null) {
                 tv_qiang_ware_title.setText(title);
             }
-            LogUtil.e("sold_num"+sold_num+",---total_number"+total_amount+",===="+percent);
-            if(tv_qiang_ware_percent!=null) {
-                tv_qiang_ware_percent.setText((int)percent+"%");
+            LogUtil.e("sold_num" + sold_num + ",---total_number" + total_amount + ",====" + percent);
+//            if (tv_qiang_ware_percent != null) {
+//                tv_qiang_ware_percent.setText((int) percent + "%");
+//            }
+//            if (tv_qiang_ware_number != null) {
+//                tv_qiang_ware_number.setText("已抢" + (int) sold_num + "件");
+//            }
+            if(saleProgressView!=null) {
+                saleProgressView.setTotalAndCurrentCount(total_amount,sold_num);
             }
-            if(tv_qiang_ware_number!=null) {
-                tv_qiang_ware_number.setText("已抢"+(int)sold_num+"件");
-            }
-            int width = ScreenUtil.getScreenWidth(context) * 16/ 60;
-            ViewGroup.LayoutParams lp2;
-            lp2 = rl_qiang_ware_count.getLayoutParams();
-            lp2.width = width;
-            rl_qiang_ware_count.setLayoutParams(lp2);
-            ViewGroup.LayoutParams lp;
-            lp = v_qiang_ware_progress.getLayoutParams();
-            lp.width = (int) (width * (percent / 100));
-            v_qiang_ware_progress.setLayoutParams(lp);
-            if(sell_price!=null && tv_qiang_ware_price!=null) {
+//            int width = ScreenUtil.getScreenWidth(context) * 16 / 60;
+//            ViewGroup.LayoutParams lp2;
+//            lp2 = rl_qiang_ware_count.getLayoutParams();
+//            lp2.width = width;
+//            rl_qiang_ware_count.setLayoutParams(lp2);
+//            ViewGroup.LayoutParams lp;
+//            lp = v_qiang_ware_progress.getLayoutParams();
+//            lp.width = (int) (width * (percent / 100));
+//            v_qiang_ware_progress.setLayoutParams(lp);
+            if (sell_price != null && tv_qiang_ware_price != null) {
                 tv_qiang_ware_price.setText(sell_price);
             }
-            if(tv_qiang_ware_zhuan!=null) {
-                tv_qiang_ware_zhuan.setText("￥"+df.format(zhuan));
+            if (tv_qiang_ware_zhuan != null) {
+                tv_qiang_ware_zhuan.setText("￥" + df.format(zhuan));
             }
-            if(tv_qiang_ware_coast!=null) {
-                tv_qiang_ware_coast.setText("￥"+df.format(coast));
+            if (tv_qiang_ware_coast != null) {
+                tv_qiang_ware_coast.setText("￥" + df.format(coast));
             }
-            if(coupon_p>0) {
+            if (coupon_p > 0) {
                 tv_qiang_ware_coupon.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 tv_qiang_ware_coupon.setVisibility(View.GONE);
             }
             if (shopType == 1) {
@@ -356,7 +366,7 @@ public class QiangPresenter extends BasePresenter {
                 ll_qiang_ware_zhuan.setVisibility(View.GONE);
             }
 
-            if(zhuan == 0) {
+            if (zhuan == 0) {
                 ll_qiang_ware_zhuan.setVisibility(View.GONE);
             }
             final String finalCoupon_info_s = coupon_info_s;
@@ -365,7 +375,7 @@ public class QiangPresenter extends BasePresenter {
             ll_qiang_right_ware.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(finalCoupon_info_s !=null && !TextUtils.isEmpty(finalCoupon_info_s)) {
+                    if (finalCoupon_info_s != null && !TextUtils.isEmpty(finalCoupon_info_s)) {
                         Intent intent = new Intent(context, WebActivity.class);
                         intent.putExtra("web_url", finalCoupon_click_url);
                         intent.putExtra("url", link_url);
@@ -373,10 +383,10 @@ public class QiangPresenter extends BasePresenter {
                         intent.putExtra("goods_img", img_url);
                         intent.putExtra("goods_title", title);
                         intent.putExtra("goods_price", sell_price);
-                        intent.putExtra("goods_coupon",String.valueOf(finalCoupon_p));
-                        intent.putExtra("goods_coupon_url",finalCoupon_click_url);
+                        intent.putExtra("goods_coupon", String.valueOf(finalCoupon_p));
+                        intent.putExtra("goods_coupon_url", finalCoupon_click_url);
                         context.startActivity(intent);
-                    }else{
+                    } else {
                         Intent intent = new Intent(context, WebRecordActivity.class);
                         intent.putExtra("url", link_url);
                         intent.putExtra("goods_id", goods_id);
@@ -397,8 +407,11 @@ public class QiangPresenter extends BasePresenter {
         this.onLoadSuccessListener = onLoadSuccessListener;
     }
 
-    public interface OnLoadSuccessListener{
+    public interface OnLoadSuccessListener {
         void onSuccessResponse(long time);
+
         void onResponseNoData();
     }
+
+
 }

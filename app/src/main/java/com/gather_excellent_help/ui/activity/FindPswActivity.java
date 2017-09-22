@@ -102,7 +102,8 @@ public class FindPswActivity extends Activity {
         int statusCode = smsCodeBean.getStatusCode();
         switch (statusCode) {
             case 0:
-                Toast.makeText(FindPswActivity.this, "获取验证码失败！", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(FindPswActivity.this, "获取验证码失败！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FindPswActivity.this, smsCodeBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
             case 1:
                 List<SmsCodeBean.DataBean> data = smsCodeBean.getData();
@@ -199,7 +200,9 @@ public class FindPswActivity extends Activity {
         map.put("sms_code", user);
         map.put("type", "2");
         netUtils.okHttp2Server2(sms_url, map);
-        countDownTimer.start();
+        if(countDownTimer!=null) {
+            countDownTimer.start();
+        }
 
     }
 
@@ -229,4 +232,12 @@ public class FindPswActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(countDownTimer!=null) {
+            countDownTimer.cancel();
+            countDownTimer = null;
+        }
+    }
 }

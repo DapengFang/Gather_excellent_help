@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -248,7 +249,6 @@ public class WebRecordActivity extends BaseActivity {
                     click_url = changeUrlBean.getData().get(0).getClick_url();
                     handler.sendEmptyMessage(GET_URL);
                     AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(click_url), alibcShowParams, alibcTaokeParams, null,demoTradeCallback);
-
                 } else {
                     AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, demoTradeCallback);
                 }
@@ -532,9 +532,7 @@ public class WebRecordActivity extends BaseActivity {
 
             @Override
             public void onFailure(int code, String msg) {
-//                Toast.makeText(LoginActivity.this, "绑定失败 ！",
-//                        Toast.LENGTH_LONG).show();
-//                Log.i("GGG", "错误码" + code + "原因" + msg);
+                Log.i("GGG","错误码" + code + "原因" +msg);
             }
         });
     }
@@ -584,9 +582,6 @@ public class WebRecordActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         UMShareAPI.get(this).release();
-        if(demoTradeCallback!=null) {
-            demoTradeCallback = null;
-        }
         if(alibcLogin!=null) {
             alibcLogin = null;
         }

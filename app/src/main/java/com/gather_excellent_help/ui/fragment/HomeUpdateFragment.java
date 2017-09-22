@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -16,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
@@ -26,6 +28,7 @@ import com.gather_excellent_help.presenter.homepresenter.GroupPresenter;
 import com.gather_excellent_help.presenter.homepresenter.QiangPresenter;
 import com.gather_excellent_help.presenter.homepresenter.TypePresenter;
 import com.gather_excellent_help.presenter.homepresenter.VipPresenter;
+import com.gather_excellent_help.ui.activity.ScannerWebActivity;
 import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.base.LazyLoadFragment;
@@ -41,6 +44,7 @@ import java.lang.ref.WeakReference;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
+import push.jerry.cn.scan.CaptureActivity;
 
 /**
  * Created by Dapeng Fang on 2017/8/21.
@@ -76,6 +80,8 @@ public class HomeUpdateFragment extends LazyLoadFragment {
     TextView tv_item_home_title;
     @Bind(R.id.tv_item_home_more)
     TextView tv_item_home_more;
+    @Bind(R.id.ll_home_update_scanner)
+    LinearLayout ll_home_update_scanner;
     private boolean mIsRequestDataRefresh = false;
     public static final int TIME_DOWN = 1; //倒计时显示的标识
     public static final int STOP_REFRESH = 2; //加载数据的标识
@@ -168,11 +174,10 @@ public class HomeUpdateFragment extends LazyLoadFragment {
         typePresenter.initData();
 
 
-        vipPresenter = new VipPresenter(getContext(), llHomeVipZera);
+        vipPresenter = new VipPresenter(getActivity(), llHomeVipZera);
         vipPresenter.initData();
 
-
-        qiangPresenter = new QiangPresenter(getContext(), llHomeQiangZera);
+        qiangPresenter = new QiangPresenter(getActivity(), llHomeQiangZera);
         qiangPresenter.initData();
 
         qiangPresenter.setOnLoadSuccessListener(new QiangPresenter.OnLoadSuccessListener() {
@@ -197,7 +202,7 @@ public class HomeUpdateFragment extends LazyLoadFragment {
             }
         });
 
-        groupPresenter = new GroupPresenter(getContext(), llHomeGroupZera);
+        groupPresenter = new GroupPresenter(getActivity(), llHomeGroupZera);
         groupPresenter.initData();
         activityPresenter = new ActivityPresenter(getContext(), rcvHomeActivity);
         activityPresenter.initData();
@@ -220,6 +225,26 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                 intent.putExtra("content", "isHomeSou");
                 intent.putExtra("sousuo", "");
                 startActivity(intent);
+            }
+        });
+        ll_home_update_scanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CaptureActivity.open(getContext(), new CaptureActivity.OnScanResultListener() {
+                    @Override
+                    public void onResult(String result) {
+                        LogUtil.e(result);
+                        if(!result.contains("http") || !result.contains("rtnurl=")) {
+                            Toast.makeText(getContext(),"没有找到此商品！", Toast.LENGTH_SHORT).show();
+                        }else{
+                            String[] sanners = result.split("=");
+                            String url = sanners[sanners.length - 1];
+                            Intent intent = new Intent(getContext(), ScannerWebActivity.class);
+                            intent.putExtra("scaner_url",url);
+                            startActivity(intent);
+                        }
+                    }
+                });
             }
         });
 
@@ -285,7 +310,6 @@ public class HomeUpdateFragment extends LazyLoadFragment {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
-
     }
 
     private void setupSwipeRefresh(View view) {

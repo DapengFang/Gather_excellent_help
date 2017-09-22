@@ -24,6 +24,7 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 
 import com.gather_excellent_help.bean.LowerMermberBean;
+import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.adapter.LowerMemberAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
@@ -146,9 +147,9 @@ public class LowerMemberStaticsActivity extends BaseActivity {
                 lastVisibleItem = layoutManager.findLastVisibleItemPosition();
                 if(rcvWardsStatisticsS!=null) {
                     int top = rcvWardsStatisticsS.getChildAt(0).getTop();
-                    if(top<0) {
+                    if(top<0 && isHindow) {
                         ll_lower_member_show.setVisibility(View.GONE);
-                    }else{
+                    }else if(top>=0 && !isHindow) {
                         ll_lower_member_show.setVisibility(View.VISIBLE);
                     }
                 }
@@ -280,6 +281,44 @@ public class LowerMemberStaticsActivity extends BaseActivity {
                 })
                 .setNegativeButton("取消", null)
                 .show();
+    }
+
+    private float lastX;
+    private float lastY;
+    private boolean isHindow;
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        super.dispatchTouchEvent(ev);
+        final int action = ev.getAction();
+
+        float x = ev.getX();
+        float y = ev.getY();
+
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                lastY = y;
+                lastX = x;
+                isHindow = false;
+                return false;
+            case MotionEvent.ACTION_MOVE:
+                float dY = Math.abs(y - lastY);
+                float dX = Math.abs(x - lastX);
+                float dis = y-lastY;
+                boolean down = y > lastY ? true : false;
+                lastY = y;
+                lastX = x;
+                LogUtil.e("dis === " + dis);
+                if(dis<0) {
+                    isHindow =true;
+                }else if(dis>0) {
+                    isHindow =false;
+                }
+                break;
+            default:
+                return false;
+        }
+        return false;
     }
 
 

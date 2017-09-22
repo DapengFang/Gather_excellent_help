@@ -271,17 +271,25 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                             String sphoto = Tools.BitmapToBase64(bitmap);
                             if (which.equals("l1")) {
-                                ivMerchantPictureL1.setImageBitmap(bitmap);
+                                if(ivMerchantPictureL1!=null) {
+                                    ivMerchantPictureL1.setImageBitmap(bitmap);
+                                }
                                 upload1 = sphoto;
                             } else if (which.equals("l2")) {
-                                ivMerchantPictureL2.setImageBitmap(bitmap);
+                                if(ivMerchantPictureL2!=null) {
+                                    ivMerchantPictureL2.setImageBitmap(bitmap);
+                                }
                                 left_pic = true;
                                 upload2 = sphoto;
                             } else if (which.equals("l3")) {
-                                ivMerchantPictureL3.setImageBitmap(bitmap);
+                                if(ivMerchantPictureL3!=null) {
+                                    ivMerchantPictureL3.setImageBitmap(bitmap);
+                                }
                                 upload3 = sphoto;
                             } else if (which.equals("l4")) {
-                                ivMerchantPictureL4.setImageBitmap(bitmap);
+                                if(ivMerchantPictureL4!=null) {
+                                    ivMerchantPictureL4.setImageBitmap(bitmap);
+                                }
                                 upload4 = sphoto;
                             }
                         }

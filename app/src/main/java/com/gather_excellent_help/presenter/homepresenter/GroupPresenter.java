@@ -1,5 +1,6 @@
 package com.gather_excellent_help.presenter.homepresenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -36,8 +37,7 @@ import okhttp3.Call;
 
 public class GroupPresenter extends BasePresenter {
 
-    //private  ImageLoader mImageLoader;
-    private Context context;
+    private Activity context;
     private LinearLayout llHomeGroupZera;
     private LinearLayout ll_group_left_big;
     private String group_url = Url.BASE_URL + "GroupBuy.aspx";
@@ -59,11 +59,10 @@ public class GroupPresenter extends BasePresenter {
     private List<HomeGroupBean.DataBean> groupData;
 
 
-    public GroupPresenter(Context context, LinearLayout llHomeGroupZera) {
+    public GroupPresenter(Activity context, LinearLayout llHomeGroupZera) {
         this.context = context;
         this.llHomeGroupZera = llHomeGroupZera;
         initView();
-        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         netUtil = new NetUtil();
         shopType = Tools.getShopType(context);
         String userRate = Tools.getUserRate(context);
@@ -179,11 +178,13 @@ public class GroupPresenter extends BasePresenter {
                     tv_group_ware_title.setText(title);
                 }
                 if(img_url!=null && iv_group_ware_img!=null) {
-                    Glide.with(context).load(img_url+"_320x320q90.jpg")
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
-                            .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
-                            .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
-                            .into(iv_group_ware_img);//请求成功后把图片设置到的控件
+                    if(context!=null && !context.isFinishing()) {
+                        Glide.with(context).load(img_url+"_320x320q90.jpg")
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                                .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                                .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                                .into(iv_group_ware_img);//请求成功后把图片设置到的控件
+                    }
                 }
                 if(tv_group_ware_coupon!=null) {
                     tv_group_ware_coupon.setText("领券减"+couponsPrice);

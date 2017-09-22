@@ -26,6 +26,22 @@
                     <include layout="@layout/component_home_banner" />
 
                     <LinearLayout
+                        android:id="@+id/ll_home_update_scanner"
+                        android:layout_width="@dimen/x38"
+                        android:layout_height="@dimen/x38"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/x15"
+                        android:layout_marginRight="@dimen/x3"
+                        android:layout_alignParentRight="true">
+                        <ImageView
+                            android:layout_width="@dimen/x20"
+                            android:layout_height="@dimen/x20"
+                            android:src="@drawable/scanner_2d"
+                            android:layout_marginTop="@dimen/x3"/>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/ll_home_sousuo"
                         android:layout_width="@dimen/x240"
                         android:layout_height="@dimen/x26"
