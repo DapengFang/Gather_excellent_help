@@ -219,10 +219,12 @@ public class Tools {
      * 设置部分字体颜色为红色(前面)
      */
     public static void setPartTextColor2(TextView tv,String str,String s) {
-        int end = str.indexOf(s);
-        SpannableStringBuilder style = new SpannableStringBuilder(str);
-        style.setSpan(new ForegroundColorSpan(Color.RED),0, end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        tv.setText(style);
+        if(str!=null && str.length()>0 && s!=null && s.length()>0) {
+            int end = str.indexOf(s);
+            SpannableStringBuilder style = new SpannableStringBuilder(str);
+            style.setSpan(new ForegroundColorSpan(Color.RED),0, end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+            tv.setText(style);
+        }
     }
 
     //获取当前版本号。
@@ -325,5 +327,13 @@ public class Tools {
         String uniqueId = deviceUuid.toString();
 
         return uniqueId;
+    }
+    //保存阿里云热修复冷启动的状态
+    public static void saveHotfixStute(Context context,boolean bool){
+        CacheUtils.putBoolean(context,CacheUtils.HOT_FIX_STATUS,bool);
+    }
+    //得到阿里云热修复冷启动的状态
+    public static boolean getHotfixStute(Context context){
+        return CacheUtils.getBoolean(context,CacheUtils.HOT_FIX_STATUS,false);
     }
 }

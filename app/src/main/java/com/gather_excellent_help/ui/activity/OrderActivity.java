@@ -204,7 +204,7 @@ public class OrderActivity extends BaseActivity {
      * @param curr_statue 联网请求订单信息
      */
     private void net2ServerOrder(int curr_statue) {
-        String curr_url = "";
+        String curr_url = tui_url;
         if (order_type == -1) {
             curr_url = order_url;
         } else if (order_type == -2) {

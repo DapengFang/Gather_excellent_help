@@ -63,7 +63,7 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
         double sell_price = itemBean.getSell_price();
         int couponsPrice = itemBean.getCouponsPrice();
         double tkRate = itemBean.getTkRate()/100;
-        double zhuan = (sell_price -couponsPrice)*tkRate*0.9f*user_rate;
+        double zhuan = (sell_price -couponsPrice)*tkRate*0.9f*user_rate*itemBean.getCommission_rate();
         double coast = sell_price -couponsPrice-zhuan;
         if(holder.tvActivityWarePrice !=null && holder.tvActivityWarePrice!=null) {
             if (shopType == 1) {

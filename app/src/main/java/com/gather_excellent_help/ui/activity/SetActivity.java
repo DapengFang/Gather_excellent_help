@@ -89,6 +89,7 @@ public class SetActivity extends BaseActivity {
     private String sms_url = Url.BASE_URL + "GetRandom.aspx";
     private String sms_code_s = "-1";
     private CountDownTimer countDownTimer;
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -256,7 +257,6 @@ public class SetActivity extends BaseActivity {
      */
     private void showUnbindTaobaoDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
         builder.setTitle("温馨提示")
                 .setMessage("你确定要解除淘宝绑定吗?")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -265,8 +265,11 @@ public class SetActivity extends BaseActivity {
                         unBindTaobao();
                     }
                 })
-                .setNegativeButton("取消", null)
-                .show();
+                .setNegativeButton("取消", null);
+        alertDialog = builder.create();
+        if (SetActivity.this != null && !SetActivity.this.isFinishing()) {
+            alertDialog.show();
+        }
     }
 
     /**
@@ -274,7 +277,6 @@ public class SetActivity extends BaseActivity {
      */
     private void showUnBindAlipayDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
         builder.setTitle("温馨提示")
                 .setMessage("你确定要解除支付宝绑定吗?")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -283,8 +285,11 @@ public class SetActivity extends BaseActivity {
                         unBindPay();
                     }
                 })
-                .setNegativeButton("取消", null)
-                .show();
+                .setNegativeButton("取消", null);
+        alertDialog = builder.create();
+        if (SetActivity.this != null && !SetActivity.this.isFinishing()) {
+            alertDialog.show();
+        }
     }
 
     /**
@@ -292,7 +297,6 @@ public class SetActivity extends BaseActivity {
      */
     private void showCacheClearDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
         builder.setTitle("温馨提示")
                 .setMessage("你确定要执行此操作吗?")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -307,8 +311,12 @@ public class SetActivity extends BaseActivity {
                         }
                     }
                 })
-                .setNegativeButton("取消", null)
-                .show();
+                .setNegativeButton("取消", null);
+        alertDialog = builder.create();
+        if (SetActivity.this != null && !SetActivity.this.isFinishing()) {
+            alertDialog.show();
+        }
+
     }
 
     /**
@@ -316,7 +324,6 @@ public class SetActivity extends BaseActivity {
      */
     private void showAppExitDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
         builder.setTitle("温馨提示")
                 .setMessage("你确定要退出吗?")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -345,8 +352,11 @@ public class SetActivity extends BaseActivity {
                         }
                     }
                 })
-                .setNegativeButton("取消", null)
-                .show();
+                .setNegativeButton("取消", null);
+        alertDialog = builder.create();
+        if (SetActivity.this != null && !SetActivity.this.isFinishing()) {
+            alertDialog.show();
+        }
     }
 
     /**
@@ -474,8 +484,10 @@ public class SetActivity extends BaseActivity {
         TextView tvBindAlipayCancel = (TextView) inflate.findViewById(R.id.tv_bind_alipay_cancel);
         TextView tvBindAlipayConfirm = (TextView) inflate.findViewById(R.id.tv_bind_alipay_confirm);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final AlertDialog alertDialog = builder.setView(inflate).create();
-        alertDialog.show();
+        alertDialog = builder.setView(inflate).create();
+        if (SetActivity.this != null && !SetActivity.this.isFinishing()) {
+            alertDialog.show();
+        }
         tvAlipayGetSms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -489,8 +501,8 @@ public class SetActivity extends BaseActivity {
         tvBindAlipayCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (alertDialog.isShowing()) {
-                    if(countDownTimer!=null) {
+                if (alertDialog != null && alertDialog.isShowing()) {
+                    if (countDownTimer != null) {
                         countDownTimer.cancel();
                         countDownTimer = null;
                     }
@@ -519,11 +531,13 @@ public class SetActivity extends BaseActivity {
                 }
                 if (smscode.equals(sms_code_s)) {
                     bindPay(account, name);
-                    if(countDownTimer!=null) {
+                    if (countDownTimer != null) {
                         countDownTimer.cancel();
                         countDownTimer = null;
                     }
-                    alertDialog.dismiss();
+                    if (alertDialog != null && alertDialog.isShowing()) {
+                        alertDialog.dismiss();
+                    }
 
                 } else {
                     Toast.makeText(SetActivity.this, "短信验证码不正确！", Toast.LENGTH_SHORT).show();
@@ -555,11 +569,13 @@ public class SetActivity extends BaseActivity {
                 getSmsCode(userPhone, user_account, tvAlipayGetSms);
             }
         });
-        final AlertDialog alertDialog = builder.setTitle("绑定支付宝")
+        alertDialog = builder.setTitle("绑定支付宝")
                 .setView(view)
                 .setPositiveButton("确定", null)
                 .setNegativeButton("取消", null).create();
-        alertDialog.show();
+        if (SetActivity.this != null && !SetActivity.this.isFinishing()) {
+            alertDialog.show();
+        }
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -581,7 +597,9 @@ public class SetActivity extends BaseActivity {
                 }
                 if (smscode.equals(sms_code_s)) {
                     bindPay(account, name);
-                    alertDialog.dismiss();
+                    if (alertDialog != null && alertDialog.isShowing()) {
+                        alertDialog.dismiss();
+                    }
                 } else {
                     Toast.makeText(SetActivity.this, "短信验证码不正确！", Toast.LENGTH_SHORT).show();
                     return;
@@ -660,7 +678,7 @@ public class SetActivity extends BaseActivity {
         map.put("sms_code", userPhone);
         map.put("type", "3");
         netUtils.okHttp2Server2(sms_url, map);
-        if(countDownTimer!=null) {
+        if (countDownTimer != null) {
             countDownTimer.start();
         }
     }
@@ -669,9 +687,13 @@ public class SetActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(countDownTimer!=null) {
+        if (countDownTimer != null) {
             countDownTimer.cancel();
             countDownTimer = null;
+        }
+        if (alertDialog != null && alertDialog.isShowing()) {
+            alertDialog.dismiss();
+            alertDialog = null;
         }
     }
 }

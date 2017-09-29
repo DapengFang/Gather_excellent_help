@@ -107,6 +107,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
     private List<ListBean.DataBean> conditionData; //查询条件数据
     private List<SearchWareBean.DataBean> wareData;
     private int page = 1;//显示第几页
+    private boolean isCanLoad = true;
     private Handler handler = new Handler();
 
     private String type_id;
@@ -241,6 +242,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                             Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(etWareListContent.getWindowToken(), 0);
                     isLoadmore = -1;
+                    isCanLoad = true;
                     ll_ware_list_loadmore.setVisibility(View.GONE);
                     content_et = etWareListContent.getText().toString().trim();
                     if (content_et != null && !TextUtils.isEmpty(content_et)) {
@@ -343,11 +345,13 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 List<SearchWareBean.DataBean> data = searchWareBean.getData();
                 if (isLoadmore != -1) {
                     page++;
+                    isCanLoad =true;
                     LogUtil.e("page == " + page);
                     newData = searchWareBean.getData();
                     wareData.addAll(newData);
                     wareListAdapter.notifyDataSetChanged();
                 } else {
+                    isCanLoad =true;
                     wareData = searchWareBean.getData();
                     newData = wareData;
                     wareListAdapter = new WareListAdapter(WareListActivity.this, wareData, sousuoStr);
@@ -419,6 +423,9 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     @Override
                     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
                         if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                            if(!isCanLoad) {
+                                return;
+                            }
                             if (absListView.getLastVisiblePosition() == (absListView.getCount() - 1)) {
                                 isLoadmore = 0;
                                 if (type_id != null && !TextUtils.isEmpty(type_id)) {
@@ -428,14 +435,8 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                                         showLoadNoMore();
                                     } else {
                                         showLoadMore();
-                                        if(handler!=null) {
-                                            handler.postDelayed(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    searchWareList();
-                                                }
-                                            }, 500);
-                                        }
+                                        searchWareList();
+                                        isCanLoad =false;
                                     }
                                 } else {
                                     if (sousuoStr != null && !TextUtils.isEmpty(sousuoStr)) {
@@ -446,14 +447,8 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                                             showLoadNoMore();
                                         } else {
                                             showLoadMore();
-                                            if(handler!=null) {
-                                                handler.postDelayed(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        searchWareList();
-                                                    }
-                                                }, 500);
-                                            }
+                                            searchWareList();
+                                            isCanLoad = false;
                                         }
                                     }
                                 }
@@ -616,6 +611,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
             switch (view.getId()) {
                 case R.id.ll_ware_list_price:
                     isLoadmore = -1;
+                    isCanLoad = true;
                     if (sort_price == SortPrice.ASC.ordinal()) {
                         sort_price = SortPrice.DESC.ordinal();
                     } else {
@@ -626,6 +622,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     break;
                 case R.id.ll_ware_list_leibie:
                     isLoadmore = -1;
+                    isCanLoad =true;
                     crr_click = 0;
                     if(activity_id != null) {
                         activity_id = "0";
@@ -635,6 +632,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     break;
                 case R.id.ll_ware_list_pingpai:
                     isLoadmore = -1;
+                    isCanLoad = true;
                     crr_click = 1;
                     map = new HashMap<>();
                     if (Type != null && !TextUtils.isEmpty(Type)) {
@@ -647,6 +645,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     break;
                 case R.id.ll_ware_list_rongliang:
                     isLoadmore = -1;
+                    isCanLoad = true;
                     crr_click = 2;
                     if (Type != null && !TextUtils.isEmpty(Type)) {
                         map = new HashMap<>();
@@ -662,6 +661,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                             Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(etWareListContent.getWindowToken(), 0);
                     isLoadmore = -1;
+                    isCanLoad = true;
                     ll_ware_list_loadmore.setVisibility(View.GONE);
                     content_et = etWareListContent.getText().toString().trim();
                     if (content_et != null && !TextUtils.isEmpty(content_et)) {
@@ -901,6 +901,10 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
+        }
+        if(typeSelectorPopupwindow!=null && typeSelectorPopupwindow.isShowing()) {
+            typeSelectorPopupwindow.dismiss();
+            typeSelectorPopupwindow = null;
         }
     }
 

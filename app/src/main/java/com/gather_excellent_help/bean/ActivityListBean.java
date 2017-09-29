@@ -61,6 +61,7 @@ public class ActivityListBean {
          * tkRate : 6.5
          * add_time : 2017-08-21T13:58:30
          * lately_order_time : 0001-01-01T00:00:00
+         * commission_rate : 1
          */
 
         private String title;
@@ -80,6 +81,7 @@ public class ActivityListBean {
         private double tkRate;
         private String add_time;
         private String lately_order_time;
+        private double commission_rate;
 
         public String getTitle() {
             return title;
@@ -215,6 +217,14 @@ public class ActivityListBean {
 
         public void setLately_order_time(String lately_order_time) {
             this.lately_order_time = lately_order_time;
+        }
+
+        public double getCommission_rate() {
+            return commission_rate;
+        }
+
+        public void setCommission_rate(double commission_rate) {
+            this.commission_rate = commission_rate;
         }
     }
 }

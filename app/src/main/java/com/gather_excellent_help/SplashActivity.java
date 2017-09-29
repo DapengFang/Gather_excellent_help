@@ -45,11 +45,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+import android.Manifest;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 
 public class SplashActivity extends BaseFullScreenActivity {
+
 
     @Bind(R.id.iv_splash)
     ImageView  ivSplash;
@@ -64,6 +67,7 @@ public class SplashActivity extends BaseFullScreenActivity {
     public static final int REQUEST_DOWNLOAD_ERROR = 4;
     private String check_url = Url.BASE_URL + "GetAppVersion.aspx";
     private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
+    private static final int REQUEST_CODE_ASK_CALL_PHONE = 0x05;
 
     private int time=2;
 
@@ -82,20 +86,29 @@ public class SplashActivity extends BaseFullScreenActivity {
                     finish();
                     break;
                 case REQUEST_DOWNLOAD_SUCCESS:
-                    //installApk();
                     autoObtainStoragePermission();
                     break;
             }
         }
     };
     private Bitmap bitmap;
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-        startLoadingData();
+        if (Build.VERSION.SDK_INT >= 23) {
+            int checkCallPhonePermission = ContextCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE);
+            if(checkCallPhonePermission != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_PHONE_STATE},REQUEST_CODE_ASK_CALL_PHONE);
+            }else{
+                startLoadingData();
+            }
+        }else{
+            startLoadingData();
+        }
     }
 
     /**
@@ -138,13 +151,16 @@ public class SplashActivity extends BaseFullScreenActivity {
                 pd.dismiss();
             }
         }
+        if(alertDialog!=null && alertDialog.isShowing()) {
+            alertDialog.dismiss();
+            alertDialog = null;
+        }
         mHandler.removeCallbacksAndMessages(null);
     }
 
     /**
      * 自动获取sdk权限
      */
-
     private void autoObtainStoragePermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSIONS_REQUEST_CODE);
@@ -159,12 +175,19 @@ public class SplashActivity extends BaseFullScreenActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
-
             case STORAGE_PERMISSIONS_REQUEST_CODE://调用系统相册申请Sdcard权限回调
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     installApk();
                 } else {
                     ToastUtils.showShort(this, "请允许打开操作SDCard的权限！！");
+                }
+                break;
+            case REQUEST_CODE_ASK_CALL_PHONE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startLoadingData();
+                }else{
+                    Toast.makeText(SplashActivity.this, "请允许打开读取手机的权限！！", Toast.LENGTH_SHORT)
+                            .show();
                 }
                 break;
         }
@@ -174,7 +197,7 @@ public class SplashActivity extends BaseFullScreenActivity {
      * 向用户展示更新下载的对话框
      */
     private void showUpdateDialog() {
-        AlertDialog alertDialog = new AlertDialog.Builder(this)
+        alertDialog = new AlertDialog.Builder(this)
                 .setTitle("提示")
                 .setMessage("有新版本，请立即更新！")
                 .setCancelable(false)
@@ -184,7 +207,9 @@ public class SplashActivity extends BaseFullScreenActivity {
                         showloadApkDialog();
                     }
                 }).create();
-        alertDialog.show();
+        if(SplashActivity.this!=null && !isFinishing()) {
+            alertDialog.show();
+        }
     }
 
     /**
@@ -272,6 +297,7 @@ public class SplashActivity extends BaseFullScreenActivity {
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString()+"--"+e.getMessage());
+            Toast.makeText(SplashActivity.this, "请检查你的网络连接情况！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -292,7 +318,7 @@ public class SplashActivity extends BaseFullScreenActivity {
                         String version = Tools.getVersion(this);
                         if(appVersion!=null) {
                            if(appVersion.equals(Tools.getVersion(this))) {
-                               mHandler.sendEmptyMessageDelayed(REQUEST_TIME,2000);
+                               mHandler.sendEmptyMessageDelayed(REQUEST_TIME,1000);
                            }else{
                                showUpdateDialog();
                            }
@@ -305,4 +331,6 @@ public class SplashActivity extends BaseFullScreenActivity {
                 break;
         }
     }
+
+
 }

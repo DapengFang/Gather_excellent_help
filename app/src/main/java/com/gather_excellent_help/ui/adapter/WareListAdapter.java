@@ -34,7 +34,6 @@ public class WareListAdapter extends BaseAdapter {
     private Context context;
     private List<SearchWareBean.DataBean> data;
     private LayoutInflater inflater;    //布局填充器
-    //private ImageLoader mImageLoader;
     private double user_rate;
     private String load_type;
     private int shopType;
@@ -105,7 +104,7 @@ public class WareListAdapter extends BaseAdapter {
         DecimalFormat df = new DecimalFormat("#0.00");
         int couponsPrice = dataBean.getCouponsPrice();
         double tkRate = dataBean.getTkRate() / 100;
-        double zhuan = (dataBean.getSell_price() - couponsPrice) * tkRate * 0.9f * user_rate;
+        double zhuan = (dataBean.getSell_price() - couponsPrice) * tkRate * 0.9f * user_rate* dataBean.getCommission_rate();
         double coast = dataBean.getSell_price() - zhuan -couponsPrice;
         final String couponsUrl = dataBean.getCouponsUrl();
         final String secondCouponsUrl = dataBean.getSecondCouponsUrl();

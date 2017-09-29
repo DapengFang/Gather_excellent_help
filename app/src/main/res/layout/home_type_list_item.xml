@@ -91,7 +91,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
-                        android:layout_marginLeft="@dimen/x5"
+                        android:layout_marginLeft="@dimen/x3"
                         android:text="现价"
                         android:textColor="#55000000"
                         android:textSize="@dimen/x10" />

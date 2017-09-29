@@ -67,7 +67,7 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
         final double sell_price = dataBean.getSell_price();
         final String link_url = dataBean.getLink_url();
         double tkRate = dataBean.getTkRate()/100;
-        double zhuan = (sell_price -couponsPrice)*tkRate*0.9f*user_rate;
+        double zhuan = (sell_price -couponsPrice)*tkRate*0.9f*user_rate*dataBean.getCommission_rate();
         double coast = sell_price -couponsPrice-zhuan;
         final String goods_id = String.valueOf(dataBean.getProductId());
         final String secondCouponsUrl = dataBean.getSecondCouponsUrl();

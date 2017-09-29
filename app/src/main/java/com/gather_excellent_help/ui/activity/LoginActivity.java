@@ -179,7 +179,7 @@ public class LoginActivity extends Activity {
             return;
         }
 
-            password = password+"@@11fe468";
+        password = password+"@@11fe468";
         password = EncryptUtil.getMd5Value(password);
         map= new HashMap<>();
         map.put("UserName",user);

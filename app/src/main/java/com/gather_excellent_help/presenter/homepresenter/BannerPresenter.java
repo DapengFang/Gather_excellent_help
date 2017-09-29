@@ -1,5 +1,6 @@
 package com.gather_excellent_help.presenter.homepresenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -30,12 +31,12 @@ import okhttp3.Call;
 
 public class BannerPresenter extends BasePresenter {
 
-    private Context context;
+    private Activity context;
     private CarouselImageView civHomeGanner;
     private NetUtil netUtils;
     private String banner_url = Url.BASE_URL + "IndexBanner.aspx";
 
-    public BannerPresenter(Context context, CarouselImageView civHomeGanner) {
+    public BannerPresenter(Activity context, CarouselImageView civHomeGanner) {
         this.context = context;
         this.civHomeGanner = civHomeGanner;
         netUtils = new NetUtil();
@@ -127,9 +128,12 @@ public class BannerPresenter extends BasePresenter {
 
             @Override
             public void displayImage(String imageURL, ImageView imageView) {
-                Glide.with(context).load(imageURL)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
-                        .into(imageView);//请求成功后把图片设置到的控件
+                if(context!=null && !context.isFinishing() && imageURL!=null) {
+                    Glide.with(context).load(imageURL)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                            .into(imageView);//请求成功后把图片设置到的控件
+                }
+
             }
         };
         civHomeGanner.setImageResources(data, mAdCycleViewListener);

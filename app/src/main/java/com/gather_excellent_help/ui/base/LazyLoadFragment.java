@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.gather_excellent_help.MyApplication;
-import com.squareup.leakcanary.RefWatcher;
+//import com.gather_excellent_help.MyApplication;
+//import com.squareup.leakcanary.RefWatcher;
 
 /**
  * Fragment预加载问题的解决方案：
@@ -113,8 +113,8 @@ public abstract class LazyLoadFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        RefWatcher refWatcher = MyApplication.getRefWatcher(getActivity());
-        refWatcher.watch(this);
+//        RefWatcher refWatcher = MyApplication.getRefWatcher(getActivity());
+//        refWatcher.watch(this);
     }
 }
 

@@ -54,6 +54,7 @@ import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -322,17 +323,19 @@ public class MineFragment extends LazyLoadFragment {
                 LogUtil.e(call.toString() + "==" + e.getMessage());
             }
         });
-        tbnMineControl.setOnStateChangeListener(new MyToggleButton.OnStateChangeListener() {
-            @Override
-            public void isCurrentState(boolean currentState) {
-                CacheUtils.putBoolean(getContext(), CacheUtils.TOGGLE_SHOW, currentState);
-                if (currentState) {
-                    Toast.makeText(getContext(), "推广赚已隐藏！", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "推广赚已显示！", Toast.LENGTH_SHORT).show();
+        if(tbnMineControl!=null) {
+            tbnMineControl.setOnStateChangeListener(new MyToggleButton.OnStateChangeListener() {
+                @Override
+                public void isCurrentState(boolean currentState) {
+                    CacheUtils.putBoolean(getContext(), CacheUtils.TOGGLE_SHOW, currentState);
+                    if (currentState) {
+                        Toast.makeText(getContext(), "推广赚已隐藏！", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "推广赚已显示！", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        }
         netUtils2.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -491,6 +494,7 @@ public class MineFragment extends LazyLoadFragment {
         if (shopType == 1) {
             tvAccountMoneyTitle1.setText("余额/提现中");
             DecimalFormat df = new DecimalFormat("0.00");
+            df.setRoundingMode(RoundingMode.DOWN);
             tvAccountMoney.setText(df.format(amount) + "/" + df.format(frostAmount));
             tvAccountMoney.setVisibility(View.VISIBLE);
             tvAccountMoney2.setText(df.format(user_earn));
@@ -574,7 +578,7 @@ public class MineFragment extends LazyLoadFragment {
                             Toast.makeText(getContext(), "你已经申请成功", Toast.LENGTH_SHORT).show();
                         } else if (applyState == 2) {
                             Toast.makeText(getContext(), "你的申请被驳回，请核对后重新申请！", Toast.LENGTH_SHORT).show();
-                            toMerchantEnter();
+
                         } else if (applyState == 3) {
                             if (payState == 1) {
                                 Toast.makeText(getContext(), "你的申请已提交，请等待工作人员审核！", Toast.LENGTH_SHORT).show();
@@ -582,6 +586,8 @@ public class MineFragment extends LazyLoadFragment {
                                 Toast.makeText(getContext(), "请你支付加盟费用！", Toast.LENGTH_SHORT).show();
                                 toAlipay();
                             }
+                        }else if(applyState == 0) {
+                            toMerchantEnter();
                         }
                     }
                     break;
@@ -593,7 +599,7 @@ public class MineFragment extends LazyLoadFragment {
                     if (shopType == 1) {
                         toAccountDetail();
                     } else {
-                        //条帮助
+                        //跳帮助
                         which = "help";
                         netUtils2.okHttp2Server2(help_url, null);
                     }
@@ -633,7 +639,7 @@ public class MineFragment extends LazyLoadFragment {
                     netUtils2.okHttp2Server2(help_url, null);
                     break;
                 case R.id.ll_mine_fanyong_rule:
-                    //条返佣规则
+                    //跳返佣规则
                     which = "rule";
                     netUtils2.okHttp2Server2(rule_url, null);
                     break;
@@ -649,7 +655,8 @@ public class MineFragment extends LazyLoadFragment {
                     break;
 
                 case R.id.iv_me_person_lingdang:
-
+                    //测试热修复的小铃铛
+                    Toast.makeText(getContext(), "热修复测试成功！！！", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -782,7 +789,7 @@ public class MineFragment extends LazyLoadFragment {
     }
 
     /**
-     * 区支付宝支付页面
+     * 去支付宝支付页面
      */
     private void toAlipay() {
         Intent intent = new Intent(getContext(), AlipayManagerActivity.class);

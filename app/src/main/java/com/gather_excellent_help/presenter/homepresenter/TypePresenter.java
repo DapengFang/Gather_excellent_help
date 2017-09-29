@@ -1,5 +1,6 @@
 package com.gather_excellent_help.presenter.homepresenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -28,13 +29,13 @@ import okhttp3.Call;
  */
 
 public class TypePresenter extends BasePresenter {
-    private Context context;
+    private Activity context;
     private MyGridView gvHomeType;
     private String type_url = Url.BASE_URL + "IndexCategory.aspx";
     private NetUtil netUtil;
     private List<TyepIndexBean.DataBean> typeData;
 
-    public TypePresenter(Context context, MyGridView gvHomeType) {
+    public TypePresenter(Activity context, MyGridView gvHomeType) {
         this.context = context;
         this.gvHomeType = gvHomeType;
         netUtil = new NetUtil();

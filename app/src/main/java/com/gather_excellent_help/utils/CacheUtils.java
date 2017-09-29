@@ -45,6 +45,9 @@ public class CacheUtils {
 	public static final String APPLAY_STATUS = "applay_status";
 	public static final String PAY_STATUS = "pay_status";
 
+	//保存冷启动修复状态
+	public static final String HOT_FIX_STATUS = "hot_fix_status";
+
 
 
 	public static SharedPreferences sp;

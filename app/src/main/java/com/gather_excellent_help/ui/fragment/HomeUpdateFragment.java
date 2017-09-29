@@ -167,10 +167,10 @@ public class HomeUpdateFragment extends LazyLoadFragment {
      * 加载首页数据
      */
     private void loadHomeUpdateData() {
-        bannerPresenter = new BannerPresenter(getContext(), civHomeGanner);
+        bannerPresenter = new BannerPresenter(getActivity(), civHomeGanner);
         bannerPresenter.initData();
 
-        typePresenter = new TypePresenter(getContext(), gvHomeType);
+        typePresenter = new TypePresenter(getActivity(), gvHomeType);
         typePresenter.initData();
 
 
@@ -350,21 +350,22 @@ public class HomeUpdateFragment extends LazyLoadFragment {
      * @param requestDataRefresh 是否需要刷新
      */
     public void setRefresh(boolean requestDataRefresh) {
-        if (swipeRefresh == null) {
-            return;
-        }
         if (!requestDataRefresh) {
             mIsRequestDataRefresh = false;
-            swipeRefresh.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (swipeRefresh != null) {
-                        swipeRefresh.setRefreshing(false);
+            if(swipeRefresh!=null) {
+                swipeRefresh.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swipeRefresh != null) {
+                            swipeRefresh.setRefreshing(false);
+                        }
                     }
-                }
-            }, 1000);
+                }, 1000);
+            }
         } else {
-            swipeRefresh.setRefreshing(true);
+            if(swipeRefresh!=null) {
+                swipeRefresh.setRefreshing(true);
+            }
         }
     }
 

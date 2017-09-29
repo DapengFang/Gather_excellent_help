@@ -265,7 +265,10 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
                     break;
                 case CODE_RESULT_REQUEST:
                     try {
-                        Bitmap bitmap = PhotoUtils.getBitmapFormUri(this, cropImageUri);
+                        Bitmap bitmap =null;
+                        if(cropImageUri!=null) {
+                            bitmap = PhotoUtils.getBitmapFormUri(this, cropImageUri);
+                        }
                         if (bitmap != null) {
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);

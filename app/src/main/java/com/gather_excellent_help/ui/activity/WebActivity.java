@@ -316,7 +316,10 @@ public class WebActivity extends BaseActivity {
                     click_url = changeUrlBean.getData().get(0).getClick_url();
                     //加载需要显示的网页
                     wvBanner.loadUrl(click_url);
-                    handler.sendEmptyMessage(GET_URL);
+                    if(handler!=null) {
+                        handler.sendEmptyMessage(GET_URL);
+                    }
+
                 }
                 break;
             case 0:

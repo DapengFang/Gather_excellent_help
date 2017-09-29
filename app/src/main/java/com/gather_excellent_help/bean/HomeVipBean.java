@@ -61,6 +61,7 @@ public class HomeVipBean {
          * market_price : 618
          * sell_price : 505
          * tkRate : 3
+         * commission_rate:1
          */
 
         private int activity_id;
@@ -80,6 +81,7 @@ public class HomeVipBean {
         private double market_price;
         private double sell_price;
         private double tkRate;
+        private double commission_rate;
 
         public int getActivity_id() {
             return activity_id;
@@ -215,6 +217,14 @@ public class HomeVipBean {
 
         public void setTkRate(double tkRate) {
             this.tkRate = tkRate;
+        }
+
+        public double getCommission_rate() {
+            return commission_rate;
+        }
+
+        public void setCommission_rate(double commission_rate) {
+            this.commission_rate = commission_rate;
         }
     }
 }

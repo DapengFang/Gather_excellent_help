@@ -1,5 +1,7 @@
 package com.gather_excellent_help;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,8 +27,10 @@ import com.gather_excellent_help.ui.widget.NoScrollViewPager;
 import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.Tools;
+import com.taobao.sophix.SophixManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -142,6 +146,33 @@ public class MainActivity extends FragmentActivity {
             }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        boolean hotfixStute = Tools.getHotfixStute(this);
+        if (!isAppOnForeground()) {
+            //app 进入后台
+            if (hotfixStute) {
+                SophixManager.getInstance().killProcessSafely();
+                Tools.saveHotfixStute(this, false);
+                Toast.makeText(MainActivity.this, "发现聚优帮有更新，请重新启动App", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public boolean isAppOnForeground() {
+        // Returns a list of application processes that are running on the device
+        ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+        String packageName = getApplicationContext().getPackageName();
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        if (appProcesses == null)
+            return false;
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) // The name of the process that this object is associated with.
+            if (appProcess.processName.equals(packageName) && appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND)
+                return true;
+        return false;
     }
 
     @Override

@@ -115,6 +115,7 @@ public class HomeWareBean {
              * market_price : 498
              * sell_price : 298
              * tkRate : 0
+             * commission_rate : 1
              */
 
             private int activity_id;
@@ -134,6 +135,7 @@ public class HomeWareBean {
             private double market_price;
             private double sell_price;
             private double tkRate;
+            private double commission_rate;
 
             public int getActivity_id() {
                 return activity_id;
@@ -269,6 +271,14 @@ public class HomeWareBean {
 
             public void setSecondCouponsUrl(String secondCouponsUrl) {
                 this.secondCouponsUrl = secondCouponsUrl;
+            }
+
+            public double getCommission_rate() {
+                return commission_rate;
+            }
+
+            public void setCommission_rate(double commission_rate) {
+                this.commission_rate = commission_rate;
             }
         }
     }

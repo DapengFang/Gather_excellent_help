@@ -58,6 +58,7 @@ public class SearchWareBean {
          * market_price : 394
          * sell_price : 394
          * tkRate : 20
+         * commission_rate：1
          */
 
         private String title;
@@ -75,6 +76,7 @@ public class SearchWareBean {
         private double market_price;
         private double sell_price;
         private double tkRate;
+        private double commission_rate;
 
         public String getTitle() {
             return title;
@@ -194,6 +196,14 @@ public class SearchWareBean {
 
         public void setSecondCouponsUrl(String secondCouponsUrl) {
             this.secondCouponsUrl = secondCouponsUrl;
+        }
+
+        public double getCommission_rate() {
+            return commission_rate;
+        }
+
+        public void setCommission_rate(double commission_rate) {
+            this.commission_rate = commission_rate;
         }
     }
 }

@@ -161,7 +161,7 @@ public class VipPresenter extends BasePresenter {
                   double sell_price = dataBean.getSell_price();
                   final String link_url = dataBean.getLink_url();
                   double tkRate = dataBean.getTkRate()/100;
-                  double zhuan = (sell_price -couponsPrice)*tkRate*0.9f*user_rate;
+                  double zhuan = (sell_price -couponsPrice)*tkRate*0.9f*user_rate*dataBean.getCommission_rate();
                   double coast = sell_price -couponsPrice-zhuan;
                   tv_vip_ware_person.setVisibility(View.GONE);
                   if(title!=null && tv_vip_ware_title!=null) {

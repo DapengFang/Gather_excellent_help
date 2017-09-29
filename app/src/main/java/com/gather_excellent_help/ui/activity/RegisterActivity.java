@@ -191,8 +191,8 @@ public class RegisterActivity extends Activity {
             Toast.makeText(RegisterActivity.this, "请输入密码！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (password.length() < 6 || password.matches(Check.p_sample) || password.matches(Check.p_simple)) {
-            Toast.makeText(RegisterActivity.this, "输入密码过于简单，为了您的账号安全，请输入6位到12位不同数字或字母和数字的组合！", Toast.LENGTH_SHORT).show();
+        if (password.length() < 6) {
+            Toast.makeText(RegisterActivity.this, "请输入6位到12位的密码，谢谢", Toast.LENGTH_SHORT).show();
             return;
         }
         password = password + "@@11fe468";

@@ -264,12 +264,7 @@ public class TaobaoFragment extends LazyLoadFragment {
                                             showLoadNoMore();
                                         } else {
                                             showLoadMore();
-                                            handler.postDelayed(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    searchTaobaoWare(keyword, city, type, is_tmall, start_price, end_price, page_no);
-                                                }
-                                            }, 500);
+                                            searchTaobaoWare(keyword, city, type, is_tmall, start_price, end_price, page_no);
                                         }
                                     } else {
                                         llTaobaoLoadmore.setVisibility(View.GONE);
@@ -412,7 +407,15 @@ public class TaobaoFragment extends LazyLoadFragment {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
+        if(taobaoShaixuanPopupwindow!=null && taobaoShaixuanPopupwindow.isShowing()) {
+            taobaoShaixuanPopupwindow.dismiss();
+        }
+        if(taobaoZonghePopupwindow!=null && taobaoZonghePopupwindow.isShowing()) {
+            taobaoZonghePopupwindow.dismiss();
+        }
     }
+
+
 
     private void initChoice(){
         ivUpPrice.setImageResource(R.drawable.up_gray_arraw);
@@ -719,6 +722,12 @@ public class TaobaoFragment extends LazyLoadFragment {
         if(handler!=null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
+        }
+        if(taobaoShaixuanPopupwindow!=null && taobaoShaixuanPopupwindow.isShowing()) {
+            taobaoShaixuanPopupwindow.dismiss();
+        }
+        if(taobaoZonghePopupwindow!=null && taobaoZonghePopupwindow.isShowing()) {
+            taobaoZonghePopupwindow.dismiss();
         }
     }
 }

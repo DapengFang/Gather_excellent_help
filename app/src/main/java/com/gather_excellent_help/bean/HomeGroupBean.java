@@ -62,6 +62,7 @@ public class HomeGroupBean {
          * market_price : 214
          * sell_price : 214
          * tkRate : 20
+         * commission_rate:1
          */
 
         private int activity_id;
@@ -81,6 +82,7 @@ public class HomeGroupBean {
         private double market_price;
         private double sell_price;
         private double tkRate;
+        private double commission_rate;
 
         public int getActivity_id() {
             return activity_id;
@@ -216,6 +218,14 @@ public class HomeGroupBean {
 
         public void setTkRate(double tkRate) {
             this.tkRate = tkRate;
+        }
+
+        public double getCommission_rate() {
+            return commission_rate;
+        }
+
+        public void setCommission_rate(double commission_rate) {
+            this.commission_rate = commission_rate;
         }
     }
 }

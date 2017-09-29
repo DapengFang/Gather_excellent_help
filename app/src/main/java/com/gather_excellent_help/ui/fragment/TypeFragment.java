@@ -307,16 +307,20 @@ public class TypeFragment extends LazyLoadFragment {
                     page++;
                     LogUtil.e("page == " + page);
                     currData = activityListBean.getData();
-                    activityData.addAll(currData);
+                    if(activityData!=null && currData!=null) {
+                        activityData.addAll(currData);
+                    }
                     typeActivityListAdapter.notifyDataSetChanged();
                 } else {
                     currData = activityListBean.getData();
-                    activityData = currData;
-                    typeActivityListAdapter = new TypeActivityListAdapter(getContext(), activityData);
-                    rcvTypeShow.setAdapter(typeActivityListAdapter);
-                    page = 2;
-                    if (currData.size() == 0) {
-                        Toast.makeText(getContext(), "该条目下没有商品信息。", Toast.LENGTH_SHORT).show();
+                    if(currData!=null) {
+                        activityData = currData;
+                        typeActivityListAdapter = new TypeActivityListAdapter(getContext(), activityData);
+                        rcvTypeShow.setAdapter(typeActivityListAdapter);
+                        page = 2;
+                        if (currData.size() == 0) {
+                            Toast.makeText(getContext(), "该条目下没有商品信息。", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
                 ll_type_loadmore.setVisibility(View.GONE);
@@ -508,21 +512,22 @@ public class TypeFragment extends LazyLoadFragment {
      * @param requestDataRefresh 是否需要刷新
      */
     public void setRefresh(boolean requestDataRefresh) {
-        if (swipeRefresh == null) {
-            return;
-        }
         if (!requestDataRefresh) {
             mIsRequestDataRefresh = false;
-            swipeRefresh.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (swipeRefresh != null) {
-                        swipeRefresh.setRefreshing(false);
+            if(swipeRefresh!=null) {
+                swipeRefresh.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swipeRefresh != null) {
+                            swipeRefresh.setRefreshing(false);
+                        }
                     }
-                }
-            }, 1000);
+                }, 1000);
+            }
         } else {
-            swipeRefresh.setRefreshing(true);
+            if(swipeRefresh!=null) {
+                swipeRefresh.setRefreshing(true);
+            }
         }
     }
 

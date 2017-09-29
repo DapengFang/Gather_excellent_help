@@ -61,7 +61,7 @@ public class HomeActivityAdapter extends RecyclerView.Adapter<HomeActivityAdapte
         String title = dataBean.getTitle();
         final String img_url = dataBean.getImg_url();
         final List<HomeWareBean.DataBean.ItemBean> itemData = dataBean.getItem();
-        if(title!=null && holder.tv_rush_more_title!=null) {
+        if(title!=null && holder.tv_rush_more_title!=null && title.length()>0) {
             SpannableStringBuilder style = new SpannableStringBuilder(title);
             style.setSpan(new ForegroundColorSpan(Color.RED),2, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
             holder.tv_rush_more_title.setText(style);

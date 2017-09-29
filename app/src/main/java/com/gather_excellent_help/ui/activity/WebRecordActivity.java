@@ -247,7 +247,9 @@ public class WebRecordActivity extends BaseActivity {
                 demoTradeCallback = new DemoTradeCallback(WebRecordActivity.this);
                 if (data != null && data.size() > 0) {
                     click_url = changeUrlBean.getData().get(0).getClick_url();
-                    handler.sendEmptyMessage(GET_URL);
+                    if(handler!=null) {
+                        handler.sendEmptyMessage(GET_URL);
+                    }
                     AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(click_url), alibcShowParams, alibcTaokeParams, null,demoTradeCallback);
                 } else {
                     AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, demoTradeCallback);
