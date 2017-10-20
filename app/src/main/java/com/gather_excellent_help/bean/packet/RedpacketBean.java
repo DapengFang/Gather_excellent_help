@@ -1,17 +1,17 @@
-package com.gather_excellent_help.bean;
+package com.gather_excellent_help.bean.packet;
 
 import java.util.List;
 
 /**
- * Created by Dapeng Fang on 2017/8/29.
+ * Created by Dapeng Fang on 2017/10/18.
  */
 
-public class VersionBean {
+public class RedpacketBean {
 
     /**
      * statusCode : 1
      * statusMessage : 查询成功
-     * data : [{"AppVersion":"1.0.1"}]
+     * data : [{"newHblink":"https://uland.taobao.com/thb?pid=mm_119869053_26726507_130642937","isHb":1}]
      */
 
     private int statusCode;
@@ -44,27 +44,27 @@ public class VersionBean {
 
     public static class DataBean {
         /**
-         * AppVersion : 1.0.1
+         * newHblink : https://uland.taobao.com/thb?pid=mm_119869053_26726507_130642937
+         * isHb : 1
          */
 
-        private String AppVersion;
+        private String newHblink;
+        private int isHb;
 
-        private int IsHb;
-
-        public String getAppVersion() {
-            return AppVersion;
+        public String getNewHblink() {
+            return newHblink;
         }
 
-        public void setAppVersion(String AppVersion) {
-            this.AppVersion = AppVersion;
+        public void setNewHblink(String newHblink) {
+            this.newHblink = newHblink;
         }
 
         public int getIsHb() {
-            return IsHb;
+            return isHb;
         }
 
         public void setIsHb(int isHb) {
-            IsHb = isHb;
+            this.isHb = isHb;
         }
     }
 }

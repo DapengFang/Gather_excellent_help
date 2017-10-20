@@ -1,6 +1,7 @@
 package com.gather_excellent_help.aliapi;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.alibaba.baichuan.android.trade.callback.AlibcTradeCallback;
@@ -44,6 +45,9 @@ public class DemoTradeCallback implements AlibcTradeCallback {
             for (int i=0;i<paySuccessOrders.size();i++){
                 String ord = paySuccessOrders.get(i);
                 order += ord +"a";
+            }
+            if(TextUtils.isEmpty(order)) {
+               return;
             }
             order = order.substring(0,order.length()-1);
             netUtils = new NetUtil();

@@ -245,7 +245,9 @@ public class TypeFragment extends LazyLoadFragment {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-
+                                if(currData  == null) {
+                                    return;
+                                }
                                 if (currData.size() < Integer.parseInt(pageSize)) {
                                     ll_type_loadmore.setVisibility(View.VISIBLE);
                                     ll_type_loadmore.getChildAt(0).setVisibility(View.GONE);

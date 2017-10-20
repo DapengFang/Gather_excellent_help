@@ -59,6 +59,7 @@ public class BackRebateActivity extends BaseActivity {
     private boolean isLoadMore = false;
     private int page = 1;
     private int lastVisibleItem;
+    private boolean isCanLoad = true;
     private FullyLinearLayoutManager fullyLinearLayoutManager;
     private BackRebateAdapter backRebateAdapter;
 
@@ -97,21 +98,25 @@ public class BackRebateActivity extends BaseActivity {
                         type = "1";
                         page = 1;
                         isLoadMore = false;
+                        isCanLoad =true;
                         break;
                     case 1:
                         type = "2";
                         page = 1;
                         isLoadMore = false;
+                        isCanLoad = true;
                         break;
                     case 2:
                         type = "3";
                         page = 1;
                         isLoadMore = false;
+                        isCanLoad =true;
                         break;
                     case 3:
                         type = "4";
                         page = 1;
                         isLoadMore = false;
+                        isCanLoad = true;
                         break;
                 }
                 loadBackData(type, pageIndex);
@@ -154,6 +159,7 @@ public class BackRebateActivity extends BaseActivity {
                             backRebateAdapter = new BackRebateAdapter(BackRebateActivity.this, data);
                             rcvBackRebate.setAdapter(backRebateAdapter);
                         }
+                        isCanLoad = true;
                         break;
                     case 0:
                         Toast.makeText(BackRebateActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -172,7 +178,9 @@ public class BackRebateActivity extends BaseActivity {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-
+                    if(!isCanLoad) {
+                        return;
+                    }
 
                     lastVisibleItem = fullyLinearLayoutManager
                             .findLastVisibleItemPosition();
@@ -183,13 +191,9 @@ public class BackRebateActivity extends BaseActivity {
                             Toast.makeText(BackRebateActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                pageIndex = String.valueOf(page);
-                                loadBackData(type,pageIndex);
-                            }
-                        }, 1000);
+                        pageIndex = String.valueOf(page);
+                        isCanLoad = false;
+                        loadBackData(type,pageIndex);
                     }
                 }
             }

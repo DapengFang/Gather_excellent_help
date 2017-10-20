@@ -1,6 +1,7 @@
 package com.gather_excellent_help.utils;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 
 import java.io.File;
@@ -12,19 +13,23 @@ import java.math.BigDecimal;
 
 public class DataCleanManager {
 
-    /** * 清除本应用内部缓存(/data/data/com.xxx.xxx/cache) * * @param context */
+    /**
+     * 清除本应用内部缓存(/data/data/com.xxx.xxx/cache) * * @param context
+     */
     public static void cleanInternalCache(Context context) {
         deleteFilesByDirectory(context.getCacheDir());
     }
 
-    /** * 清除本应用所有数据库(/data/data/com.xxx.xxx/databases) * * @param context */
+    /**
+     * 清除本应用所有数据库(/data/data/com.xxx.xxx/databases) * * @param context
+     */
     public static void cleanDatabases(Context context) {
         deleteFilesByDirectory(new File("/data/data/"
                 + context.getPackageName() + "/databases"));
     }
 
     /**
-     * * 清除本应用SharedPreference(/data/data/com.xxx.xxx/shared_prefs) * * @param
+     * 清除本应用SharedPreference(/data/data/com.xxx.xxx/shared_prefs) * * @param
      * context
      */
     public static void cleanSharedPreference(Context context) {
@@ -32,18 +37,24 @@ public class DataCleanManager {
                 + context.getPackageName() + "/shared_prefs"));
     }
 
-    /** * 按名字清除本应用数据库 * * @param context * @param dbName */
+    /**
+     * 按名字清除本应用数据库 * * @param context * @param dbName
+     */
     public static void cleanDatabaseByName(Context context, String dbName) {
         context.deleteDatabase(dbName);
     }
 
-    /** * 清除/data/data/com.xxx.xxx/files下的内容 * * @param context */
+    /**
+     * 清除/data/data/com.xxx.xxx/files下的内容
+     *
+     * @param context
+     */
     public static void cleanFiles(Context context) {
         deleteFilesByDirectory(context.getFilesDir());
     }
 
     /**
-     * * 清除外部cache下的内容(/mnt/sdcard/android/data/com.xxx.xxx/cache) * * @param
+     * 清除外部cache下的内容(/mnt/sdcard/android/data/com.xxx.xxx/cache) * * @param
      * context
      */
     public static void cleanExternalCache(Context context) {
@@ -53,12 +64,16 @@ public class DataCleanManager {
         }
     }
 
-    /** * 清除自定义路径下的文件，使用需小心，请不要误删。而且只支持目录下的文件删除 * * @param filePath */
+    /**
+     * 清除自定义路径下的文件，使用需小心，请不要误删。而且只支持目录下的文件删除 * * @param filePath
+     */
     public static void cleanCustomCache(String filePath) {
         deleteFilesByDirectory(new File(filePath));
     }
 
-    /** * 清除本应用所有的数据 * * @param context * @param filepath */
+    /**
+     * 清除本应用所有的数据 * * @param context * @param filepath
+     */
     public static void cleanApplicationData(Context context, String... filepath) {
         cleanInternalCache(context);
         cleanExternalCache(context);
@@ -69,32 +84,62 @@ public class DataCleanManager {
             cleanCustomCache(filePath);
         }
     }
-    /** * 清除本应用所有的数据 * * @param context * @param filepath */
+
+    /**
+     * 清除本应用所有的数据 * * @param context * @param filepath
+     */
     public static void cleanApplicationCache(Context context) {
         cleanInternalCache(context);
         cleanExternalCache(context);
-        cleanDatabases(context);
-        //cleanSharedPreference(context);
-        cleanFiles(context);
     }
 
-    /** * 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理 * * @param directory */
+
+    /**
+     * 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理 * * @param directory
+     */
     private static void deleteFilesByDirectory(File directory) {
-        if (directory != null && directory.exists() && directory.isDirectory()) {
-            for (File item : directory.listFiles()) {
-                item.delete();
+        if (directory != null && directory.exists()) {
+            if (directory.isDirectory()) {
+                try {
+                    File[] fileList = directory.listFiles();
+                    for (int i = 0; i < fileList.length; i++) {
+                        // 如果下面还有文件
+                        if (fileList[i].isDirectory()) {
+                            deleteFilesByDirectory(fileList[i]);
+                        } else {
+                            fileList[i].delete();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
+    /**
+     * 获取缓存大小
+     *
+     * @param context
+     * @return
+     * @throws Exception
+     */
     public static String getTotalCacheSize(Context context) throws Exception {
         long cacheSize = getFolderSize(context.getCacheDir());
+        LogUtil.e("cacheSize == " + cacheSize);
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             cacheSize += getFolderSize(context.getExternalCacheDir());
         }
         return getFormatSize(cacheSize);
     }
 
+    /**
+     * 获取文件
+     *
+     * @param file
+     * @return
+     * @throws Exception
+     */
     // 获取文件
     //Context.getExternalFilesDir() --> SDCard/Android/data/你的应用的包名/files/ 目录，一般放一些长时间保存的数据
     //Context.getExternalCacheDir() --> SDCard/Android/data/你的应用包名/cache/目录，一般存放临时缓存数据

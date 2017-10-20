@@ -102,7 +102,6 @@ public class WebRecordActivity extends BaseActivity {
         }
     };
 
-
     private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
     private AlibcTaokeParams alibcTaokeParams = null;//淘客参数，包括pid，unionid，subPid
     private Boolean isTaoke = false;//是否是淘客商品类型
@@ -176,7 +175,7 @@ public class WebRecordActivity extends BaseActivity {
         rlShare.setOnClickListener(new MyOnclickListener());
         boolean login = Tools.isLogin(this);
         adverId = Tools.getAdverId(this);
-        LogUtil.e("adverId================" + adverId);
+        LogUtil.e("adverId----------------------" + adverId);
         if (login) {
             boolean bindTao = Tools.isBindTao(this);
             if (bindTao) {
@@ -231,7 +230,6 @@ public class WebRecordActivity extends BaseActivity {
                 LogUtil.e(taoWord);
                 break;
         }
-
     }
 
     /**
@@ -263,6 +261,7 @@ public class WebRecordActivity extends BaseActivity {
 
     //Web视图
     private class MyWebViewClient extends WebViewClient {
+
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             return false;
         }

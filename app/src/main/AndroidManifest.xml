@@ -23,13 +23,13 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <!--阿里云热修复权限-->
+    <!-- 阿里云热修复权限 -->
     <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- 外部存储读权限，调试工具加载本地补丁需要 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MyApplication"
@@ -92,6 +92,7 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
@@ -142,6 +143,16 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="splash"
+                    android:scheme="juyoubang" />
             </intent-filter>
         </activity>
         <activity
@@ -218,9 +229,7 @@
         <activity
             android:name=".ui.activity.shop.ShopInfoUpadateActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" >
-
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.shop.ShopBrandUpdateActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -243,16 +252,17 @@
             android:name=".ui.activity.pswset.UserPswsetActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|stateUnchanged"></activity>
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
         <activity
             android:name=".ui.activity.pswset.UserPswCompleteActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|stateUnchanged"></activity>
-        <activity android:name=".ui.activity.ScannerWebActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity
+            android:name=".ui.activity.ScannerWebActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
-        <!--阿里云热修复-->
+            android:screenOrientation="portrait" />
+        <!-- 阿里云热修复 -->
         <meta-data
             android:name="com.taobao.android.hotfix.IDSECRET"
             android:value="24638059-1" />
@@ -262,6 +272,33 @@
         <meta-data
             android:name="com.taobao.android.hotfix.RSASECRET"
             android:value="MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCgK6vgfmiz6jOiSBazKKq6F1o7GlJJ2Zy4mNo2Wy0xva9A5ovbO8tl7wn+B0OfPH71ip75dNblCIe3O/iwVlZ1gceidVAvehJ+ojvr571/U0RoPTou6V3MTnoqzfAB7wL/AxLVd+NBhU4T8J3vSL/bhCdUQxnYCIsKLnGjalIjj1kJ67eEPqE/uRHq+fw4USoY7s4rCLsLtydvvxpcrBpmJPEifclWNUZdIwtIQTF2nQ3Z2IRJK+4mwzLYe0Rz4azICHKKa2j4tFH5Zw/ypqKFLE+E+x6+RdO4FIRmaMYdeCTRjzqx6IxKImITvVFKPMt+6F+iwTaFAZtSgf30/h3zAgMBAAECggEAK/+zKGkxM/MrGfI5oh+Svqn5lHDHmBfaUG9UykfDo31a7jYmxyOm3SqMESdHsS96JNNelmI9Qg9U0MX9q9sbxw3OnFcjntcmy3ifg09Wo+poyUXAfPCIXr5UGvwVaUKSDSF4BAH6AJ6w8xNPH1NZuOCVuTTxnYHDSBm4B88GH1QrMnkvFOKRXWG9ZxZj1B9Yv48gv1LILwMU55S9SRmr13ibeo91yBlDpB06+TxoUYfIQGKT5punc1cpCR8bFRsEZouu2agoyHv0DMrlSee5jZRme3mKADktLOkfU+wIwqExJGAAWi+HIgQLFXzrItiYo8ry4+YJ/W2jWCU9qvy1IQKBgQDQVkQvyVx8G9Bn2C3TqiqCeCyimTU4yfvn2ggpcQxztPd8N6jrFefp6v0ha/Lv/Uasu6ttotRZpyqXCsDAWoTJsAEsEATRij45/EbzHvJIF+zPiQ39yfT8MlBOdmbGT81Ocp7lf8Y4Y6XGfMelwVWxu7Ksk5gHYwg1sL97BiP4MQKBgQDE0G4S+EaE+5gVYP7TL6v7Yl0QDDzFa4i2U0x6nQ8/1n+QFszX4w/dLD7BHTMdzBh0e6GlAIfervfOH6lOnX4Gv86pEuFNdwLc1noGCQ6kjO4358ppS0vNaTVwou5aFwreBvyqUC6uJWDvPM5Frmsjp24V7pkyCoftAgi7U2GTYwKBgQCwXQbWCTjwmz8eWYPZ1gisb/0hHF9QlrRX/lvAcUHgRYboMdoeQGoVvGbSvyZmANuuaCRj6F6pEnlcaa7oZvhYIFWtrlXV6Jhqz+Rj9YOWgiJnQZeFi0yHnjQbZ+Hy6SVczm0yzKrJm5l/YKxF5leb4NANhdhCEJSnlttR0s3qUQKBgQCVuDU0SxhiS36rLMlNYGOFbZN8BMMqL56ljIKOd/JEzujldOLJjFriFql6gLsE/ODRo8cY3Wl+tj2e2SkTu+1GNx2AMvOf2VwdIS9cbgFsniUN9E9fgD8e+N0FXXzSndrPgiMtcKfCJH80H16PVZr9WX3+Qy7ZCXfTjYuU7V46HwKBgQC04GRIKxagoI3SDLFO8z64iy8zC3hVVUeL9G5UxmyW728jaU9effwnvLu2PHli7adQ9Tlpa842eUkUs1iLBDzm4TU28tmWkg+ugduhu7uqtbsX2YoSd0Pt3Bp6EICZjeuUB1x/sAlFlPeO4SPcIuV0nC+vHAvbg3FBKpLJesXjlQ==" />
+
+        <activity
+            android:name=".ui.activity.shop.WhichJoinActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity android:name=".ui.activity.shop.TalentShowActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.shop.StoreshowActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.shop.StoreSuccActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.RedpacketShowActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"></activity>
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
     </application>
 
 </manifest>

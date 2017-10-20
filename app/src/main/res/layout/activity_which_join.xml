@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_which_join"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.gather_excellent_help.ui.activity.shop.WhichJoinActivity">
+
+    <include layout="@layout/top_zhuangai_bar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x10"
+        android:text="请选择加盟方式"
+        android:textSize="14sp"
+        android:textColor="#000000"
+        android:layout_marginTop="@dimen/x10"
+        android:layout_marginBottom="@dimen/x10"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#11000000" />
+
+    <RelativeLayout
+        android:id="@+id/rl_daren_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x10">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="微达人"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <CheckBox
+            android:id="@+id/cb_daren_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:checked="true"
+            android:clickable="false"
+            android:button="@drawable/rb_checkstand_bg_selector" />
+
+    </RelativeLayout>
+     <View
+         android:layout_width="match_parent"
+         android:layout_height="1dp"
+         android:background="#11000000"/>
+     <RelativeLayout
+         android:id="@+id/rl_shiti_select"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:padding="@dimen/x10">
+
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="实体店"
+             android:textSize="14sp"
+             android:textColor="#000000"
+             android:layout_centerVertical="true"/>
+         <CheckBox
+             android:id="@+id/cb_shiti_select"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:button="@drawable/rb_checkstand_bg_selector"
+             android:layout_centerVertical="true"
+             android:clickable="false"
+             android:layout_alignParentRight="true"/>
+
+     </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#11000000" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="微达人与实体店之间区别详见帮助中心"
+        android:textSize="14sp"
+        android:textColor="#99000000"
+        android:padding="@dimen/x10"/>
+
+
+    <TextView
+        android:id="@+id/tv_join_submit"
+        android:layout_width="@dimen/x240"
+        android:layout_height="@dimen/x40"
+        android:background="@drawable/register_confirm_selector"
+        android:gravity="center"
+        android:text="确定"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:layout_marginTop="@dimen/x80"/>
+
+</LinearLayout>

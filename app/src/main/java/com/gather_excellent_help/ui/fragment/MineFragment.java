@@ -44,6 +44,7 @@ import com.gather_excellent_help.ui.activity.credits.LowerMemberStaticsActivity;
 import com.gather_excellent_help.ui.activity.credits.ShopDetailActivity;
 import com.gather_excellent_help.ui.activity.shop.ShopInfoUpadateActivity;
 import com.gather_excellent_help.ui.activity.shop.ShopPhotoUpdateActivity;
+import com.gather_excellent_help.ui.activity.shop.WhichJoinActivity;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.base.LazyLoadFragment;
 import com.gather_excellent_help.ui.widget.CircularImage;
@@ -196,6 +197,8 @@ public class MineFragment extends LazyLoadFragment {
     public static final int CHECK_NULL = 4; //加载数据的标识
 
     private Handler handler;
+    private int apply_type = -1;
+    private int pay_type;
 
     @Override
     public View initView() {
@@ -249,9 +252,8 @@ public class MineFragment extends LazyLoadFragment {
             }
         };
         if (handler != null) {
-            handler.sendEmptyMessageDelayed(CHECK_NULL,500);
+            handler.sendEmptyMessageDelayed(CHECK_NULL, 500);
         }
-
     }
 
     /**
@@ -323,7 +325,7 @@ public class MineFragment extends LazyLoadFragment {
                 LogUtil.e(call.toString() + "==" + e.getMessage());
             }
         });
-        if(tbnMineControl!=null) {
+        if (tbnMineControl != null) {
             tbnMineControl.setOnStateChangeListener(new MyToggleButton.OnStateChangeListener() {
                 @Override
                 public void isCurrentState(boolean currentState) {
@@ -346,14 +348,14 @@ public class MineFragment extends LazyLoadFragment {
                         parseHelpData(response);
                         break;
                     case 0:
-
+                        Toast.makeText(getContext(), codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-
+                LogUtil.e(call.toString() + "-" + e.getMessage());
             }
         });
     }
@@ -423,6 +425,7 @@ public class MineFragment extends LazyLoadFragment {
      * @param response
      */
     private void parseData(String response) {
+        LogUtil.e(response);
         Gson gson = new Gson();
         MineBean mineBean = gson.fromJson(response, MineBean.class);
         int statusCode = mineBean.getStatusCode();
@@ -460,6 +463,8 @@ public class MineFragment extends LazyLoadFragment {
         advertising = dataBean.getAdvertising();
         applyState = dataBean.getApply_status();
         payState = dataBean.getPay_status();
+        apply_type = dataBean.getApply_type();
+        pay_type = dataBean.getPay_type();
         String user_get_ratio = dataBean.getUser_get_ratio();
         if (user_get_ratio != null) {
             CacheUtils.putString(getContext(), CacheUtils.USER_RATE, user_get_ratio);
@@ -511,7 +516,6 @@ public class MineFragment extends LazyLoadFragment {
         } else {
             loadCuserDefault();
         }
-
     }
 
     /**
@@ -578,15 +582,22 @@ public class MineFragment extends LazyLoadFragment {
                             Toast.makeText(getContext(), "你已经申请成功", Toast.LENGTH_SHORT).show();
                         } else if (applyState == 2) {
                             Toast.makeText(getContext(), "你的申请被驳回，请核对后重新申请！", Toast.LENGTH_SHORT).show();
-
                         } else if (applyState == 3) {
-                            if (payState == 1) {
-                                Toast.makeText(getContext(), "你的申请已提交，请等待工作人员审核！", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getContext(), "请你支付加盟费用！", Toast.LENGTH_SHORT).show();
-                                toAlipay();
+                            if(apply_type == 6) {
+                                Toast.makeText(getContext(), "你的申请已提交，请等待工作人员处理！", Toast.LENGTH_SHORT).show();
+                            }else if(apply_type == 5) {
+                                if(pay_type == 1) {
+                                    if (payState == 1) {
+                                        Toast.makeText(getContext(), "你的申请已提交，请等待工作人员处理！", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getContext(), "请你支付加盟费用！", Toast.LENGTH_SHORT).show();
+                                        toAlipay();
+                                    }
+                                }else if(pay_type == 2) {
+                                    Toast.makeText(getContext(), "你的申请已提交，请等待工作人员处理！", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }else if(applyState == 0) {
+                        } else if (applyState == 0) {
                             toMerchantEnter();
                         }
                     }
@@ -671,17 +682,21 @@ public class MineFragment extends LazyLoadFragment {
     }
 
     private void toHelp(String url) {
+        LogUtil.e("返佣规则 = " + url);
         Intent intent = new Intent(getContext(), RuleHelpActivity.class);
         intent.putExtra("web_url", url);
         intent.putExtra("which", which);
         startActivity(intent);
+
     }
 
     /**
      * 跳转到商家入驻界面
      */
     private void toMerchantEnter() {
-        Intent intent = new Intent(getContext(), ShopInfoUpadateActivity.class);
+//        Intent intent = new Intent(getContext(), ShopInfoUpadateActivity.class);
+//        startActivity(intent);
+        Intent intent = new Intent(getContext(), WhichJoinActivity.class);
         startActivity(intent);
     }
 

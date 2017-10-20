@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,12 +68,13 @@ public class SetActivity extends BaseActivity {
     RelativeLayout rlSetUserinfo;
     @Bind(R.id.tv_set_logout)
     TextView tvSetLogout;
-    @Bind(R.id.tv_set_clear_cache)
     TextView tvSetClearCache;
     @Bind(R.id.tv_set_bind_alipay)
     TextView tvSetBindAlipay;
     @Bind(R.id.tv_set_bind_taobao)
     TextView tvSetBindTaobao;
+
+    private TextView tv_set_version;
 
     private NetUtil netUtils;
     private Map<String, String> map;
@@ -90,19 +93,34 @@ public class SetActivity extends BaseActivity {
     private String sms_code_s = "-1";
     private CountDownTimer countDownTimer;
     private AlertDialog alertDialog;
+    private File apkFile;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set);
+        initView();
         ButterKnife.bind(this);
         initData();
+    }
+
+    private void initView() {
+        tvSetClearCache = (TextView) findViewById(R.id.tv_set_clear_cache);
+        tv_set_version = (TextView)findViewById(R.id.tv_set_version);
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
+        String version = Tools.getVersion(this);
+        String show_version = "当前版本号：" + version;
+        if(show_version.length()>6) {
+            Tools.setPartTextColor(tv_set_version,show_version,"：");
+        }else{
+            tv_set_version.setText("");
+        }
         boolean bindTao = Tools.isBindTao(this);
         if (bindTao) {
             nick = CacheUtils.getString(SetActivity.this, CacheUtils.TAOBAO_NICK, "");
@@ -236,7 +254,8 @@ public class SetActivity extends BaseActivity {
                     startActivity(intent);
                     break;
                 case R.id.rl_set_about:
-
+                    //关于聚优帮相关的内容展示
+                    //Toast.makeText(SetActivity.this, "关于聚优帮", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.rl_set_cache:
                     showCacheClearDialog();
@@ -304,7 +323,8 @@ public class SetActivity extends BaseActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         try {
                             DataCleanManager.cleanApplicationCache(SetActivity.this);
-                            tvSetClearCache.setText("清理缓存 (0KB)");
+                            String totalCacheSize = DataCleanManager.getTotalCacheSize(SetActivity.this);
+                            tvSetClearCache.setText("清理缓存 ("+totalCacheSize+")");
                             //EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "清理缓存!"));
                         } catch (Exception e) {
                             e.printStackTrace();

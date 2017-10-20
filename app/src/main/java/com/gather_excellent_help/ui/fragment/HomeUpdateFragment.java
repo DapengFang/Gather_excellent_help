@@ -11,6 +11,9 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -82,6 +85,7 @@ public class HomeUpdateFragment extends LazyLoadFragment {
     TextView tv_item_home_more;
     @Bind(R.id.ll_home_update_scanner)
     LinearLayout ll_home_update_scanner;
+
     private boolean mIsRequestDataRefresh = false;
     public static final int TIME_DOWN = 1; //倒计时显示的标识
     public static final int STOP_REFRESH = 2; //加载数据的标识
@@ -123,7 +127,9 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                             handler.removeMessages(TIME_DOWN);
                             return;
                         }
-                        handler.sendEmptyMessageDelayed(TIME_DOWN, 1000);
+                        if(handler!=null) {
+                            handler.sendEmptyMessageDelayed(TIME_DOWN, 1000);
+                        }
                         break;
                     case STOP_REFRESH:
                         if (bannerRefresh == false && typeRefresh == false) {
@@ -131,10 +137,14 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                                 stopDataRefresh();
                                 setRefresh(mIsRequestDataRefresh);
                             }
-                            handler.removeMessages(STOP_REFRESH);
+                            if(handler!=null) {
+                                handler.removeMessages(STOP_REFRESH);
+                            }
                             return;
                         }
-                        handler.sendEmptyMessageDelayed(STOP_REFRESH, 200);
+                        if(handler!=null) {
+                            handler.sendEmptyMessageDelayed(STOP_REFRESH, 200);
+                        }
                         break;
                     case TOTOP:
                         if (mynested_scrollview != null) {
@@ -147,9 +157,13 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                                 && llHomeGroupZera != null && rcvHomeActivity != null
                                 && rcvHomeActivityList != null && mynested_scrollview != null && ll_home_loadmore != null) {
                             loadHomeUpdateData();
-                            handler.removeMessages(CHECK_NULL);
+                            if(handler!=null) {
+                                handler.removeMessages(CHECK_NULL);
+                            }
                         } else {
-                            handler.sendEmptyMessageDelayed(CHECK_NULL, 500);
+                            if(handler!=null) {
+                                handler.sendEmptyMessageDelayed(CHECK_NULL, 500);
+                            }
                         }
 
                         break;

@@ -206,5 +206,13 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_set_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#6b6b6b"
+        android:layout_marginTop="@dimen/x120"
+        android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>

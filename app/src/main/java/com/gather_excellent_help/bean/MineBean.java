@@ -69,6 +69,8 @@ public class MineBean {
         private int group_type;
         private int apply_status;
         private int pay_status;
+        private int apply_type;
+        private int pay_type;
 
 
         public String getAvatar() {
@@ -181,6 +183,22 @@ public class MineBean {
 
         public void setPay_status(int pay_status) {
             this.pay_status = pay_status;
+        }
+
+        public int getApply_type() {
+            return apply_type;
+        }
+
+        public void setApply_type(int apply_type) {
+            this.apply_type = apply_type;
+        }
+
+        public int getPay_type() {
+            return pay_type;
+        }
+
+        public void setPay_type(int pay_type) {
+            this.pay_type = pay_type;
         }
     }
 }

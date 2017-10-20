@@ -26,6 +26,8 @@ import com.gather_excellent_help.api.pay.PayResult;
 import com.gather_excellent_help.api.pay.SignUtils;
 import com.gather_excellent_help.bean.ApplyMoneyBean;
 import com.gather_excellent_help.bean.CodeStatueBean;
+import com.gather_excellent_help.event.AnyEvent;
+import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -42,6 +44,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
 public class AlipayManagerActivity extends BaseActivity {
@@ -283,6 +286,8 @@ public class AlipayManagerActivity extends BaseActivity {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(AlipayManagerActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
                         wvBanner.loadUrl(succ_url);
+                        EventBus.getDefault().post(new AnyEvent(EventType.STORE_EXIT,"退出商家付款界面"));
+                        EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"刷新"));
                         pay_status = "1";
                         MobclickAgent.onEvent(AlipayManagerActivity.this, "a_pay");
                     } else {
@@ -292,6 +297,7 @@ public class AlipayManagerActivity extends BaseActivity {
                         if (TextUtils.equals(resultStatus, "8000")) {
                             Toast.makeText(AlipayManagerActivity.this, "支付结果确认中", Toast.LENGTH_SHORT).show();
                             wvBanner.loadUrl(fail_url);
+
                         } else {
                             // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
                             Toast.makeText(AlipayManagerActivity.this, "支付失败", Toast.LENGTH_SHORT).show();

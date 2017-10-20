@@ -291,6 +291,7 @@ public class SplashActivity extends BaseFullScreenActivity {
 
         @Override
         public void getSuccessResponse(String response) {
+            LogUtil.e(response);
             parseData(response);
         }
 
@@ -313,6 +314,9 @@ public class SplashActivity extends BaseFullScreenActivity {
                 List<VersionBean.DataBean> data = versionBean.getData();
                 if(data!=null && data.size()>0) {
                     VersionBean.DataBean dataBean = data.get(0);
+                    int isHb = dataBean.getIsHb();
+                    LogUtil.e("是否开启 = " + isHb);
+                    CacheUtils.putInteger(SplashActivity.this,CacheUtils.IS_OPEN_RED,isHb);
                     if(dataBean!=null) {
                         String appVersion = dataBean.getAppVersion();
                         String version = Tools.getVersion(this);
@@ -331,6 +335,4 @@ public class SplashActivity extends BaseFullScreenActivity {
                 break;
         }
     }
-
-
 }

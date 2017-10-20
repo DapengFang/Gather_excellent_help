@@ -1,67 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_main"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#fff">
+    android:layout_height="match_parent">
 
-    <com.gather_excellent_help.ui.widget.NoScrollViewPager
-        android:id="@+id/vp_main"
+    <LinearLayout
+        android:id="@+id/ll_main"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#11000000" />
-
-    <RelativeLayout
-        android:id="@+id/rl_main_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffffff">
-
-        <RadioGroup
-            android:id="@+id/rg_main"
+        <com.gather_excellent_help.ui.widget.NoScrollViewPager
+            android:id="@+id/vp_main"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/x42"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-            <RadioButton
-                android:id="@+id/rb_home"
-                style="@style/bottom_tag_style"
-                android:drawableTop="@drawable/rb_home_selector"
-                android:text="首页" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#11000000" />
 
-            <RadioButton
-                android:id="@+id/rb_shaidan"
-                style="@style/bottom_tag_style"
-                android:drawableTop="@drawable/rb_type_selector"
-                android:text="分类" />
+        <RelativeLayout
+            android:id="@+id/rl_main_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff">
 
-            <RadioButton
-                android:id="@+id/rb_type"
-                style="@style/bottom_tag_style"
-                android:drawableTop="@drawable/rb_soutaobao_selector"
-                android:text="搜淘宝" />
+            <RadioGroup
+                android:id="@+id/rg_main"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x42"
+                android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/rb_shopping"
-                style="@style/bottom_tag_style"
-                android:drawableTop="@drawable/rb_goodscart_selector"
-                android:text="新闻" />
+                <RadioButton
+                    android:id="@+id/rb_home"
+                    style="@style/bottom_tag_style"
+                    android:drawableTop="@drawable/rb_home_selector"
+                    android:text="首页" />
 
-            <RadioButton
-                android:id="@+id/rb_me"
-                style="@style/bottom_tag_style"
-                android:drawableTop="@drawable/rb_mine_selector"
-                android:text="我的" />
+                <RadioButton
+                    android:id="@+id/rb_shaidan"
+                    style="@style/bottom_tag_style"
+                    android:drawableTop="@drawable/rb_type_selector"
+                    android:text="分类" />
 
-        </RadioGroup>
+                <RadioButton
+                    android:id="@+id/rb_type"
+                    style="@style/bottom_tag_style"
+                    android:drawableTop="@drawable/rb_soutaobao_selector"
+                    android:text="搜淘宝" />
 
+                <RadioButton
+                    android:id="@+id/rb_shopping"
+                    style="@style/bottom_tag_style"
+                    android:drawableTop="@drawable/rb_goodscart_selector"
+                    android:text="新闻" />
+
+                <RadioButton
+                    android:id="@+id/rb_me"
+                    style="@style/bottom_tag_style"
+                    android:drawableTop="@drawable/rb_mine_selector"
+                    android:text="我的" />
+
+            </RadioGroup>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/rl_red_packet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#77000000"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/rl_red_packet_show"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/x320"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/r_red_packet_icon"
+                android:layout_centerHorizontal="true"/>
+
+            <ImageView
+                android:id="@+id/iv_red_packet_exit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/r_red_exit_icon"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"/>
+            <ImageView
+                android:id="@+id/iv_red_packet_get"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/r_red_get_icon"
+                android:layout_above="@id/iv_red_packet_exit"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/x10"/>
+
+        </RelativeLayout>
     </RelativeLayout>
 
-</LinearLayout>
+</FrameLayout>
 

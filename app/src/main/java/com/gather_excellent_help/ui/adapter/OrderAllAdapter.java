@@ -18,6 +18,7 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.OrderAllBean;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -52,6 +53,7 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
     public void onBindViewHolder(OrderManagerViewHolder holder, int position) {
         OrderAllBean.DataBean dataBean = allData.get(position);
         DecimalFormat df = new DecimalFormat("#0.00");
+        df.setRoundingMode(RoundingMode.DOWN);
         holder.tvOrderAllTime.setText("下单时间:" + dataBean.getCreate_time());
         holder.tvOrderAllPrice.setText("订单金额:￥" + dataBean.getPrice());
         holder.tvOrderAllNumber.setText("订单号:" + dataBean.getTrade_id());

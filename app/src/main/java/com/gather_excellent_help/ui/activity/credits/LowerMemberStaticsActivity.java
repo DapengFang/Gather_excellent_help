@@ -1,5 +1,6 @@
 package com.gather_excellent_help.ui.activity.credits;
 
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.adapter.LowerMemberAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
+import com.gather_excellent_help.ui.widget.MyNestedScrollView;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -66,6 +68,9 @@ public class LowerMemberStaticsActivity extends BaseActivity {
     @Bind(R.id.ll_lower_member_show)
     LinearLayout ll_lower_member_show;
 
+    private MyNestedScrollView mynest_scrollview;
+
+
     private String startTime = "";
     private String endTime = "";
 
@@ -86,21 +91,30 @@ public class LowerMemberStaticsActivity extends BaseActivity {
     private LowerMemberAdapter lowerMemberAdapter;
 
     private boolean isLoadMore = false;
+    private boolean isCanLoad = true;
     private int page = 1;
     private FullyLinearLayoutManager layoutManager;
     private int lastVisibleItem;
     private String whicks = "";
     private int firstVisbleItem;
 
+    private boolean isAnimationFirst = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lower_member_statics);
+        initView();
         ButterKnife.bind(this);
         initData();
     }
 
-    private void initData(){
+    private void initView() {
+        mynest_scrollview = (MyNestedScrollView) findViewById(R.id.mynest_scrollview);
+    }
+
+
+    private void initData() {
         tvTopTitleName.setText("下级会员统计");
         netUtil = new NetUtil();
         Id = Tools.getUserLogin(this);
@@ -113,49 +127,7 @@ public class LowerMemberStaticsActivity extends BaseActivity {
         rlWardTimeStart.setOnClickListener(new MyOnclikListener());
         rlWardTimeEnd.setOnClickListener(new MyOnclikListener());
         tvWardStaticsConfirm.setOnClickListener(new MyOnclikListener());
-        rcvWardsStatisticsS.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    lastVisibleItem = layoutManager
-                            .findLastVisibleItemPosition();
-                    if (lastVisibleItem + 1 == layoutManager
-                            .getItemCount()) {
-                        isLoadMore = true;
-                        if (currData != null) {
-                            if (currData.size() < 10) {
-                                Toast.makeText(LowerMemberStaticsActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                        }
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                pageNo = String.valueOf(page);
-                                net2Server();
-                            }
-                        }, 1000);
-                    }
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
-                if(rcvWardsStatisticsS!=null) {
-                    int top = rcvWardsStatisticsS.getChildAt(0).getTop();
-                    if(top<0 && isHindow) {
-                        ll_lower_member_show.setVisibility(View.GONE);
-                    }else if(top>=0 && !isHindow) {
-                        ll_lower_member_show.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-        });
-
+        mynest_scrollview.setOnTouchListener(new MyOnTouchClickListener());
     }
 
     public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
@@ -185,6 +157,7 @@ public class LowerMemberStaticsActivity extends BaseActivity {
                         lowerMemberAdapter = new LowerMemberAdapter(LowerMemberStaticsActivity.this, lowerData);
                         rcvWardsStatisticsS.setAdapter(lowerMemberAdapter);
                     }
+                    isCanLoad = true;
                     break;
                 case 0:
                     Toast.makeText(LowerMemberStaticsActivity.this, lowerMermberBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -209,7 +182,7 @@ public class LowerMemberStaticsActivity extends BaseActivity {
         netUtil.okHttp2Server2(url, map);
     }
 
-    public class MyOnclikListener implements View.OnClickListener{
+    public class MyOnclikListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
@@ -247,6 +220,7 @@ public class LowerMemberStaticsActivity extends BaseActivity {
         }
         String username = etWardStaticsUsername.getText().toString().trim();
         isLoadMore = false;
+        isCanLoad = true;
         page = 1;
         pageNo = "1";
         start_time = startTime;
@@ -255,7 +229,6 @@ public class LowerMemberStaticsActivity extends BaseActivity {
         isLoadMore = false;
         whicks = "query";
         net2Server();
-
     }
 
     private void showDateDialog(final int which) {
@@ -283,43 +256,37 @@ public class LowerMemberStaticsActivity extends BaseActivity {
                 .show();
     }
 
-    private float lastX;
-    private float lastY;
-    private boolean isHindow;
+    public class MyOnTouchClickListener implements View.OnTouchListener {
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        super.dispatchTouchEvent(ev);
-        final int action = ev.getAction();
-
-        float x = ev.getX();
-        float y = ev.getY();
-
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                lastY = y;
-                lastX = x;
-                isHindow = false;
-                return false;
-            case MotionEvent.ACTION_MOVE:
-                float dY = Math.abs(y - lastY);
-                float dX = Math.abs(x - lastX);
-                float dis = y-lastY;
-                boolean down = y > lastY ? true : false;
-                lastY = y;
-                lastX = x;
-                LogUtil.e("dis === " + dis);
-                if(dis<0) {
-                    isHindow =true;
-                }else if(dis>0) {
-                    isHindow =false;
-                }
-                break;
-            default:
-                return false;
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            int scrollY = view.getScrollY();
+            int height = view.getHeight();
+            int scrollViewMeasuredHeight = mynest_scrollview.getChildAt(0).getMeasuredHeight();
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_UP:
+                    if ((scrollY + height) == scrollViewMeasuredHeight) {
+                        if (isCanLoad) {
+                            lastVisibleItem = layoutManager
+                                    .findLastVisibleItemPosition();
+                            if (lastVisibleItem + 1 == layoutManager
+                                    .getItemCount()) {
+                                isLoadMore = true;
+                                if (currData != null) {
+                                    if (currData.size() < 10) {
+                                        Toast.makeText(LowerMemberStaticsActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                                isCanLoad = false;
+                                pageNo = String.valueOf(page);
+                                net2Server();
+                            }
+                        }
+                        break;
+                    }
+            }
+            return false;
         }
-        return false;
+
     }
-
-
 }

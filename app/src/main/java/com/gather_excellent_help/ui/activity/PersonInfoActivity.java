@@ -47,6 +47,7 @@ import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,7 @@ public class PersonInfoActivity extends BaseActivity {
     RelativeLayout rlPersonAddress;
 
     private NetUtil netUtils;
-    private Map<String,String> map;
+    private Map<String, String> map;
     private String url = Url.BASE_URL + "UserInfo.aspx";
     private String head_url = Url.BASE_URL + "ChangeFace.aspx";
     private String userLogin;//用户登录后的标识
@@ -91,7 +92,6 @@ public class PersonInfoActivity extends BaseActivity {
     public static final int CHOOSE_PICTURE = 1;
     public static final int DO_PICTURE = 2;
     private String whick;
-    private File tempfile;
 
     private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo.jpg");
     private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
@@ -113,15 +113,14 @@ public class PersonInfoActivity extends BaseActivity {
      */
     private void initData() {
         netUtils = new NetUtil();
-        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         getUserInfo();
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
                 LogUtil.e(response);
-                if(whick.equals("info")) {
+                if (whick.equals("info")) {
                     parseData(response);
-                }else if(whick.equals("head")) {
+                } else if (whick.equals("head")) {
                     parseHead(response);
                 }
 
@@ -129,7 +128,7 @@ public class PersonInfoActivity extends BaseActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-                LogUtil.e(call.toString()+","+e.getMessage());
+                LogUtil.e(call.toString() + "," + e.getMessage());
             }
         });
         rlPersonExit.setOnClickListener(new MyOnclickListener());
@@ -138,22 +137,23 @@ public class PersonInfoActivity extends BaseActivity {
 
     /**
      * 解析
+     *
      * @param response
      */
     private void parseHead(String response) {
         LogUtil.e(response);
         UserAvatarBean userAvatarBean = new Gson().fromJson(response, UserAvatarBean.class);
         int statusCode = userAvatarBean.getStatusCode();
-        switch (statusCode){
+        switch (statusCode) {
             case 1:
                 List<UserAvatarBean.DataBean> data = userAvatarBean.getData();
-                if(data!=null) {
-                    if(data.size()>0) {
+                if (data != null) {
+                    if (data.size() > 0) {
                         UserAvatarBean.DataBean dataBean = data.get(0);
-                        if(dataBean!=null) {
+                        if (dataBean != null) {
                             String avatar = dataBean.getAvatar();
-                            if(avatar!=null && !TextUtils.isEmpty(avatar)) {
-                                if(!avatar.contains("http:")) {
+                            if (avatar != null && !TextUtils.isEmpty(avatar)) {
+                                if (!avatar.contains("http:")) {
                                     avatar = Url.IMG_URL + avatar;
                                 }
                                 Glide.with(this).load(avatar)
@@ -161,7 +161,7 @@ public class PersonInfoActivity extends BaseActivity {
                                         .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
                                         .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
                                         .into(civPersonHead);//请求成功后把图片设置到的控件
-                                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
+                                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "登录成功！"));
                             }
                         }
                     }
@@ -173,20 +173,21 @@ public class PersonInfoActivity extends BaseActivity {
         }
     }
 
-    public class MyOnclickListener implements View.OnClickListener{
+    public class MyOnclickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case  R.id.rl_person_exit:
+                case R.id.rl_person_exit:
                     finish();
                     break;
                 case R.id.civ_person_head:
-                     updateUserHead();
-                     break;
+                    updateUserHead();
+                    break;
             }
         }
     }
+
     private static final int output_X = 480;
     private static final int output_Y = 480;
 
@@ -196,19 +197,19 @@ public class PersonInfoActivity extends BaseActivity {
     private void updateUserHead() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("选择图片");
-        builder.setItems(new String[]{"拍照","相册"}, new DialogInterface.OnClickListener() {
+        builder.setItems(new String[]{"拍照", "相册"}, new DialogInterface.OnClickListener() {
             @SuppressLint("WorldWriteableFiles")
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = null;
                 switch (which) {
-                   case TAKE_PICTURE:
-                       autoObtainCameraPermission();
-                       break;
-                   case CHOOSE_PICTURE:
-                       autoObtainStoragePermission();
-                       break;
-               }
+                    case TAKE_PICTURE:
+                        autoObtainCameraPermission();
+                        break;
+                    case CHOOSE_PICTURE:
+                        autoObtainStoragePermission();
+                        break;
+                }
             }
         });
         builder.create().show();
@@ -237,6 +238,16 @@ public class PersonInfoActivity extends BaseActivity {
             case CAMERA_PERMISSIONS_REQUEST_CODE: {//调用系统相机申请拍照权限回调
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (hasSdcard()) {
+                        if (fileUri.exists()) {
+                            fileUri.delete();
+                        } else {
+                            try {
+                                fileUri.createNewFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                LogUtil.e(e.getMessage());
+                            }
+                        }
                         imageUri = Uri.fromFile(fileUri);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                             imageUri = FileProvider.getUriForFile(PersonInfoActivity.this, "com.gather_excellent_help.fileprovider", fileUri);//通过FileProvider创建一个content类型的Uri
@@ -254,7 +265,6 @@ public class PersonInfoActivity extends BaseActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     PhotoUtils.openPic(this, CHOOSE_PICTURE);
                 } else {
-
                     ToastUtils.showShort(this, "请允许打开操作SDCard权限！！");
                 }
                 break;
@@ -288,6 +298,7 @@ public class PersonInfoActivity extends BaseActivity {
 
     /**
      * 保存裁剪之后的图片数据
+     *
      * @param picdata
      */
     private void setPicToView(Intent picdata) {
@@ -298,12 +309,12 @@ public class PersonInfoActivity extends BaseActivity {
             civPersonHead.setImageDrawable(drawable);
             String upload = Tools.BitmapToBase64(photo);
             LogUtil.e(upload);
-            if(!TextUtils.isEmpty(upload)) {
+            if (!TextUtils.isEmpty(upload)) {
                 map = new HashMap<>();
-                map.put("id",userLogin);
-                map.put("file",upload);
+                map.put("id", userLogin);
+                map.put("file", upload);
                 whick = "head";
-                netUtils.okHttp2Server2(head_url,map);
+                netUtils.okHttp2Server2(head_url, map);
             }
         }
     }
@@ -318,6 +329,16 @@ public class PersonInfoActivity extends BaseActivity {
                 // 如果是直接从相册获取
                 case CHOOSE_PICTURE:
                     if (hasSdcard()) {
+                        if (fileCropUri.exists()) {
+                            fileCropUri.delete();
+                        } else {
+                            try {
+                                fileCropUri.createNewFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                LogUtil.e(e.getMessage());
+                            }
+                        }
                         cropImageUri = Uri.fromFile(fileCropUri);
                         Uri newUri = Uri.parse(PhotoUtils.getPath(this, data.getData()));
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
@@ -329,6 +350,16 @@ public class PersonInfoActivity extends BaseActivity {
                     break;
                 // 如果是调用相机拍照时
                 case TAKE_PICTURE:
+                    if (fileCropUri.exists()) {
+                        fileCropUri.delete();
+                    } else {
+                        try {
+                            fileCropUri.createNewFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            LogUtil.e(e.getMessage());
+                        }
+                    }
                     cropImageUri = Uri.fromFile(fileCropUri);
                     PhotoUtils.cropImageUri(this, imageUri, cropImageUri, 1, 1, output_X, output_Y, CODE_RESULT_REQUEST);
                     break;
@@ -340,12 +371,12 @@ public class PersonInfoActivity extends BaseActivity {
                         civPersonHead.setImageDrawable(drawable);
                         String upload = Tools.BitmapToBase64(bitmap);
                         LogUtil.e(upload);
-                        if(!TextUtils.isEmpty(upload)) {
+                        if (!TextUtils.isEmpty(upload)) {
                             map = new HashMap<>();
-                            map.put("id",userLogin);
-                            map.put("file",upload);
+                            map.put("id", userLogin);
+                            map.put("file", upload);
                             whick = "head";
-                            netUtils.okHttp2Server2(head_url,map);
+                            netUtils.okHttp2Server2(head_url, map);
                         }
                     }
                 default:
@@ -358,6 +389,7 @@ public class PersonInfoActivity extends BaseActivity {
 
     /**
      * 解析用户信息
+     *
      * @param response
      */
     private void parseData(String response) {
@@ -367,20 +399,21 @@ public class PersonInfoActivity extends BaseActivity {
         int statusCode = userinfoBean.getStatusCode();
         List<UserinfoBean.DataBean> data = userinfoBean.getData();
         switch (statusCode) {
-            case 1 :
-                if(data==null) {
+            case 1:
+                if (data == null) {
                     return;
                 }
                 loadUserInfo(data);
                 break;
             case 0:
-                Toast.makeText(PersonInfoActivity.this, "修改失败！"+userinfoBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(PersonInfoActivity.this, "修改失败！" + userinfoBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
     /**
      * 展示用户信息
+     *
      * @param data
      */
     private void loadUserInfo(List<UserinfoBean.DataBean> data) {
@@ -390,26 +423,28 @@ public class PersonInfoActivity extends BaseActivity {
         String mobile = dataBean.getMobile();
         String nick_name = dataBean.getNick_name();
         String sex = dataBean.getSex();
-        if(nick_name!=null && !TextUtils.isEmpty(nick_name)) {
+        if (nick_name != null && !TextUtils.isEmpty(nick_name)) {
             tvPersonNick.setText(nick_name);
         }
-        if(avatar!=null && !avatar.equals("")) {
-            if(!avatar.contains("http")){
+        if (avatar != null && !avatar.equals("")) {
+            if (!avatar.contains("http")) {
                 avatar = Url.IMG_URL + avatar;
             }
-            Glide.with(this).load(avatar)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
-                    .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
-                    .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
-                    .into(civPersonHead);//请求成功后把图片设置到的控件
+            if (PersonInfoActivity.this != null && !PersonInfoActivity.this.isFinishing()){
+                Glide.with(this).load(avatar)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                        .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                        .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                        .into(civPersonHead);//请求成功后把图片设置到的控件
+            }
         }
-        if(mobile!=null && !mobile.equals("")) {
+        if (mobile != null && !mobile.equals("")) {
             tvPersonPhone.setText(mobile);
         }
-        if(sex!=null && !sex.equals("")) {
-           tvPersonSex.setText(sex);
+        if (sex != null && !sex.equals("")) {
+            tvPersonSex.setText(sex);
         }
-        if(group!=null && !group.equals("")) {
+        if (group != null && !group.equals("")) {
             usertype.setText(group);
         }
     }
@@ -418,12 +453,12 @@ public class PersonInfoActivity extends BaseActivity {
      * 获取用户的登录信息
      */
     private void getUserInfo() {
-        if(Tools.isLogin(this)) {
+        if (Tools.isLogin(this)) {
             userLogin = Tools.getUserLogin(this);
-            map= new HashMap<>();
-            map.put("Id",userLogin);
+            map = new HashMap<>();
+            map.put("Id", userLogin);
             whick = "info";
-            netUtils.okHttp2Server2(url,map);
+            netUtils.okHttp2Server2(url, map);
         }
     }
 

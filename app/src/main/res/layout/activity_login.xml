@@ -125,6 +125,7 @@
                 android:textSize="16sp"
                 android:gravity="center"
                 android:background="@drawable/register_confirm_selector"/>
+
             <TextView
                 android:id="@+id/tv_register"
                 android:layout_width="match_parent"
@@ -136,7 +137,6 @@
                 android:gravity="center"
                 android:background="@drawable/login_shape_register_selector"/>
         </LinearLayout>
-
 
     </LinearLayout>
 

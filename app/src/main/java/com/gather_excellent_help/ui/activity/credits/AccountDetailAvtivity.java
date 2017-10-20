@@ -47,6 +47,7 @@ public class AccountDetailAvtivity extends BaseActivity {
     @Bind(R.id.iv_order_no_zhanwei)
     ImageView ivOrderNoZhanwei;
 
+
     private String account_url = Url.BASE_URL + "AmountLog.aspx";
     private Map<String, String> map;
     private NetUtil netUtil;
@@ -57,6 +58,7 @@ public class AccountDetailAvtivity extends BaseActivity {
     private String pageIndex = "1";
     private int page = 1;
     private boolean isLoadmore = false;
+    private boolean isCanLoad = true;
     private int lastVisibleItem;
     private FullyLinearLayoutManager layoutManager;
     private AcccountDetailAdapter acccountDetailAdapter;
@@ -109,6 +111,9 @@ public class AccountDetailAvtivity extends BaseActivity {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if(!isCanLoad) {
+                        return;
+                    }
                     lastVisibleItem = layoutManager
                             .findLastVisibleItemPosition();
 
@@ -119,13 +124,9 @@ public class AccountDetailAvtivity extends BaseActivity {
                             Toast.makeText(AccountDetailAvtivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                pageIndex = String.valueOf(page);
-                                net2ServerByType(type);
-                            }
-                        }, 1000);
+                        isCanLoad = false;
+                        pageIndex = String.valueOf(page);
+                        net2ServerByType(type);
                     }
                 }
             }
@@ -182,6 +183,7 @@ public class AccountDetailAvtivity extends BaseActivity {
             acccountDetailAdapter = new AcccountDetailAdapter(this, accountData);
             rcvAccountDetail.setAdapter(acccountDetailAdapter);
         }
+        isCanLoad = true;
     }
 
     public class MyOnclickListener implements View.OnClickListener {
@@ -199,6 +201,7 @@ public class AccountDetailAvtivity extends BaseActivity {
                     tvAccountQueryTime.setSelected(true);
                     tvAccountQueryProject.setSelected(false);
                     type = "1";
+                    isCanLoad = true;
                     net2ServerByType(type);
                     break;
                 case R.id.tv_account_query_project:
@@ -208,6 +211,7 @@ public class AccountDetailAvtivity extends BaseActivity {
                     tvAccountQueryTime.setSelected(false);
                     tvAccountQueryProject.setSelected(true);
                     type = "2";
+                    isCanLoad = true;
                     net2ServerByType(type);
                     break;
             }

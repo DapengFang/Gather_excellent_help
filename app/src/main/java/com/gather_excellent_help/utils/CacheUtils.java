@@ -48,7 +48,8 @@ public class CacheUtils {
 	//保存冷启动修复状态
 	public static final String HOT_FIX_STATUS = "hot_fix_status";
 
-
+	//保存是否开启红包状态
+	public static final String IS_OPEN_RED = "is_open_red";
 
 	public static SharedPreferences sp;
 

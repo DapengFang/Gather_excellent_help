@@ -46,35 +46,6 @@ public class BaseActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        boolean hotfixStute = Tools.getHotfixStute(this);
-        LogUtil.e("hotfixStute == "+ hotfixStute);
-        if (!isAppOnForeground()) {
-            //app 进入后台
-            if (hotfixStute) {
-                SophixManager.getInstance().killProcessSafely();
-                Tools.saveHotfixStute(this, false);
-                Toast.makeText(BaseActivity.this, "杀死app进程成功", Toast.LENGTH_SHORT).show();
-                LogUtil.e("杀死app进程成功");
-            }else{
-                LogUtil.e("杀死app进程失败");
-            }
-            LogUtil.e("现在处于后台进程");
-        }else{
-            LogUtil.e("现在处于前台进程");
-        }
-    }
-
-    public boolean isAppOnForeground() {
-        // Returns a list of application processes that are running on the device
-        ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-        String packageName = getApplicationContext().getPackageName();
-        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
-        if (appProcesses == null)
-            return false;
-        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) // The name of the process that this object is associated with.
-            if (appProcess.processName.equals(packageName) && appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND)
-                return true;
-        return false;
     }
 
 }

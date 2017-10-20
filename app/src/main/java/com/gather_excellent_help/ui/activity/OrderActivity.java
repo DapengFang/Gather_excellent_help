@@ -49,7 +49,7 @@ public class OrderActivity extends BaseActivity {
     ViewpagerIndicator vid_order_manager;
     @Bind(R.id.iv_order_no_zhanwei)
     ImageView ivOrderNoZhanwei;
-
+    private boolean isCanLoad = true;
 
     private OrderAllAdapter orderAllAdapter;
     private int tab_p = 0;//当前的订单的位置
@@ -63,7 +63,7 @@ public class OrderActivity extends BaseActivity {
     private String loginId;
     private int order_type;
     private String pageIndex = "1";
-    private int page;
+    private int page = 1;
     private boolean isLoaderMore = false;
     private FullyLinearLayoutManager fullyLinearLayoutManager;
     private int lastVisibleItem;
@@ -138,20 +138,18 @@ public class OrderActivity extends BaseActivity {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if(!isCanLoad) {
+                        return;
+                    }
                     lastVisibleItem = fullyLinearLayoutManager
                             .findLastVisibleItemPosition();
-
                     if (lastVisibleItem + 1 == fullyLinearLayoutManager
                             .getItemCount()) {
                         isLoaderMore = true;
                         page++;
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                pageIndex = String.valueOf(page);
-                                net2ServerOrder(curr_statue);
-                            }
-                        }, 1000);
+                        isCanLoad =false;
+                        pageIndex = String.valueOf(page);
+                        net2ServerOrder(curr_statue);
                     }
                 }
             }
@@ -172,8 +170,9 @@ public class OrderActivity extends BaseActivity {
     private void pareAllData(String response) {
         OrderAllBean orderAllBean = new Gson().fromJson(response, OrderAllBean.class);
         List<OrderAllBean.DataBean> data = orderAllBean.getData();
+        isCanLoad = true;
         if (isLoaderMore) {
-            if (data.size() < 10) {
+            if (data.size() == 0) {
                 Toast.makeText(OrderActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
                 return;
             } else {
@@ -259,25 +258,31 @@ public class OrderActivity extends BaseActivity {
                     }
                     tab_p = finalI;
                     pageIndex = "1";
+                    page = 1;
                     isLoaderMore = false;
                     switch (tab_p) {
                         case 0:
+                            isCanLoad = true;
                             curr_statue = 5;
                             net2ServerOrder(curr_statue);
                             break;
                         case 1:
+                            isCanLoad = true;
                             curr_statue = 1;
                             net2ServerOrder(curr_statue);
                             break;
                         case 2:
+                            isCanLoad = true;
                             curr_statue = 2;
                             net2ServerOrder(curr_statue);
                             break;
                         case 3:
+                            isCanLoad = true;
                             curr_statue = 3;
                             net2ServerOrder(curr_statue);
                             break;
                         case 4:
+                            isCanLoad = true;
                             curr_statue = 4;
                             net2ServerOrder(curr_statue);
                             break;

@@ -336,4 +336,9 @@ public class Tools {
     public static boolean getHotfixStute(Context context){
         return CacheUtils.getBoolean(context,CacheUtils.HOT_FIX_STATUS,false);
     }
+
+    //获取红包开启状态
+    public static int getOpenRedStute(Context context){
+        return CacheUtils.getInteger(context,CacheUtils.IS_OPEN_RED,0);
+    }
 }

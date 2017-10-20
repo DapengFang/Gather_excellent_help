@@ -254,7 +254,6 @@ public class LoginActivity extends Activity {
                 map.put("portrait", avatarUrl);
                 map.put("nickname", nick);
             }
-
     }
 
     @Override
