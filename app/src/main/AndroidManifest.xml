@@ -222,10 +222,12 @@
 
         <service android:name=".ui.service.MyService" />
 
-        <activity android:name=".TestActivity"
+        <activity
+            android:name=".TestActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
-        <activity android:name=".TestActivity2"
+        <activity
+            android:name=".TestActivity2"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
@@ -308,9 +310,8 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".ui.activity.QRcodeActivity" />
-        <activity android:name=".ui.activity.BindPhoneActivity">
-
-        </activity>
+        <activity android:name=".ui.activity.BindPhoneActivity"></activity>
+        <activity android:name=".ui.activity.SetBindPswActivity"></activity>
     </application>
 
 </manifest>

@@ -35,7 +35,6 @@ public class TaobaoWareListAdapter extends BaseAdapter {
     private Context context;
     private List<SearchTaobaoBean.DataBean> data;
     private LayoutInflater inflater;    //布局填充器
-    //private ImageLoader mImageLoader;
     private double user_rate;
     private int shopType;
 

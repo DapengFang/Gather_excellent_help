@@ -9,8 +9,8 @@ android {
         applicationId "com.gather_excellent_help"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 9
-        versionName "1.0.8"
+        versionCode 8
+        versionName "1.0.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
         ndk {

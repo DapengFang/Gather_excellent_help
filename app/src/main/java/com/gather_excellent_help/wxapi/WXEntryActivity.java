@@ -58,7 +58,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     private NetUtil netUtil;
     private Map<String,String> map;
 
-    private String wex_url = "http://192.168.200.106:809/api/juyoubang/WeChatLogin.aspx";
+    private String wex_url = Url.BASE_URL + "WeChatLogin.aspx";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

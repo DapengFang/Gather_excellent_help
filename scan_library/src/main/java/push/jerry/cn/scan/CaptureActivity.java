@@ -2,11 +2,14 @@ package push.jerry.cn.scan;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +17,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,14 +30,24 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.ChecksumException;
 import com.google.zxing.DecodeHintType;
+import com.google.zxing.FormatException;
+import com.google.zxing.NotFoundException;
+import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.client.result.ResultParser;
+import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.qrcode.QRCodeReader;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +60,7 @@ import push.jerry.cn.scan.permisson.Acp;
 import push.jerry.cn.scan.permisson.AcpListener;
 import push.jerry.cn.scan.permisson.AcpOptions;
 import push.jerry.cn.scan.permisson.ToastUtil;
+import push.jerry.cn.scan.utils.UriUtil;
 import push.jerry.cn.scan.view.ViewfinderView;
 
 
@@ -64,6 +79,7 @@ public class CaptureActivity extends AppCompatActivity
         implements SurfaceHolder.Callback {
     public static final int OPEN_TYPE_COUPON_CODE = 1;//打开类型 扫描印书码
     public static final int OPEN_TYPE_PV_CODE = 2;//打开类型 扫描商家优惠码
+    private static final int REQUEST_CODE_SCAN_GALLERY = 0x123;//从相册获取二维码的标识
 
     private static final int ANIMATION_DURATION = 800;
     private static final int ANIMATION_STARTOFFSET = 500;
@@ -122,12 +138,19 @@ public class CaptureActivity extends AppCompatActivity
     private RelativeLayout rlOpenUp, rlOpenDown;
     private SurfaceHolder surfaceHolder;
     private ImageView lightView;
+    private TextView tv_camera;
     private static OnScanResultListener onScanResultListener;
+    private String photo_path;
+    private ProgressDialog mProgress;
+    private Bitmap scanBitmap;
 
     public static void open(Context context, OnScanResultListener listener) {
         onScanResultListener = listener;
         context.startActivity(new Intent(context, CaptureActivity.class));
     }
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,6 +160,16 @@ public class CaptureActivity extends AppCompatActivity
         setContentView(R.layout.activity_capture);
         flMain = (FrameLayout) findViewById(R.id.capture_frame);
         lightView = (ImageView) findViewById(R.id.btnLight);
+        tv_camera = (TextView) findViewById(R.id.tv_camera);
+        tv_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //打开手机中的相册
+                Intent innerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                innerIntent.setType("image/*");
+                startActivityForResult(innerIntent, REQUEST_CODE_SCAN_GALLERY);
+            }
+        });
         lightView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -477,6 +510,92 @@ public class CaptureActivity extends AppCompatActivity
         builder.setPositiveButton(R.string.scan_dialog_ok, new FinishListener(this));
         builder.setOnCancelListener(new FinishListener(this));
         builder.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode==RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_CODE_SCAN_GALLERY:
+                    handleAlbumPic(data);
+                    break;
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * 处理选择的图片
+     * @param data
+     */
+    private void handleAlbumPic(Intent data) {
+        //获取选中图片的路径
+        photo_path = UriUtil.getImageAbsolutePath(CaptureActivity.this,data.getData());
+
+        mProgress = new ProgressDialog(CaptureActivity.this);
+        mProgress.setMessage("正在扫描...");
+        mProgress.setCancelable(false);
+        mProgress.show();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mProgress.dismiss();
+                Result result =  scanningImage(photo_path);
+                if (result != null) {
+                    Log.e("TAG", "result = " + result);
+//                    Intent resultIntent = new Intent();
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("scaner_success" ,result.getText());
+//                    resultIntent.putExtras(bundle);
+//                    CaptureActivity.this.setResult(RESULT_OK, resultIntent);
+                    onScanResultListener.onResult(result.getText());
+                    finish();
+                } else {
+                    Toast.makeText(CaptureActivity.this, "识别失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    /**
+     * 扫描二维码图片的方法
+     * @param
+     * @return
+     */
+    public Result scanningImage(String path) {
+        if(TextUtils.isEmpty(path)){
+            return null;
+        }
+        Hashtable<DecodeHintType, String> hints = new Hashtable<>();
+        hints.put(DecodeHintType.CHARACTER_SET, "UTF8"); //设置二维码内容的编码
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true; // 先获取原大小
+        scanBitmap = BitmapFactory.decodeFile(path, options);
+        options.inJustDecodeBounds = false; // 获取新的大小
+        int sampleSize = (int) (options.outHeight / (float) 200);
+        if (sampleSize <= 0)
+            sampleSize = 1;
+        options.inSampleSize = sampleSize;
+        scanBitmap = BitmapFactory.decodeFile(path, options);
+        int width = scanBitmap.getWidth();
+        int height = scanBitmap.getHeight();
+        final int[] pixels = new int[width * height];
+        scanBitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+        RGBLuminanceSource source = new RGBLuminanceSource(width,height,pixels);
+        BinaryBitmap bitmap1 = new BinaryBitmap(new HybridBinarizer(source));
+        QRCodeReader reader = new QRCodeReader();
+        try {
+            return reader.decode(bitmap1, hints);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        } catch (ChecksumException e) {
+            e.printStackTrace();
+        } catch (FormatException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void Close(View view) {

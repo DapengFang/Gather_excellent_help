@@ -196,6 +196,8 @@ public class MineFragment extends LazyLoadFragment {
 
     public static final int CHECK_NULL = 4; //加载数据的标识
 
+    private static final int REQUEST_CODE_SCAN_GALLERY = 0x123;//从相册获取二维码的标识
+
     private Handler handler;
     private int apply_type = -1;
     private int pay_type;
@@ -668,9 +670,21 @@ public class MineFragment extends LazyLoadFragment {
                 case R.id.iv_me_person_lingdang:
                     //测试热修复的小铃铛
                     Toast.makeText(getContext(), "热修复测试成功！！！", Toast.LENGTH_SHORT).show();
+                    carmeraScanImage();
                     break;
             }
         }
+    }
+
+    /**
+     * 从相册获取二维码并扫描解析
+     */
+    private void carmeraScanImage() {
+        //打开手机中的相册
+        Intent innerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        innerIntent.setType("image/*");
+        startActivityForResult(innerIntent, REQUEST_CODE_SCAN_GALLERY);
+
     }
 
     /**

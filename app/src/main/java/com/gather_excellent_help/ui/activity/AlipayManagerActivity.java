@@ -159,6 +159,7 @@ public class AlipayManagerActivity extends BaseActivity {
                         }
                         key = String.valueOf(System.currentTimeMillis());
                         String orderInfo = getOrderInfo("聚优帮加盟", "聚优帮-商家-加盟", price);
+                        LogUtil.e(orderInfo);
                         String sign = sign(orderInfo);
                         try {
                             /**
@@ -257,7 +258,8 @@ public class AlipayManagerActivity extends BaseActivity {
             "iSyNJwlWipu9mTSrfdDQbjXCkBdJAkAPJT7nq8NpbCC79xpUEGwnIUPq4jSAl3Be\n" +
             "8i/Okxt08BtEQ/quG4+zuUnjqmKZC/2szYKH1XuFVQju7Sioyxq9AkA1ldoHdbbN\n" +
             "cHP8Zpc4Hpz+YIIGJhVifl3rNLAi2CqngrQFjmJxNa0GLkTSc4/zE4L4Q1UKEM2c\n" +
-            "qs8s8NwJW5RL";   // 支付宝公钥
+            "qs8s8NwJW5RL";
+    // 支付宝公钥
     public static final String RSA_PUBLIC = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCgF1G+SCzt2RpMwy2JXcYjjglRCpFiJnGbrGhWDhwBqsAG8JrUXoLgKnuPF8LsEPR8Sw+KG/n0IpUKGr4Da663vlS/MOicglE2LH/d7MkmtGYZTkk2gvVs5GZstkRkyJvpuF77AUfu2MRc9aFcU6iwW6Rj5f2L+diWQks32oujJQIDAQAB";
     private static final int SDK_PAY_FLAG = 1;
 

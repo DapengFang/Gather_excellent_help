@@ -82,7 +82,11 @@ public class MyApplication extends Application {
                         } else if (code == PatchStatus.CODE_LOAD_RELAUNCH) {
                             // 表明新补丁生效需要重启. 开发者可提示用户或者强制重启;
                             // 建议: 用户可以监听进入后台事件, 然后调用killProcessSafely自杀，以此加快应用补丁，详见1.3.2.3
-                            Tools.saveHotfixStute(application,true);
+                            try{
+                                Tools.saveHotfixStute(application,true);
+                            }catch(Error e){
+                               LogUtil.e("程序发生未知错误！！！");
+                            }
                             Log.e("TGA","PatchStatus.CODE_LOAD_RELAUNCH = 补丁加载需要冷启动" );
                             Toast.makeText(application, "请重新打开App加载更新补丁！", Toast.LENGTH_SHORT).show();
                         } else if(code == PatchStatus.CODE_LOAD_FAIL) {
