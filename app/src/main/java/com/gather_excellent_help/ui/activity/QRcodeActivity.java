@@ -1,25 +1,22 @@
-package com.gather_excellent_help;
+package com.gather_excellent_help.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gather_excellent_help.ui.activity.QRcodeActivity;
+import com.gather_excellent_help.R;
+import com.gather_excellent_help.ui.activity.credits.InviteFriendsActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
-import com.gather_excellent_help.ui.widget.DividerItemDecoration;
-import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
-import com.gather_excellent_help.update.HomeActivityAdapter;
-import com.gather_excellent_help.update.HomeActivityListAdapter;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.qrcode.QRCodeUtil;
 import com.umeng.socialize.ShareAction;
@@ -32,10 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
-public class TestActivity extends BaseActivity {
+public class QRcodeActivity extends BaseActivity {
 
     private ImageView iv_qrcode;
     private TextView tv_qrcode_tip;
@@ -45,7 +39,7 @@ public class TestActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_qrcode);
         initView();
         initData();
     }
@@ -67,7 +61,7 @@ public class TestActivity extends BaseActivity {
         tv_top_title_name.setText("邀请好友二维码");
         Intent intent = getIntent();
         final String share_url = intent.getStringExtra("share_url");
-        final String filePath = getFileRoot(TestActivity.this) + File.separator
+        final String filePath = getFileRoot(QRcodeActivity.this) + File.separator
                 + "qr_" + System.currentTimeMillis() + ".jpg";
 
         LogUtil.e("filePath = " + filePath);
@@ -86,13 +80,13 @@ public class TestActivity extends BaseActivity {
                         public void run() {
                             Bitmap bitmap = BitmapFactory.decodeFile(filePath);
                             final String share_content = "我邀请你一起来聚优帮耍，快点打开" + share_url + "和我一起玩转聚优帮吧。";
-                            final UMImage image = new UMImage(TestActivity.this, bitmap);//bitmap文件
+                            final UMImage image = new UMImage(QRcodeActivity.this, bitmap);//bitmap文件
                             iv_qrcode.setImageBitmap(bitmap);
                             tv_qrcode_tip.setVisibility(View.VISIBLE);
                             iv_qrcode.setOnLongClickListener(new View.OnLongClickListener() {
                                 @Override
                                 public boolean onLongClick(View view) {
-                                    new ShareAction(TestActivity.this)
+                                    new ShareAction(QRcodeActivity.this)
                                             .setPlatform(SHARE_MEDIA.WEIXIN)//传入平台
                                             .withText("hello")//分享内容
                                             .withMedia(image)
@@ -138,7 +132,7 @@ public class TestActivity extends BaseActivity {
          */
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            Toast.makeText(TestActivity.this, "成功了", Toast.LENGTH_LONG).show();
+            Toast.makeText(QRcodeActivity.this, "成功了", Toast.LENGTH_LONG).show();
         }
 
         /**
@@ -148,7 +142,7 @@ public class TestActivity extends BaseActivity {
          */
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            Toast.makeText(TestActivity.this, "失败" + t.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(QRcodeActivity.this, "失败" + t.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         /**
@@ -157,8 +151,7 @@ public class TestActivity extends BaseActivity {
          */
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(TestActivity.this, "取消了", Toast.LENGTH_LONG).show();
-
+            Toast.makeText(QRcodeActivity.this, "取消了", Toast.LENGTH_LONG).show();
         }
     };
 
@@ -196,8 +189,8 @@ public class TestActivity extends BaseActivity {
             Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             Uri uri = Uri.fromFile(file);
             intent.setData(uri);
-            TestActivity.this.sendBroadcast(intent);
-            Toast.makeText(TestActivity.this,"保存相册成功~",Toast.LENGTH_SHORT).show();
+            QRcodeActivity.this.sendBroadcast(intent);
+            Toast.makeText(QRcodeActivity.this,"保存相册成功~",Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -208,4 +201,5 @@ public class TestActivity extends BaseActivity {
         super.onDestroy();
         UMShareAPI.get(this).release();
     }
+
 }

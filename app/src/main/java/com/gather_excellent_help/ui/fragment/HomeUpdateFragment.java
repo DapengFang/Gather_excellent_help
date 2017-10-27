@@ -248,14 +248,20 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                     @Override
                     public void onResult(String result) {
                         LogUtil.e(result);
-                        if(!result.contains("http") || !result.contains("rtnurl=")) {
-                            Toast.makeText(getContext(),"没有找到此商品！", Toast.LENGTH_SHORT).show();
+                        if(result.startsWith("http")) {
+                            if(result.contains("rtnurl=")) {
+                                String[] sanners = result.split("=");
+                                String url = sanners[sanners.length - 1];
+                                Intent intent = new Intent(getContext(), ScannerWebActivity.class);
+                                intent.putExtra("scaner_url", url);
+                                startActivity(intent);
+                            }else{
+                                Intent intent = new Intent(getContext(), ScannerWebActivity.class);
+                                intent.putExtra("scaner_url", result);
+                                startActivity(intent);
+                            }
                         }else{
-                            String[] sanners = result.split("=");
-                            String url = sanners[sanners.length - 1];
-                            Intent intent = new Intent(getContext(), ScannerWebActivity.class);
-                            intent.putExtra("scaner_url",url);
-                            startActivity(intent);
+                            Toast.makeText(getContext(), result , Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

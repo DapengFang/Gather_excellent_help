@@ -322,10 +322,8 @@ public class Tools {
         tmDevice = "" + tm.getDeviceId();
         tmSerial = "" + tm.getSimSerialNumber();
         androidId = "" + android.provider.Settings.Secure.getString(activity.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-
         UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
         String uniqueId = deviceUuid.toString();
-
         return uniqueId;
     }
     //保存阿里云热修复冷启动的状态
@@ -335,6 +333,16 @@ public class Tools {
     //得到阿里云热修复冷启动的状态
     public static boolean getHotfixStute(Context context){
         return CacheUtils.getBoolean(context,CacheUtils.HOT_FIX_STATUS,false);
+    }
+
+    //保存第一次加载时候弹出提示状态
+    public static void saveFirstHotfixToast(Context context,int count){
+        CacheUtils.putInteger(context,CacheUtils.HOT_FIX_SHOW_TOAST,count);
+    }
+
+    //取出第一次保存的弹出提示状态
+    public static int getFirstHotfixToast(Context context){
+        return CacheUtils.getInteger(context,CacheUtils.HOT_FIX_SHOW_TOAST,0);
     }
 
     //获取红包开启状态

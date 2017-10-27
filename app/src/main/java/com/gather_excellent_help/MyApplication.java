@@ -48,12 +48,6 @@ public class MyApplication extends Application {
     private Map<String, String> map;
     private String appVersion;
 
-//    public static RefWatcher getRefWatcher(Context context) {
-//        MyApplication application = (MyApplication) context.getApplicationContext();
-//        return application.refWatcher;
-//    }
-//
-//    private RefWatcher refWatcher;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -68,11 +62,23 @@ public class MyApplication extends Application {
                 .setPatchLoadStatusStub(new PatchLoadStatusListener() {
                     @Override
                     public void onLoad(final int mode, final int code, final String info, final int handlePatchVersion) {
+                        LogUtil.e("mode = " + mode + ",code = " + code + ",info = " + info + "handlePatchVersion = " + handlePatchVersion);
                         // 补丁加载回调通知
                         if (code == PatchStatus.CODE_LOAD_SUCCESS) {
                             // 表明补丁加载成功
-                            Log.e("TGA","PatchStatus.CODE_LOAD_SUCCESS = 补丁加载成功" );
-                            Toast.makeText(application, "更新补丁加载成功！", Toast.LENGTH_SHORT).show();
+                            Log.e("TGA","PatchStatus.CODE_LOAD_SUCCESS = 补丁加载成功");
+                            try {
+                                int count = Tools.getFirstHotfixToast(application);
+                                if(count == 1) {
+                                    Toast.makeText(application, "更新补丁成功！", Toast.LENGTH_SHORT).show();
+                                    Tools.saveFirstHotfixToast(application,2);
+                                }else if(count ==2) {
+                                    Toast.makeText(application, "更新补丁成功！", Toast.LENGTH_SHORT).show();
+                                    Tools.saveFirstHotfixToast(application,0);
+                                }
+                            }catch (Error e){
+                               LogUtil.e(e.getMessage());
+                            }
                         } else if (code == PatchStatus.CODE_LOAD_RELAUNCH) {
                             // 表明新补丁生效需要重启. 开发者可提示用户或者强制重启;
                             // 建议: 用户可以监听进入后台事件, 然后调用killProcessSafely自杀，以此加快应用补丁，详见1.3.2.3
@@ -98,12 +104,16 @@ public class MyApplication extends Application {
         // queryAndLoadNewPatch不可放在attachBaseContext 中，否则无网络权限，建议放在后面任意时刻，如onCreate中
         SophixManager.getInstance().queryAndLoadNewPatch();
         netUtil = new NetUtil();
-        boolean login = Tools.isLogin(application);
-        if (login) {
-            userLogin = Tools.getUserLogin(application);
-            map = new HashMap<>();
-            map.put("id", userLogin);
-            netUtil.okHttp2Server2(url, map);
+        try {
+            boolean login = Tools.isLogin(application);
+            if (login) {
+                userLogin = Tools.getUserLogin(application);
+                map = new HashMap<>();
+                map.put("id", userLogin);
+                netUtil.okHttp2Server2(url, map);
+            }
+        }catch (Error e){
+           LogUtil.e("程序发生未知错误！");
         }
         netUtil.setOnServerResponseListener(new MyOnsetServerLisetener());
         new Thread() {
@@ -134,11 +144,8 @@ public class MyApplication extends Application {
                 UMShareAPI.get(application);
                 JPushInterface.setDebugMode(true);
                 JPushInterface.init(application);
-                //refWatcher = LeakCanary.install(application);
             }
         }.start();
-
-
     }
 
     public class MyOnsetServerLisetener implements NetUtil.OnServerResponseListener {
@@ -150,7 +157,7 @@ public class MyApplication extends Application {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            LogUtil.e(call.toString() + "--" + e.getMessage());
+           LogUtil.e(e.getMessage());
         }
     }
 

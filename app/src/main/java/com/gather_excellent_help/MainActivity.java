@@ -262,7 +262,7 @@ public class MainActivity extends FragmentActivity{
     @Override
     protected void onStop() {
         super.onStop();// ATTENTION: This was auto-generated to implement the App Indexing API.
-// See https://g.co/AppIndexing/AndroidStudio for more information.
+         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         boolean hotfixStute = Tools.getHotfixStute(this);
         if (!isAppOnForeground()) {
@@ -270,6 +270,7 @@ public class MainActivity extends FragmentActivity{
             if (hotfixStute) {
                 Toast.makeText(MainActivity.this, "发现聚优帮有更新，需要重新启动App更新补丁", Toast.LENGTH_SHORT).show();
                 Tools.saveHotfixStute(this, false);
+                Tools.saveFirstHotfixToast(this,1);
                 SophixManager.getInstance().killProcessSafely();
             }
         }

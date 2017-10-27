@@ -51,6 +51,9 @@ public class CacheUtils {
 	//保存是否开启红包状态
 	public static final String IS_OPEN_RED = "is_open_red";
 
+	//保存热更新加载的提示次数
+	public static final String HOT_FIX_SHOW_TOAST = "hot_fix_show_toast";
+
 	public static SharedPreferences sp;
 
 	public static void putBoolean(Context context,String key,boolean value){

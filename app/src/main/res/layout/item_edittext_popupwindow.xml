@@ -3,22 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/popupwind_bg_icon">
-
-    <EditText
-        android:id="@+id/et_edittext_pop"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/x80"
-        android:background="@drawable/edit_bg_shape"
-        android:textSize="12sp"
+    <TextView
+        android:id="@+id/tv_popup_cancel"
+        android:layout_width="@dimen/x50"
+        android:layout_height="@dimen/x30"
+        android:text="取消"
         android:textColor="#686868"
-        android:textColorHint="#a5a5a5"
-        android:hint="请你输入内容。"
-        android:maxLength="60"
-        android:layout_marginTop="@dimen/x30"
+        android:textSize="12sp"
+        android:gravity="center"
         android:layout_marginLeft="@dimen/x10"
-        android:layout_marginRight="@dimen/x10"
-        android:gravity="top"
-        android:padding="@dimen/x7"/>
+        android:layout_marginTop="@dimen/x10"
+        android:background="@drawable/edit_submit_bgshape"/>
+
     <TextView
         android:id="@+id/tv_popup_submit"
         android:layout_width="@dimen/x50"
@@ -27,10 +23,27 @@
         android:textColor="#686868"
         android:textSize="12sp"
         android:gravity="center"
-        android:layout_below="@id/et_edittext_pop"
-        android:layout_alignParentRight="true"
         android:layout_marginTop="@dimen/x10"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/x10"
         android:background="@drawable/edit_submit_bgshape"/>
+
+    <EditText
+        android:id="@+id/et_edittext_pop"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x120"
+        android:background="@drawable/edit_bg_shape"
+        android:textSize="14sp"
+        android:textColor="#686868"
+        android:textColorHint="#a5a5a5"
+        android:hint="请你输入内容。"
+        android:maxLength="60"
+        android:layout_marginTop="@dimen/x30"
+        android:layout_below="@id/tv_popup_submit"
+        android:layout_marginLeft="@dimen/x10"
+        android:layout_marginRight="@dimen/x10"
+        android:gravity="top"
+        android:padding="@dimen/x7"/>
+
 
 </RelativeLayout>

@@ -82,11 +82,13 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".ui.base.BaseFragmentActivity" />
 
-        <!-- wechat callback -->
+        <!-- 微信相关的activity -->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
@@ -220,8 +222,12 @@
 
         <service android:name=".ui.service.MyService" />
 
-        <activity android:name=".TestActivity" />
-        <activity android:name=".TestActivity2" />
+        <activity android:name=".TestActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity android:name=".TestActivity2"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.credits.ExtractDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -276,21 +282,23 @@
         <activity
             android:name=".ui.activity.shop.WhichJoinActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait">
-
-        </activity>
-        <activity android:name=".ui.activity.shop.TalentShowActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.shop.TalentShowActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.shop.StoreshowActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.shop.StoreshowActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.shop.StoreSuccActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.shop.StoreSuccActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.activity.RedpacketShowActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.RedpacketShowActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -299,6 +307,10 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <activity android:name=".ui.activity.QRcodeActivity" />
+        <activity android:name=".ui.activity.BindPhoneActivity">
+
+        </activity>
     </application>
 
 </manifest>

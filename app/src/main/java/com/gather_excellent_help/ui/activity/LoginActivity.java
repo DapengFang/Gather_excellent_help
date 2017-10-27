@@ -29,6 +29,9 @@ import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
 
 import java.lang.ref.WeakReference;
@@ -36,24 +39,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
 public class LoginActivity extends Activity {
 
 
-    @Bind(R.id.et_login_user)
     EditText etLoginUser;
-    @Bind(R.id.et_login_psw)
     EditText etLoginPsw;
-    @Bind(R.id.tv_login_lostpsw)
     TextView tvLoginLostpsw;
-    @Bind(R.id.tv_login)
     TextView tvLogin;
-    @Bind(R.id.tv_register)
     TextView tvRegister;
+    private TextView tv_login_wx;
 
     private String bind_url = Url.BASE_URL + "bindTaobao.aspx";//绑定淘宝
 
@@ -67,6 +64,8 @@ public class LoginActivity extends Activity {
     private String nick;
     private String which;
     private AlibcLogin alibcLogin;
+    private IWXAPI api;
+    private String weixin_app_id = "wxc883e0b88fddcc71";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +74,21 @@ public class LoginActivity extends Activity {
         //去掉Activity上面的状态栏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
+        initView();
+        regToWx();
         initData();
+    }
+
+    /**
+     * 初始化控件
+     */
+    private void initView(){
+        tvLogin = (TextView) findViewById(R.id.tv_login);
+        tvRegister = (TextView) findViewById(R.id.tv_register);
+        tvLoginLostpsw = (TextView) findViewById(R.id.tv_login_lostpsw);
+        etLoginUser = (EditText) findViewById(R.id.et_login_user);
+        etLoginPsw = (EditText) findViewById(R.id.et_login_psw);
+        tv_login_wx = (TextView)findViewById(R.id.tv_login_wx);
     }
 
     /**
@@ -88,6 +100,12 @@ public class LoginActivity extends Activity {
         tvLogin.setOnClickListener(new MyOnClickListener());
         tvRegister.setOnClickListener(new MyOnClickListener());
         tvLoginLostpsw.setOnClickListener(new MyOnClickListener());
+        tv_login_wx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginToWchat();
+            }
+        });
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -104,6 +122,40 @@ public class LoginActivity extends Activity {
                LogUtil.e(call.toString()+","+e.getMessage());
             }
         });
+    }
+
+    /** -------------------------微信第三方登录---------------------- */
+    /**
+     * 微信平台应用授权登录接入代码示例
+     */
+    private void regToWx() {
+        // 通过WXAPIFactory工厂,获得IWXAPI的实例
+        api = WXAPIFactory.createWXAPI(LoginActivity.this, weixin_app_id, true);
+        // 将应用的appid注册到微信
+        api.registerApp(weixin_app_id);
+    }
+
+    private void loginToWchat() {
+        LogUtil.e("登录到微信！");
+        getCode();
+    }
+
+    //获取微信访问getCode
+    private void getCode() {
+        if (!api.isWXAppInstalled()) {
+            Toast.makeText(this, "请先安装微信应用！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!api.isWXAppSupportAPI()) {
+            Toast.makeText(this, "请先更新微信应用！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // send oauth request
+        final SendAuth.Req req = new SendAuth.Req();
+        req.scope = "snsapi_userinfo";
+        req.state = "wechat_sdk_demo_test";
+        api.sendReq(req);
+        finish();
     }
 
     /**
@@ -147,13 +199,13 @@ public class LoginActivity extends Activity {
                     double user_rate = data.get(0).getUser_get_ratio();
                     String advertising = data.get(0).getAdvertising();
                     int group_id = data.get(0).getGroup_id();
+                    LogUtil.e("user = " + user);
                     CacheUtils.putBoolean(LoginActivity.this,CacheUtils.LOGIN_STATE,true);
                     CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_VALUE,id+"");
                     CacheUtils.putInteger(LoginActivity.this,CacheUtils.SHOP_TYPE,group_type);
                     CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_PHONE,user);
                     CacheUtils.putString(LoginActivity.this,CacheUtils.USER_RATE,user_rate+"");
                     CacheUtils.putInteger(LoginActivity.this, CacheUtils.GROUP_TYPE, group_id);
-
                     if (advertising != null) {
                         CacheUtils.putString(LoginActivity.this, CacheUtils.ADVER_ID, advertising);
                     }
@@ -260,5 +312,9 @@ public class LoginActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         AlibcTradeSDK.destory();
+        if(api!=null) {
+            api.unregisterApp();
+            api=null;
+        }
     }
 }

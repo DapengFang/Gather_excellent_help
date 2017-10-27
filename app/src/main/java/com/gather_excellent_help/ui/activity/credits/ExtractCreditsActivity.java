@@ -30,6 +30,7 @@ import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 import com.umeng.analytics.MobclickAgent;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +94,7 @@ public class ExtractCreditsActivity extends BaseActivity {
             @Override
             public void getSuccessResponse(String response) {
                 LogUtil.e(response);
+                tvExtractCreditsCommit.setClickable(true);
                 CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
                 int statusCode = codeStatueBean.getStatusCode();
                 switch (statusCode) {
@@ -111,6 +113,7 @@ public class ExtractCreditsActivity extends BaseActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
+                tvExtractCreditsCommit.setClickable(true);
                 LogUtil.e(call.toString() + "--" + e.getMessage());
             }
         });
@@ -141,7 +144,8 @@ public class ExtractCreditsActivity extends BaseActivity {
                         List<MineBean.DataBean> data = mineBean.getData();
                         if (data.size() > 0) {
                             amount = mineBean.getData().get(0).getAmount();
-                            DecimalFormat df = new DecimalFormat("#.00");
+                            DecimalFormat df = new DecimalFormat("0.00");
+                            df.setRoundingMode(RoundingMode.DOWN);
                             if (amount == 0) {
                                 tvExteactAccount.setText("可提取现金: 0");
                             } else {
@@ -204,12 +208,14 @@ public class ExtractCreditsActivity extends BaseActivity {
      * 提取积分
      */
     private void commitExtractCredits() {
+        tvExtractCreditsCommit.setClickable(false);
         String etCredits = etExtractCash.getText().toString().trim();
         if (TextUtils.isEmpty(etCredits)) {
             Toast.makeText(ExtractCreditsActivity.this, "请输入提取数量！", Toast.LENGTH_SHORT).show();
+            tvExtractCreditsCommit.setClickable(true);
         } else {
             Integer cret = Integer.valueOf(etCredits);
-            if (cret > 0 && cret <= amount) {
+            if (cret >= 10 && cret <= amount) {
                 String userLogin = Tools.getUserLogin(this);
                 boolean bindAlipay = Tools.isBindAlipay(this);
                 map = new HashMap<>();
@@ -218,10 +224,12 @@ public class ExtractCreditsActivity extends BaseActivity {
                 if (bindAlipay) {
                     netUtil.okHttp2Server2(extract_url, map);
                 } else {
+                    tvExtractCreditsCommit.setClickable(true);
                     toBindAlipay();
                 }
             } else {
-                Toast.makeText(ExtractCreditsActivity.this, "输入数量不正确！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ExtractCreditsActivity.this, "输入数量不正确，提现金额需要不低于最小额度并且不能高于可提取现金数量！！！", Toast.LENGTH_SHORT).show();
+                tvExtractCreditsCommit.setClickable(true);
             }
         }
     }
@@ -246,7 +254,10 @@ public class ExtractCreditsActivity extends BaseActivity {
             public void onClick(View view) {
                 String user_account = etAccount.getText().toString().trim();
                 String userPhone = Tools.getUserPhone(ExtractCreditsActivity.this);
-                LogUtil.e(userPhone);
+                if(TextUtils.isEmpty(userPhone)) {
+                    Toast.makeText(ExtractCreditsActivity.this, "检测到登录出现故障，请退出当前账号后重新登录！！！", Toast.LENGTH_SHORT).show();
+                }
+                LogUtil.e("userPhone = " + userPhone);
                 getSmsCode(userPhone, user_account, tvAlipayGetSms);
             }
         });

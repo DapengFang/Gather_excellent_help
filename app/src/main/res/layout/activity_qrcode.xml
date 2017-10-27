@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/activity_qrcode"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="com.gather_excellent_help.ui.activity.QRcodeActivity">
+
+<include layout="@layout/top_zhuangai_bar"/>
+
+<ImageView
+    android:id="@+id/iv_qrcode"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"/>
+
+<TextView
+    android:id="@+id/tv_qrcode_tip"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="长按二维码将二维码分享给微信好友\n点击二维码将二维码保存到相册"
+    android:textSize="14sp"
+    android:textColor="#99000000"
+    android:gravity="center"
+    android:layout_below="@id/iv_qrcode"
+    android:layout_marginTop="@dimen/x8"
+    android:visibility="gone"
+    android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

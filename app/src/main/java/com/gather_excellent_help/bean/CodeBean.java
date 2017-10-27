@@ -18,6 +18,7 @@ public class CodeBean {
     private String statusMessage;
     private List<DataBean> data;
 
+
     public int getStatusCode() {
         return statusCode;
     }
@@ -54,6 +55,7 @@ public class CodeBean {
         private int group_id;
         private int apply_status;
         private int pay_status;
+        private String wechat_id;
 
         public Integer getId() {
             return id;
@@ -109,6 +111,14 @@ public class CodeBean {
 
         public void setPay_status(int pay_status) {
             this.pay_status = pay_status;
+        }
+
+        public String getWechat_id() {
+            return wechat_id;
+        }
+
+        public void setWechat_id(String wechat_id) {
+            this.wechat_id = wechat_id;
         }
     }
 }

@@ -9,4 +9,5 @@ public class EventType {
     public static final int BIND_TAOBAO = 1;
     public static final int EVENT_EXIT = 2;
     public static final int STORE_EXIT = 3;
+    public static final int WEIXIN_EXIT = 4;//退出微信登录界面
 }

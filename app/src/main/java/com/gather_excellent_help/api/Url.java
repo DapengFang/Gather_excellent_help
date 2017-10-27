@@ -28,4 +28,7 @@ public class Url {
 
     //廖琳铃接口
     //public static final String BASE_URL = "http://192.168.200.194:8022/api/juyoubang/";
+
+    //岳凯接口
+    //private String url = "http://192.168.200.195/api/juyoubang/RewardSearch.aspx";
 }

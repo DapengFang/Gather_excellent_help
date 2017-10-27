@@ -47,6 +47,7 @@ public class EditTextPopupwindow extends PopupWindow {
         View view= inflater.inflate(R.layout.item_edittext_popupwindow,null);
         final EditText et_edittext_pop = (EditText) view.findViewById(R.id.et_edittext_pop);
         TextView tv_popup_submit = (TextView) view.findViewById(R.id.tv_popup_submit);
+        TextView tv_popup_cancel = (TextView) view.findViewById(R.id.tv_popup_cancel);
         String callmsg = tv_train_dynamic_content.getText().toString().trim();
         if(!callmsg.contains("说点什么吧")) {
             et_edittext_pop.setText(callmsg);
@@ -75,15 +76,18 @@ public class EditTextPopupwindow extends PopupWindow {
             public void onClick(View view) {
                 String cont = et_edittext_pop.getText().toString().trim();
                 if(!TextUtils.isEmpty(cont)) {
-//                    if(cont.length()>12) {
-//                        tv_train_dynamic_content.setText(cont.substring(0,12)+"...");
-//                    }else{
-//
-//                    }
                     tv_train_dynamic_content.setText(cont);
                 }else{
                     tv_train_dynamic_content.setText("说点什么吧！");
                 }
+                if(isShowing()) {
+                    dismiss();
+                }
+            }
+        });
+        tv_popup_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 if(isShowing()) {
                     dismiss();
                 }

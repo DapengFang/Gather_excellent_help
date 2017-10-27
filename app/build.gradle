@@ -105,11 +105,12 @@ dependencies {
     compile 'cn.jiguang.sdk:jcore:1.1.1'
     // 此处以JCore 1.1.1 版本为例。
     compile 'com.android.support:percent:24.2.0'
-//    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
-//    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
+    //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
+
+    //    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
     compile project(':scan_library')
-    compile ('com.aliyun.ams:alicloud-android-hotfix:3.1.3'){
-        exclude (module: 'alicloud-android-utdid')
+    compile('com.aliyun.ams:alicloud-android-hotfix:3.1.3') {
+        exclude(module: 'alicloud-android-utdid')
     }
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }

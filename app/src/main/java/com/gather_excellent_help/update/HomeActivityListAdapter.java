@@ -17,7 +17,6 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.ActivityListBean;
 import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.utils.Tools;
-import com.gather_excellent_help.utils.imageutils.ImageLoader;
 
 import java.text.DecimalFormat;
 import java.util.List;

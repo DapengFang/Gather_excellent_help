@@ -56,7 +56,7 @@
         android:id="@+id/iv_shop_picture"
         android:layout_width="@dimen/x300"
         android:layout_height="@dimen/x300"
-        android:background="#ffffff"
+        android:background="#f5f5f5"
         android:layout_gravity="center_horizontal"
         android:padding="@dimen/x3"/>
             <View

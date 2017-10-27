@@ -16,9 +16,11 @@ import android.widget.Toast;
 
 import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.TestActivity;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.InviteFriendBean;
 import com.gather_excellent_help.ui.activity.LoginActivity;
+import com.gather_excellent_help.ui.activity.QRcodeActivity;
 import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.activity.wards.SeeWardsActivity;
@@ -65,7 +67,7 @@ public class InviteFriendsActivity extends BaseActivity {
 
     private String invite_url = Url.BASE_URL + "ShareApp.aspx";
     private NetUtil netUtil;
-    private Map<String,String> map;
+    private Map<String, String> map;
     private String share_url;
 
     private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
@@ -87,12 +89,12 @@ public class InviteFriendsActivity extends BaseActivity {
         tvTopTitleName.setText("邀请好友");
         map = new HashMap<>();
         String userLogin = Tools.getUserLogin(this);
-        if(TextUtils.isEmpty(userLogin)) {
+        if (TextUtils.isEmpty(userLogin)) {
             toLogin();
             return;
         }
-        map.put("id",userLogin);
-        netUtil.okHttp2Server2(invite_url,map);
+        map.put("id", userLogin);
+        netUtil.okHttp2Server2(invite_url, map);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -122,16 +124,18 @@ public class InviteFriendsActivity extends BaseActivity {
 
     /**
      * 解析数据
+     *
      * @param response
      */
     private void parseData(String response) {
         InviteFriendBean inviteFriendBean = new Gson().fromJson(response, InviteFriendBean.class);
         int statusCode = inviteFriendBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
+            case 1:
                 List<InviteFriendBean.DataBean> data = inviteFriendBean.getData();
-                if(data.size()>0) {
+                if (data.size() > 0) {
                     share_url = data.get(0).getShare_url();
+                    LogUtil.e("share_url = " + share_url);
                 }
                 break;
             case 0:
@@ -149,10 +153,10 @@ public class InviteFriendsActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.ll_invite_firend:
-                    if(android.os.Build.VERSION.SDK_INT>=23){
-                        String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.CALL_PHONE,Manifest.permission.READ_LOGS,Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.SET_DEBUG_APP,Manifest.permission.SYSTEM_ALERT_WINDOW,Manifest.permission.GET_ACCOUNTS,Manifest.permission.WRITE_APN_SETTINGS};
-                        ActivityCompat.requestPermissions(InviteFriendsActivity.this,mPermissionList,STORAGE_PERMISSIONS_REQUEST_CODE);
-                    }else{
+                    if (android.os.Build.VERSION.SDK_INT >= 23) {
+                        String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP, Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_APN_SETTINGS};
+                        ActivityCompat.requestPermissions(InviteFriendsActivity.this, mPermissionList, STORAGE_PERMISSIONS_REQUEST_CODE);
+                    } else {
                         showWeixin();
                     }
                     break;
@@ -170,10 +174,10 @@ public class InviteFriendsActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case STORAGE_PERMISSIONS_REQUEST_CODE :
+            case STORAGE_PERMISSIONS_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     showWeixin();
-                }else{
+                } else {
                     Toast.makeText(InviteFriendsActivity.this, "请允许打开操作SDCard权限！！", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -200,14 +204,17 @@ public class InviteFriendsActivity extends BaseActivity {
      * 打开微信邀请好友
      */
     private void showWeixin() {
-        if(share_url!=null) {
-            String share_content = "我邀请你一起来聚优帮耍，快点打开"+share_url+"和我一起玩转聚优帮吧。";
-            new ShareAction(InviteFriendsActivity.this)
-                    .setPlatform(SHARE_MEDIA.WEIXIN)//传入平台
-                    .withText(share_content)//分享内容
-                    .setCallback(shareListener)//回调监听器
-                    .share();
-        }
+//        if(share_url!=null) {
+//            String share_content = "我邀请你一起来聚优帮耍，快点打开"+share_url+"和我一起玩转聚优帮吧。";
+//            new ShareAction(InviteFriendsActivity.this)
+//                    .setPlatform(SHARE_MEDIA.WEIXIN)//传入平台
+//                    .withText(share_content)//分享内容
+//                    .setCallback(shareListener)//回调监听器
+//                    .share();
+//        }
+        Intent intent = new Intent(this, TestActivity.class);
+        intent.putExtra("share_url", share_url);
+        startActivity(intent);
     }
 
     private UMShareListener shareListener = new UMShareListener() {
@@ -226,7 +233,7 @@ public class InviteFriendsActivity extends BaseActivity {
          */
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            Toast.makeText(InviteFriendsActivity.this,"成功了",Toast.LENGTH_LONG).show();
+            Toast.makeText(InviteFriendsActivity.this, "成功了", Toast.LENGTH_LONG).show();
         }
 
         /**
@@ -236,7 +243,7 @@ public class InviteFriendsActivity extends BaseActivity {
          */
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            Toast.makeText(InviteFriendsActivity.this,"失败"+t.getMessage(),Toast.LENGTH_LONG).show();
+            Toast.makeText(InviteFriendsActivity.this, "失败了" + t.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         /**
@@ -245,8 +252,7 @@ public class InviteFriendsActivity extends BaseActivity {
          */
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(InviteFriendsActivity.this,"取消了",Toast.LENGTH_LONG).show();
-
+            Toast.makeText(InviteFriendsActivity.this, "取消了", Toast.LENGTH_LONG).show();
         }
     };
 
