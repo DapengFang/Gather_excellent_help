@@ -141,11 +141,13 @@
             android:name=".SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -310,8 +312,12 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".ui.activity.QRcodeActivity" />
-        <activity android:name=".ui.activity.BindPhoneActivity"></activity>
-        <activity android:name=".ui.activity.SetBindPswActivity"></activity>
+        <activity android:name=".ui.activity.BindPhoneActivity">
+
+        </activity>
+        <activity android:name=".ui.activity.SetBindPswActivity">
+
+        </activity>
     </application>
 
 </manifest>

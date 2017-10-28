@@ -641,7 +641,6 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     } else {
                         Toast.makeText(WareListActivity.this, "请选择类别！", Toast.LENGTH_SHORT).show();
                     }
-
                     break;
                 case R.id.ll_ware_list_rongliang:
                     isLoadmore = -1;

@@ -85,6 +85,17 @@
     </LinearLayout>
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="为了您的账号安全以及日后操作方便，\n请您绑定手机号码"
+        android:textColor="#99000000"
+        android:lineSpacingExtra="@dimen/x3"
+        android:textSize="14sp"
+        android:layout_marginTop="@dimen/x10"/>
+
+    <TextView
         android:id="@+id/tv_bind_phone_submit"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x40"

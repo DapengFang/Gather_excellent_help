@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -59,12 +60,14 @@ public class SetBindPswActivity extends BaseActivity {
      */
     private void initData(){
         tv_top_title_name.setText("设置密码");
+        rl_exit.setVisibility(View.GONE);
         Intent intent = getIntent();
         user = intent.getStringExtra("user");
         netUtil = new NetUtil();
         netUtil.setOnServerResponseListener(new OnServerResponseListener());
         MyonclickListener myonclickListener = new MyonclickListener();
         tv_bind_setpsw_submit.setOnClickListener(myonclickListener);
+        et_bind_setpsw_psw.setOnClickListener(myonclickListener);
     }
 
     /**
@@ -78,6 +81,9 @@ public class SetBindPswActivity extends BaseActivity {
                 case R.id.tv_bind_setpsw_submit :
                     toSetPsw();
                     break;
+                case R.id.et_bind_setpsw_psw:
+                    et_bind_setpsw_psw.setCursorVisible(true);
+                    break;
             }
         }
     }
@@ -88,15 +94,16 @@ public class SetBindPswActivity extends BaseActivity {
     private void toSetPsw() {
         String psw = et_bind_setpsw_psw.getText().toString().trim();
         if (TextUtils.isEmpty(psw)) {
-            Toast.makeText(SetBindPswActivity.this, "请输入新密码！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SetBindPswActivity.this, "请输入密码！！！", Toast.LENGTH_SHORT).show();
             return;
         }
         if (psw.length() < 6) {
-            Toast.makeText(SetBindPswActivity.this, "请输入6位到12位的密码，谢谢", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SetBindPswActivity.this, "为了您的账号安全，密码长度不能低于6位，请重新输入！！！", Toast.LENGTH_SHORT).show();
         } else {
             if(user == null) {
                 user = "";
             }
+            tv_bind_setpsw_submit.setClickable(false);
             psw = psw + "@@11fe468";
             psw = EncryptUtil.getMd5Value(psw);
             map = new HashMap<>();
@@ -111,6 +118,7 @@ public class SetBindPswActivity extends BaseActivity {
 
         @Override
         public void getSuccessResponse(String response) {
+            tv_bind_setpsw_submit.setClickable(true);
             Gson gson = new Gson();
             CodeStatueBean codeStatueBean = gson.fromJson(response, CodeStatueBean.class);
             int statusCode = codeStatueBean.getStatusCode();
@@ -127,7 +135,17 @@ public class SetBindPswActivity extends BaseActivity {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
+            tv_bind_setpsw_submit.setClickable(true);
             LogUtil.e(e.getMessage());
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

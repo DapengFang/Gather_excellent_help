@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -59,6 +60,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     private Map<String,String> map;
 
     private String wex_url = Url.BASE_URL + "WeChatLogin.aspx";
+    private String wechat_response = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +158,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
     }
 
-
     private String urlEnodeUTF8(String str) {
         String result = str;
         try {
@@ -166,7 +167,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         }
         return result;
     }
-
 
     /**
      * @param userInfo_url 获取微信用户详细信息
@@ -185,6 +185,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                     @Override
                     public void onResponse(String response, int id) {
                         LogUtil.e(response);
+                        wechat_response = response;
                         //Toast.makeText(WXEntryActivity.this, response, Toast.LENGTH_SHORT).show();
                         map = new HashMap<>();
                         map.put("wechat_json",response);
@@ -209,19 +210,33 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                 case 1 :
                     List<CodeBean.DataBean> data = codeBean.getData();
                     if(data.size()>0) {
+                        int is_phone = data.get(0).getIs_phone();
+                        String use_phone = data.get(0).getUse_phone();
                         Integer id = data.get(0).getId();
                         int group_type = data.get(0).getGroup_type();
                         double user_rate = data.get(0).getUser_get_ratio();
+                        String advertising = data.get(0).getAdvertising();
                         int group_id = data.get(0).getGroup_id();
-                        String wechat_id = data.get(0).getWechat_id();
-                        CacheUtils.putBoolean(WXEntryActivity.this, CacheUtils.LOGIN_STATE, true);
-                        CacheUtils.putString(WXEntryActivity.this, CacheUtils.LOGIN_VALUE, id + "");
-                        CacheUtils.putInteger(WXEntryActivity.this, CacheUtils.SHOP_TYPE, group_type);
-                        CacheUtils.putString(WXEntryActivity.this, CacheUtils.USER_RATE, user_rate + "");
-                        CacheUtils.putInteger(WXEntryActivity.this, CacheUtils.GROUP_TYPE, group_id);
-                        Intent intent = new Intent(WXEntryActivity.this, BindPhoneActivity.class);
-                        intent.putExtra("wechat_id",wechat_id);
-                        startActivity(intent);
+                        if(is_phone == 0) {
+                            Intent intent = new Intent(WXEntryActivity.this, BindPhoneActivity.class);
+                            intent.putExtra("wechat_json",wechat_response);
+                            startActivity(intent);
+                        }else if(is_phone == 1) {
+                            LogUtil.e("绑定过手机号码了！");
+                            if(use_phone!=null && !TextUtils.isEmpty(use_phone)) {
+                                LogUtil.e("use_phone = " + use_phone);
+                                CacheUtils.putString(WXEntryActivity.this,CacheUtils.LOGIN_PHONE,use_phone);
+                            }
+                            CacheUtils.putBoolean(WXEntryActivity.this,CacheUtils.LOGIN_STATE,true);
+                            CacheUtils.putString(WXEntryActivity.this,CacheUtils.LOGIN_VALUE,id+"");
+                            CacheUtils.putInteger(WXEntryActivity.this,CacheUtils.SHOP_TYPE,group_type);
+                            CacheUtils.putString(WXEntryActivity.this,CacheUtils.USER_RATE,user_rate+"");
+                            CacheUtils.putInteger(WXEntryActivity.this, CacheUtils.GROUP_TYPE, group_id);
+                            if (advertising != null) {
+                                CacheUtils.putString(WXEntryActivity.this, CacheUtils.ADVER_ID, advertising);
+                            }
+                            EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
+                        }
                     }
                     break;
                 case 0:

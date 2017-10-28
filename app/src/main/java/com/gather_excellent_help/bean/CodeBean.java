@@ -56,6 +56,8 @@ public class CodeBean {
         private int apply_status;
         private int pay_status;
         private String wechat_id;
+        private int is_phone;
+        private String use_phone;
 
         public Integer getId() {
             return id;
@@ -119,6 +121,22 @@ public class CodeBean {
 
         public void setWechat_id(String wechat_id) {
             this.wechat_id = wechat_id;
+        }
+
+        public int getIs_phone() {
+            return is_phone;
+        }
+
+        public void setIs_phone(int is_phone) {
+            this.is_phone = is_phone;
+        }
+
+        public String getUse_phone() {
+            return use_phone;
+        }
+
+        public void setUse_phone(String use_phone) {
+            this.use_phone = use_phone;
         }
     }
 }

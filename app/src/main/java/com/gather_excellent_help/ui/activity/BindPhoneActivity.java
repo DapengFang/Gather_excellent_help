@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -18,9 +19,13 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.TestActivity;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.BindPhoneBean;
+import com.gather_excellent_help.bean.CodeBean;
 import com.gather_excellent_help.bean.SmsCodeBean;
+import com.gather_excellent_help.event.AnyEvent;
+import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.credits.ExtractCreditsActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -30,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
 public class BindPhoneActivity extends BaseActivity {
@@ -44,12 +50,12 @@ public class BindPhoneActivity extends BaseActivity {
     private CountDownTimer countDownTimer;
 
     private String sms_url = Url.BASE_URL + "GetRandom.aspx";
-    private String bind_url = Url.BASE_URL + "BindTel.aspx";
+    private String bind_url = Url.BASE_URL + "WeChatLoginPhone.aspx";
     private String whick = "";
     private Map<String, String> hashMap;
     private NetUtil netUtils;
     private String sms_code_s = "";
-    private String wechat_id = "";
+    private String wechat_json = "";
     private String phone = "";
 
 
@@ -75,8 +81,9 @@ public class BindPhoneActivity extends BaseActivity {
 
     private void initData() {
         Intent intent = getIntent();
-        wechat_id = intent.getStringExtra("wechat_id");
+        wechat_json = intent.getStringExtra("wechat_json");
         tv_top_title_name.setText("绑定手机号");
+        rl_exit.setVisibility(View.GONE);
         netUtils = new NetUtil();
         netUtils.setOnServerResponseListener(new OnServerResponseListener());
         MyonclickListener myonclickListener = new MyonclickListener();
@@ -110,7 +117,6 @@ public class BindPhoneActivity extends BaseActivity {
         }
     }
 
-
     /**
      * 绑定手机号
      */
@@ -135,7 +141,7 @@ public class BindPhoneActivity extends BaseActivity {
         whick = "bind";
         hashMap = new HashMap<>();
         hashMap.put("phone_number", phone);
-        hashMap.put("wechat_id", wechat_id);
+        hashMap.put("wechat_json", wechat_json);
         netUtils.okHttp2Server2(bind_url, hashMap);
     }
 
@@ -199,6 +205,7 @@ public class BindPhoneActivity extends BaseActivity {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
+            EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
             tv_bind_phone_submit.setClickable(true);
             LogUtil.e("网络连接出现问题~");
         }
@@ -211,27 +218,42 @@ public class BindPhoneActivity extends BaseActivity {
      */
     private void parseBindData(String response) {
         LogUtil.e(response);
-        BindPhoneBean bindPhoneBean = new Gson().fromJson(response, BindPhoneBean.class);
-        int statusCode = bindPhoneBean.getStatusCode();
+        CodeBean codeBean = new Gson().fromJson(response, CodeBean.class);
+        int statusCode = codeBean.getStatusCode();
         switch (statusCode) {
             case 1:
-                Toast.makeText(BindPhoneActivity.this, bindPhoneBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                List<BindPhoneBean.DataBean> data = bindPhoneBean.getData();
-                if (data != null && data.size() > 0) {
-                    BindPhoneBean.DataBean dataBean = data.get(0);
-                    int is_exist = dataBean.getIs_exist();
-                    if (is_exist == 1) {
-                        Toast.makeText(BindPhoneActivity.this, "你可以使用你原来的密码进行登录！", Toast.LENGTH_SHORT).show();
-                    } else if (is_exist == 0) {
+                List<CodeBean.DataBean> data = codeBean.getData();
+                if(data.size()>0) {
+                    Integer id = data.get(0).getId();
+                    int group_type = data.get(0).getGroup_type();
+                    double user_rate = data.get(0).getUser_get_ratio();
+                    String advertising = data.get(0).getAdvertising();
+                    int group_id = data.get(0).getGroup_id();
+                    int is_phone = data.get(0).getIs_phone();
+                    String use_phone = data.get(0).getUse_phone();
+                    CacheUtils.putBoolean(BindPhoneActivity.this, CacheUtils.LOGIN_STATE, true);
+                    CacheUtils.putString(BindPhoneActivity.this, CacheUtils.LOGIN_VALUE, id + "");
+                    CacheUtils.putInteger(BindPhoneActivity.this, CacheUtils.SHOP_TYPE, group_type);
+                    CacheUtils.putString(BindPhoneActivity.this, CacheUtils.LOGIN_PHONE, use_phone);
+                    CacheUtils.putString(BindPhoneActivity.this, CacheUtils.USER_RATE, user_rate + "");
+                    CacheUtils.putInteger(BindPhoneActivity.this, CacheUtils.GROUP_TYPE, group_id);
+                    if (advertising != null) {
+                        CacheUtils.putString(BindPhoneActivity.this, CacheUtils.ADVER_ID, advertising);
+                    }
+                    if (is_phone == 1) {
+                        Toast.makeText(BindPhoneActivity.this, "检测到您绑定的手机号码之前注册过，您可以直接通过之前的密码进行登录操作。", Toast.LENGTH_SHORT).show();
+                    } else if (is_phone == 0) {
                         //设置密码
                         Intent intent = new Intent(BindPhoneActivity.this, SetBindPswActivity.class);
-                        intent.putExtra("user",phone);
+                        intent.putExtra("user", phone);
                         startActivity(intent);
                     }
                 }
+                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
+                finish();
                 break;
             case 0:
-                Toast.makeText(BindPhoneActivity.this, bindPhoneBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(BindPhoneActivity.this, codeBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -257,6 +279,15 @@ public class BindPhoneActivity extends BaseActivity {
                 Toast.makeText(BindPhoneActivity.this, "验证码已发送你的手机，请查收！", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }
