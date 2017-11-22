@@ -4,12 +4,19 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.alibaba.baichuan.android.trade.AlibcTrade;
+import com.alibaba.baichuan.android.trade.model.AlibcShowParams;
+import com.alibaba.baichuan.android.trade.model.OpenType;
+import com.alibaba.baichuan.android.trade.page.AlibcPage;
+import com.alibaba.baichuan.trade.biz.core.taoke.AlibcTaokeParams;
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.aliapi.DemoTradeCallback;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.LogUtil;
@@ -31,6 +38,11 @@ public class ScannerWebActivity extends BaseActivity {
     private String scaner_url;
     private NetUtil netUtil;
     private Intent intent;
+
+    private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
+    private AlibcTaokeParams alibcTaokeParams = null;//淘客参数，包括pid，unionid，subPid
+    private DemoTradeCallback demoTradeCallback;
+    private Map<String, String> exParams;//yhhpass参数
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +74,20 @@ public class ScannerWebActivity extends BaseActivity {
 
         //设置Web视图
         wvScannerWeb.setWebViewClient(new MyWebViewClient());
+        wvScannerWeb.setWebChromeClient(new WebChromeClient());
+        alibcShowParams = new AlibcShowParams(OpenType.H5, false);
+        exParams = new HashMap<>();
+        exParams.put("isv_code", "appisvcode");
+        exParams.put("alibaba", "阿里巴巴");//自定义参数部分，可任意增删改
+        demoTradeCallback = new DemoTradeCallback(ScannerWebActivity.this);
         intent = getIntent();
         scaner_url = intent.getStringExtra("scaner_url");
-        wvScannerWeb.loadUrl(scaner_url);
+        int url_type = intent.getIntExtra("url_type", -1);
+        if(url_type == 1) {
+            AlibcTrade.show(this, wvScannerWeb, new WebViewClient(), null, new AlibcPage(scaner_url), alibcShowParams, alibcTaokeParams, null,demoTradeCallback);
+        }else if(url_type == 2) {
+            wvScannerWeb.loadUrl(scaner_url);
+        }
         netUtil = new NetUtil();
         netUtil.setOnServerResponseListener(new OnServerResponseListener());
     }

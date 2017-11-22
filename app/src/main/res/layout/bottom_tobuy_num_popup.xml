@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:background="#ffffff"
+        android:padding="7dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_bottom_pop_img"
+                    android:layout_width="@dimen/x80"
+                    android:layout_height="@dimen/x80"
+                    android:src="@mipmap/juyoubangs" />
+
+                <ImageView
+                    android:id="@+id/iv_bottom_pop_exit"
+                    android:layout_width="@dimen/x18"
+                    android:layout_height="@dimen/x18"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/x3"
+                    android:layout_marginTop="@dimen/x3"
+                    android:src="@drawable/search_after_exit" />
+
+                <RelativeLayout
+                    android:layout_width="@dimen/x180"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/iv_bottom_pop_img"
+                    android:layout_toRightOf="@id/iv_bottom_pop_img"
+                    android:layout_marginLeft="@dimen/x10">
+
+                    <TextView
+                        android:id="@+id/tv_bottom_pop_name"
+                        android:layout_width="@dimen/x180"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#aa000000"
+                        android:textSize="@dimen/x12" />
+
+                    <TextView
+                        android:id="@+id/tv_activity_sun_tao_icon"
+                        android:layout_width="@dimen/x30"
+                        android:layout_height="@dimen/x12"
+                        android:text="苏宁"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@drawable/sun_tao_text_selector"
+                        android:textSize="@dimen/x8"
+                        android:layout_marginTop="@dimen/x2"
+                        android:background="@drawable/sun_tao_icon_selector"/>
+
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/iv_bottom_pop_img"
+                    android:layout_marginLeft="@dimen/x10"
+                    android:layout_toRightOf="@+id/iv_bottom_pop_img"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_bottom_pop_goodprice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#eeff0000"
+                        android:textSize="@dimen/x14"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_bottom_pop_ogoodprice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:layout_marginLeft="@dimen/x3"
+                        android:textColor="#aa000000"
+                        android:textSize="@dimen/x10" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x1"
+                android:layout_marginTop="@dimen/x3"
+                android:background="#eeeeee" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+            </View>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x30">
+
+                <TextView
+                    android:id="@+id/tv_num_show"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/x3"
+                    android:text="数量："
+                    android:textColor="#aa000000"
+                    android:textSize="@dimen/x12" />
+
+                <com.gather_excellent_help.ui.widget.NumberAddSubView
+                    android:id="@+id/nav_bottom_pop_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/x3"
+                    android:layout_marginLeft="@dimen/x3"
+                    android:layout_toRightOf="@id/tv_num_show" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_bottom_pop_buy"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:background="#eeff0000"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="确定"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/x14" />
+
+</LinearLayout>

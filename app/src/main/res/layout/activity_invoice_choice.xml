@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_invoice_choice"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#eeeeee"
+    android:orientation="vertical"
+    tools:context="com.gather_excellent_help.ui.activity.suning.InvoiceChoiceActivity">
+
+    <include layout="@layout/top_zhuangai_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:padding="@dimen/x15">
+
+            <TextView
+                android:id="@+id/tv_title_show1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="发票类型"
+                android:textColor="#aaaaaa"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_invoice_type_o"
+                android:layout_width="@dimen/x100"
+                android:layout_height="@dimen/x30"
+                android:layout_below="@id/tv_title_show1"
+                android:layout_marginTop="@dimen/x10"
+                android:background="@drawable/tv_store_show_selector"
+                android:gravity="center"
+                android:text="纸制发票"
+                android:textColor="@drawable/tv_store_text_selector"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_invoice_type_t"
+                android:layout_width="@dimen/x100"
+                android:layout_height="@dimen/x30"
+                android:layout_alignTop="@id/tv_invoice_type_o"
+                android:layout_marginLeft="@dimen/x16"
+                android:layout_toRightOf="@id/tv_invoice_type_o"
+                android:background="@drawable/tv_store_show_selector"
+                android:gravity="center"
+                android:text="不开发票"
+                android:textColor="@drawable/tv_store_text_selector"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x9"
+            android:background="@color/translate" />
+
+        <RelativeLayout
+            android:id="@+id/rl_invoice_hind_one"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:padding="@dimen/x15">
+
+            <TextView
+                android:id="@+id/tv_title_show2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="发票抬头"
+                android:textColor="#aaaaaa"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_invoice_edit_o"
+                android:layout_width="@dimen/x100"
+                android:layout_height="@dimen/x30"
+                android:layout_below="@id/tv_title_show2"
+                android:layout_marginTop="@dimen/x10"
+                android:background="@drawable/tv_store_show_selector"
+                android:gravity="center"
+                android:text="个人"
+                android:textColor="@drawable/tv_store_text_selector"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_invoice_edit_t"
+                android:layout_width="@dimen/x100"
+                android:layout_height="@dimen/x30"
+                android:layout_alignTop="@id/tv_invoice_edit_o"
+                android:layout_marginLeft="@dimen/x16"
+                android:layout_toRightOf="@id/tv_invoice_edit_o"
+                android:background="@drawable/tv_store_show_selector"
+                android:gravity="center"
+                android:text="单位"
+                android:textColor="@drawable/tv_store_text_selector"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/et_invoice_name"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x32"
+                android:layout_below="@id/tv_invoice_edit_t"
+                android:layout_marginTop="@dimen/x10"
+                android:background="@drawable/suning_order_confirm_remark_shape"
+                android:cursorVisible="false"
+                android:hint="请输入姓名"
+                android:paddingLeft="@dimen/x6"
+                android:textColor="#99000000"
+                android:textColorHint="#55000000"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x1"
+            android:layout_marginLeft="@dimen/x15"
+            android:layout_marginRight="@dimen/x15"
+            android:background="@color/translate"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_invoice_hind_two"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:padding="@dimen/x15">
+
+            <TextView
+                android:id="@+id/tv_title_show3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="纳税人识别号"
+                android:textColor="#aaaaaa"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/et_invoice_tax_code"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x32"
+                android:layout_below="@id/tv_title_show3"
+                android:layout_marginTop="@dimen/x10"
+                android:background="@drawable/suning_order_confirm_remark_shape"
+                android:cursorVisible="false"
+                android:hint="填写纳税人识别号或社会信用代码"
+                android:paddingLeft="@dimen/x6"
+                android:textColor="#99000000"
+                android:textColorHint="#55000000"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_suning_invoice_submit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/x15"
+        android:background="@drawable/bind_phone_confirm_selector"
+        android:gravity="center"
+        android:text="确定"
+        android:textColor="#ffffff"
+        android:textSize="14sp" />
+
+</LinearLayout>

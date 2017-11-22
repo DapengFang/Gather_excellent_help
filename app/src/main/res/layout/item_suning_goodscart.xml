@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/x108"
+    android:background="#ffffff"
+    android:minHeight="@dimen/x120"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_shopcart_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/x10">
+
+        <CheckBox
+            android:id="@+id/cb_item_shopcart_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x7"
+            android:button="@drawable/cart_checkbox_selector" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x120"
+            android:layout_marginLeft="@dimen/x3"
+            android:layout_toRightOf="@id/cb_item_shopcart_check"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/x10">
+
+            <ImageView
+                android:id="@+id/iv_suning_order_ware"
+                android:layout_width="@dimen/x80"
+                android:layout_height="@dimen/x80"
+                android:src="@mipmap/juyoubangs" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginTop="@dimen/x10"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_suning_goodscart_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x30"
+                    android:gravity="center_vertical"
+                    android:lineSpacingExtra="@dimen/x1"
+                    android:text="鸟笼取暖节能电暖气台式电暖炉家用电暖器办公室小太阳烤火炉"
+                    android:textColor="#555555"
+                    android:textSize="@dimen/x12" />
+
+                <TextView
+                    android:id="@+id/tv_suning_goodscart_spec"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x16"
+                    android:layout_below="@id/tv_suning_goodscart_title"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="@dimen/x3"
+                    android:text="颜色分类：大号、黑色"
+                    android:textColor="#aaaaaa"
+                    android:textSize="@dimen/x12" />
+
+                <com.gather_excellent_help.ui.widget.NumberAddSubView
+                    android:id="@+id/nas_goodscart_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_suning_goodscart_spec"
+                    android:layout_marginTop="@dimen/x6"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="@dimen/x60"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/x10">
+
+                <TextView
+                    android:id="@+id/tv_suning_order_realprice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="￥28.90"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/x12" />
+
+                <TextView
+                    android:id="@+id/tv_suning_order_oldprice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/tv_suning_order_realprice"
+                    android:layout_marginTop="@dimen/x3"
+                    android:text="￥66.99"
+                    android:textColor="#aaaaaa"
+                    android:textSize="@dimen/x12" />
+
+                <TextView
+                    android:id="@+id/tv_suning_order_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/tv_suning_order_oldprice"
+                    android:text="x1"
+                    android:textColor="#aaaaaa"
+                    android:textSize="@dimen/x12" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_item_shopcart_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/x3"
+            android:paddingRight="@dimen/x15"
+            android:src="@drawable/shanchu_idcard_icon" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="@dimen/x300"
+            android:layout_height="1dp"
+            android:background="#11000000" />
+    </LinearLayout>
+</LinearLayout>

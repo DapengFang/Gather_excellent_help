@@ -10,4 +10,8 @@ public class EventType {
     public static final int EVENT_EXIT = 2;
     public static final int STORE_EXIT = 3;
     public static final int WEIXIN_EXIT = 4;//退出微信登录界面
+    public static final int UPDATA_ADDRESS = 5;//刷新收货地址界面
+    public static final int UPDATA_ADDRESS_ORDER = 6;//刷新订单页面收货地址界面
+    public static final int UPDATA_ORDER_LIST = 7;//刷新订单列表页面
+    public static final int CLEAR_ALL_GOODSCART= 8;//清空购物车
 }

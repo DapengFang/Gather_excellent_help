@@ -19,14 +19,31 @@
             android:background="#11000000"/>
     </RelativeLayout>
 
-
-    <TextView
-        android:id="@+id/tv_activity_ware_title"
+    <RelativeLayout
         android:layout_width="@dimen/x95"
-        android:layout_height="@dimen/x14"
-        android:text="Haier/海尔EC"
-        android:textSize="@dimen/x12"
-        android:textColor="#333333"/>
+        android:layout_height="@dimen/x14">
+
+        <TextView
+            android:id="@+id/tv_activity_ware_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Haier/海尔EC"
+            android:textSize="@dimen/x12"
+            android:textColor="#333333"/>
+
+        <TextView
+            android:id="@+id/tv_activity_sun_tao_icon"
+            android:layout_width="@dimen/x30"
+            android:layout_height="@dimen/x12"
+            android:text=""
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@drawable/sun_tao_text_selector"
+            android:textSize="@dimen/x8"
+            android:layout_marginTop="@dimen/x2"
+            android:background="@drawable/sun_tao_icon_selector"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

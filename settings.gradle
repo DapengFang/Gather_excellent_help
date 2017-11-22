@@ -1,1 +1,1 @@
-include ':app', ':scan_library'
+include ':app', ':scan_library', ':photo_library', ':pullToRefresh_library', ':catloadinglibrary'

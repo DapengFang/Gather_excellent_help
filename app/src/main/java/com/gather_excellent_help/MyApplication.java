@@ -88,7 +88,6 @@ public class MyApplication extends Application {
                                LogUtil.e("程序发生未知错误！！！");
                             }
                             Log.e("TGA","PatchStatus.CODE_LOAD_RELAUNCH = 补丁加载需要冷启动" );
-                            Toast.makeText(application, "请重新打开App加载更新补丁！", Toast.LENGTH_SHORT).show();
                         } else if(code == PatchStatus.CODE_LOAD_FAIL) {
                             // 内部引擎异常, 推荐此时清空本地补丁, 防止失败补丁重复加载
                             Log.e("TGA","PatchStatus.CODE_LOAD_FAIL = 内存引擎异常" );

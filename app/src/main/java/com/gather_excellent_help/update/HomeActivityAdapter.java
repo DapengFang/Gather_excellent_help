@@ -24,6 +24,7 @@ import com.gather_excellent_help.bean.HomeWareBean;
 import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
+import com.gather_excellent_help.ui.activity.suning.SuningDetailActivity;
 import com.gather_excellent_help.ui.adapter.HomeRushAdapter;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -91,33 +92,47 @@ public class HomeActivityAdapter extends RecyclerView.Adapter<HomeActivityAdapte
                 @Override
                 public void onItemClick(View v, int i) {
                     DecimalFormat df = new DecimalFormat("#0.00");
+                    int site_id = itemData.get(i).getSite_id();
+                    int article_id = itemData.get(i).getArticle_id();
                     String couponsUrl = itemData.get(i).getCouponsUrl();
                     String link_url = itemData.get(i).getLink_url();
                     String goods_id = itemData.get(i).getProductId();
                     String goods_img = itemData.get(i).getImg_url();
                     String goods_title = itemData.get(i).getTitle();
                     double sell_price = itemData.get(i).getSell_price();
+                    double market_price = itemData.get(i).getMarket_price();
                     int couponsPrice = itemData.get(i).getCouponsPrice();
-                    if(couponsPrice>0) {
-                        if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
-                            Intent intent = new Intent(context, WebActivity.class);
-                            intent.putExtra("web_url",couponsUrl);
+                    if(site_id == 1) {
+                        if(couponsPrice>0) {
+                            if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
+                                Intent intent = new Intent(context, WebActivity.class);
+                                intent.putExtra("web_url",couponsUrl);
+                                intent.putExtra("url", link_url);
+                                intent.putExtra("goods_id", goods_id);
+                                intent.putExtra("goods_img", goods_img);
+                                intent.putExtra("goods_title", goods_title);
+                                intent.putExtra("goods_price", df.format(sell_price)+"");
+                                intent.putExtra("goods_coupon", String.valueOf(couponsPrice));
+                                intent.putExtra("goods_coupon_url", couponsUrl);
+                                context.startActivity(intent);
+                            }
+                        } else{
+                            Intent intent = new Intent(context, WebRecordActivity.class);
                             intent.putExtra("url", link_url);
                             intent.putExtra("goods_id", goods_id);
                             intent.putExtra("goods_img", goods_img);
                             intent.putExtra("goods_title", goods_title);
                             intent.putExtra("goods_price", df.format(sell_price)+"");
-                            intent.putExtra("goods_coupon", String.valueOf(couponsPrice));
-                            intent.putExtra("goods_coupon_url", couponsUrl);
                             context.startActivity(intent);
                         }
-                    } else{
-                        Intent intent = new Intent(context, WebRecordActivity.class);
-                        intent.putExtra("url", link_url);
+                    }else if(site_id == 2) {
+                        Intent intent = new Intent(context, SuningDetailActivity.class);
+                        intent.putExtra("article_id",article_id);
                         intent.putExtra("goods_id", goods_id);
                         intent.putExtra("goods_img", goods_img);
                         intent.putExtra("goods_title", goods_title);
                         intent.putExtra("goods_price", df.format(sell_price)+"");
+                        intent.putExtra("c_price", df.format(market_price)+"");
                         context.startActivity(intent);
                     }
                 }

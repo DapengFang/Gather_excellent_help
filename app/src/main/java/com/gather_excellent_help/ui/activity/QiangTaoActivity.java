@@ -30,6 +30,7 @@ import com.gather_excellent_help.ui.adapter.WareListAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.ScreenUtil;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
@@ -124,6 +125,26 @@ public class QiangTaoActivity extends BaseActivity {
             public void onItemClick(View v, int position) {
                 curr_click = position;
                 int lastCheckPosition = taoQiangTimeAdapter.getLastCheckPosition();
+                int moveDistance  = (ScreenUtil.getScreenWidth(QiangTaoActivity.this) - childWidth)/2;
+                int[] location = new int[2];
+                v.getLocationOnScreen(location);
+                int x = location[0];
+                int distance = 0;
+                if(position!=0 && position!=taoQiangTimeAdapter.getItemCount()-1) {
+                    if(position>lastCheckPosition) {
+                        distance = x - moveDistance;
+                    }else{
+                        distance = x - moveDistance;
+                    }
+                    rcvHorizationalTimeNavigator.scrollBy(distance,0);
+                }else if(position == 0) {
+                    distance = x;
+                    rcvHorizationalTimeNavigator.scrollBy(distance,0);
+                }else if(position == taoQiangTimeAdapter.getItemCount()-1) {
+                    int dis = ScreenUtil.getScreenWidth(QiangTaoActivity.this) - childWidth;
+                    distance = x - dis;
+                    rcvHorizationalTimeNavigator.scrollBy(distance,0);
+                }
                 for (int i = 0; i < timeData.size(); i++) {
                     QiangTimeBean qiangTimeBean = timeData.get(i);
                     if (i == position) {
@@ -132,14 +153,14 @@ public class QiangTaoActivity extends BaseActivity {
                         qiangTimeBean.setCheck(false);
                     }
                 }
-                int distance = 0;
-                if(position>lastCheckPosition) {
-                    distance = (position-lastCheckPosition) * childWidth;
-                    rcvHorizationalTimeNavigator.scrollBy(distance,0);
-                }else{
-                    distance = (lastCheckPosition - position) * childWidth;
-                    rcvHorizationalTimeNavigator.scrollBy(-distance,0);
-                }
+//                int distance = 0;
+//                if(position>lastCheckPosition) {
+//                    distance = (position-lastCheckPosition) * childWidth;
+//                    rcvHorizationalTimeNavigator.scrollBy(distance,0);
+//                }else{
+//                    distance = (lastCheckPosition - position) * childWidth;
+//                    rcvHorizationalTimeNavigator.scrollBy(-distance,0);
+//                }
                 taoQiangTimeAdapter.notifyDataSetChanged();
                 QiangTimeBean qiangTimeBean = timeData.get(position);
                 int time = qiangTimeBean.getTime();

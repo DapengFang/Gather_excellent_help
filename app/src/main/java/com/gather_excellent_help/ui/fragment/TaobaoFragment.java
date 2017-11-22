@@ -291,6 +291,7 @@ public class TaobaoFragment extends LazyLoadFragment {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "--" + e.getMessage());
+                llTaobaoLoadmore.setVisibility(View.GONE);
             }
 
         });

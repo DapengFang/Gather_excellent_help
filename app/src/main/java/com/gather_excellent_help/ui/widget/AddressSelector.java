@@ -17,9 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gather_excellent_help.R;
-import com.gather_excellent_help.bean.address.Area;
+import com.gather_excellent_help.bean.PcsBean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Dapeng Fang on 2017/9/1.
@@ -33,7 +34,7 @@ public class AddressSelector extends LinearLayout implements View.OnClickListene
     private ArrayList<Tab> tabs;
     //列表的适配器
     private AddressAdapter addressAdapter;
-    private ArrayList<Area> cities;
+    private List<PcsBean.DataBean>  cities;
     private OnItemClickListener onItemClickListener;
     private OnTabSelectedListener onTabSelectedListener;
     private RecyclerView list;
@@ -293,9 +294,9 @@ public class AddressSelector extends LinearLayout implements View.OnClickListene
             if(listTextSize != -1)
                 holder.tv.setTextSize(listTextSize);
             String string = "";
-            Area area = cities.get(position);
-            if(area!=null) {
-              string = area.getName();
+            PcsBean.DataBean dataBean = cities.get(position);
+            if(dataBean!=null) {
+              string = dataBean.getName();
             }
             if(TextUtils.equals(tabs.get(tabIndex).getText(),string)){
                 holder.img.setVisibility(View.VISIBLE);
@@ -310,8 +311,8 @@ public class AddressSelector extends LinearLayout implements View.OnClickListene
                 @Override
                 public void onClick(View v) {
                     if(onItemClickListener != null){
-                        onItemClickListener.itemClick(AddressSelector.this,(Area) v.getTag(),tabIndex,position);
-                        tabs.get(tabIndex).setText(((Area) v.getTag()).getName());
+                        onItemClickListener.itemClick(AddressSelector.this,(PcsBean.DataBean) v.getTag(),tabIndex,position);
+                        tabs.get(tabIndex).setText(((PcsBean.DataBean) v.getTag()).getName());
                         tabs.get(tabIndex).setTag(v.getTag());
                         if(tabIndex+1 < tabs.size()){
                             tabIndex ++;
@@ -351,7 +352,7 @@ public class AddressSelector extends LinearLayout implements View.OnClickListene
          * @param area 返回地址列表对应点击的对象
          * @param tabPosition 对应tab的位置
          * */
-        void itemClick(AddressSelector addressSelector,Area area, int tabPosition,int position);
+        void itemClick(AddressSelector addressSelector,PcsBean.DataBean area, int tabPosition,int position);
     }
 
     /**
@@ -377,11 +378,11 @@ public class AddressSelector extends LinearLayout implements View.OnClickListene
     /**
      * 设置列表的数据源，设置后立即生效
      * */
-    public void setCities(ArrayList cities,String which) {
+    public void setCities(List<PcsBean.DataBean> cities,String which) {
         this.which = which;
         if(cities == null||cities.size() <= 0)
             return;
-        if(cities.get(0) instanceof Area){
+        if(cities.get(0) instanceof PcsBean.DataBean){
             this.cities = cities;
             if(addressAdapter == null){
                 addressAdapter = new AddressAdapter();

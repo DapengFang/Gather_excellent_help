@@ -194,6 +194,7 @@ public class NewsFirstPresenter {
                              page = 2;
                          }
                          if(size == 0) {
+                             swip_news_first.setRefreshing(false);
                              Toast.makeText(context, "没有搜索到查询内容！", Toast.LENGTH_SHORT).show();
                              return;
                          }

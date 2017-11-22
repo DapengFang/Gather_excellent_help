@@ -30,6 +30,7 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.ListBean;
 import com.gather_excellent_help.bean.SearchWareBean;
+import com.gather_excellent_help.ui.activity.suning.SuningDetailActivity;
 import com.gather_excellent_help.ui.adapter.WareListAdapter;
 import com.gather_excellent_help.ui.adapter.WareSelectorAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
@@ -369,41 +370,16 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         DecimalFormat df = new DecimalFormat("#0.00");
-                        if (sousuoStr.equals("isVip")) {
-                            String link_url = wareData.get(i).getLink_url();
-                            String goods_id = wareData.get(i).getProductId();
-                            String goods_img = wareData.get(i).getImg_url();
-                            String goods_title = wareData.get(i).getTitle();
-                            double sell_price = wareData.get(i).getSell_price();
-                            Intent intent = new Intent(WareListActivity.this, WebRecordActivity.class);
-                            intent.putExtra("url", link_url);
-                            intent.putExtra("goods_id", goods_id);
-                            intent.putExtra("goods_img", goods_img);
-                            intent.putExtra("goods_title", goods_title);
-                            intent.putExtra("goods_price", df.format(sell_price) + "");
-                            startActivity(intent);
-                        } else {
-                            String couponsUrl = wareData.get(i).getCouponsUrl();
-                            String link_url = wareData.get(i).getLink_url();
-                            String goods_id = wareData.get(i).getProductId();
-                            String goods_img = wareData.get(i).getImg_url();
-                            String goods_title = wareData.get(i).getTitle();
-                            double sell_price = wareData.get(i).getSell_price();
-                            int couponsPrice = wareData.get(i).getCouponsPrice();
-                            if (couponsPrice > 0) {
-                                if (couponsUrl != null && !TextUtils.isEmpty(couponsUrl)) {
-                                    Intent intent = new Intent(WareListActivity.this, WebActivity.class);
-                                    intent.putExtra("web_url", couponsUrl);
-                                    intent.putExtra("url", link_url);
-                                    intent.putExtra("goods_id", goods_id);
-                                    intent.putExtra("goods_img", goods_img);
-                                    intent.putExtra("goods_title", goods_title);
-                                    intent.putExtra("goods_price", df.format(sell_price) + "");
-                                    intent.putExtra("goods_coupon", String.valueOf(couponsPrice));
-                                    intent.putExtra("goods_coupon_url", couponsUrl);
-                                    startActivity(intent);
-                                }
-                            } else {
+                        int site_id = wareData.get(i).getSite_id();
+                        int article_id = wareData.get(i).getArticle_id();
+                        String goods_id = wareData.get(i).getProductId();
+                        String goods_img = wareData.get(i).getImg_url();
+                        String goods_title = wareData.get(i).getTitle();
+                        double sell_price = wareData.get(i).getSell_price();
+                        double market_price = wareData.get(i).getMarket_price();
+                        if(site_id == 1) {
+                            if (sousuoStr.equals("isVip")) {
+                                String link_url = wareData.get(i).getLink_url();
                                 Intent intent = new Intent(WareListActivity.this, WebRecordActivity.class);
                                 intent.putExtra("url", link_url);
                                 intent.putExtra("goods_id", goods_id);
@@ -411,9 +387,44 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                                 intent.putExtra("goods_title", goods_title);
                                 intent.putExtra("goods_price", df.format(sell_price) + "");
                                 startActivity(intent);
+                            } else {
+                                String couponsUrl = wareData.get(i).getCouponsUrl();
+                                String link_url = wareData.get(i).getLink_url();
+                                int couponsPrice = wareData.get(i).getCouponsPrice();
+                                if (couponsPrice > 0) {
+                                    if (couponsUrl != null && !TextUtils.isEmpty(couponsUrl)) {
+                                        Intent intent = new Intent(WareListActivity.this, WebActivity.class);
+                                        intent.putExtra("web_url", couponsUrl);
+                                        intent.putExtra("url", link_url);
+                                        intent.putExtra("goods_id", goods_id);
+                                        intent.putExtra("goods_img", goods_img);
+                                        intent.putExtra("goods_title", goods_title);
+                                        intent.putExtra("goods_price", df.format(sell_price) + "");
+                                        intent.putExtra("goods_coupon", String.valueOf(couponsPrice));
+                                        intent.putExtra("goods_coupon_url", couponsUrl);
+                                        startActivity(intent);
+                                    }
+                                } else {
+                                    Intent intent = new Intent(WareListActivity.this, WebRecordActivity.class);
+                                    intent.putExtra("url", link_url);
+                                    intent.putExtra("goods_id", goods_id);
+                                    intent.putExtra("goods_img", goods_img);
+                                    intent.putExtra("goods_title", goods_title);
+                                    intent.putExtra("goods_price", df.format(sell_price) + "");
+                                    startActivity(intent);
+                                }
                             }
+                        }else if(site_id == 2) {
+                            //苏宁
+                            Intent intent = new Intent(WareListActivity.this, SuningDetailActivity.class);
+                            intent.putExtra("article_id",article_id);
+                            intent.putExtra("goods_id", goods_id);
+                            intent.putExtra("goods_img", goods_img);
+                            intent.putExtra("goods_title", goods_title);
+                            intent.putExtra("goods_price", df.format(sell_price)+"");
+                            intent.putExtra("c_price", df.format(market_price)+"");
+                            startActivity(intent);
                         }
-
                     }
                 });
 

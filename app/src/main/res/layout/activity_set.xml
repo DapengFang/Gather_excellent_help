@@ -32,11 +32,22 @@
                 android:textSize="14sp" />
 
             <ImageView
+                android:id="@+id/iv_set_userinfo_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/arraw_right_jiantou" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="收货地址管理"
+                android:layout_toLeftOf="@id/iv_set_userinfo_right"
+                android:layout_marginRight="@dimen/x3"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:layout_centerVertical="true"/>
 
         </RelativeLayout>
 

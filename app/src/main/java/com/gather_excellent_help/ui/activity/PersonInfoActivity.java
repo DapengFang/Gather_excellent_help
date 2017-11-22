@@ -34,6 +34,7 @@ import com.gather_excellent_help.bean.UserAvatarBean;
 import com.gather_excellent_help.bean.UserinfoBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
+import com.gather_excellent_help.ui.activity.address.PersonAddressActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.CircularImage;
 import com.gather_excellent_help.utils.CacheUtils;
@@ -123,7 +124,6 @@ public class PersonInfoActivity extends BaseActivity {
                 } else if (whick.equals("head")) {
                     parseHead(response);
                 }
-
             }
 
             @Override
@@ -131,8 +131,10 @@ public class PersonInfoActivity extends BaseActivity {
                 LogUtil.e(call.toString() + "," + e.getMessage());
             }
         });
-        rlPersonExit.setOnClickListener(new MyOnclickListener());
-        civPersonHead.setOnClickListener(new MyOnclickListener());
+        MyOnclickListener myOnclickListener = new MyOnclickListener();
+        rlPersonExit.setOnClickListener(myOnclickListener);
+        civPersonHead.setOnClickListener(myOnclickListener);
+        rlPersonAddress.setOnClickListener(myOnclickListener);
     }
 
     /**
@@ -184,8 +186,19 @@ public class PersonInfoActivity extends BaseActivity {
                 case R.id.civ_person_head:
                     updateUserHead();
                     break;
+                case R.id.rl_person_address:
+                    toPersonAddressPage();
+                    break;
             }
         }
+    }
+
+    /**
+     * 跳转到收货地址界面
+     */
+    private void toPersonAddressPage() {
+        Intent intent = new Intent(PersonInfoActivity.this, PersonAddressActivity.class);
+        startActivity(intent);
     }
 
     private static final int output_X = 480;

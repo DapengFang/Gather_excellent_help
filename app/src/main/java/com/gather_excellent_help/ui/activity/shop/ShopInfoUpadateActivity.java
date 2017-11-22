@@ -147,7 +147,7 @@ public class ShopInfoUpadateActivity extends BaseActivity {
         }
         pcsChoicePopupwindow.setOnItemClickListenr(new PcsChoicePopupwindow.OnItemClickListenr() {
             @Override
-            public void getFinalAddress(String address) {
+            public void getFinalAddress(String address,String area,String area_id) {
                 pcs = address;
                 LogUtil.e(address);
                 tvMerchantPcsChoice.setText(address);

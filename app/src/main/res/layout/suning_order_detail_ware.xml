@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#dddddd"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x110"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/x10"
+        android:background="#eeeeee">
+
+        <ImageView
+            android:id="@+id/iv_suning_order_ware"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/x80"
+            android:src="@mipmap/juyoubangs" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/x10"
+            android:layout_marginTop="@dimen/x10"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_suning_order_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="鸟笼取暖节能电暖气台式电暖炉家用电暖器办公室小太阳烤火炉"
+                android:textColor="#555555"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_suning_order_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_suning_order_title"
+                android:layout_marginTop="@dimen/x3"
+                android:text="颜色分类：大号、黑色"
+                android:textColor="#aaaaaa"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="@dimen/x60"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/x10">
+
+            <TextView
+                android:id="@+id/tv_suning_order_realprice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="￥28.90"
+                android:textColor="#333333"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_suning_order_oldprice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tv_suning_order_realprice"
+                android:layout_marginTop="@dimen/x3"
+                android:text="￥66.99"
+                android:textColor="#aaaaaa"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_suning_order_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tv_suning_order_oldprice"
+                android:text="x1"
+                android:textColor="#aaaaaa"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#dddddd"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x50"
+        android:background="#eeeeee">
+        <TextView
+            android:id="@+id/tv_item_order_back"
+            android:layout_width="@dimen/x80"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/order_suning_bg_shape"
+            android:gravity="center"
+            android:paddingBottom="@dimen/x8"
+            android:paddingTop="@dimen/x8"
+            android:layout_marginRight="@dimen/x8"
+            android:text="退款"
+            android:textColor="#555555"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:background="#dddddd"/>
+
+</LinearLayout>

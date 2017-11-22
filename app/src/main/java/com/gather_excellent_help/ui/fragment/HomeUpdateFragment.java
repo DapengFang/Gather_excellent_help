@@ -20,8 +20,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.baichuan.android.trade.AlibcTrade;
+import com.alibaba.baichuan.android.trade.page.AlibcPage;
 import com.bumptech.glide.Glide;
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.bean.ChangeUrlBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.presenter.homepresenter.ActivityListPresenter;
@@ -31,8 +34,10 @@ import com.gather_excellent_help.presenter.homepresenter.GroupPresenter;
 import com.gather_excellent_help.presenter.homepresenter.QiangPresenter;
 import com.gather_excellent_help.presenter.homepresenter.TypePresenter;
 import com.gather_excellent_help.presenter.homepresenter.VipPresenter;
+import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.activity.ScannerWebActivity;
 import com.gather_excellent_help.ui.activity.WareListActivity;
+import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.base.BaseFragment;
 import com.gather_excellent_help.ui.base.LazyLoadFragment;
 import com.gather_excellent_help.ui.widget.CarouselImageView;
@@ -41,8 +46,11 @@ import com.gather_excellent_help.ui.widget.MyNestedScrollView;
 import com.gather_excellent_help.ui.widget.RushDownTimer;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.Tools;
+import com.gather_excellent_help.utils.changeutils.ChangeUrlUtil;
+import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -187,7 +195,6 @@ public class HomeUpdateFragment extends LazyLoadFragment {
         typePresenter = new TypePresenter(getActivity(), gvHomeType);
         typePresenter.initData();
 
-
         vipPresenter = new VipPresenter(getActivity(), llHomeVipZera);
         vipPresenter.initData();
 
@@ -244,32 +251,64 @@ public class HomeUpdateFragment extends LazyLoadFragment {
         ll_home_update_scanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CaptureActivity.open(getContext(), new CaptureActivity.OnScanResultListener() {
-                    @Override
-                    public void onResult(String result) {
-                        LogUtil.e(result);
-                        if(result.startsWith("http")) {
-                            if(result.contains("rtnurl=")) {
-                                String[] sanners = result.split("=");
-                                String url = sanners[sanners.length - 1];
-                                Intent intent = new Intent(getContext(), ScannerWebActivity.class);
-                                intent.putExtra("scaner_url", url);
-                                startActivity(intent);
+                boolean isLogin = Tools.isLogin(getContext());
+                if(isLogin) {
+                    CaptureActivity.open(getContext(), new CaptureActivity.OnScanResultListener() {
+                        @Override
+                        public void onResult(String result) {
+                            LogUtil.e(result);
+                            if(result.startsWith("http")) {
+                                boolean b = ChangeUrlUtil.checkContainWareId(result);
+                                if(b) {
+                                    String wareId = ChangeUrlUtil.getWareId(result);
+                                    String adverId = Tools.getAdverId(getContext());
+                                    LogUtil.e(wareId);
+                                    ChangeUrlUtil.getChangeUrl(getContext(), result, wareId, adverId, new ChangeUrlUtil.OnChangeUrlListener() {
+                                        @Override
+                                        public void onResultUrl(String result) {
+                                            LogUtil.e("click_url = " + result);
+                                            ChangeUrlBean changeUrlBean = new Gson().fromJson(result, ChangeUrlBean.class);
+                                            int statusCode = changeUrlBean.getStatusCode();
+                                            switch (statusCode) {
+                                                case 1:
+                                                    List<ChangeUrlBean.DataBean> data = changeUrlBean.getData();
+                                                    if (data != null && data.size() > 0) {
+                                                        String click_url = changeUrlBean.getData().get(0).getClick_url();
+                                                        LogUtil.e("click_url = " + click_url);
+                                                        Intent intent = new Intent(getContext(), ScannerWebActivity.class);
+                                                        intent.putExtra("scaner_url", click_url);
+                                                        intent.putExtra("url_type",1);
+                                                        startActivity(intent);
+                                                    } else {
+                                                        Toast.makeText(getContext(), "转链出现问题，没有拿到转链的链接~", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    break;
+                                                case 0:
+                                                    Toast.makeText(getContext(), changeUrlBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                                                    break;
+                                            }
+                                        }
+                                    });
+                                }else{
+                                    Intent intent = new Intent(getContext(), ScannerWebActivity.class);
+                                    intent.putExtra("scaner_url", result);
+                                    intent.putExtra("url_type",2);
+                                    startActivity(intent);
+                                }
                             }else{
-                                Intent intent = new Intent(getContext(), ScannerWebActivity.class);
-                                intent.putExtra("scaner_url", result);
-                                startActivity(intent);
+                                Toast.makeText(getContext(), result , Toast.LENGTH_SHORT).show();
                             }
-                        }else{
-                            Toast.makeText(getContext(), result , Toast.LENGTH_SHORT).show();
                         }
-                    }
-                });
+                    });
+                }else{
+                    Intent intent = new Intent(getContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
         if(handler!=null) {
-            handler.sendEmptyMessageDelayed(TOTOP, 3000);
+            handler.sendEmptyMessageDelayed(TOTOP, 2000);
         }
     }
 

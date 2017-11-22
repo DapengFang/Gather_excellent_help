@@ -27,25 +27,23 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.HelpRuleBean;
 import com.gather_excellent_help.bean.MineBean;
+import com.gather_excellent_help.ui.activity.suning.LogisticsInfoActivity;
+import com.gather_excellent_help.ui.activity.suning.SuningGoodscartActivity;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.AlipayManagerActivity;
 import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.activity.OrderActivity;
 import com.gather_excellent_help.ui.activity.RuleHelpActivity;
-import com.gather_excellent_help.ui.activity.ScannerWebActivity;
 import com.gather_excellent_help.ui.activity.SetActivity;
-import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.credits.AccountDetailAvtivity;
 import com.gather_excellent_help.ui.activity.credits.BackRebateActivity;
 import com.gather_excellent_help.ui.activity.credits.ExtractCreditsActivity;
 import com.gather_excellent_help.ui.activity.credits.InviteFriendsActivity;
 import com.gather_excellent_help.ui.activity.credits.LowerMemberStaticsActivity;
 import com.gather_excellent_help.ui.activity.credits.ShopDetailActivity;
-import com.gather_excellent_help.ui.activity.shop.ShopInfoUpadateActivity;
-import com.gather_excellent_help.ui.activity.shop.ShopPhotoUpdateActivity;
 import com.gather_excellent_help.ui.activity.shop.WhichJoinActivity;
-import com.gather_excellent_help.ui.base.BaseFragment;
+import com.gather_excellent_help.ui.activity.suning.SuningOrderActivity;
 import com.gather_excellent_help.ui.base.LazyLoadFragment;
 import com.gather_excellent_help.ui.widget.CircularImage;
 import com.gather_excellent_help.ui.widget.MyToggleButton;
@@ -65,8 +63,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 import okhttp3.Call;
-import push.jerry.cn.scan.CaptureActivity;
-import push.jerry.cn.scan.permisson.ToastUtil;
 
 /**
  * Created by wuxin on 2017/7/7.
@@ -166,6 +162,10 @@ public class MineFragment extends LazyLoadFragment {
     View vTuiZhuanLine;
     @Bind(R.id.v_toggle_line)
     View vToggleLine;
+
+
+    private LinearLayout ll_mine_u_like;
+    private LinearLayout ll_mine_suning_order;
     private String mseg = "";
 
     private NetUtil netUtils;
@@ -205,6 +205,8 @@ public class MineFragment extends LazyLoadFragment {
     @Override
     public View initView() {
         View inflate = View.inflate(getContext(), R.layout.mine_fragment, null);
+        ll_mine_u_like = (LinearLayout) inflate.findViewById(R.id.ll_mine_u_like);
+        ll_mine_suning_order = (LinearLayout) inflate.findViewById(R.id.ll_mine_suning_order);
         return inflate;
     }
 
@@ -213,6 +215,7 @@ public class MineFragment extends LazyLoadFragment {
         login = Tools.isLogin(getContext());
         groupId = Tools.getGroupId(getContext());
         shopType = Tools.getShopType(getContext());
+        LogUtil.e("Mine shopType = " + shopType);
         LogUtil.e("groupId = " + groupId);
         handler = new Handler() {
             @Override
@@ -315,6 +318,9 @@ public class MineFragment extends LazyLoadFragment {
         civMeHeadIcon.setOnClickListener(new MyOnClickListener());
         llLowerMemberStatics.setOnClickListener(new MyOnClickListener());
         ivMePersonLingdang.setOnClickListener(new MyOnClickListener());
+
+        ll_mine_u_like.setOnClickListener(new MyOnClickListener());
+        ll_mine_suning_order.setOnClickListener(new MyOnClickListener());
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -467,6 +473,7 @@ public class MineFragment extends LazyLoadFragment {
         payState = dataBean.getPay_status();
         apply_type = dataBean.getApply_type();
         pay_type = dataBean.getPay_type();
+        shopType = dataBean.getGroup_type();
         String user_get_ratio = dataBean.getUser_get_ratio();
         if (user_get_ratio != null) {
             CacheUtils.putString(getContext(), CacheUtils.USER_RATE, user_get_ratio);
@@ -475,6 +482,7 @@ public class MineFragment extends LazyLoadFragment {
             CacheUtils.putString(getContext(), CacheUtils.ADVER_ID, advertising);
         }
         CacheUtils.putInteger(getContext(), CacheUtils.GROUP_TYPE, group_id);
+        CacheUtils.putInteger(getContext(), CacheUtils.SHOP_TYPE,shopType);
         if (civMeHeadIcon == null) {
             return;
         }
@@ -670,22 +678,33 @@ public class MineFragment extends LazyLoadFragment {
                 case R.id.iv_me_person_lingdang:
                     //测试热修复的小铃铛
                     Toast.makeText(getContext(), "热修复测试成功！！！", Toast.LENGTH_SHORT).show();
-                    carmeraScanImage();
+                    break;
+                case R.id.ll_mine_u_like:
+                    toSuningGoodscart();
+                    break;
+                case R.id.ll_mine_suning_order:
+                    toSuningOrder();
                     break;
             }
         }
     }
 
     /**
-     * 从相册获取二维码并扫描解析
+     * 跳转到苏宁购物车
      */
-    private void carmeraScanImage() {
-        //打开手机中的相册
-        Intent innerIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        innerIntent.setType("image/*");
-        startActivityForResult(innerIntent, REQUEST_CODE_SCAN_GALLERY);
-
+    private void toSuningGoodscart() {
+        Intent intent = new Intent(getContext(), LogisticsInfoActivity.class);
+        startActivity(intent);
     }
+
+    /**
+     * 跳转到苏宁页面
+     */
+    private void toSuningOrder() {
+        Intent intent = new Intent(getContext(), SuningOrderActivity.class);
+        startActivity(intent);
+    }
+
 
     /**
      * 跳转到下级会员统计界面

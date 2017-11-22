@@ -30,13 +30,44 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- 外部存储读权限，调试工具加载本地补丁需要 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    //定位相关权限
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+      
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+     
 
+    //百度定位
+    <!-- 这个权限用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 这个权限用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- SD卡读取权限，用户写入离线定位数据 -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
+    <uses-sdk tools:overrideLibrary="com.baoyachi.stepview,com.roger.catloadinglibrary"/>
+
+
+      
     <application
         android:name=".MyApplication"
         android:icon="@mipmap/juyoubangs"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:allowBackup="false"
+        tools:replace="android:icon,android:theme,android:allowBackup">
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.gather_excellent_help.fileprovider"
@@ -46,6 +77,15 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="qd8vKaXcCtFRKEOxFqt6MWgGYCQpXgA8" />
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
 
         <activity
             android:name="com.umeng.socialize.media.WBShareCallBackActivity"
@@ -141,13 +181,11 @@
             android:name=".SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -312,12 +350,21 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".ui.activity.QRcodeActivity" />
-        <activity android:name=".ui.activity.BindPhoneActivity">
-
-        </activity>
-        <activity android:name=".ui.activity.SetBindPswActivity">
-
-        </activity>
+        <activity android:name=".ui.activity.BindPhoneActivity" />
+        <activity android:name=".ui.activity.SetBindPswActivity" />
+        <activity android:name=".ui.activity.address.PersonAddressActivity" />
+        <activity android:name=".ui.activity.address.AddNewAddressActivity" />
+        <activity android:name=".ui.activity.suning.HackySeeBigimgActivity" />
+        <activity android:name=".ui.activity.suning.SuningDetailActivity" />
+        <activity android:name=".ui.activity.suning.OrderConfirmActivity" />
+        <activity android:name=".ui.activity.suning.OrderCartConfirmActivity"/>
+        <activity android:name=".ui.activity.suning.InvoiceChoiceActivity" />
+        <activity android:name=".ui.activity.suning.CheckStandActivity" />
+        <activity android:name=".ui.activity.suning.SuningOrderActivity" />
+        <activity android:name=".ui.activity.suning.SuningOrderDetailActivity" />
+        <activity android:name=".ui.activity.suning.SuningOrderLogisticsActivity" />
+        <activity android:name=".ui.activity.suning.LogisticsInfoActivity" />
+        <activity android:name=".ui.activity.suning.SuningGoodscartActivity"></activity>
     </application>
 
 </manifest>

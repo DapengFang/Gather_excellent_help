@@ -349,4 +349,11 @@ public class Tools {
     public static int getOpenRedStute(Context context){
         return CacheUtils.getInteger(context,CacheUtils.IS_OPEN_RED,0);
     }
+
+    public static boolean getInt2Boolean(String str){
+        if(str.equals("1")) {
+            return true;
+        }
+        return false;
+    }
 }

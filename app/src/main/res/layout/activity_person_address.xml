@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/top_zhuangai_bar" />
+
+    <RelativeLayout
+        android:id="@+id/default_address"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_shenfen"
+            android:layout_width="@dimen/x120"
+            android:layout_height="@dimen/x80"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x120"
+            android:src="@drawable/default_idcard" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_shenfen"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x10"
+            android:text="暂无地址管理，请添加"
+            android:textColor="#cacaca"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_address_hava"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#fff"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/ll_address_top_show"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x46"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/x7"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x3"
+                android:text="已有"
+                android:textColor="#ababab"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_address_top_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/red_content_color"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="个地址(最多有5个收货地址)"
+                android:textColor="#ababab"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#e5e5e5" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcv_me_address"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#f4f4f4"></android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#e5e5e5" />
+
+    <TextView
+        android:id="@+id/tv_me_add_newaddress"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x45"
+        android:gravity="center"
+        android:text="添加新地址"
+        android:textColor="#aa000000"
+        android:textSize="16sp"
+        android:background="#ffffff"/>
+
+</LinearLayout>

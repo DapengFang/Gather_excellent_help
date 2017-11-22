@@ -10,6 +10,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/catloadinglibrary" />
+            <option value="$PROJECT_DIR$/photo_library" />
+            <option value="$PROJECT_DIR$/pullToRefresh_library" />
             <option value="$PROJECT_DIR$/scan_library" />
           </set>
         </option>

@@ -64,10 +64,12 @@ public class ActivityListBean {
          * commission_rate : 1
          */
 
+        private int site_id;//区分苏宁和淘宝
+        private int article_id;//数据库自增id
         private String title;
         private String link_url;
         private String img_url;
-        private String productId;
+        private String productId;//产品id
         private String couponsId;
         private int couponsPrice;
         private int couponsCondition;
@@ -225,6 +227,22 @@ public class ActivityListBean {
 
         public void setCommission_rate(double commission_rate) {
             this.commission_rate = commission_rate;
+        }
+
+        public int getSite_id() {
+            return site_id;
+        }
+
+        public void setSite_id(int site_id) {
+            this.site_id = site_id;
+        }
+
+        public int getArticle_id() {
+            return article_id;
+        }
+
+        public void setArticle_id(int article_id) {
+            this.article_id = article_id;
         }
     }
 }

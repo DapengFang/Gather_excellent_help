@@ -2,7 +2,10 @@ package com.gather_excellent_help.update;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +17,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.TestActivity2;
 import com.gather_excellent_help.bean.ActivityListBean;
 import com.gather_excellent_help.ui.activity.WebActivity;
+import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.Tools;
 
 import java.text.DecimalFormat;
@@ -57,6 +62,7 @@ public class HomeActivityListAdapter extends RecyclerView.Adapter<HomeActivityLi
     @Override
     public void onBindViewHolder(HomeActivityListViewHolder holder, final int position) {
         ActivityListBean.DataBean dataBean = activityData.get(position);
+        final int site_id = dataBean.getSite_id();
         final DecimalFormat df = new DecimalFormat("#0.00");
         final String img_url = dataBean.getImg_url();
         final int couponsPrice = dataBean.getCouponsPrice();
@@ -69,66 +75,105 @@ public class HomeActivityListAdapter extends RecyclerView.Adapter<HomeActivityLi
         double coast = sell_price -couponsPrice-zhuan;
         final String goods_id = String.valueOf(dataBean.getProductId());
         final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
-        if(holder.ivActivityListWareImg!=null  && img_url!=null) {
-            Glide.with(context).load(img_url+"_320x320q90.jpg")
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
-                    .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
-                    .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
-                    .into(holder.ivActivityListWareImg);//请求成功后把图片设置到的控件
-        }
-        if(holder.tvActivityWareCoupon!=null) {
-            holder.tvActivityWareCoupon.setText("领券减"+couponsPrice);
-        }
+
         if(holder.tvActivityWareTitle!=null && title!=null) {
-            holder.tvActivityWareTitle.setText(title);
+            holder.tvActivityWareTitle.setText("\t\t\t\t\t\t\t" + title);
         }
+
         if(holder.tvActivityWarePrice!=null) {
             holder.tvActivityWarePrice.setText("￥"+df.format(sell_price));
         }
-        if(holder.tvActivityWareZhuan!=null) {
-            holder.tvActivityWareZhuan.setText("￥"+df.format(zhuan));
-        }
-        if(holder.tvActivityWareCoast!=null) {
-            holder.tvActivityWareCoast.setText("￥"+df.format(coast));
-        }
-        if(holder.tvActivityWareCoupon!=null) {
-            if(couponsPrice>0) {
-                holder.tvActivityWareCoupon.setVisibility(View.VISIBLE);
-            }else{
-                holder.tvActivityWareCoupon.setVisibility(View.GONE);
-            }
-        }
-        if(holder.ll_activity_list_ware_zhuan!=null) {
-            if (shopType == 1) {
-                if (isToggle) {
-                    holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
-                } else {
-                    holder.ll_activity_list_ware_zhuan.setVisibility(View.VISIBLE);
-                }
-            } else {
-                holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
-            }
-            if(zhuan == 0) {
-                holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
-            }
-        }
-        if(holder.tvActivityWareCouponSecond!=null) {
-            if(secondCouponsUrl!=null && !TextUtils.isEmpty(secondCouponsUrl)) {
-                   holder.tvActivityWareCouponSecond.setVisibility(View.VISIBLE);
-            }else{
-                holder.tvActivityWareCouponSecond.setVisibility(View.GONE);
+
+        if(site_id == 1) {
+            //淘宝
+            if(holder.ivActivityListWareImg!=null  && img_url!=null) {
+                Glide.with(context).load(img_url+"_320x320q90.jpg")
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                        .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                        .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                        .into(holder.ivActivityListWareImg);//请求成功后把图片设置到的控件
             }
 
-            holder.tvActivityWareCouponSecond.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            if(holder.tv_activity_sun_tao_icon!=null) {
+                holder.tv_activity_sun_tao_icon.setSelected(false);
+                holder.tv_activity_sun_tao_icon.setText("淘宝");
+            }
+
+            if(holder.tvActivityWareCoupon!=null) {
+                holder.tvActivityWareCoupon.setText("领券减"+couponsPrice);
+            }
+
+            if(holder.tvActivityWareZhuan!=null) {
+                holder.tvActivityWareZhuan.setText("￥"+df.format(zhuan));
+            }
+            if(holder.tvActivityWareCoast!=null) {
+                holder.tvActivityWareCoast.setText("￥"+df.format(coast));
+            }
+            if(holder.tvActivityWareCoupon!=null) {
+                if(couponsPrice>0) {
+                    holder.tvActivityWareCoupon.setVisibility(View.VISIBLE);
+                }else{
+                    holder.tvActivityWareCoupon.setVisibility(View.GONE);
+                }
+            }
+            if(holder.ll_activity_list_ware_zhuan!=null) {
+                if (shopType == 1) {
+                    if (isToggle) {
+                        holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
+                    } else {
+                        holder.ll_activity_list_ware_zhuan.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
+                }
+                if(zhuan == 0) {
+                    holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
+                }
+            }
+            if(holder.tvActivityWareCouponSecond!=null) {
+                if(secondCouponsUrl!=null && !TextUtils.isEmpty(secondCouponsUrl)) {
+                    holder.tvActivityWareCouponSecond.setVisibility(View.VISIBLE);
+                }else{
+                    holder.tvActivityWareCouponSecond.setVisibility(View.GONE);
+                }
+
+                holder.tvActivityWareCouponSecond.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
                         Intent intent = new Intent(context, WebActivity.class);
                         intent.putExtra("web_url", secondCouponsUrl);
                         intent.putExtra("type","second");
                         context.startActivity(intent);
-                }
-            });
+                    }
+                });
+            }
+        }else if(site_id == 2) {
+            //苏宁
+            if(holder.ivActivityListWareImg!=null  && img_url!=null) {
+                String replace_img = img_url.replace("800x800", "400x400");
+                Glide.with(context).load(replace_img)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                        .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                        .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                        .into(holder.ivActivityListWareImg);//请求成功后把图片设置到的控件
+            }
+
+            if(holder.tvActivityWareCoupon!=null) {
+                holder.tvActivityWareCoupon.setVisibility(View.GONE);
+            }
+            if(holder.tvActivityWareCouponSecond!=null) {
+                holder.tvActivityWareCouponSecond.setVisibility(View.GONE);
+            }
+            if(holder.ll_activity_list_ware_zhuan!=null) {
+                holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
+            }
+            if(holder.tv_activity_sun_tao_icon!=null) {
+                holder.tv_activity_sun_tao_icon.setSelected(true);
+                holder.tv_activity_sun_tao_icon.setText("苏宁");
+            }
+
         }
+
         if(holder.llActivityListWare!=null) {
             holder.llActivityListWare.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -138,12 +183,14 @@ public class HomeActivityListAdapter extends RecyclerView.Adapter<HomeActivityLi
             });
         }
 
+
     }
 
     @Override
     public int getItemCount() {
         return null == activityData ? 0 : activityData.size();
     }
+
 
     public class HomeActivityListViewHolder extends RecyclerView.ViewHolder {
 
@@ -168,9 +215,12 @@ public class HomeActivityListAdapter extends RecyclerView.Adapter<HomeActivityLi
         @Bind(R.id.ll_activity_list_ware_zhuan)
         LinearLayout ll_activity_list_ware_zhuan;
 
+        TextView tv_activity_sun_tao_icon;
+
         public HomeActivityListViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
+            tv_activity_sun_tao_icon = (TextView) itemView.findViewById(R.id.tv_activity_sun_tao_icon);
         }
     }
 

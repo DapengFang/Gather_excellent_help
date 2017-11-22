@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/x100"
+    android:layout_height="@dimen/x24"
+    android:background="@drawable/number_add_sub_view_bg"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/btn_sub"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="-"
+        android:background="@drawable/btn_style_while_selector"
+        android:textColor="#000000"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="@dimen/x16"
+        android:background="#999999"
+        android:layout_gravity="center_vertical"/>
+
+    <TextView
+        android:id="@+id/tv_number"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="1"
+        android:textColor="#000000"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="@dimen/x16"
+        android:background="#999999"
+        android:layout_gravity="center_vertical"/>
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="+"
+        android:background="@drawable/btn_style_while_selector"
+        android:textColor="#000000"
+        android:textSize="14sp" />
+
+</LinearLayout>

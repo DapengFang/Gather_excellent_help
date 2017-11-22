@@ -84,7 +84,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/right_jiantou"
-                android:visibility="invisible"/>
+                android:visibility="gone"/>
 
             <com.gather_excellent_help.ui.widget.CircularImage
                 android:id="@+id/civ_person_head"
@@ -92,7 +92,7 @@
                 android:layout_height="50dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/x3"
-                android:layout_toLeftOf="@id/iv_right1"
+                android:layout_alignParentRight="true"
                 android:src="@drawable/default_person_icon" />
         </RelativeLayout>
 
@@ -103,7 +103,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/x36"
             android:padding="@dimen/x8">
 
             <TextView
@@ -121,7 +121,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/right_jiantou"
-                android:visibility="invisible"/>
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/tv_person_nick"
@@ -129,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/x3"
-                android:layout_toLeftOf="@id/iv_right7"
+                android:layout_alignParentRight="true"
                 android:text=""
                 android:textColor="#99000000"
                 android:textSize="12sp" />
@@ -143,7 +143,7 @@
         <RelativeLayout
             android:id="@+id/rl_person_sex"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/x36"
             android:padding="@dimen/x8">
 
             <TextView
@@ -161,7 +161,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/right_jiantou"
-                android:visibility="invisible"/>
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/tv_person_sex"
@@ -169,7 +169,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/x3"
-                android:layout_toLeftOf="@id/iv_right5"
+                android:layout_alignParentRight="true"
                 android:text="男"
                 android:textColor="#99000000"
                 android:textSize="12sp" />
@@ -182,7 +182,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/x36"
             android:padding="@dimen/x8">
 
             <TextView
@@ -200,7 +200,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/right_jiantou"
-                android:visibility="invisible"/>
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/tv_person_phone"
@@ -208,7 +208,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/x3"
-                android:layout_toLeftOf="@id/iv_right3"
+                android:layout_alignParentRight="true"
                 android:text="18612345678"
                 android:textColor="#99000000"
                 android:textSize="12sp" />
@@ -223,7 +223,7 @@
         <RelativeLayout
             android:id="@+id/rl_person_usertype"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/x36"
             android:padding="@dimen/x8">
 
             <TextView
@@ -241,7 +241,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/right_jiantou"
-                android:visibility="invisible"/>
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/usertype"
@@ -249,7 +249,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/x3"
-                android:layout_toLeftOf="@id/iv_right4"
+                android:layout_alignParentRight="true"
                 android:text="实体商家"
                 android:textColor="#99000000"
                 android:textSize="12sp" />
@@ -264,9 +264,9 @@
         <RelativeLayout
             android:id="@+id/rl_person_address"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/x36"
             android:padding="@dimen/x8"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -282,8 +282,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/x3"
                 android:src="@drawable/right_jiantou"
-                android:visibility="invisible"/>
+                android:visibility="visible"/>
 
         </RelativeLayout>
         <View

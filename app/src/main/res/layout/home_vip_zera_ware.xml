@@ -33,17 +33,33 @@
         android:layout_height="match_parent"
         android:layout_weight="5"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/x10"
+        android:paddingLeft="@dimen/x6"
         android:paddingTop="@dimen/x6"
         android:paddingRight="@dimen/x6">
 
-        <TextView
-            android:id="@+id/tv_vip_ware_title"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/x30"
-            android:lineSpacingExtra="@dimen/x2"
-            android:textSize="@dimen/x12"
-            android:textColor="#333333" />
+            android:layout_height="@dimen/x30">
+            <TextView
+                android:id="@+id/tv_vip_ware_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:lineSpacingExtra="@dimen/x2"
+                android:textSize="@dimen/x12"
+                android:textColor="#333333" />
+            <TextView
+                android:id="@+id/tv_activity_sun_tao_icon"
+                android:layout_width="@dimen/x32"
+                android:layout_height="@dimen/x13"
+                android:text=""
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@drawable/sun_tao_text_selector"
+                android:textSize="@dimen/x8"
+                android:layout_marginTop="@dimen/x2"
+                android:background="@drawable/sun_tao_icon_selector"/>
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/tv_vip_ware_person"
@@ -88,13 +104,13 @@
                 android:id="@+id/tv_vip_ware_zhuan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/x9"
+                android:textSize="@dimen/x8"
                 android:layout_gravity="bottom"
                 android:textColor="#ff6600"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/x6"
+                android:textSize="@dimen/x5"
                 android:textColor="#ff6600"
                 android:text="赚"
                 android:layout_gravity="bottom"
@@ -103,14 +119,14 @@
                 android:id="@+id/tv_vip_ware_coast"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/x9"
+                android:textSize="@dimen/x8"
                 android:layout_gravity="bottom"
                 android:textColor="#ff6600"
                 android:layout_marginLeft="@dimen/x8"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/x6"
+                android:textSize="@dimen/x5"
                 android:textColor="#ff6600"
                 android:text="成本"
                 android:layout_gravity="bottom"

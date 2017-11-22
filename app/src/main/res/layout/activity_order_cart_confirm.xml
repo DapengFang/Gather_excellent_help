@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_order_confirm"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.gather_excellent_help.ui.activity.suning.OrderConfirmActivity">
+
+    <include layout="@layout/top_zhuangai_bar" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.gather_excellent_help.ui.widget.MyNestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x9"
+                    android:background="#eeeeee" />
+
+                <TextView
+                    android:id="@+id/tv_sunng_add_newaddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x100"
+                    android:background="@drawable/address_background"
+                    android:gravity="center"
+                    android:padding="@dimen/x10"
+                    android:text="新建收货地址"
+                    android:textColor="#99000000"
+                    android:textSize="18sp"
+                    android:visibility="visible" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_suning_default_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x120"
+                    android:background="@drawable/address_background"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/ll_suning_confirm_conee"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/x20"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/x10">
+
+                        <TextView
+                            android:id="@+id/tv_suning_address_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/x18"
+                            android:text="猪小明"
+                            android:textColor="#aa000000"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_suning_address_phone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/x10"
+                            android:text="18514792343"
+                            android:textColor="#aa000000"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_suning_address_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@id/ll_suning_confirm_conee"
+                        android:layout_below="@id/ll_suning_confirm_conee"
+                        android:layout_marginLeft="@dimen/x20"
+                        android:layout_marginRight="@dimen/x15"
+                        android:padding="@dimen/x10"
+                        android:text="四川省成都市武侯区复城国际写字楼701"
+                        android:textColor="#99000000"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/tv_suning_address_details"
+                        android:layout_marginLeft="@dimen/x10"
+                        android:layout_marginTop="@dimen/x13"
+                        android:src="@drawable/dingwei_icon" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x9"
+                    android:background="#eeeeee"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rcv_cart_order_confirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x9"
+                    android:background="#eeeeee" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ffffff"
+                    android:orientation="vertical"
+                    android:padding="@dimen/x10">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="支付完成后尽快为您发货"
+                        android:textColor="#333333"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/et_suning_order_mark"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/x32"
+                        android:layout_marginTop="@dimen/x8"
+                        android:background="@drawable/suning_order_confirm_remark_shape"
+                        android:cursorVisible="false"
+                        android:hint="选填：备注信息"
+                        android:paddingLeft="@dimen/x6"
+                        android:textColor="#99000000"
+                        android:textColorHint="#55000000"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x9"
+                    android:background="#eeeeee" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_suning_order_invoice_show"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/x10">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="发票信息"
+                        android:textColor="#333333"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_suning_order_invoice_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:drawablePadding="@dimen/x3"
+                        android:drawableRight="@drawable/arraw_right_jiantou"
+                        android:text="纸制-方大鹏"
+                        android:textColor="#99000000"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x9"
+                    android:background="#eeeeee" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ffffff"
+                    android:orientation="vertical"
+                    android:padding="@dimen/x10">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="商品总额"
+                            android:textColor="#333333"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tv_confirm_goods_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:text=""
+                            android:textStyle="bold"
+                            android:textColor="#FF7F00"
+                            android:textSize="14sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="运费"
+                            android:textColor="#333333"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tv_confirm_postage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:text=""
+                            android:textStyle="bold"
+                            android:textColor="#FF7F00"
+                            android:textSize="14sp" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x9"
+                    android:background="#eeeeee" />
+
+            </LinearLayout>
+        </com.gather_excellent_help.ui.widget.MyNestedScrollView>
+
+        <RelativeLayout
+            android:id="@+id/rl_net_show"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#33000000"
+            android:visibility="gone">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x1"
+        android:background="#eeeeee" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x45"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+
+            <TextView
+                android:id="@+id/tv_confirm_order_totalprice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/x8"
+                android:text=""
+                android:textStyle="bold"
+                android:textColor="#FF7F00"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/x3"
+                android:layout_toLeftOf="@id/tv_confirm_order_totalprice"
+                android:text="实付金额："
+                android:textColor="#333333"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_order_create_confirm"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#FF7F00"
+            android:gravity="center"
+            android:text="提交订单"
+            android:textColor="@color/scan_white"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
+

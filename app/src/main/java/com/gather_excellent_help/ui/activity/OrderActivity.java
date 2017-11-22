@@ -22,11 +22,13 @@ import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.MyNestedScrollView;
 import com.gather_excellent_help.ui.widget.ViewpagerIndicator;
+import com.gather_excellent_help.ui.widget.WanRecycleView;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.PhotoUtils;
 import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +44,8 @@ public class OrderActivity extends BaseActivity {
     RelativeLayout rlExit;
     @Bind(R.id.tv_top_title_name)
     TextView tvTopTitleName;
-    @Bind(R.id.rcv_order_manager)
+
+    private WanRecycleView wan_order_manager;
     RecyclerView rcvOrderManager;
 
     @Bind(R.id.vid_order_manager)
@@ -76,16 +79,71 @@ public class OrderActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         ButterKnife.bind(this);
+        initView();
         initData();
+    }
+
+    /**
+     * 初始化控件
+     */
+    private void initView() {
+        wan_order_manager = (WanRecycleView)findViewById(R.id.wan_order_manager);
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
-        netUtil = new NetUtil();
+        rcvOrderManager = wan_order_manager.getRefreshableView();
         fullyLinearLayoutManager = new FullyLinearLayoutManager(OrderActivity.this);
         rcvOrderManager.setLayoutManager(fullyLinearLayoutManager);
+
+        //设置刷新相关
+        wan_order_manager.setScrollingWhileRefreshingEnabled(true);
+        wan_order_manager.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        wan_order_manager.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+                pageIndex = "1";
+                page = 1;
+                isLoaderMore = false;
+                switch (tab_p) {
+                    case 0:
+                        isCanLoad = true;
+                        curr_statue = 5;
+                        net2ServerOrder(curr_statue);
+                        break;
+                    case 1:
+                        isCanLoad = true;
+                        curr_statue = 1;
+                        net2ServerOrder(curr_statue);
+                        break;
+                    case 2:
+                        isCanLoad = true;
+                        curr_statue = 2;
+                        net2ServerOrder(curr_statue);
+                        break;
+                    case 3:
+                        isCanLoad = true;
+                        curr_statue = 3;
+                        net2ServerOrder(curr_statue);
+                        break;
+                    case 4:
+                        isCanLoad = true;
+                        curr_statue = 4;
+                        net2ServerOrder(curr_statue);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+
+            }
+
+        });
+
+        netUtil = new NetUtil();
         vidacatorControll();
         tvTopTitleName.setText("推广赚订单");
         Intent intent = getIntent();

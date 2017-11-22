@@ -54,7 +54,6 @@ public class QiangPresenter extends BasePresenter {
     private double user_rate;
     private int shopType;
     private boolean isToggle;
-    //private ImageLoader mImageLoader;
     private RelativeLayout rl_item_laod_more;
     private TextView tv_item_home_title;
     private long curr_time;

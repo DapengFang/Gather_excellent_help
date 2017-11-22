@@ -118,6 +118,8 @@ public class HomeWareBean {
              * commission_rate : 1
              */
 
+            private int site_id;
+            private int article_id;
             private int activity_id;
             private String title;
             private String link_url;
@@ -136,6 +138,22 @@ public class HomeWareBean {
             private double sell_price;
             private double tkRate;
             private double commission_rate;
+
+            public int getSite_id() {
+                return site_id;
+            }
+
+            public void setSite_id(int site_id) {
+                this.site_id = site_id;
+            }
+
+            public int getArticle_id() {
+                return article_id;
+            }
+
+            public void setArticle_id(int article_id) {
+                this.article_id = article_id;
+            }
 
             public int getActivity_id() {
                 return activity_id;

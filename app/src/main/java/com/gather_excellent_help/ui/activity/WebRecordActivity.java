@@ -19,6 +19,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
+import com.roger.catloadinglibrary.CatLoadingView;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
@@ -125,20 +127,33 @@ public class WebRecordActivity extends BaseActivity {
     private AlibcLogin alibcLogin;
     private AlertDialog dialog;
 
+    private CatLoadingView catView;
+
+    private ImageView iv_order_no_zhanwei;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_record);
         ButterKnife.bind(this);
+        initView();
         rlShare.setVisibility(View.VISIBLE);
         tvTopTitleName.setText("商品详情");
         initData();
     }
 
     /**
+     * 初始化控件
+     */
+    private void initView() {
+        iv_order_no_zhanwei = (ImageView)findViewById(R.id.iv_order_no_zhanwei);
+    }
+
+    /**
      * 初始化数据
      */
     private void initData() {
+        catView = new CatLoadingView();
         which = "";
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
@@ -179,6 +194,7 @@ public class WebRecordActivity extends BaseActivity {
         if (login) {
             boolean bindTao = Tools.isBindTao(this);
             if (bindTao) {
+                showCatView();
                 LogUtil.e("adverId = " + adverId);
                 which = "change_url";
                 map = new HashMap<>();
@@ -211,9 +227,37 @@ public class WebRecordActivity extends BaseActivity {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "--" + e.getMessage());
+                hindCatView(1);
             }
         });
 
+    }
+
+    /**
+     * 隐藏CatView
+     */
+    private void hindCatView(final int w) {
+        if(catView!=null) {
+            View view = new View(this);
+            view.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(w == 1) {
+                        iv_order_no_zhanwei.setVisibility(View.VISIBLE);
+                    }
+                    catView.dismiss();
+                }
+            },1200);
+        }
+    }
+
+    /**
+     * 显示CatView
+     */
+    private void showCatView() {
+        if(catView!=null) {
+            catView.show(getSupportFragmentManager(),"");
+        }
     }
 
     /**
@@ -252,9 +296,11 @@ public class WebRecordActivity extends BaseActivity {
                 } else {
                     AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, demoTradeCallback);
                 }
+                hindCatView(0);
                 break;
             case 0:
                 Toast.makeText(WebRecordActivity.this, changeUrlBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                hindCatView(1);
                 break;
         }
     }

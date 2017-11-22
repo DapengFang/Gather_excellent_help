@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
  */
 
 public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWareAdapter.HomeActivityWareViewHolder> {
-    
+
     private Context context;
     private List<HomeWareBean.DataBean.ItemBean> itemData;
     //private ImageLoader mImageLoader;
@@ -58,49 +58,78 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
     public void onBindViewHolder(HomeActivityWareViewHolder holder, final int position) {
         DecimalFormat df = new DecimalFormat("#0.00");
         HomeWareBean.DataBean.ItemBean itemBean = itemData.get(position);
+        int site_id = itemBean.getSite_id();
+        int article_id = itemBean.getArticle_id();
         String img_url = itemBean.getImg_url();
         String title = itemBean.getTitle();
         double sell_price = itemBean.getSell_price();
         int couponsPrice = itemBean.getCouponsPrice();
-        double tkRate = itemBean.getTkRate()/100;
-        double zhuan = (sell_price -couponsPrice)*tkRate*0.9f*user_rate*itemBean.getCommission_rate();
-        double coast = sell_price -couponsPrice-zhuan;
-        if(holder.tvActivityWarePrice !=null && holder.tvActivityWarePrice!=null) {
-            if (shopType == 1) {
-                if (isToggle) {
-                    holder.tvActivityWarePrice.setText("￥"+df.format(sell_price));
-                    holder.tvActivityWareType.setText("页面价");
+        double tkRate = itemBean.getTkRate() / 100;
+        double zhuan = (sell_price - couponsPrice) * tkRate * 0.9f * user_rate * itemBean.getCommission_rate();
+        double coast = sell_price - couponsPrice - zhuan;
+
+        if (holder.tvActivityWareTitle != null && title != null) {
+            holder.tvActivityWareTitle.setText("\t\t\t\t\t\t" + title);
+        }
+
+        if (site_id == 1) {
+            if (holder.tv_activity_sun_tao_icon != null) {
+                holder.tv_activity_sun_tao_icon.setSelected(false);
+                holder.tv_activity_sun_tao_icon.setText("淘宝");
+            }
+            if (holder.tvActivityWarePrice != null && holder.tvActivityWarePrice != null) {
+                if (shopType == 1) {
+                    if (isToggle) {
+                        holder.tvActivityWarePrice.setText("￥" + df.format(sell_price));
+                        holder.tvActivityWareType.setText("页面价");
+                    } else {
+                        holder.tvActivityWarePrice.setText("￥" + df.format(coast));
+                        holder.tvActivityWareType.setText("成本");
+                    }
                 } else {
-                    holder.tvActivityWarePrice.setText("￥"+df.format(coast));
-                    holder.tvActivityWareType.setText("成本");
+                    holder.tvActivityWarePrice.setText("￥" + df.format(sell_price));
+                    holder.tvActivityWareType.setText("页面价");
                 }
-            } else {
-                holder.tvActivityWarePrice.setText("￥"+df.format(sell_price));
+            }
+            if (holder.ivActivityWareImg != null && img_url != null) {
+                //mImageLoader.loadImage(img_url,holder.ivActivityWareImg,true);
+                Glide.with(context).load(img_url + "_320x320q90.jpg")
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                        .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                        .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                        .into(holder.ivActivityWareImg);//请求成功后把图片设置到的控件
+            }
+        } else if (site_id == 2) {
+            if (holder.tv_activity_sun_tao_icon != null) {
+                holder.tv_activity_sun_tao_icon.setSelected(true);
+                holder.tv_activity_sun_tao_icon.setText("苏宁");
+            }
+            if (holder.ivActivityWareImg != null && img_url != null) {
+                Glide.with(context).load(img_url.replace("800x800", "400x400"))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                        .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                        .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                        .into(holder.ivActivityWareImg);//请求成功后把图片设置到的控件
+            }
+
+            if (holder.tvActivityWarePrice != null && holder.tvActivityWarePrice != null) {
+                holder.tvActivityWarePrice.setText("￥" + df.format(sell_price));
                 holder.tvActivityWareType.setText("页面价");
             }
+
         }
-        if(holder.ivActivityWareImg!=null && img_url!=null) {
-            //mImageLoader.loadImage(img_url,holder.ivActivityWareImg,true);
-            Glide.with(context).load(img_url+"_320x320q90.jpg")
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
-                    .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
-                    .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
-                    .into(holder.ivActivityWareImg);//请求成功后把图片设置到的控件
-        }
-        if(holder.tvActivityWareTitle!=null && title!=null) {
-           holder.tvActivityWareTitle.setText(title);
-        }
+
         holder.llActivityWare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               onItemClickListener.onItemClick(view,position);
+                onItemClickListener.onItemClick(view, position);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return null == itemData ? 0:itemData.size();
+        return null == itemData ? 0 : itemData.size();
     }
 
     public class HomeActivityWareViewHolder extends RecyclerView.ViewHolder {
@@ -116,16 +145,19 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
         @Bind(R.id.ll_activity_ware)
         LinearLayout llActivityWare;
 
+        TextView tv_activity_sun_tao_icon;
+
         public HomeActivityWareViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
+            tv_activity_sun_tao_icon = (TextView) itemView.findViewById(R.id.tv_activity_sun_tao_icon);
         }
     }
 
     private OnItemClickListener onItemClickListener;
 
-    public interface OnItemClickListener{
-        void onItemClick(View v,int position);
+    public interface OnItemClickListener {
+        void onItemClick(View v, int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
