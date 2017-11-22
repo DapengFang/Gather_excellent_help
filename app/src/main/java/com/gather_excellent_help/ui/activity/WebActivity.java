@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -119,6 +120,7 @@ public class WebActivity extends BaseActivity {
     private AlertDialog dialog;
 
     private CatLoadingView catView;
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +135,7 @@ public class WebActivity extends BaseActivity {
      * 初始化控件
      */
     private void initView() {
-        iv_order_no_zhanwei = (ImageView)findViewById(R.id.iv_order_no_zhanwei);
+        iv_order_no_zhanwei = (ImageView) findViewById(R.id.iv_order_no_zhanwei);
     }
 
     /**
@@ -191,9 +193,8 @@ public class WebActivity extends BaseActivity {
                             map.put("adzoneId", adverId);
                             netUtil.okHttp2Server2(chang_url, map);
                         } else {
-                            Toast.makeText(WebActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
                             String userLogin = Tools.getUserLogin(this);
-                            bindTaobao(userLogin);
+                            showBindTaobaoDialog(userLogin);
                         }
                     } else {
                         toLogin();
@@ -229,9 +230,8 @@ public class WebActivity extends BaseActivity {
                         map.put("adzoneId", adverId);
                         netUtil.okHttp2Server2(chang_url, map);
                     } else {
-                        Toast.makeText(WebActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
                         String userLogin = Tools.getUserLogin(this);
-                        bindTaobao(userLogin);
+                        showBindTaobaoDialog(userLogin);
                     }
                 } else {
                     toLogin();
@@ -280,11 +280,36 @@ public class WebActivity extends BaseActivity {
     }
 
     /**
+     * 展示绑定淘宝的dialog
+     */
+    private void showBindTaobaoDialog(final String id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("绑定淘宝账号")
+                .setMessage("您需要绑定淘宝账号，若取消绑定将会在您查看商品详情时提示您继续绑定操作")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        bindTaobao(id);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                });
+        alertDialog = builder.create();
+        if (WebActivity.this != null && !WebActivity.this.isFinishing()) {
+            alertDialog.show();
+        }
+    }
+
+    /**
      * 显示catView
      */
     private void showCatView() {
-        if(catView!=null) {
-            catView.show(getSupportFragmentManager(),"");
+        if (catView != null) {
+            catView.show(getSupportFragmentManager(), "");
         }
     }
 
@@ -292,18 +317,19 @@ public class WebActivity extends BaseActivity {
      * 隐藏catView
      */
     private void hindCatView(final int w) {
-        if(catView!=null) {
-            View view = new View(this);
-            view.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if(w == 1) {
-                        iv_order_no_zhanwei.setVisibility(View.VISIBLE);
-                    }
+        View view = new View(this);
+        view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (w == 1) {
+                    iv_order_no_zhanwei.setVisibility(View.VISIBLE);
+                }
+                if (catView != null) {
                     catView.dismiss();
                 }
-            },1200);
-        }
+            }
+        }, 1200);
+
     }
 
     /**
@@ -318,11 +344,7 @@ public class WebActivity extends BaseActivity {
             case 1:
                 CacheUtils.putBoolean(WebActivity.this, CacheUtils.BIND_STATE, true);
                 CacheUtils.putString(WebActivity.this, CacheUtils.TAOBAO_NICK, nick);
-                which = "change_url";
-                map = new HashMap<>();
-                map.put("goodsId", goods_id);
-                map.put("adzoneId", adverId);
-                netUtil.okHttp2Server2(chang_url, map);
+                initData();
                 break;
             case 0:
                 Toast.makeText(WebActivity.this, "绑定淘宝失败", Toast.LENGTH_SHORT).show();
@@ -361,7 +383,7 @@ public class WebActivity extends BaseActivity {
                     click_url = changeUrlBean.getData().get(0).getClick_url();
                     //加载需要显示的网页
                     wvBanner.loadUrl(click_url);
-                    if(handler!=null) {
+                    if (handler != null) {
                         handler.sendEmptyMessage(GET_URL);
                     }
                     hindCatView(0);
@@ -649,12 +671,12 @@ public class WebActivity extends BaseActivity {
         public void onResult(SHARE_MEDIA platform) {
             Toast.makeText(WebActivity.this, "分享成功", Toast.LENGTH_LONG).show();
             if (dialog != null && dialog.isShowing()) {
-                    dialog.dismiss();
+                dialog.dismiss();
             }
-            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+            if (sharePopupwindow != null && sharePopupwindow.isShowing()) {
                 sharePopupwindow.dismiss();
             }
-            if(vShadow!=null) {
+            if (vShadow != null) {
                 vShadow.setVisibility(View.GONE);
             }
         }
@@ -670,10 +692,10 @@ public class WebActivity extends BaseActivity {
             if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
-            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+            if (sharePopupwindow != null && sharePopupwindow.isShowing()) {
                 sharePopupwindow.dismiss();
             }
-            if(vShadow!=null) {
+            if (vShadow != null) {
                 vShadow.setVisibility(View.GONE);
             }
         }
@@ -688,10 +710,10 @@ public class WebActivity extends BaseActivity {
             if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
-            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+            if (sharePopupwindow != null && sharePopupwindow.isShowing()) {
                 sharePopupwindow.dismiss();
             }
-            if(vShadow!=null) {
+            if (vShadow != null) {
                 vShadow.setVisibility(View.GONE);
             }
         }
@@ -701,11 +723,11 @@ public class WebActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         UMShareAPI.get(this).release();
-        if(alibcLogin!=null){
+        if (alibcLogin != null) {
             alibcLogin = null;
         }
         AlibcTradeSDK.destory();
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }

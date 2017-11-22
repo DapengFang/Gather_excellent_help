@@ -1,6 +1,8 @@
 package com.gather_excellent_help.ui.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +17,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.suning.SuningGoodscartBean;
 import com.gather_excellent_help.db.suning.SqliteServiceManager;
+import com.gather_excellent_help.ui.activity.AlipayInfoActivity;
+import com.gather_excellent_help.ui.activity.suning.SuningGoodscartActivity;
 import com.gather_excellent_help.ui.widget.NumberAddSubView;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -30,13 +34,13 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
     private Context context;
     private List<SuningGoodscartBean.DataBean> data;
     private SqliteServiceManager manager;
+    private AlertDialog alertDialog;
 
     public SuningGoodscartAdapter(Context context, List<SuningGoodscartBean.DataBean> data) {
         this.context = context;
         this.data = data;
         manager = new SqliteServiceManager(context);
     }
-
 
     @Override
     public SuningGoodscartViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -108,12 +112,7 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
         holder.iv_item_shopcart_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int index = data.indexOf(dataBean);
-                data.remove(index);
-                notifyItemRemoved(position);//当移除的时候用这个刷新
-                notifyDataSetChanged();
-                manager.deleteGoods(new String[]{id});
-                onUpdatePriceListener.onUpdateData();
+                showDeleteDialog(dataBean,position,id);
             }
         });
         holder.nas_goodscart_num.setOnButtonClickListener(new NumberAddSubView.OnButtonClickListener() {
@@ -132,6 +131,15 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
             }
         });
 
+    }
+
+    private void deleteWare(SuningGoodscartBean.DataBean dataBean, int position, String id) {
+        int index = data.indexOf(dataBean);
+        data.remove(index);
+        notifyItemRemoved(position);//当移除的时候用这个刷新
+        notifyDataSetChanged();
+        manager.deleteGoods(new String[]{id});
+        onUpdatePriceListener.onUpdateData();
     }
 
     @Override
@@ -177,5 +185,26 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
 
     public List<SuningGoodscartBean.DataBean> getData() {
         return data;
+    }
+
+    /**
+     * 解除支付宝绑定的dialog
+     */
+    private void showDeleteDialog(final SuningGoodscartBean.DataBean dataBean,final int position,final String id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("温馨提示")
+                .setMessage("您确定要删除该商品信息吗?")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        deleteWare(dataBean, position, id);
+                    }
+                })
+                .setNegativeButton("取消", null);
+        alertDialog = builder.create();
+        SuningGoodscartActivity activity = (SuningGoodscartActivity) context;
+        if (activity != null && !activity.isFinishing()) {
+            alertDialog.show();
+        }
     }
 }

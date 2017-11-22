@@ -1,6 +1,8 @@
 package com.gather_excellent_help.ui.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -66,6 +68,7 @@ public class LoginActivity extends Activity {
     private AlibcLogin alibcLogin;
     private IWXAPI api;
     private String weixin_app_id = "wxc883e0b88fddcc71";
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,10 +212,36 @@ public class LoginActivity extends Activity {
                     if (advertising != null) {
                         CacheUtils.putString(LoginActivity.this, CacheUtils.ADVER_ID, advertising);
                     }
-                    bindTaobao(id+"");
-                    finish();
+                    EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
+                    showBindTaobaoDialog(id);
                 }
                 break;
+        }
+    }
+
+    /**
+     * 展示绑定淘宝的dialog
+     */
+    private void showBindTaobaoDialog(final int id){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("绑定淘宝账号")
+                .setMessage("为了方便您之后的操作，请您先绑定淘宝账号。若取消绑定将会在您查看商品详情时提示您继续绑定操作")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        bindTaobao(id+"");
+                        finish();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                });
+        alertDialog = builder.create();
+        if (LoginActivity.this != null && !LoginActivity.this.isFinishing()) {
+            alertDialog.show();
         }
     }
 

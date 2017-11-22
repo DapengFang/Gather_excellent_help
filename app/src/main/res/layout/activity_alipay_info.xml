@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_alipay_info"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#eeeeee"
+    tools:context="com.gather_excellent_help.ui.activity.AlipayInfoActivity">
+
+    <include layout="@layout/top_zhuangai_bar"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_set_userinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x12"
+        android:layout_marginTop="@dimen/x8"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/tv_alipay_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text=""
+            android:textColor="#6b6b6b"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#dcdcdc" />
+    <RelativeLayout
+        android:id="@+id/rl_set_payaccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x12"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/tv_alipay_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text=""
+            android:textColor="#6b6b6b"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:layout_marginTop="@dimen/x40"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_alipay_unbind"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="解除绑定"
+            android:textColor="#222222"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:background="#ffffff"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

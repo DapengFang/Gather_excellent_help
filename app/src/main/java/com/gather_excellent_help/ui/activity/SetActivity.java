@@ -25,6 +25,7 @@ import com.gather_excellent_help.bean.SmsCodeBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.Check;
 import com.gather_excellent_help.utils.DataCleanManager;
@@ -94,12 +95,14 @@ public class SetActivity extends BaseActivity {
     private CountDownTimer countDownTimer;
     private AlertDialog alertDialog;
     private File apkFile;
+    private String name;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set);
+        EventBus.getDefault().register(this);
         initView();
         ButterKnife.bind(this);
         initData();
@@ -107,18 +110,21 @@ public class SetActivity extends BaseActivity {
 
     private void initView() {
         tvSetClearCache = (TextView) findViewById(R.id.tv_set_clear_cache);
-        tv_set_version = (TextView)findViewById(R.id.tv_set_version);
+        tv_set_version = (TextView) findViewById(R.id.tv_set_version);
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
+        if (isLogin()) {
+            user_id = CacheUtils.getString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
+        }
         String version = Tools.getVersion(this);
         String show_version = "当前版本号：" + version;
-        if(show_version.length()>6) {
-            Tools.setPartTextColor(tv_set_version,show_version,"：");
-        }else{
+        if (show_version.length() > 6) {
+            Tools.setPartTextColor(tv_set_version, show_version, "：");
+        } else {
             tv_set_version.setText("");
         }
         boolean bindTao = Tools.isBindTao(this);
@@ -179,6 +185,7 @@ public class SetActivity extends BaseActivity {
                             tvSetBindAlipay.setText("绑定/解绑支付宝账号(" + account + ")");
                             CacheUtils.putBoolean(SetActivity.this, CacheUtils.PAY_STATE, true);
                             CacheUtils.putString(SetActivity.this, CacheUtils.ALIPAY_ACCOUNT, account);
+                            CacheUtils.putString(SetActivity.this, CacheUtils.ALIPAY_USERNAME, name);
                         } else if (which.equals("unpay")) {
                             tvSetBindAlipay.setText("绑定/解绑支付宝账号");
                             CacheUtils.putBoolean(SetActivity.this, CacheUtils.PAY_STATE, false);
@@ -237,7 +244,7 @@ public class SetActivity extends BaseActivity {
                     break;
                 case R.id.rl_set_payaccount:
                     if (isPay()) {
-                        showUnBindAlipayDialog();
+                        toAlipayBindInfoPage();
                     } else {
                         showAlipayAccount();
                     }
@@ -246,7 +253,7 @@ public class SetActivity extends BaseActivity {
                     if (isBind()) {
                         showUnbindTaobaoDialog();
                     } else {
-                        bindTaobao();
+                        showBindTaobaoDialog();
                     }
                     break;
                 case R.id.rl_set_updatepsw:
@@ -272,12 +279,40 @@ public class SetActivity extends BaseActivity {
     }
 
     /**
+     * 跳转到绑定支付宝信息页面
+     */
+    private void toAlipayBindInfoPage() {
+        Intent intent = new Intent(SetActivity.this, AlipayInfoActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * 展示绑定淘宝的dialog
+     */
+    private void showBindTaobaoDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("绑定淘宝账号")
+                .setMessage("您需要绑定淘宝账号，若取消绑定将会在您查看商品详情时提示您继续绑定操作")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        bindTaobao();
+                    }
+                })
+                .setNegativeButton("取消", null);
+        alertDialog = builder.create();
+        if (SetActivity.this != null && !SetActivity.this.isFinishing()) {
+            alertDialog.show();
+        }
+    }
+
+    /**
      * 解除淘宝绑定的dialog
      */
     private void showUnbindTaobaoDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("温馨提示")
-                .setMessage("你确定要解除淘宝绑定吗?")
+                .setMessage("您确定要解除淘宝绑定吗?")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -297,7 +332,7 @@ public class SetActivity extends BaseActivity {
     private void showUnBindAlipayDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("温馨提示")
-                .setMessage("你确定要解除支付宝绑定吗?")
+                .setMessage("您确定要解除支付宝绑定吗?")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -317,15 +352,14 @@ public class SetActivity extends BaseActivity {
     private void showCacheClearDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("温馨提示")
-                .setMessage("你确定要执行此操作吗?")
+                .setMessage("您确定要执行此操作吗?")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         try {
                             DataCleanManager.cleanApplicationCache(SetActivity.this);
                             String totalCacheSize = DataCleanManager.getTotalCacheSize(SetActivity.this);
-                            tvSetClearCache.setText("清理缓存 ("+totalCacheSize+")");
-                            //EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "清理缓存!"));
+                            tvSetClearCache.setText("清理缓存 (" + totalCacheSize + ")");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -345,21 +379,21 @@ public class SetActivity extends BaseActivity {
     private void showAppExitDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("温馨提示")
-                .setMessage("你确定要退出吗?")
+                .setMessage("您确定要退出吗?")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         try {
-                            CacheUtils.putBoolean(SetActivity.this, CacheUtils.LOGIN_STATE, false);
-                            CacheUtils.putString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
-                            CacheUtils.putInteger(SetActivity.this, CacheUtils.GROUP_TYPE, -1);
-                            CacheUtils.putInteger(SetActivity.this, CacheUtils.SHOP_TYPE, -1);
                             if (isBind()) {
                                 unBindTaobao();
                             } else {
                                 CacheUtils.putBoolean(SetActivity.this, CacheUtils.BIND_STATE, false);
                                 CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK, "");
                             }
+                            CacheUtils.putBoolean(SetActivity.this, CacheUtils.LOGIN_STATE, false);
+                            CacheUtils.putString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
+                            CacheUtils.putInteger(SetActivity.this, CacheUtils.GROUP_TYPE, -1);
+                            CacheUtils.putInteger(SetActivity.this, CacheUtils.SHOP_TYPE, -1);
                             CacheUtils.putString(SetActivity.this, CacheUtils.ALIPAY_ACCOUNT, "");
                             CacheUtils.putBoolean(SetActivity.this, CacheUtils.PAY_STATE, false);
                             CacheUtils.putString(SetActivity.this, CacheUtils.USER_RATE, "");
@@ -460,13 +494,9 @@ public class SetActivity extends BaseActivity {
      * 解绑用户信息
      */
     public void unBindUserInfo() {
-        isLogin();
-        if (isLogin()) {
-            user_id = CacheUtils.getString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
-            if (!TextUtils.isEmpty(user_id)) {
-                map = new HashMap<>();
-                map.put("Id", user_id + "");
-            }
+        if (user_id != null && !TextUtils.isEmpty(user_id)) {
+            map = new HashMap<>();
+            map.put("Id", user_id + "");
         }
     }
 
@@ -505,6 +535,7 @@ public class SetActivity extends BaseActivity {
         TextView tvBindAlipayConfirm = (TextView) inflate.findViewById(R.id.tv_bind_alipay_confirm);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         alertDialog = builder.setView(inflate).create();
+        etAccount.addTextChangedListener(new MyTextWatcher());
         if (SetActivity.this != null && !SetActivity.this.isFinishing()) {
             alertDialog.show();
         }
@@ -534,15 +565,14 @@ public class SetActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 account = etAccount.getText().toString().trim();
-                String name = etName.getText().toString().trim();
+                name = etName.getText().toString().trim();
                 String smscode = etSmsCode.getText().toString().trim();
-
-                if (TextUtils.isEmpty(account)) {
-                    Toast.makeText(SetActivity.this, "请输入支付宝账号!", Toast.LENGTH_SHORT).show();
+                if (!Check.isTelPhoneNumber(account) && !Check.isEmail(account)) {
+                    Toast.makeText(SetActivity.this, "输入的支付宝账号不能为空而且只能为正确的手机号码或者邮箱，请您重新输入！", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (TextUtils.isEmpty(name)) {
-                    Toast.makeText(SetActivity.this, "请输入用户名!", Toast.LENGTH_SHORT).show();
+                if (!Check.isLegalName(name)) {
+                    Toast.makeText(SetActivity.this, "输入用户名不能为空而且只能为中文真实姓名，请您重新输入！", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (TextUtils.isEmpty(smscode)) {
@@ -570,65 +600,6 @@ public class SetActivity extends BaseActivity {
     }
 
     /**
-     * 设置用户支付宝账号
-     */
-    private void showPayAcount() {
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = View.inflate(this, R.layout.item_pay_account, null);
-        final EditText etAccount = (EditText) view.findViewById(R.id.et_pay_account);
-        final EditText etName = (EditText) view.findViewById(R.id.et_pay_name);
-        final EditText etSmsCode = (EditText) view.findViewById(R.id.et_alipay_smscode);
-        final TextView tvAlipayGetSms = (TextView) view.findViewById(R.id.tv_alipay_getSms);
-        tvAlipayGetSms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String user_account = etAccount.getText().toString().trim();
-                String userPhone = Tools.getUserPhone(SetActivity.this);
-                LogUtil.e(userPhone);
-                getSmsCode(userPhone, user_account, tvAlipayGetSms);
-            }
-        });
-        alertDialog = builder.setTitle("绑定支付宝")
-                .setView(view)
-                .setPositiveButton("确定", null)
-                .setNegativeButton("取消", null).create();
-        if (SetActivity.this != null && !SetActivity.this.isFinishing()) {
-            alertDialog.show();
-        }
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                account = etAccount.getText().toString().trim();
-                String name = etName.getText().toString().trim();
-                String smscode = etSmsCode.getText().toString().trim();
-
-                if (TextUtils.isEmpty(account)) {
-                    Toast.makeText(SetActivity.this, "请输入支付宝账号!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (TextUtils.isEmpty(name)) {
-                    Toast.makeText(SetActivity.this, "请输入用户名!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (TextUtils.isEmpty(smscode)) {
-                    Toast.makeText(SetActivity.this, "请输入短信验证码!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (smscode.equals(sms_code_s)) {
-                    bindPay(account, name);
-                    if (alertDialog != null && alertDialog.isShowing()) {
-                        alertDialog.dismiss();
-                    }
-                } else {
-                    Toast.makeText(SetActivity.this, "短信验证码不正确！", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-        });
-    }
-
-    /**
      * 绑定支付宝
      */
     private void bindPay(String account, String name) {
@@ -653,7 +624,6 @@ public class SetActivity extends BaseActivity {
      * 登录账号
      */
     private void loginUser() {
-        Toast.makeText(SetActivity.this, "请先登录！", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(SetActivity.this, LoginActivity.class);
         startActivity(intent);
     }
@@ -703,6 +673,14 @@ public class SetActivity extends BaseActivity {
         }
     }
 
+    public void onEvent(AnyEvent event) {
+        if (event.getType() == EventType.UNBIND_ALIPAY) {
+            String msg = "onEventMainThread收到了消息：" + event.getMessage();
+            LogUtil.e(msg);
+            initData();
+        }
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -715,5 +693,6 @@ public class SetActivity extends BaseActivity {
             alertDialog.dismiss();
             alertDialog = null;
         }
+        EventBus.getDefault().unregister(this);
     }
 }

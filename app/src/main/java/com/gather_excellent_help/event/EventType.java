@@ -14,4 +14,5 @@ public class EventType {
     public static final int UPDATA_ADDRESS_ORDER = 6;//刷新订单页面收货地址界面
     public static final int UPDATA_ORDER_LIST = 7;//刷新订单列表页面
     public static final int CLEAR_ALL_GOODSCART= 8;//清空购物车
+    public static final int UNBIND_ALIPAY= 9;//解除绑定支付宝
 }

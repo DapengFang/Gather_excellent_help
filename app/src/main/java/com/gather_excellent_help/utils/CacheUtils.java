@@ -39,6 +39,7 @@ public class CacheUtils {
 	public static final String ADVER_ID = "adver_id";
 	public static final String TAOBAO_NICK = "taobao_nick";
 	public static final String ALIPAY_ACCOUNT = "alipay_account";
+	public static final String ALIPAY_USERNAME = "alipay_username";
 	public static final String USER_RATE = "user_rate";
 	public static final String LOGIN_PHONE = "login_phone";
 

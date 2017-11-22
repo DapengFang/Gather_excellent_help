@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -130,6 +131,7 @@ public class WebRecordActivity extends BaseActivity {
     private CatLoadingView catView;
 
     private ImageView iv_order_no_zhanwei;
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,8 +139,6 @@ public class WebRecordActivity extends BaseActivity {
         setContentView(R.layout.activity_web_record);
         ButterKnife.bind(this);
         initView();
-        rlShare.setVisibility(View.VISIBLE);
-        tvTopTitleName.setText("商品详情");
         initData();
     }
 
@@ -146,13 +146,15 @@ public class WebRecordActivity extends BaseActivity {
      * 初始化控件
      */
     private void initView() {
-        iv_order_no_zhanwei = (ImageView)findViewById(R.id.iv_order_no_zhanwei);
+        iv_order_no_zhanwei = (ImageView) findViewById(R.id.iv_order_no_zhanwei);
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
+        rlShare.setVisibility(View.VISIBLE);
+        tvTopTitleName.setText("商品详情");
         catView = new CatLoadingView();
         which = "";
         Intent intent = getIntent();
@@ -202,9 +204,8 @@ public class WebRecordActivity extends BaseActivity {
                 map.put("adzoneId", adverId);
                 netUtil.okHttp2Server2(chang_url, map);
             } else {
-                Toast.makeText(WebRecordActivity.this, "请先绑定淘宝账号！", Toast.LENGTH_SHORT).show();
                 String userLogin = Tools.getUserLogin(this);
-                bindTaobao(userLogin);
+                showBindTaobaoDialog(userLogin);
             }
         } else {
             toLogin();
@@ -234,29 +235,54 @@ public class WebRecordActivity extends BaseActivity {
     }
 
     /**
+     * 展示绑定淘宝的dialog
+     */
+    private void showBindTaobaoDialog(final String id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("绑定淘宝账号")
+                .setMessage("您需要绑定淘宝账号，若取消绑定将会在您查看商品详情时提示您继续绑定操作")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        bindTaobao(id);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                });
+        alertDialog = builder.create();
+        if (WebRecordActivity.this != null && !WebRecordActivity.this.isFinishing()) {
+            alertDialog.show();
+        }
+    }
+
+    /**
      * 隐藏CatView
      */
     private void hindCatView(final int w) {
-        if(catView!=null) {
-            View view = new View(this);
-            view.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if(w == 1) {
-                        iv_order_no_zhanwei.setVisibility(View.VISIBLE);
-                    }
+        View view = new View(this);
+        view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (w == 1) {
+                    iv_order_no_zhanwei.setVisibility(View.VISIBLE);
+                }
+                if (catView != null) {
                     catView.dismiss();
                 }
-            },1200);
-        }
+            }
+        }, 1200);
     }
 
     /**
      * 显示CatView
      */
     private void showCatView() {
-        if(catView!=null) {
-            catView.show(getSupportFragmentManager(),"");
+        if (catView != null) {
+            catView.show(getSupportFragmentManager(), "");
         }
     }
 
@@ -289,10 +315,10 @@ public class WebRecordActivity extends BaseActivity {
                 demoTradeCallback = new DemoTradeCallback(WebRecordActivity.this);
                 if (data != null && data.size() > 0) {
                     click_url = changeUrlBean.getData().get(0).getClick_url();
-                    if(handler!=null) {
+                    if (handler != null) {
                         handler.sendEmptyMessage(GET_URL);
                     }
-                    AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(click_url), alibcShowParams, alibcTaokeParams, null,demoTradeCallback);
+                    AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(click_url), alibcShowParams, alibcTaokeParams, null, demoTradeCallback);
                 } else {
                     AlibcTrade.show(this, wvBanner, new MyWebViewClient(), null, new AlibcPage(url), alibcShowParams, alibcTaokeParams, null, demoTradeCallback);
                 }
@@ -347,11 +373,11 @@ public class WebRecordActivity extends BaseActivity {
                         return;
                     }
                     if (!TextUtils.isEmpty(click_url)) {
-                        if(Build.VERSION.SDK_INT>=23){
-                            String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.CALL_PHONE,Manifest.permission.READ_LOGS,Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.SET_DEBUG_APP,Manifest.permission.SYSTEM_ALERT_WINDOW,Manifest.permission.GET_ACCOUNTS,Manifest.permission.WRITE_APN_SETTINGS};
-                            ActivityCompat.requestPermissions(WebRecordActivity.this,mPermissionList,STORAGE_PERMISSIONS_REQUEST_CODE);
-                        }else{
-                            shareWareUrl();   
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP, Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_APN_SETTINGS};
+                            ActivityCompat.requestPermissions(WebRecordActivity.this, mPermissionList, STORAGE_PERMISSIONS_REQUEST_CODE);
+                        } else {
+                            shareWareUrl();
                         }
                     } else {
                         Toast.makeText(WebRecordActivity.this, "商品已下架，无法分享！", Toast.LENGTH_SHORT).show();
@@ -366,10 +392,10 @@ public class WebRecordActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case  STORAGE_PERMISSIONS_REQUEST_CODE:
+            case STORAGE_PERMISSIONS_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     shareWareUrl();
-                }else{
+                } else {
                     Toast.makeText(WebRecordActivity.this, "请允许打开操作SDCard权限！！", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -406,7 +432,7 @@ public class WebRecordActivity extends BaseActivity {
 
             @Override
             public void onWeixinFriendClick() {
-                showCopyDialog(	SHARE_MEDIA.WEIXIN_CIRCLE);
+                showCopyDialog(SHARE_MEDIA.WEIXIN_CIRCLE);
             }
         });
     }
@@ -469,7 +495,7 @@ public class WebRecordActivity extends BaseActivity {
 
     private void showPopMenu() {
         if (sharePopupwindow == null) {
-            sharePopupwindow = new SharePopupwindow(WebRecordActivity.this,vShadow);
+            sharePopupwindow = new SharePopupwindow(WebRecordActivity.this, vShadow);
             sharePopupwindow.showAtLocation(wvBanner, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         } else if (sharePopupwindow != null
                 && sharePopupwindow.isShowing()) {
@@ -505,13 +531,13 @@ public class WebRecordActivity extends BaseActivity {
         @Override
         public void onResult(SHARE_MEDIA platform) {
             Toast.makeText(WebRecordActivity.this, "分享成功", Toast.LENGTH_LONG).show();
-            if(dialog!=null && dialog.isShowing()) {
+            if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
-            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+            if (sharePopupwindow != null && sharePopupwindow.isShowing()) {
                 sharePopupwindow.dismiss();
             }
-            if(vShadow!=null) {
+            if (vShadow != null) {
                 vShadow.setVisibility(View.GONE);
             }
         }
@@ -524,13 +550,13 @@ public class WebRecordActivity extends BaseActivity {
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
             Toast.makeText(WebRecordActivity.this, "分享失败" + t.getMessage(), Toast.LENGTH_LONG).show();
-            if(dialog!=null && dialog.isShowing()) {
+            if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
-            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+            if (sharePopupwindow != null && sharePopupwindow.isShowing()) {
                 sharePopupwindow.dismiss();
             }
-            if(vShadow!=null) {
+            if (vShadow != null) {
                 vShadow.setVisibility(View.GONE);
             }
         }
@@ -542,13 +568,13 @@ public class WebRecordActivity extends BaseActivity {
         @Override
         public void onCancel(SHARE_MEDIA platform) {
             Toast.makeText(WebRecordActivity.this, "分享取消", Toast.LENGTH_LONG).show();
-            if(dialog!=null && dialog.isShowing()) {
+            if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
-            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+            if (sharePopupwindow != null && sharePopupwindow.isShowing()) {
                 sharePopupwindow.dismiss();
             }
-            if(vShadow!=null) {
+            if (vShadow != null) {
                 vShadow.setVisibility(View.GONE);
             }
         }
@@ -579,7 +605,7 @@ public class WebRecordActivity extends BaseActivity {
 
             @Override
             public void onFailure(int code, String msg) {
-                Log.i("GGG","错误码" + code + "原因" +msg);
+                Log.i("GGG", "错误码" + code + "原因" + msg);
             }
         });
     }
@@ -613,11 +639,7 @@ public class WebRecordActivity extends BaseActivity {
             case 1:
                 CacheUtils.putBoolean(WebRecordActivity.this, CacheUtils.BIND_STATE, true);
                 CacheUtils.putString(WebRecordActivity.this, CacheUtils.TAOBAO_NICK, nick);
-                which = "change_url";
-                map = new HashMap<>();
-                map.put("goodsId", goods_id);
-                map.put("adzoneId", adverId);
-                netUtil.okHttp2Server2(chang_url, map);
+                initData();
                 break;
             case 0:
                 Toast.makeText(WebRecordActivity.this, "绑定淘宝失败", Toast.LENGTH_SHORT).show();
@@ -629,11 +651,11 @@ public class WebRecordActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         UMShareAPI.get(this).release();
-        if(alibcLogin!=null) {
+        if (alibcLogin != null) {
             alibcLogin = null;
         }
         AlibcTradeSDK.destory();
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
