@@ -68,11 +68,51 @@
 
     </LinearLayout>
 
-    <com.gather_excellent_help.ui.widget.WanRecycleView
-        android:id="@+id/wan_suning_goodscart"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1">
+
+        <com.gather_excellent_help.ui.widget.WanRecycleView
+            android:id="@+id/wan_suning_goodscart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:id="@+id/ll_goodscast_clear_show"
+            android:layout_width="@dimen/x180"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/x100"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/x100"
+                android:layout_height="@dimen/x100"
+                android:src="@drawable/goods_cart_clear_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/x20"
+                android:text="亲~购物车空空如也！"
+                android:textColor="#66000000"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_goodscart_clear_toSee"
+                android:layout_width="@dimen/x160"
+                android:layout_height="@dimen/x40"
+                android:layout_marginTop="@dimen/x30"
+                android:background="@drawable/tv_goodscart_see_shape"
+                android:gravity="center"
+                android:text="再去逛逛"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+
+    </FrameLayout>
 
 
     <View

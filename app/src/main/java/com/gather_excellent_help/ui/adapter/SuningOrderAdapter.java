@@ -66,37 +66,49 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
     public void onBindViewHolder(SuningOrderViewHolder holder, final int position) {
         DecimalFormat df = new DecimalFormat("#0.00");
         SuningOrderBean.DataBean dataBean = data.get(position);
-        if(dataBean!=null) {
-            final int status = dataBean.getStatus();
+        if (dataBean != null) {
+            final int status = dataBean.getOrder_status();
             String add_time = dataBean.getAdd_time();
             double real_amount = dataBean.getReal_amount();
             String order_no = dataBean.getOrder_no();
             List<SuningOrderBean.DataBean.GoodListBean> goodList = dataBean.getGoodList();
-            if(add_time!=null) {
+            if (add_time != null) {
                 holder.tv_item_order_time.setText(add_time);
             }
-            holder.tv_item_order_shifukuan.setText(String.valueOf(df.format(real_amount)));
-            if (status == 4) {
+            holder.tv_item_order_shifukuan.setText("￥" + String.valueOf(df.format(real_amount)));
+            if (status == 1) {
                 holder.tv_item_order_type.setText("买家待付款");
                 holder.tv_item_order_topay.setVisibility(View.VISIBLE);
                 holder.tv_item_order_cancel.setVisibility(View.VISIBLE);
+                holder.tv_item_order_extra.setVisibility(View.GONE);
                 holder.tv_item_order_topay.setText("立即付款");
                 holder.tv_item_order_cancel.setText("取消订单");
-            } else if (status == 1) {
+            } else if (status == 2) {
                 holder.tv_item_order_type.setText("等待卖家发货");
                 holder.tv_item_order_topay.setVisibility(View.VISIBLE);
-                holder.tv_item_order_cancel.setVisibility(View.GONE);
+                holder.tv_item_order_cancel.setVisibility(View.VISIBLE);
+                holder.tv_item_order_extra.setVisibility(View.VISIBLE);
                 holder.tv_item_order_topay.setText("提醒发货");
-            } else if (status == 2) {
+                holder.tv_item_order_cancel.setText("查看物流");
+                holder.tv_item_order_extra.setText("取消订单");
+            } else if (status == 3) {
                 holder.tv_item_order_type.setText("卖家已发货");
                 holder.tv_item_order_topay.setVisibility(View.VISIBLE);
                 holder.tv_item_order_cancel.setVisibility(View.GONE);
-                holder.tv_item_order_topay.setText("物流信息");
-            } else if (status == 3) {
+                holder.tv_item_order_extra.setVisibility(View.GONE);
+                holder.tv_item_order_topay.setText("查看物流");
+            } else if (status == 4) {
                 holder.tv_item_order_type.setText("交易完成");
                 holder.tv_item_order_topay.setVisibility(View.VISIBLE);
-                holder.tv_item_order_cancel.setVisibility(View.GONE);
+                holder.tv_item_order_cancel.setVisibility(View.VISIBLE);
+                holder.tv_item_order_extra.setVisibility(View.GONE);
                 holder.tv_item_order_topay.setText("确认订单");
+                holder.tv_item_order_cancel.setText("申请售后");
+            } else if (status == 5) {
+                holder.tv_item_order_type.setText("订单作废");
+                holder.tv_item_order_topay.setVisibility(View.GONE);
+                holder.tv_item_order_cancel.setVisibility(View.GONE);
+                holder.tv_item_order_extra.setVisibility(View.GONE);
             }
             holder.tv_item_order_topay.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -110,13 +122,19 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
                     onButtonClickListener.onLeftButtonClick(v, position, status);
                 }
             });
+            holder.tv_item_order_extra.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onButtonClickListener.onExtraButtonClick(v,position,status);
+                }
+            });
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onButtonClickListener.onItemClickListener(v, position, status);
                 }
             });
-            if(goodList!=null && goodList.size()>0) {
+            if (goodList != null && goodList.size() > 0) {
                 holder.tv_suning_order_warenum.setText(goodList.size() + "件商品");
                 holder.ll_order_manager_container.removeAllViews();
                 for (int i = 0; i < goodList.size(); i++) {
@@ -136,6 +154,8 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
                                     .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
                                     .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
                                     .into(iv_suning_order_ware);//请求成功后把图片设置到的控件
+                        }else{
+                            iv_suning_order_ware.setImageResource(R.mipmap.zhanwei_icon);
                         }
                         if (goodListBean.getSpec_text() != null) {
                             tv_suning_order_type.setText(goodListBean.getSpec_text());
@@ -143,10 +163,10 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
                         if (goodListBean.getGoods_title() != null) {
                             tv_suning_order_title.setText(goodListBean.getGoods_title());
                         }
-                        tv_suning_order_realprice.setText(String.valueOf(df.format(goodListBean.getReal_price())));
+                        tv_suning_order_realprice.setText("￥" + String.valueOf(df.format(goodListBean.getReal_price())));
                         tv_suning_order_oldprice.getPaint().setAntiAlias(true);
                         tv_suning_order_oldprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-                        tv_suning_order_oldprice.setText(String.valueOf(df.format(goodListBean.getGoods_price())));
+                        tv_suning_order_oldprice.setText("￥" + String.valueOf(df.format(goodListBean.getGoods_price())));
                         tv_suning_order_number.setText("x" + goodListBean.getQuantity());
                     }
                     holder.ll_order_manager_container.addView(inflate);
@@ -169,6 +189,7 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
         TextView tv_item_order_shifukuan;
         TextView tv_item_order_topay;
         TextView tv_item_order_cancel;
+        TextView tv_item_order_extra;
         View itemView;
 
         public SuningOrderViewHolder(View itemView) {
@@ -181,6 +202,7 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
             tv_item_order_shifukuan = (TextView) itemView.findViewById(R.id.tv_item_order_shifukuan);
             tv_item_order_topay = (TextView) itemView.findViewById(R.id.tv_item_order_topay);
             tv_item_order_cancel = (TextView) itemView.findViewById(R.id.tv_item_order_cancel);
+            tv_item_order_extra = (TextView) itemView.findViewById(R.id.tv_item_order_extra);
         }
     }
 
@@ -193,6 +215,8 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
         void onLeftButtonClick(View view, int position, int status);
 
         void onRightButtonClick(View view, int position, int status);
+
+        void onExtraButtonClick(View view, int position, int status);
     }
 
     public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {

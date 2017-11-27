@@ -18,10 +18,12 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.AddressDetailBean;
 import com.gather_excellent_help.bean.CodeStatueBean;
+import com.gather_excellent_help.bean.suning.SuningGoodscartBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.address.AddNewAddressActivity;
 import com.gather_excellent_help.ui.activity.address.PersonAddressActivity;
+import com.gather_excellent_help.ui.activity.suning.SuningGoodscartActivity;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -45,6 +47,7 @@ public class PersonAddressAdapter extends RecyclerView.Adapter<PersonAddressAdap
     private Context context;
     private List<AddressDetailBean.DataBean> data;
     private TextView tv_address_top_num;
+    private android.app.AlertDialog alertDialog;
 
     public PersonAddressAdapter(Context context, List<AddressDetailBean.DataBean> data, TextView tv_address_top_num) {
         this.context = context;
@@ -86,7 +89,7 @@ public class PersonAddressAdapter extends RecyclerView.Adapter<PersonAddressAdap
             @Override
             public void onClick(View v) {
                 holder.tv_address_delete.setClickable(false);
-                delAddress(dataBean, position, v);
+                showDeleteDialog(dataBean, position, v);
             }
         });
         holder.cb_address_default.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +140,7 @@ public class PersonAddressAdapter extends RecyclerView.Adapter<PersonAddressAdap
                         CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
                         int statusCode = codeStatueBean.getStatusCode();
                         Toast.makeText(context, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                        EventBus.getDefault().post(new AnyEvent(EventType.UPDATA_ADDRESS,"更新地址界面信息"));
                         EventBus.getDefault().post(new AnyEvent(EventType.UPDATA_ADDRESS_ORDER,"更新订单页面的地址信息"));
                     }
                 });
@@ -176,6 +180,7 @@ public class PersonAddressAdapter extends RecyclerView.Adapter<PersonAddressAdap
                                 notifyItemRemoved(position);//当移除的时候用这个刷新
                                 notifyDataSetChanged();
                                 tv_address_top_num.setText(data.size() + "");
+                                EventBus.getDefault().post(new AnyEvent(EventType.UPDATA_ADDRESS,"更新地址界面信息"));
                                 EventBus.getDefault().post(new AnyEvent(EventType.UPDATA_ADDRESS_ORDER,"更新订单页面的地址信息"));
                                 break;
                         }
@@ -201,6 +206,27 @@ public class PersonAddressAdapter extends RecyclerView.Adapter<PersonAddressAdap
         bundle.putInt("isdefault", dataBean.getIs_default());
         intent.putExtras(bundle);
         context.startActivity(intent);
+    }
+
+    /**
+     * 解除支付宝绑定的dialog
+     */
+    private void showDeleteDialog(final AddressDetailBean.DataBean dataBean, final int position, final View v) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+        builder.setTitle("温馨提示")
+                .setMessage("您确定要删除该收货地址吗?")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        delAddress(dataBean, position, v);
+                    }
+                })
+                .setNegativeButton("取消", null);
+        alertDialog = builder.create();
+        PersonAddressActivity activity = (PersonAddressActivity) context;
+        if (activity != null && !activity.isFinishing()) {
+            alertDialog.show();
+        }
     }
 
 

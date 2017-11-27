@@ -154,7 +154,7 @@ public class CheckStandActivity extends BaseActivity {
          */
         final String payInfo = orderInfo + "&sign=\"" + sign + "\"&" + getSignType();
 
-        LogUtil.e(payInfo);
+        LogUtil.e("支付信息 = " + payInfo);
 
         Runnable payRunnable = new Runnable() {
 
@@ -214,8 +214,11 @@ public class CheckStandActivity extends BaseActivity {
                      * detail.htm?spm=0.0.0.0.xdvAU6&treeId=59&articleId=103665&
                      * docType=1) 建议商户依赖异步通知
                      */
+                    String memo = payResult.getMemo();
                     String resultInfo = payResult.getResult();// 同步返回需要验证的信息
                     String resultStatus = payResult.getResultStatus();
+                    Toast.makeText(CheckStandActivity.this, resultInfo, Toast.LENGTH_SHORT).show();
+                    LogUtil.e(memo + "-----------" + resultInfo);
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(CheckStandActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
@@ -339,6 +342,7 @@ public class CheckStandActivity extends BaseActivity {
 
         @Override
         public void getSuccessResponse(String response) {
+            LogUtil.e(response);
             SuningPaystateBean suningPaystateBean = new Gson().fromJson(response, SuningPaystateBean.class);
             int statusCode = suningPaystateBean.getStatusCode();
             switch (statusCode) {
@@ -349,9 +353,9 @@ public class CheckStandActivity extends BaseActivity {
                         if (dataBean != null) {
                             String pay_text = dataBean.getPay_text();
                             Toast.makeText(CheckStandActivity.this, pay_text, Toast.LENGTH_SHORT).show();
+                            toOrderPage();
                         }
                     }
-                    finish();
                     break;
                 case 0:
                     Toast.makeText(CheckStandActivity.this, "支付状态保存出现问题，请及时联系客服处理！！！！", Toast.LENGTH_SHORT).show();
@@ -361,7 +365,18 @@ public class CheckStandActivity extends BaseActivity {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            Toast.makeText(CheckStandActivity.this, "支付状态保存出现问题，请及时联系客服处理！！！！", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(CheckStandActivity.this, "支付状态保存出现问题，请及时联系客服处理！！！！", Toast.LENGTH_SHORT).show();
+            LogUtil.e(call.toString() + "-" + e.getMessage());
         }
+    }
+
+    /**
+     * 跳转到订单列表页面
+     */
+    private void toOrderPage() {
+        Intent intent = new Intent(this, SuningOrderActivity.class);
+        intent.putExtra("pay_status",pay_status);
+        startActivity(intent);
+        finish();
     }
 }

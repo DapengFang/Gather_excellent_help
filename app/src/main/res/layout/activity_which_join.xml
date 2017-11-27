@@ -84,10 +84,29 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="微达人与实体店之间区别详见帮助中心"
-        android:textSize="14sp"
+        android:text="微达人：开通后成为微商会员，适合具有推广能力的运营者（微商、其他线上线下群体等）"
+        android:lineSpacingExtra="@dimen/x3"
+        android:textSize="@dimen/x12"
         android:textColor="#99000000"
+        android:layout_marginTop="@dimen/x8"
+        android:padding="@dimen/x10"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="实体店：开通后成为商户会员，适合有实体店的运营者（电器店、小卖部、五金建材店等）"
+        android:lineSpacingExtra="@dimen/x3"
+        android:textSize="@dimen/x12"
+        android:textColor="#99000000"
+        android:padding="@dimen/x10"/>
+
+    <TextView
+        android:id="@+id/tv_which_join_help"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="@dimen/x12"
+        android:textColor="#333333"
         android:padding="@dimen/x10"/>
 
 
@@ -100,7 +119,7 @@
         android:text="确定"
         android:layout_gravity="center_horizontal"
         android:textColor="#ffffff"
-        android:textSize="18sp"
+        android:textSize="@dimen/x16"
         android:layout_marginTop="@dimen/x80"/>
 
 </LinearLayout>

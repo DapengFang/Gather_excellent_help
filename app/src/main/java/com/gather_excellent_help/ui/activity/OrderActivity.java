@@ -29,6 +29,7 @@ import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.PhotoUtils;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +73,7 @@ public class OrderActivity extends BaseActivity {
     private int lastVisibleItem;
     private List<OrderAllBean.DataBean> allData;
     private Handler handler = new Handler();
-
+    private CatLoadingView catLoadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +88,14 @@ public class OrderActivity extends BaseActivity {
      * 初始化控件
      */
     private void initView() {
-        wan_order_manager = (WanRecycleView)findViewById(R.id.wan_order_manager);
+        wan_order_manager = (WanRecycleView) findViewById(R.id.wan_order_manager);
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
+        catLoadingView = new CatLoadingView();
         rcvOrderManager = wan_order_manager.getRefreshableView();
         fullyLinearLayoutManager = new FullyLinearLayoutManager(OrderActivity.this);
         rcvOrderManager.setLayoutManager(fullyLinearLayoutManager);
@@ -171,16 +173,21 @@ public class OrderActivity extends BaseActivity {
             @Override
             public void getSuccessResponse(String response) {
                 LogUtil.e(response);
+                if (wan_order_manager != null) {
+                    wan_order_manager.onRefreshComplete();
+                }
                 CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
                 int statusCode = codeStatueBean.getStatusCode();
                 switch (statusCode) {
                     case 1:
                         LogUtil.e(response);
                         pareAllData(response);
+                        hindCatView();
                         break;
                     case 0:
                         LogUtil.e(codeStatueBean.getStatusMessage());
                         Toast.makeText(OrderActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                        hindCatView();
                         break;
                 }
 
@@ -196,7 +203,7 @@ public class OrderActivity extends BaseActivity {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    if(!isCanLoad) {
+                    if (!isCanLoad) {
                         return;
                     }
                     lastVisibleItem = fullyLinearLayoutManager
@@ -205,7 +212,7 @@ public class OrderActivity extends BaseActivity {
                             .getItemCount()) {
                         isLoaderMore = true;
                         page++;
-                        isCanLoad =false;
+                        isCanLoad = false;
                         pageIndex = String.valueOf(page);
                         net2ServerOrder(curr_statue);
                     }
@@ -261,6 +268,7 @@ public class OrderActivity extends BaseActivity {
      * @param curr_statue 联网请求订单信息
      */
     private void net2ServerOrder(int curr_statue) {
+        showCatView();
         String curr_url = tui_url;
         if (order_type == -1) {
             curr_url = order_url;
@@ -274,6 +282,24 @@ public class OrderActivity extends BaseActivity {
         map.put("pageSize", pageSize);
         map.put("pageIndex", pageIndex);
         netUtil.okHttp2Server2(curr_url, map);
+    }
+
+    /**
+     * 展示CatView
+     */
+    private void showCatView() {
+        if (catLoadingView != null) {
+            catLoadingView.show(getSupportFragmentManager(), "");
+        }
+    }
+
+    /**
+     * 隐藏CatView
+     */
+    private void hindCatView() {
+        if (catLoadingView != null) {
+            catLoadingView.dismiss();
+        }
     }
 
 
@@ -353,7 +379,7 @@ public class OrderActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }

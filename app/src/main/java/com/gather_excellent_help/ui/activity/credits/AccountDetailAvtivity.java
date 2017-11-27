@@ -19,10 +19,13 @@ import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.adapter.AcccountDetailAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
+import com.gather_excellent_help.ui.widget.WanRecycleView;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,14 +41,16 @@ public class AccountDetailAvtivity extends BaseActivity {
     RelativeLayout rlExit;
     @Bind(R.id.tv_top_title_name)
     TextView tvTopTitleName;
-    @Bind(R.id.rcv_account_detail)
-    RecyclerView rcvAccountDetail;
+
     @Bind(R.id.tv_account_query_time)
     TextView tvAccountQueryTime;
     @Bind(R.id.tv_account_query_project)
     TextView tvAccountQueryProject;
     @Bind(R.id.iv_order_no_zhanwei)
     ImageView ivOrderNoZhanwei;
+
+    private WanRecycleView wan_account_detail;
+    private RecyclerView rcvAccountDetail;
 
 
     private String account_url = Url.BASE_URL + "AmountLog.aspx";
@@ -63,27 +68,70 @@ public class AccountDetailAvtivity extends BaseActivity {
     private FullyLinearLayoutManager layoutManager;
     private AcccountDetailAdapter acccountDetailAdapter;
 
+    private CatLoadingView catLoadingView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_detail_avtivity);
+        initView();
         ButterKnife.bind(this);
         initData();
     }
 
+    /**
+     * 初始化控件
+     */
+    private void initView() {
+        wan_account_detail = (WanRecycleView)findViewById(R.id.wan_account_detail);
+    }
+
+    /**
+     * 初始化数据
+     */
     private void initData() {
+        catLoadingView = new CatLoadingView();
+        netUtil = new NetUtil();
         tvTopTitleName.setText("账户明细");
         tvAccountQueryTime.setSelected(true);
         tvAccountQueryProject.setSelected(false);
+
+        rcvAccountDetail = wan_account_detail.getRefreshableView();
         layoutManager = new FullyLinearLayoutManager(AccountDetailAvtivity.this);
         rcvAccountDetail.setLayoutManager(layoutManager);
-        netUtil = new NetUtil();
+
+        //设置刷新相关
+        wan_account_detail.setScrollingWhileRefreshingEnabled(true);
+        wan_account_detail.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        wan_account_detail.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+                isLoadmore = false;
+                page = 1;
+                pageIndex = String.valueOf(page);
+                tvAccountQueryTime.setSelected(true);
+                tvAccountQueryProject.setSelected(false);
+                isCanLoad = true;
+                net2ServerByType(type);
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+
+            }
+
+        });
+
         type = "1";
         net2ServerByType(type);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
                 LogUtil.e(response);
+                hindCatView();
+                if(wan_account_detail!=null) {
+                    wan_account_detail.onRefreshComplete();
+                }
                 CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
                 int statusCode = codeStatueBean.getStatusCode();
                 switch (statusCode) {
@@ -140,6 +188,7 @@ public class AccountDetailAvtivity extends BaseActivity {
     }
 
     private void net2ServerByType(String type) {
+        showCatView();
         String userLogin = Tools.getUserLogin(this);
         if (TextUtils.isEmpty(userLogin)) {
             toLogin();
@@ -151,6 +200,24 @@ public class AccountDetailAvtivity extends BaseActivity {
         map.put("pageIndex", pageIndex);
         map.put("type", type);
         netUtil.okHttp2Server2(account_url, map);
+    }
+
+    /**
+     * 显示CatView
+     */
+    private void showCatView(){
+        if(catLoadingView!=null) {
+            catLoadingView.show(getSupportFragmentManager(),"");
+        }
+    }
+
+    /**
+     * 隐藏CatView
+     */
+    private void hindCatView(){
+        if(catLoadingView!=null) {
+            catLoadingView.dismiss();
+        }
     }
 
     /**

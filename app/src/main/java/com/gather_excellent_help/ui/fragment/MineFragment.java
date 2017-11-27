@@ -27,8 +27,7 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.HelpRuleBean;
 import com.gather_excellent_help.bean.MineBean;
-import com.gather_excellent_help.ui.activity.suning.LogisticsInfoActivity;
-import com.gather_excellent_help.ui.activity.suning.SuningGoodscartActivity;
+import com.gather_excellent_help.ui.activity.suning.saleafter.SaleAfterActivity;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.AlipayManagerActivity;
@@ -693,7 +692,7 @@ public class MineFragment extends LazyLoadFragment {
      * 跳转到苏宁购物车
      */
     private void toSuningGoodscart() {
-        Intent intent = new Intent(getContext(), LogisticsInfoActivity.class);
+        Intent intent = new Intent(getContext(), SaleAfterActivity.class);
         startActivity(intent);
     }
 
@@ -727,8 +726,6 @@ public class MineFragment extends LazyLoadFragment {
      * 跳转到商家入驻界面
      */
     private void toMerchantEnter() {
-//        Intent intent = new Intent(getContext(), ShopInfoUpadateActivity.class);
-//        startActivity(intent);
         Intent intent = new Intent(getContext(), WhichJoinActivity.class);
         startActivity(intent);
     }

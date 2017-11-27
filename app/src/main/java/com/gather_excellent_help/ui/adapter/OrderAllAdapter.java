@@ -73,6 +73,8 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
                     .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
                     .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
                     .into(holder.ivOrderAllImg);//请求成功后把图片设置到的控件
+        }else{
+            holder.ivOrderAllImg.setImageResource(R.mipmap.zhanwei_icon);
         }
         if(curr_statue == 1) {
             holder.tvOrderAllStatue.setText("结算");

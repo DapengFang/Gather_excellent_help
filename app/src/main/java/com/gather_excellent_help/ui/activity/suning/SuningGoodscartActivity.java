@@ -55,6 +55,8 @@ public class SuningGoodscartActivity extends BaseActivity {
     private TextView tv_zhuangtai_right;
     private LinearLayout ll_goodscast_price_show;
     private SuningGoodscartAdapter suningGoodscartAdapter;
+    private LinearLayout ll_goodscast_clear_show;
+    private TextView tv_goodscart_clear_toSee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,9 @@ public class SuningGoodscartActivity extends BaseActivity {
         tv_zhuangtai_right = (TextView) findViewById(R.id.tv_zhuangtai_right);
 
         ll_goodscast_price_show = (LinearLayout) findViewById(R.id.ll_goodscast_price_show);
+
+        ll_goodscast_clear_show = (LinearLayout)findViewById(R.id.ll_goodscast_clear_show);
+        tv_goodscart_clear_toSee = (TextView)findViewById(R.id.tv_goodscart_clear_toSee);
     }
 
     /**
@@ -91,7 +96,7 @@ public class SuningGoodscartActivity extends BaseActivity {
         recyclerView = wan_suning_goodscart.getRefreshableView();
         FullyLinearLayoutManager fullyLinearLayoutManager = new FullyLinearLayoutManager(this);
         recyclerView.setLayoutManager(fullyLinearLayoutManager);
-        if (wan_suning_goodscart.isRefreshing()) {
+        if (wan_suning_goodscart!=null && wan_suning_goodscart.isRefreshing()) {
             wan_suning_goodscart.onRefreshComplete();
         }
 
@@ -124,6 +129,7 @@ public class SuningGoodscartActivity extends BaseActivity {
                     toUpdateGoodscart();
                 }
             });
+            ll_goodscast_clear_show.setVisibility(View.GONE);
         } else {
             if (recyclerView != null) {
                 data = new ArrayList<>();
@@ -135,6 +141,7 @@ public class SuningGoodscartActivity extends BaseActivity {
             total_price = 0;
             setCheckStatus();
             showTopay();
+            ll_goodscast_clear_show.setVisibility(View.VISIBLE);
         }
 
         MyonclickListener myonclickListener = new MyonclickListener();
@@ -142,7 +149,7 @@ public class SuningGoodscartActivity extends BaseActivity {
         cb_shopcart_checkall.setOnClickListener(myonclickListener);
         rl_zhuangtai_right.setOnClickListener(myonclickListener);
         tv_topay.setOnClickListener(myonclickListener);
-
+        tv_goodscart_clear_toSee.setOnClickListener(myonclickListener);
     }
 
     /**
@@ -186,17 +193,18 @@ public class SuningGoodscartActivity extends BaseActivity {
      * 更新购物车相关数据展示
      */
     private void toUpdateGoodscart() {
-        getGoodscartData();
-        checkAll_none();
-        checkOnly_check();
-        getTotalPrice();
-        if (data != null && data.size() > 0) {
-            setCheckStatus();
-        } else {
-            isCheckAll = false;
-            total_price = 0;
-            setCheckStatus();
-        }
+//        getGoodscartData();
+//        checkAll_none();
+//        checkOnly_check();
+//        getTotalPrice();
+//        if (data != null && data.size() > 0) {
+//            setCheckStatus();
+//        } else {
+//            isCheckAll = false;
+//            total_price = 0;
+//            setCheckStatus();
+//        }
+        initData();
     }
 
     /**
@@ -388,6 +396,10 @@ public class SuningGoodscartActivity extends BaseActivity {
                         }
 
                     }
+                    break;
+                case R.id.tv_goodscart_clear_toSee:
+                    finish();
+                    EventBus.getDefault().post(new AnyEvent(EventType.GOODSCART_CLEAR,"购物车空空如也"));
                     break;
             }
         }

@@ -90,7 +90,7 @@
                     android:cursorVisible="true"
                     android:hint="请输入密码"
                     android:inputType="textPassword"
-                    android:maxLength="12"
+                    android:maxLength="16"
                     android:textColor="#a9a9a9"
                     android:textColorHint="#a9a9a9"
                     android:textSize="16sp" />
@@ -184,6 +184,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_register_juyob_use"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"

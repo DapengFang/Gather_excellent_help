@@ -30,6 +30,8 @@ import com.baidu.location.LocationClientOption;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.suning.SuningStockBean;
+import com.gather_excellent_help.event.AnyEvent;
+import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.fragment.dragfragment.VerticalFragment1;
 import com.gather_excellent_help.ui.fragment.dragfragment.VerticalFragment3;
 import com.gather_excellent_help.ui.widget.DragLayout;
@@ -42,6 +44,7 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
 public class SuningDetailActivity extends FragmentActivity {
@@ -83,6 +86,7 @@ public class SuningDetailActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suning_detail);
+        EventBus.getDefault().register(this);
         initView();
         initData();
     }
@@ -321,6 +325,19 @@ public class SuningDetailActivity extends FragmentActivity {
         }
     }
 
+    /**
+     * 刷新数据
+     *
+     * @param event
+     */
+    public void onEvent(AnyEvent event) {
+        if (event.getType() == EventType.GOODSCART_CLEAR) {
+            String msg = "onEventMainThread收到了消息：" + event.getMessage();
+            LogUtil.e(msg);
+            finish();
+        }
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -330,5 +347,6 @@ public class SuningDetailActivity extends FragmentActivity {
             myListener = null;
             mLocationClient = null;
         }
+        EventBus.getDefault().unregister(this);
     }
 }

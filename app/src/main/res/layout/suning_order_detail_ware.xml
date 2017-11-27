@@ -95,15 +95,17 @@
         android:background="#dddddd"/>
 
     <RelativeLayout
+        android:id="@+id/rl_suning_detail_back"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x50"
-        android:background="#eeeeee">
+        android:layout_height="@dimen/x40"
+        android:background="#eeeeee"
+        android:visibility="gone">
         <TextView
             android:id="@+id/tv_item_order_back"
             android:layout_width="@dimen/x80"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_alignParentBottom="true"
             android:background="@drawable/order_suning_bg_shape"
             android:gravity="center"
             android:paddingBottom="@dimen/x8"
@@ -113,10 +115,5 @@
             android:textColor="#555555"
             android:textSize="12sp" />
     </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/x1"
-        android:background="#dddddd"/>
 
 </LinearLayout>

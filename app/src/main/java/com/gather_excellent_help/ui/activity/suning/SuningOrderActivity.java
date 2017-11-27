@@ -33,6 +33,7 @@ import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,8 +59,8 @@ public class SuningOrderActivity extends BaseActivity {
     private FullyLinearLayoutManager fullyLinearLayoutManager;
 
     private String order_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=GetUserOrderList";//订单列表
-    private String confrim_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=recive_myProduct";
-    private String cancel_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=DeletSingerOrder";
+    private String confrim_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=recive_myProduct";//确认订单
+    private String cancel_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=DeletSingerOrder";//取消订单
     private NetUtil netUtil;
     private Map<String, String> map;
 
@@ -79,6 +80,9 @@ public class SuningOrderActivity extends BaseActivity {
     private int lastVisibleItem;
     private String whick = "";
     private AlertDialog alertDialog;
+    private String pay_status;
+
+    private CatLoadingView catView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,20 +101,37 @@ public class SuningOrderActivity extends BaseActivity {
         tv_top_title_name = (TextView) findViewById(R.id.tv_top_title_name);
         vid_order_manager = (ViewpagerIndicator) findViewById(R.id.vid_order_manager);
         wanRecycleView = (WanRecycleView) findViewById(R.id.rcv_suning_order_list);
-        ll_pb_show = (LinearLayout)findViewById(R.id.ll_pb_show);
-        tv_pb_show_title = (TextView)findViewById(R.id.tv_pb_show_title);
-        pb_show = (ProgressBar)findViewById(R.id.pb_show);
-        ll_suning_show = (LinearLayout)findViewById(R.id.ll_suning_show);
-        iv_order_no_zhanwei = (ImageView)findViewById(R.id.iv_order_no_zhanwei);
+        ll_pb_show = (LinearLayout) findViewById(R.id.ll_pb_show);
+        tv_pb_show_title = (TextView) findViewById(R.id.tv_pb_show_title);
+        pb_show = (ProgressBar) findViewById(R.id.pb_show);
+        ll_suning_show = (LinearLayout) findViewById(R.id.ll_suning_show);
+        iv_order_no_zhanwei = (ImageView) findViewById(R.id.iv_order_no_zhanwei);
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
+        catView = new CatLoadingView();
+        Intent intent = getIntent();
+        pay_status = intent.getStringExtra("pay_status");
         tv_top_title_name.setText("苏宁订单");
         userLogin = Tools.getUserLogin(this);
         netUtil = new NetUtil();
+        vidacatorControll();
+        final int childCount = vid_order_manager.getChildCount();
+        if (pay_status != null) {
+            if (pay_status.equals("2")) {
+                isCanLoad = true;
+                order_status = "1";
+                defaultViewIndicator(childCount,1);
+            } else if (pay_status.equals("1")) {
+                isCanLoad = true;
+                order_status = "4";
+               defaultViewIndicator(childCount,0);
+            }
+        }
+        defaultViewIndicator(childCount,0);
         getSuningOrderData();
         OnServerResponseListener onServerResponseListener = new OnServerResponseListener();
         netUtil.setOnServerResponseListener(onServerResponseListener);
@@ -137,7 +158,6 @@ public class SuningOrderActivity extends BaseActivity {
             }
 
         });
-        vidacatorControll();
         MyonclickListener myonclickListener = new MyonclickListener();
         rl_exit.setOnClickListener(myonclickListener);
         rcv_suning_order_list.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -172,18 +192,33 @@ public class SuningOrderActivity extends BaseActivity {
     }
 
     /**
+     * 默认设置顶部指示器
+     * @param childCount
+     * @param index
+     */
+    private void defaultViewIndicator(final int childCount, final int index) {
+        final TextView v = (TextView) vid_order_manager.getChildAt(index);
+        v.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showDiffIndicator(v, index, childCount);
+            }
+        }, 200);
+    }
+
+    /**
      * 展示加载更多
      */
     private void showLoadMore(int status) {
-        if(status == 0) {
+        if (status == 0) {
             tv_pb_show_title.setText("正在加载中");
             ll_pb_show.setVisibility(View.VISIBLE);
             pb_show.setVisibility(View.VISIBLE);
-        }else if(status == 1) {
+        } else if (status == 1) {
             tv_pb_show_title.setText("加载完成");
             ll_pb_show.setVisibility(View.GONE);
             pb_show.setVisibility(View.GONE);
-        }else if(status == 2) {
+        } else if (status == 2) {
             tv_pb_show_title.setText("没有更多数据了");
             ll_pb_show.setVisibility(View.VISIBLE);
             pb_show.setVisibility(View.GONE);
@@ -194,6 +229,7 @@ public class SuningOrderActivity extends BaseActivity {
      * 获取苏宁订单数据
      */
     private void getSuningOrderData() {
+        showCatView();
         whick = "order_list";
         map = new HashMap<>();
         map.put("user_id", userLogin);
@@ -201,6 +237,21 @@ public class SuningOrderActivity extends BaseActivity {
         map.put("pageindex", pageindex);
         map.put("order_status", order_status);
         netUtil.okHttp2Server2(order_url, map);
+    }
+
+    /**
+     * 展示CatLoadingView
+     */
+    private void showCatView() {
+        if (catView != null) {
+            catView.show(getSupportFragmentManager(), "");
+        }
+    }
+
+    private void hindCatView() {
+        if (catView != null) {
+            catView.dismiss();
+        }
     }
 
     /**
@@ -230,16 +281,7 @@ public class SuningOrderActivity extends BaseActivity {
             child.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    vid_order_manager.checkMove(finalI);
-                    for (int j = 0; j < childCount; j++) {
-                        if (j != finalI) {
-                            TextView tv = (TextView) vid_order_manager.getChildAt(j);
-                            tv.setTextColor(Color.parseColor("#333333"));
-                        } else {
-                            TextView tv = (TextView) v;
-                            tv.setTextColor(Color.RED);
-                        }
-                    }
+                    showDiffIndicator((TextView) v, finalI, childCount);
                     tab_p = finalI;
                     pageindex = "1";
                     page = 1;
@@ -273,6 +315,24 @@ public class SuningOrderActivity extends BaseActivity {
     }
 
     /**
+     * @param v
+     * @param finalI
+     * @param childCount 展示不同的下划线
+     */
+    private void showDiffIndicator(TextView v, int finalI, int childCount) {
+        vid_order_manager.checkMove(finalI);
+        for (int j = 0; j < childCount; j++) {
+            if (j != finalI) {
+                TextView tv = (TextView) vid_order_manager.getChildAt(j);
+                tv.setTextColor(Color.parseColor("#333333"));
+            } else {
+                TextView tv = v;
+                tv.setTextColor(Color.RED);
+            }
+        }
+    }
+
+    /**
      * 联网请求的回调
      */
     public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
@@ -280,6 +340,7 @@ public class SuningOrderActivity extends BaseActivity {
         @Override
         public void getSuccessResponse(String response) {
             LogUtil.e(response);
+            hindCatView();
             if (whick.equals("order_list")) {
                 parseOrderListData(response);
             } else if (whick.equals("cancel_order")) {
@@ -291,7 +352,7 @@ public class SuningOrderActivity extends BaseActivity {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            LogUtil.e( call.toString() + "-" + e.getMessage());
+            LogUtil.e(call.toString() + "-" + e.getMessage());
         }
     }
 
@@ -304,8 +365,8 @@ public class SuningOrderActivity extends BaseActivity {
         SuningOrderConfirmBean suningOrderConfirmBean = new Gson().fromJson(response, SuningOrderConfirmBean.class);
         int statusCode = suningOrderConfirmBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
-               Toast.makeText(SuningOrderActivity.this, "确认订单成功。", Toast.LENGTH_SHORT).show();
+            case 1:
+                Toast.makeText(SuningOrderActivity.this, "确认订单成功。", Toast.LENGTH_SHORT).show();
                 pageindex = "1";
                 page = 1;
                 isLoaderMore = false;
@@ -320,6 +381,7 @@ public class SuningOrderActivity extends BaseActivity {
 
     /**
      * 解析取消订单数据
+     *
      * @param response
      */
     private void parseCancelOrderData(String response) {
@@ -365,10 +427,10 @@ public class SuningOrderActivity extends BaseActivity {
                 } else {
                     showLoadMore(1);
                     allData = data;
-                    if(allData!=null && allData.size()>0) {
+                    if (allData != null && allData.size() > 0) {
                         ll_suning_show.setVisibility(View.VISIBLE);
                         iv_order_no_zhanwei.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         ll_suning_show.setVisibility(View.GONE);
                         iv_order_no_zhanwei.setVisibility(View.VISIBLE);
                     }
@@ -391,6 +453,11 @@ public class SuningOrderActivity extends BaseActivity {
                         @Override
                         public void onRightButtonClick(View view, int position, int status) {
                             onRightButtonHandler(view, position, status);
+                        }
+
+                        @Override
+                        public void onExtraButtonClick(View view, int position, int status) {
+
                         }
                     });
                 }
@@ -462,6 +529,22 @@ public class SuningOrderActivity extends BaseActivity {
     }
 
     /**
+     * 处理额外的button
+     *
+     * @param view
+     * @param position
+     * @param status
+     */
+    private void onExtraButtonHandler(View view, int position, int status) {
+        if (allData != null && allData.size() > 0) {
+            SuningOrderBean.DataBean dataBean = allData.get(position);
+            if (dataBean != null) {
+
+            }
+        }
+    }
+
+    /**
      * 点击列表item
      *
      * @param view
@@ -526,12 +609,12 @@ public class SuningOrderActivity extends BaseActivity {
      * 查看订单详情
      */
     private void seeOrderDetail(View v, int position, int status) {
-        if(allData!=null && allData.size()>0) {
+        if (allData != null && allData.size() > 0) {
             SuningOrderBean.DataBean dataBean = allData.get(position);
-            if(dataBean!=null) {
+            if (dataBean != null) {
                 String orderInfo = new Gson().toJson(dataBean);
                 Intent intent = new Intent(SuningOrderActivity.this, SuningOrderDetailActivity.class);
-                intent.putExtra("orderInfo",orderInfo);
+                intent.putExtra("orderInfo", orderInfo);
                 startActivity(intent);
             }
         }

@@ -81,12 +81,45 @@
             android:layout_height="1dp"
             android:background="#e5e5e5" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rcv_me_address"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#f4f4f4"></android.support.v7.widget.RecyclerView>
+            android:layout_weight="1">
+
+            <com.gather_excellent_help.ui.widget.WanRecycleView
+                android:id="@+id/wan_me_address"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#f4f4f4" />
+
+            <LinearLayout
+                android:id="@+id/ll_address_clear_show"
+                android:layout_width="@dimen/x180"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x100"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/x100"
+                    android:layout_height="@dimen/x100"
+                    android:src="@drawable/address_clear_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x20"
+                    android:text="亲~您还没有收货地址哦！"
+                    android:textColor="#66000000"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+
+
+        </FrameLayout>
+
     </LinearLayout>
 
     <View
@@ -98,10 +131,10 @@
         android:id="@+id/tv_me_add_newaddress"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x45"
+        android:background="#ffffff"
         android:gravity="center"
         android:text="添加新地址"
         android:textColor="#aa000000"
-        android:textSize="16sp"
-        android:background="#ffffff"/>
+        android:textSize="16sp" />
 
 </LinearLayout>

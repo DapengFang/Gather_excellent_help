@@ -107,8 +107,10 @@ public class SuningStandardPopupwindow extends PopupWindow {
         for (int i = 0; i < data.size(); i++) {
             SuningSpecBean.DataBean dataBean = data.get(i);
             List<SuningSpecBean.DataBean.ContentBean> content = dataBean.getContent();
-            SuningSpecBean.DataBean.ContentBean contentBean = content.get(0);
-            contentBean.setCheck(true);
+            if(content!=null && content.size()>0) {
+                SuningSpecBean.DataBean.ContentBean contentBean = content.get(0);
+                contentBean.setCheck(true);
+            }
         }
         SuningSpecAdapter suningSpecAdapter = new SuningSpecAdapter(context, data);
         rcv_bottom_spec.setAdapter(suningSpecAdapter);

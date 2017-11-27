@@ -3,6 +3,7 @@ package com.gather_excellent_help.ui.base;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;

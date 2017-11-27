@@ -47,6 +47,8 @@ public class RuleHelpActivity extends BaseActivity {
                 tvTopTitleName.setText("帮助");
             }else if(which.equals("rule")) {
                 tvTopTitleName.setText("返佣规则");
+            }else if(which.equals("juyobuse")) {
+                tvTopTitleName.setText("聚优帮使用协议");
             }
         }
         WebSettings webSettings = wvBanner.getSettings();

@@ -1,6 +1,7 @@
 package com.gather_excellent_help.ui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +48,8 @@ public class RegisterActivity extends Activity {
     @Bind(R.id.rl_back)
     RelativeLayout rlBack;
 
+    private LinearLayout ll_register_juyob_use;
+
     private String phone;
     private String password;
     private String smscode = "";
@@ -64,8 +68,16 @@ public class RegisterActivity extends Activity {
         //去掉Activity上面的状态栏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register);
+        initView();
         ButterKnife.bind(this);
         initDatas();
+    }
+
+    /**
+     * 初始化控件
+     */
+    private void initView() {
+        ll_register_juyob_use = (LinearLayout)findViewById(R.id.ll_register_juyob_use);
     }
 
     /**
@@ -77,6 +89,7 @@ public class RegisterActivity extends Activity {
         tvRegisterGetSms.setOnClickListener(new MyOnclickListener());
         tvRegister.setOnClickListener(new MyOnclickListener());
         rlBack.setOnClickListener(new MyOnclickListener());
+        ll_register_juyob_use.setOnClickListener(new MyOnclickListener());
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -228,8 +241,22 @@ public class RegisterActivity extends Activity {
                 case R.id.rl_back:
                     finish();
                     break;
+                case R.id.ll_register_juyob_use:
+                    toJuyobusePager();
+                    break;
             }
         }
+    }
+
+    /**
+     * 跳转到聚优帮使用协议
+     */
+    private void toJuyobusePager() {
+        Intent intent = new Intent(RegisterActivity.this, RuleHelpActivity.class);
+        String web_url = "http://admin.210gou.com/appHome/Agreement";
+        intent.putExtra("web_url", web_url);
+        intent.putExtra("which", "juyobuse");
+        startActivity(intent);
     }
 
     @Override

@@ -57,6 +57,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
     private TextView tv_suning_detail_accepttime;
     private TextView tv_item_detail_right;
     private TextView tv_item_detail_left;
+    private TextView tv_item_detail_extra;
 
     private String orderInfo;
     private int status;//当前订单状态
@@ -104,6 +105,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
         tv_suning_detail_accepttime = (TextView) findViewById(R.id.tv_suning_detail_accepttime);
         tv_item_detail_right = (TextView) findViewById(R.id.tv_item_detail_right);
         tv_item_detail_left = (TextView) findViewById(R.id.tv_item_detail_left);
+        tv_item_detail_extra = (TextView)findViewById(R.id.tv_item_detail_extra);
     }
 
     /**
@@ -133,7 +135,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
         if (orderInfo != null) {
             SuningOrderBean.DataBean dataBean = new Gson().fromJson(orderInfo, SuningOrderBean.DataBean.class);
             if (dataBean != null) {
-                status = dataBean.getStatus();
+                status = dataBean.getOrder_status();
                 order_no = dataBean.getOrder_no();
                 order_id = dataBean.getId();
                 real_amount = dataBean.getReal_amount();
@@ -161,7 +163,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
         String express_time = dataBean.getExpress_time();
         String complete_time = dataBean.getComplete_time();
         tv_suning_detail_orderno.setText("订单号：" + order_no);
-        if (status == 4) {
+        if (status == 1) {
             tv_suning_detail_createtime.setVisibility(View.VISIBLE);
             tv_suning_detail_paytime.setVisibility(View.GONE);
             tv_suning_detail_sendtime.setVisibility(View.GONE);
@@ -169,11 +171,12 @@ public class SuningOrderDetailActivity extends BaseActivity {
             if (add_time != null) {
                 tv_suning_detail_createtime.setText("创建时间：" + add_time);
             }
+            tv_item_detail_extra.setVisibility(View.GONE);
             tv_item_detail_left.setVisibility(View.VISIBLE);
             tv_item_detail_right.setVisibility(View.VISIBLE);
             tv_item_detail_left.setText("取消订单");
             tv_item_detail_right.setText("立即付款");
-        } else if (status == 1) {
+        } else if (status == 2) {
             tv_suning_detail_createtime.setVisibility(View.VISIBLE);
             tv_suning_detail_paytime.setVisibility(View.VISIBLE);
             tv_suning_detail_sendtime.setVisibility(View.GONE);
@@ -184,10 +187,13 @@ public class SuningOrderDetailActivity extends BaseActivity {
             if (payment_time != null) {
                 tv_suning_detail_paytime.setText("付款时间：" + payment_time);
             }
-            tv_item_detail_left.setVisibility(View.GONE);
+            tv_item_detail_extra.setVisibility(View.VISIBLE);
+            tv_item_detail_left.setVisibility(View.VISIBLE);
             tv_item_detail_right.setVisibility(View.VISIBLE);
+            tv_item_detail_extra.setText("取消订单");
+            tv_item_detail_left.setText("查看物流");
             tv_item_detail_right.setText("提醒发货");
-        } else if (status == 2) {
+        } else if (status == 3) {
             tv_suning_detail_createtime.setVisibility(View.VISIBLE);
             tv_suning_detail_paytime.setVisibility(View.VISIBLE);
             tv_suning_detail_sendtime.setVisibility(View.VISIBLE);
@@ -201,10 +207,11 @@ public class SuningOrderDetailActivity extends BaseActivity {
             if (express_time != null) {
                 tv_suning_detail_sendtime.setText("发货时间：" + express_time);
             }
+            tv_item_detail_extra.setVisibility(View.GONE);
             tv_item_detail_left.setVisibility(View.GONE);
             tv_item_detail_right.setVisibility(View.VISIBLE);
-            tv_item_detail_right.setText("物流信息");
-        } else if (status == 3) {
+            tv_item_detail_right.setText("查看物流");
+        } else if (status == 4) {
             tv_suning_detail_createtime.setVisibility(View.VISIBLE);
             tv_suning_detail_paytime.setVisibility(View.VISIBLE);
             tv_suning_detail_sendtime.setVisibility(View.VISIBLE);
@@ -221,8 +228,10 @@ public class SuningOrderDetailActivity extends BaseActivity {
             if (complete_time != null) {
                 tv_suning_detail_accepttime.setText("完成时间：" + complete_time);
             }
-            tv_item_detail_left.setVisibility(View.GONE);
+            tv_item_detail_extra.setVisibility(View.GONE);
+            tv_item_detail_left.setVisibility(View.VISIBLE);
             tv_item_detail_right.setVisibility(View.VISIBLE);
+            tv_item_detail_left.setText("申请售后");
             tv_item_detail_right.setText("确认订单");
         }
     }
@@ -234,9 +243,8 @@ public class SuningOrderDetailActivity extends BaseActivity {
      * @param df
      */
     private void showFreeAndMoney(SuningOrderBean.DataBean dataBean, DecimalFormat df) {
-        double sn_freight = dataBean.getSn_freight();
         double real_amount = dataBean.getReal_amount();
-        tv_suning_detail_free.setText("￥" + df.format(sn_freight));
+        tv_suning_detail_free.setText("免邮费");
         tv_suning_detail_money.setText("￥" + df.format(real_amount));
     }
 
@@ -258,7 +266,6 @@ public class SuningOrderDetailActivity extends BaseActivity {
                 TextView tv_suning_order_realprice = (TextView) inflate.findViewById(R.id.tv_suning_order_realprice);
                 TextView tv_suning_order_oldprice = (TextView) inflate.findViewById(R.id.tv_suning_order_oldprice);
                 TextView tv_suning_order_number = (TextView) inflate.findViewById(R.id.tv_suning_order_number);
-                TextView tv_item_order_back = (TextView) inflate.findViewById(R.id.tv_item_order_back);
                 SuningOrderBean.DataBean.GoodListBean goodListBean = goodList.get(i);
                 if (goodListBean != null) {
                     String goods_title = goodListBean.getGoods_title();
@@ -281,17 +288,11 @@ public class SuningOrderDetailActivity extends BaseActivity {
                     if (goods_title != null) {
                         tv_suning_order_title.setText(goods_title);
                     }
-                    tv_suning_order_realprice.setText(String.valueOf(df.format(real_price)));
+                    tv_suning_order_realprice.setText("￥" + String.valueOf(df.format(real_price)));
                     tv_suning_order_oldprice.getPaint().setAntiAlias(true);
                     tv_suning_order_oldprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-                    tv_suning_order_oldprice.setText(String.valueOf(df.format(goods_price)));
+                    tv_suning_order_oldprice.setText("￥" + String.valueOf(df.format(goods_price)));
                     tv_suning_order_number.setText("x" + quantity);
-                    tv_item_order_back.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            toRebackOrder();
-                        }
-                    });
                     ll_suning_detail_container.addView(inflate);
                 }
             }
@@ -301,7 +302,6 @@ public class SuningOrderDetailActivity extends BaseActivity {
 
     /**
      * 展示收货地址
-     *
      * @param dataBean
      */
     private void showOrderAddress(SuningOrderBean.DataBean dataBean) {

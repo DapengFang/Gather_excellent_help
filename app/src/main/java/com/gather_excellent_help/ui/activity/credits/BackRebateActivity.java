@@ -21,10 +21,13 @@ import com.gather_excellent_help.ui.adapter.AcccountDetailAdapter;
 import com.gather_excellent_help.ui.adapter.BackRebateAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
+import com.gather_excellent_help.ui.widget.WanRecycleView;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,10 +46,13 @@ public class BackRebateActivity extends BaseActivity {
     TextView tvTopTitleName;
     @Bind(R.id.tab_back_rebate)
     TabLayout tabBackRebate;
-    @Bind(R.id.rcv_back_rebate)
-    RecyclerView rcvBackRebate;
     @Bind(R.id.iv_order_no_zhanwei)
     ImageView ivOrderNoZhanwei;
+
+    private WanRecycleView wan_back_rebate;
+    private RecyclerView rcvBackRebate;
+
+    private CatLoadingView catLoadingView;
     private List<BackRebateBean.DataBean> data;
     private List<BackRebateBean.DataBean> currData;
     private String back_url = Url.BASE_URL + "RebateLog.aspx";
@@ -68,11 +74,23 @@ public class BackRebateActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_back_rebate);
+        initView();
         ButterKnife.bind(this);
         initData();
     }
 
+    /**
+     * 初始化控件
+     */
+    private void initView() {
+        wan_back_rebate = (WanRecycleView) findViewById(R.id.wan_back_rebate);
+    }
+
+    /**
+     * 初始化数据
+     */
     private void initData() {
+        catLoadingView = new CatLoadingView();
         type = "1";
         tvTopTitleName.setText("返佣明细");
         ArrayList<String> mTitles = new ArrayList<>();
@@ -85,20 +103,43 @@ public class BackRebateActivity extends BaseActivity {
         tabBackRebate.addTab(tabBackRebate.newTab().setText(mTitles.get(1)));
         tabBackRebate.addTab(tabBackRebate.newTab().setText(mTitles.get(2)));
         tabBackRebate.addTab(tabBackRebate.newTab().setText(mTitles.get(3)));
+        rcvBackRebate = wan_back_rebate.getRefreshableView();
         fullyLinearLayoutManager = new FullyLinearLayoutManager(this);
         rcvBackRebate.setLayoutManager(fullyLinearLayoutManager);
+
+        //设置刷新相关
+        wan_back_rebate.setScrollingWhileRefreshingEnabled(true);
+        wan_back_rebate.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        wan_back_rebate.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+                page = 1;
+                isLoadMore = false;
+                isCanLoad = true;
+                pageIndex = "1";
+                loadBackData(type, pageIndex);
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+
+            }
+
+        });
+
         rlExit.setOnClickListener(new MyOnclickListener());
         netUtil = new NetUtil();
         loadBackData(type, pageIndex);
         tabBackRebate.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                pageIndex = "1";
                 switch (tab.getPosition()) {
                     case 0:
                         type = "1";
                         page = 1;
                         isLoadMore = false;
-                        isCanLoad =true;
+                        isCanLoad = true;
                         break;
                     case 1:
                         type = "2";
@@ -110,7 +151,7 @@ public class BackRebateActivity extends BaseActivity {
                         type = "3";
                         page = 1;
                         isLoadMore = false;
-                        isCanLoad =true;
+                        isCanLoad = true;
                         break;
                     case 3:
                         type = "4";
@@ -135,7 +176,11 @@ public class BackRebateActivity extends BaseActivity {
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
+                if(wan_back_rebate!=null) {
+                    wan_back_rebate.onRefreshComplete();
+                }
                 LogUtil.e(response);
+                hindCatView();
                 CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
                 int statusCode = codeStatueBean.getStatusCode();
                 switch (statusCode) {
@@ -147,10 +192,10 @@ public class BackRebateActivity extends BaseActivity {
                             data.addAll(currData);
                             backRebateAdapter.notifyDataSetChanged();
                         } else {
-                            if(currData!=null) {
-                                if(currData.size() > 0) {
+                            if (currData != null) {
+                                if (currData.size() > 0) {
                                     ivOrderNoZhanwei.setVisibility(View.GONE);
-                                }else{
+                                } else {
                                     ivOrderNoZhanwei.setVisibility(View.VISIBLE);
                                 }
                             }
@@ -178,7 +223,7 @@ public class BackRebateActivity extends BaseActivity {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    if(!isCanLoad) {
+                    if (!isCanLoad) {
                         return;
                     }
 
@@ -187,13 +232,13 @@ public class BackRebateActivity extends BaseActivity {
                     if (lastVisibleItem + 1 == fullyLinearLayoutManager
                             .getItemCount()) {
                         isLoadMore = true;
-                        if(currData.size()<10) {
+                        if (currData.size() < 10) {
                             Toast.makeText(BackRebateActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         pageIndex = String.valueOf(page);
                         isCanLoad = false;
-                        loadBackData(type,pageIndex);
+                        loadBackData(type, pageIndex);
                     }
                 }
             }
@@ -206,12 +251,31 @@ public class BackRebateActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 显示CatView
+     */
+    private void showCatView() {
+        if (catLoadingView != null) {
+            catLoadingView.show(getSupportFragmentManager(), "");
+        }
+    }
+
+    /**
+     * 隐藏CatView
+     */
+    private void hindCatView() {
+        if (catLoadingView != null) {
+            catLoadingView.dismiss();
+        }
+    }
+
     private void loadBackData(String type, String pageIndex) {
         Id = Tools.getUserLogin(this);
         if (TextUtils.isEmpty(Id)) {
             toLogin();
             return;
         }
+        showCatView();
         map = new HashMap<>();
         map.put("Id", Id);
         map.put("pageSize", pageSize);

@@ -23,7 +23,7 @@
             android:layout_centerVertical="true"
             android:text="2017-11-03 17:54:33"
             android:textColor="#7c7c7c"
-            android:textSize="14sp" />
+            android:textSize="@dimen/x14" />
 
         <TextView
             android:id="@+id/tv_item_order_type"
@@ -32,8 +32,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text=""
-            android:textColor="@color/red_content_color"
-            android:textSize="14sp" />
+            android:textColor="#ff0000"
+            android:textStyle="bold"
+            android:textSize="@dimen/x12" />
 
         <TextView
             android:id="@+id/tv_item_order_counttimer"
@@ -44,7 +45,7 @@
             android:layout_toLeftOf="@id/tv_item_order_type"
             android:text=""
             android:textColor="#184d92"
-            android:textSize="12sp"
+            android:textSize="@dimen/x12"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -75,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="14sp"
+            android:textSize="@dimen/x14"
             android:textColor="#555555"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/x8"
@@ -91,7 +92,8 @@
             android:layout_marginTop="@dimen/x8"
             android:text=""
             android:textColor="#FF7F00"
-            android:textSize="14sp" />
+            android:textStyle="bold"
+            android:textSize="@dimen/x14" />
 
         <TextView
             android:id="@+id/tv_shifukuan"
@@ -102,7 +104,7 @@
             android:text="实付款："
             android:layout_marginRight="@dimen/x3"
             android:textColor="#7a7a7a"
-            android:textSize="14sp" />
+            android:textSize="@dimen/x14" />
 
     </RelativeLayout>
 
@@ -124,7 +126,7 @@
             android:layout_marginRight="@dimen/x8"
             android:text="立即付款"
             android:textColor="#555555"
-            android:textSize="12sp" />
+            android:textSize="@dimen/x12" />
 
         <TextView
             android:id="@+id/tv_item_order_cancel"
@@ -139,7 +141,22 @@
             android:paddingTop="@dimen/x8"
             android:text="取消订单"
             android:textColor="#555555"
-            android:textSize="12sp" />
+            android:textSize="@dimen/x12" />
+
+        <TextView
+            android:id="@+id/tv_item_order_extra"
+            android:layout_width="@dimen/x80"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x8"
+            android:layout_toLeftOf="@id/tv_item_order_cancel"
+            android:background="@drawable/order_suning_bg_shape"
+            android:gravity="center"
+            android:padding="@dimen/x8"
+            android:paddingTop="@dimen/x8"
+            android:text="额外"
+            android:textColor="#555555"
+            android:textSize="@dimen/x12" />
     </RelativeLayout>
 
 </LinearLayout>

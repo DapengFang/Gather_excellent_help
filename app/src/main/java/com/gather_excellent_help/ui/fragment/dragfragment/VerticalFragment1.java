@@ -846,7 +846,7 @@ public class VerticalFragment1 extends Fragment {
                             LogUtil.e(product_num + "---" + c_num + "--" + id);
                             manager.updateGoods(new String[]{String.valueOf(c_num), id});
                         } else {
-                            manager.addGoods(new String[]{goods_id, goods_title, String.valueOf(ware_num), spec_titel, goods_price, c_price, goods_img,spec_back_id,"1"});
+                            manager.addGoods(new String[]{article_id, goods_title, String.valueOf(ware_num), spec_titel, goods_price, c_price, goods_img,spec_back_id,"1"});
                         }
                     }
                 } else {

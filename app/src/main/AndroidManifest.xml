@@ -363,7 +363,10 @@
         <activity android:name=".ui.activity.suning.SuningOrderLogisticsActivity" />
         <activity android:name=".ui.activity.suning.LogisticsInfoActivity" />
         <activity android:name=".ui.activity.suning.SuningGoodscartActivity" />
-        <activity android:name=".ui.activity.AlipayInfoActivity"></activity>
+        <activity android:name=".ui.activity.AlipayInfoActivity" />
+        <activity android:name=".ui.activity.suning.saleafter.SaleAfterActivity" />
+        <activity android:name=".ui.activity.suning.saleafter.BackMoneyActivity" />
+        <activity android:name=".ui.activity.suning.saleafter.ExchangeGoodsActivity"></activity>
     </application>
 
 </manifest>

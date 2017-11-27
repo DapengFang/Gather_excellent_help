@@ -71,6 +71,8 @@ public class SuningOrderBean {
         private int id;
         private int user_id;
         private int status;
+        private int pay_status;
+        private int order_status;
         private String user_name;
         private String accept_name;
         private String area;
@@ -119,6 +121,22 @@ public class SuningOrderBean {
 
         public void setStatus(int status) {
             this.status = status;
+        }
+
+        public int getPay_status() {
+            return pay_status;
+        }
+
+        public void setPay_status(int pay_status) {
+            this.pay_status = pay_status;
+        }
+
+        public int getOrder_status() {
+            return order_status;
+        }
+
+        public void setOrder_status(int order_status) {
+            this.order_status = order_status;
         }
 
         public String getUser_name() {
@@ -445,7 +463,6 @@ public class SuningOrderBean {
             public void setQuantpointity(int quantpointity) {
                 this.quantpointity = quantpointity;
             }
-
 
 
         }
