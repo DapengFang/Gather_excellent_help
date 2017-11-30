@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -30,10 +32,13 @@ import com.gather_excellent_help.ui.adapter.LowerMemberAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.MyNestedScrollView;
+import com.gather_excellent_help.ui.widget.WanRecycleView;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,15 +66,16 @@ public class LowerMemberStaticsActivity extends BaseActivity {
     EditText etWardStaticsUsername;
     @Bind(R.id.tv_ward_statics_confirm)
     TextView tvWardStaticsConfirm;
-    @Bind(R.id.rcv_wards_statistics_s)
-    RecyclerView rcvWardsStatisticsS;
+
     @Bind(R.id.iv_order_no_zhanwei)
     ImageView ivOrderNoZhanwei;
     @Bind(R.id.ll_lower_member_show)
     LinearLayout ll_lower_member_show;
 
-    private MyNestedScrollView mynest_scrollview;
+    private RecyclerView rcvWardsStatisticsS;
+    private SwipeRefreshLayout swip_refresh;
 
+    private MyNestedScrollView mynest_scrollview;
 
     private String startTime = "";
     private String endTime = "";
@@ -100,6 +106,8 @@ public class LowerMemberStaticsActivity extends BaseActivity {
 
     private boolean isAnimationFirst = true;
 
+    private CatLoadingView catView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,17 +119,42 @@ public class LowerMemberStaticsActivity extends BaseActivity {
 
     private void initView() {
         mynest_scrollview = (MyNestedScrollView) findViewById(R.id.mynest_scrollview);
+        rcvWardsStatisticsS = (RecyclerView) findViewById(R.id.rcv_wards_statistics_s);
+        swip_refresh = (SwipeRefreshLayout) findViewById(R.id.swip_refresh);
     }
 
 
     private void initData() {
+        catView = new CatLoadingView();
         tvTopTitleName.setText("下级会员统计");
         netUtil = new NetUtil();
         Id = Tools.getUserLogin(this);
         net2Server();
         ivOrderNoZhanwei.setVisibility(View.VISIBLE);
+
         layoutManager = new FullyLinearLayoutManager(this);
         rcvWardsStatisticsS.setLayoutManager(layoutManager);
+        setupSwipeRefresh();
+
+//        //设置刷新相关
+//        wan_wards_statistics_s.setScrollingWhileRefreshingEnabled(true);
+//        wan_wards_statistics_s.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+//        wan_wards_statistics_s.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
+//            @Override
+//            public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+//                isLoadMore = false;
+//                isCanLoad = true;
+//                page = 1;
+//                pageNo = "1";
+//                net2Server();
+//            }
+//
+//            @Override
+//            public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+//
+//            }
+//
+//        });
         netUtil.setOnServerResponseListener(new LowerMemberStaticsActivity.OnServerResponseListener());
         rlExit.setOnClickListener(new MyOnclikListener());
         rlWardTimeStart.setOnClickListener(new MyOnclikListener());
@@ -130,11 +163,55 @@ public class LowerMemberStaticsActivity extends BaseActivity {
         mynest_scrollview.setOnTouchListener(new MyOnTouchClickListener());
     }
 
+    private void setupSwipeRefresh() {
+        if (swip_refresh != null) {
+            swip_refresh.setColorSchemeResources(R.color.colorFirst,
+                    R.color.colorSecond, R.color.colorThird);
+            swip_refresh.setProgressViewOffset(true, 0, (int) TypedValue
+                    .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
+            swip_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    isLoadMore = false;
+                    isCanLoad = true;
+                    page = 1;
+                    pageNo = "1";
+                    net2Server();
+                }
+            });
+        }
+    }
+
+    /**
+     * 展示CatView
+     */
+    private void showCatView() {
+        if (catView != null) {
+            catView.show(getSupportFragmentManager(), "");
+        }
+    }
+
+    /**
+     * 隐藏CatView
+     */
+    private void hindCatView() {
+        if (catView != null) {
+            catView.dismiss();
+        }
+    }
+
+    /**
+     * 联网请求的回调
+     */
     public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
             LogUtil.e(response);
+            hindCatView();
+            if(swip_refresh!=null) {
+                swip_refresh.setRefreshing(false);
+            }
             LowerMermberBean lowerMermberBean = new Gson().fromJson(response, LowerMermberBean.class);
             int statusCode = lowerMermberBean.getStatusCode();
             switch (statusCode) {
@@ -171,7 +248,11 @@ public class LowerMemberStaticsActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 联网请求
+     */
     private void net2Server() {
+        showCatView();
         map = new HashMap<>();
         map.put("Id", Id);
         map.put("pageSize", pageSize);
@@ -231,6 +312,11 @@ public class LowerMemberStaticsActivity extends BaseActivity {
         net2Server();
     }
 
+    /**
+     * 弹出日期选择的dialog
+     *
+     * @param which
+     */
     private void showDateDialog(final int which) {
         final DatePicker datePicker = new DatePicker(this);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -256,6 +342,9 @@ public class LowerMemberStaticsActivity extends BaseActivity {
                 .show();
     }
 
+    /**
+     * 监听页面上的触摸事件
+     */
     public class MyOnTouchClickListener implements View.OnTouchListener {
 
         @Override

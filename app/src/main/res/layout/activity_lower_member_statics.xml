@@ -8,158 +8,165 @@
 
     <include layout="@layout/top_zhuangai_bar" />
 
-    <com.gather_excellent_help.ui.widget.MyNestedScrollView
-        android:id="@+id/mynest_scrollview"
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swip_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <com.gather_excellent_help.ui.widget.MyNestedScrollView
+            android:id="@+id/mynest_scrollview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/ll_lower_member_show"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/x18">
-
-                <RelativeLayout
-                    android:id="@+id/rl_ward_time_start"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/x54">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/x12"
-                        android:text="开始年月"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/x14" />
-
-                    <TextView
-                        android:id="@+id/tv_ward_statics_start"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="@dimen/x12"
-                        android:text="yyyy-MM-dd"
-                        android:textColor="#999999"
-                        android:textSize="@dimen/x12" />
-                </RelativeLayout>
-
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="#f2f2f2" />
-
-                <RelativeLayout
-                    android:id="@+id/rl_ward_time_end"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/x54">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/x12"
-                        android:text="结束年月"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/x14" />
-
-                    <TextView
-                        android:id="@+id/tv_ward_statics_end"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="@dimen/x12"
-                        android:text="yyyy-MM-dd"
-                        android:textColor="#999999"
-                        android:textSize="@dimen/x12" />
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="#f2f2f2" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/x54">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/x12"
-                        android:text="用户名"
-                        android:textColor="#000000"
-                        android:textSize="@dimen/x14" />
-
-                    <EditText
-                        android:id="@+id/et_ward_statics_username"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="@dimen/x12"
-                        android:background="@null"
-                        android:gravity="end"
-                        android:hint="请输入用户名"
-                        android:singleLine="true"
-                        android:textColor="#999999"
-                        android:textColorHint="#999999"
-                        android:textSize="@dimen/x12" />
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="#f2f2f2" />
-
-                <TextView
-                    android:id="@+id/tv_ward_statics_confirm"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/x40"
-                    android:layout_marginLeft="@dimen/x18"
-                    android:layout_marginRight="@dimen/x18"
-                    android:layout_marginTop="@dimen/x18"
-                    android:background="@drawable/wards_statics_query_shape"
-                    android:gravity="center"
-                    android:text="点击查询"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/x14" />
-
-            </LinearLayout>
-
-
-            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#f2f2f2">
+                android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rcv_wards_statistics_s"
+                <LinearLayout
+                    android:id="@+id/ll_lower_member_show"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
-
-                <ImageView
-                    android:id="@+id/iv_order_no_zhanwei"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/x60"
-                    android:src="@drawable/juyoubang_no_zhanwei"
-                    android:visibility="gone" />
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/x18">
 
-            </FrameLayout>
+                    <RelativeLayout
+                        android:id="@+id/rl_ward_time_start"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/x54">
 
-        </LinearLayout>
-    </com.gather_excellent_help.ui.widget.MyNestedScrollView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/x12"
+                            android:text="开始年月"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/x14" />
+
+                        <TextView
+                            android:id="@+id/tv_ward_statics_start"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/x12"
+                            android:text="年 - 月 - 日"
+                            android:textColor="#999999"
+                            android:textSize="@dimen/x12" />
+                    </RelativeLayout>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:background="#eeeeee" />
+
+                    <RelativeLayout
+                        android:id="@+id/rl_ward_time_end"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/x54">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/x12"
+                            android:text="结束年月"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/x14" />
+
+                        <TextView
+                            android:id="@+id/tv_ward_statics_end"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/x12"
+                            android:text="年 - 月 - 日"
+                            android:textColor="#999999"
+                            android:textSize="@dimen/x12" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:background="#eeeeee" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/x54">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/x12"
+                            android:text="用户名"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/x14" />
+
+                        <EditText
+                            android:id="@+id/et_ward_statics_username"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/x12"
+                            android:background="@null"
+                            android:gravity="end"
+                            android:hint="请输入用户名"
+                            android:singleLine="true"
+                            android:textColor="#999999"
+                            android:textColorHint="#999999"
+                            android:textSize="@dimen/x12" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:background="#eeeeee" />
+
+                    <TextView
+                        android:id="@+id/tv_ward_statics_confirm"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/x40"
+                        android:layout_marginLeft="@dimen/x10"
+                        android:layout_marginRight="@dimen/x10"
+                        android:layout_marginTop="@dimen/x18"
+                        android:background="@drawable/wards_statics_query_shape"
+                        android:gravity="center"
+                        android:text="点击查询"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/x14" />
+
+                </LinearLayout>
+
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rcv_wards_statistics_s"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <ImageView
+                        android:id="@+id/iv_order_no_zhanwei"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/x60"
+                        android:src="@drawable/content_none_icon"
+                        android:visibility="gone" />
+
+                </FrameLayout>
+
+            </LinearLayout>
+        </com.gather_excellent_help.ui.widget.MyNestedScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

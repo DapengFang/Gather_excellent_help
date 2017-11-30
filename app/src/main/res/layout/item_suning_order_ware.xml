@@ -10,7 +10,7 @@
         android:id="@+id/iv_suning_order_ware"
         android:layout_width="@dimen/x80"
         android:layout_height="@dimen/x80"
-        android:src="@mipmap/juyoubangs" />
+        android:src="@mipmap/zhanwei_icon" />
 
     <RelativeLayout
         android:layout_width="0dp"

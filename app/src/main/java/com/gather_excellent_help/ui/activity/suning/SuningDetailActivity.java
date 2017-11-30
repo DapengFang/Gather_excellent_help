@@ -117,12 +117,12 @@ public class SuningDetailActivity extends FragmentActivity {
         fragment1 = new VerticalFragment1();
         fragment3 = new VerticalFragment3();
         Bundle bundle = new Bundle();
-        bundle.putString("article_id",String.valueOf(article_id));
-        bundle.putString("goods_id",goods_id);
-        bundle.putString("goods_img",goods_img);
-        bundle.putString("goods_title",goods_title);
-        bundle.putString("goods_price",goods_price);
-        bundle.putString("c_price",c_price);
+        bundle.putString("article_id", String.valueOf(article_id));
+        bundle.putString("goods_id", goods_id);
+        bundle.putString("goods_img", goods_img);
+        bundle.putString("goods_title", goods_title);
+        bundle.putString("goods_price", goods_price);
+        bundle.putString("c_price", c_price);
         fragment1.setArguments(bundle);
         mLocationClient = new LocationClient(getApplicationContext());
         //声明LocationClient类
@@ -131,13 +131,13 @@ public class SuningDetailActivity extends FragmentActivity {
         LocationClientOption option = new LocationClientOption();
 
         option.setIsNeedAddress(true);
-//可选，是否需要地址信息，默认为不需要，即参数为false
-//如果开发者需要获得当前点的地址信息，此处必须为true
+        //可选，是否需要地址信息，默认为不需要，即参数为false
+        //如果开发者需要获得当前点的地址信息，此处必须为true
 
         mLocationClient.setLocOption(option);
-//mLocationClient为第二步初始化过的LocationClient对象
-//需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
-//更多LocationClientOption的配置，请参照类参考中LocationClientOption类的详细说明
+        //mLocationClient为第二步初始化过的LocationClient对象
+        //需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
+        //更多LocationClientOption的配置，请参照类参考中LocationClientOption类的详细说明
         netUtil = new NetUtil();
         getWareData();
         OnServerResponseListener onServerResponseListener = new OnServerResponseListener();
@@ -272,7 +272,7 @@ public class SuningDetailActivity extends FragmentActivity {
      * 加入购物车
      */
     private void toAddGoodsCart() {
-        if(fragment1!=null) {
+        if (fragment1 != null) {
             fragment1.setWhat_buy(2);
             fragment1.setIsSpecFirst("click");
             fragment1.getSpecData();
@@ -283,11 +283,11 @@ public class SuningDetailActivity extends FragmentActivity {
      * 购买苏宁商品的方法
      */
     private void toBuySuningWare() {
-       if(fragment1!=null) {
-           fragment1.setWhat_buy(1);
-           fragment1.setIsSpecFirst("click");
-           fragment1.getSpecData();
-       }
+        if (fragment1 != null) {
+            fragment1.setWhat_buy(1);
+            fragment1.setIsSpecFirst("click");
+            fragment1.getSpecData();
+        }
     }
 
     public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
@@ -307,13 +307,13 @@ public class SuningDetailActivity extends FragmentActivity {
                             public void run() {
                                 tv_suning_detail_buy.setClickable(true);
                             }
-                        },500);
+                        }, 500);
                         tv_suning_detail_cart.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 tv_suning_detail_cart.setClickable(true);
                             }
-                        },500);
+                        }, 500);
                     }
                 });
             }

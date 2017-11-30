@@ -170,7 +170,6 @@ public class CheckStandActivity extends BaseActivity {
                 mHandler.sendMessage(msg);
             }
         };
-
         // 必须异步调用
         Thread payThread = new Thread(payRunnable);
         payThread.start();
@@ -217,8 +216,6 @@ public class CheckStandActivity extends BaseActivity {
                     String memo = payResult.getMemo();
                     String resultInfo = payResult.getResult();// 同步返回需要验证的信息
                     String resultStatus = payResult.getResultStatus();
-                    Toast.makeText(CheckStandActivity.this, resultInfo, Toast.LENGTH_SHORT).show();
-                    LogUtil.e(memo + "-----------" + resultInfo);
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(CheckStandActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
@@ -242,7 +239,6 @@ public class CheckStandActivity extends BaseActivity {
                             Toast.makeText(CheckStandActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
 
                         }
-
                         if (pay_status != null && !TextUtils.isEmpty(pay_status)) {
                             map = new HashMap<>();
                             map.put("user_id", user_login);
@@ -251,8 +247,6 @@ public class CheckStandActivity extends BaseActivity {
                             netUtil.okHttp2Server2(pstatus_url, map);
                         }
                     }
-
-
                     break;
                 }
 
@@ -375,7 +369,7 @@ public class CheckStandActivity extends BaseActivity {
      */
     private void toOrderPage() {
         Intent intent = new Intent(this, SuningOrderActivity.class);
-        intent.putExtra("pay_status",pay_status);
+        intent.putExtra("pay_status", pay_status);
         startActivity(intent);
         finish();
     }

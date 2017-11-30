@@ -69,8 +69,8 @@ public class LogisticsInfoAdapter extends RecyclerView.Adapter<LogisticsInfoAdap
                     e.printStackTrace();
                 }
             }
-            list.add("感谢您在聚优帮购物，欢迎下次光临");
-            holder.vstep_logistics.setStepsViewIndicatorComplectingPosition(list.size()-2)//设置完成的步数
+            holder.vstep_logistics.setStepsViewIndicatorComplectingPosition(list.size())//设置完成的步数
+                    .reverseDraw(true)
                     .setStepViewTexts(list)//总步骤
                     .setStepsViewIndicatorCompletedLineColor(Color.parseColor("#ffffff"))//设置StepsViewIndicator完成线的颜色
                     .setStepsViewIndicatorUnCompletedLineColor(Color.parseColor("#f8f8f8"))//设置StepsViewIndicator未完成线的颜色
@@ -79,6 +79,7 @@ public class LogisticsInfoAdapter extends RecyclerView.Adapter<LogisticsInfoAdap
                     .setStepsViewIndicatorCompleteIcon(ContextCompat.getDrawable(context, R.drawable.complted))//设置StepsViewIndicator CompleteIcon
                     .setStepsViewIndicatorDefaultIcon(ContextCompat.getDrawable(context, R.drawable.default_icon))//设置StepsViewIndicator DefaultIcon
                     .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(context, R.drawable.attention));//设置StepsViewIndicator AttentionIcon
+
         }
 
 

@@ -27,6 +27,7 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.HelpRuleBean;
 import com.gather_excellent_help.bean.MineBean;
+import com.gather_excellent_help.ui.activity.suning.LogisticsInfoActivity;
 import com.gather_excellent_help.ui.activity.suning.saleafter.SaleAfterActivity;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
@@ -481,7 +482,7 @@ public class MineFragment extends LazyLoadFragment {
             CacheUtils.putString(getContext(), CacheUtils.ADVER_ID, advertising);
         }
         CacheUtils.putInteger(getContext(), CacheUtils.GROUP_TYPE, group_id);
-        CacheUtils.putInteger(getContext(), CacheUtils.SHOP_TYPE,shopType);
+        CacheUtils.putInteger(getContext(), CacheUtils.SHOP_TYPE, shopType);
         if (civMeHeadIcon == null) {
             return;
         }
@@ -592,17 +593,17 @@ public class MineFragment extends LazyLoadFragment {
                         } else if (applyState == 2) {
                             Toast.makeText(getContext(), "你的申请被驳回，请核对后重新申请！", Toast.LENGTH_SHORT).show();
                         } else if (applyState == 3) {
-                            if(apply_type == 6) {
+                            if (apply_type == 6) {
                                 Toast.makeText(getContext(), "你的申请已提交，请等待工作人员处理！", Toast.LENGTH_SHORT).show();
-                            }else if(apply_type == 5) {
-                                if(pay_type == 1) {
+                            } else if (apply_type == 5) {
+                                if (pay_type == 1) {
                                     if (payState == 1) {
                                         Toast.makeText(getContext(), "你的申请已提交，请等待工作人员处理！", Toast.LENGTH_SHORT).show();
                                     } else {
                                         Toast.makeText(getContext(), "请你支付加盟费用！", Toast.LENGTH_SHORT).show();
                                         toAlipay();
                                     }
-                                }else if(pay_type == 2) {
+                                } else if (pay_type == 2) {
                                     Toast.makeText(getContext(), "你的申请已提交，请等待工作人员处理！", Toast.LENGTH_SHORT).show();
                                 }
                             }

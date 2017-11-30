@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#dddddd"/>
+        android:background="#dddddd" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/x110"
+        android:background="#ffffff"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="@dimen/x10"
-        android:background="#eeeeee">
+        android:padding="@dimen/x10">
 
         <ImageView
             android:id="@+id/iv_suning_order_ware"
             android:layout_width="@dimen/x80"
             android:layout_height="@dimen/x80"
-            android:src="@mipmap/juyoubangs" />
+            android:src="@mipmap/zhanwei_icon" />
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -92,25 +92,32 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#dddddd"/>
+        android:background="#dddddd" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x8"
+        android:background="#eeeeee"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:id="@+id/rl_suning_detail_back"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x40"
-        android:background="#eeeeee"
-        android:visibility="gone">
+        android:background="#ffffff"
+        android:visibility="visible">
+
         <TextView
             android:id="@+id/tv_item_order_back"
             android:layout_width="@dimen/x80"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
+            android:layout_marginRight="@dimen/x8"
             android:background="@drawable/order_suning_bg_shape"
             android:gravity="center"
             android:paddingBottom="@dimen/x8"
             android:paddingTop="@dimen/x8"
-            android:layout_marginRight="@dimen/x8"
             android:text="退款"
             android:textColor="#555555"
             android:textSize="12sp" />

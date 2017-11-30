@@ -116,7 +116,7 @@ dependencies {
     //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
 
     //    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
-    compile 'com.github.baoyachi:StepView:1.2'
+    compile 'com.github.baoyachi:StepView:1.9'
     compile project(':scan_library')
     compile('com.aliyun.ams:alicloud-android-hotfix:3.1.3') {
         exclude(module: 'alicloud-android-utdid')

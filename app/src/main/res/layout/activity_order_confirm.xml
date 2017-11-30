@@ -24,16 +24,11 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/x9"
-                    android:background="#eeeeee" />
 
                 <TextView
                     android:id="@+id/tv_sunng_add_newaddress"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/x100"
-                    android:background="@drawable/address_background"
                     android:gravity="center"
                     android:padding="@dimen/x10"
                     android:text="新建收货地址"
@@ -45,7 +40,6 @@
                     android:id="@+id/rl_suning_default_address"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/x120"
-                    android:background="@drawable/address_background"
                     android:visibility="gone">
 
                     <LinearLayout
@@ -62,7 +56,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/x18"
-                            android:text="猪小明"
+                            android:text=""
                             android:textColor="#aa000000"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -72,7 +66,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/x10"
-                            android:text="18514792343"
+                            android:text=""
                             android:textColor="#aa000000"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -87,7 +81,7 @@
                         android:layout_marginLeft="@dimen/x20"
                         android:layout_marginRight="@dimen/x15"
                         android:padding="@dimen/x10"
-                        android:text="四川省成都市武侯区复城国际写字楼701"
+                        android:text=""
                         android:textColor="#99000000"
                         android:textSize="14sp" />
 
@@ -100,9 +94,15 @@
                         android:src="@drawable/dingwei_icon" />
                 </RelativeLayout>
 
+             <ImageView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:background="@drawable/suning_order_address_line"/>
+
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/x9" />
+                    android:layout_height="@dimen/x9"
+                    android:background="#eeeeee"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -207,11 +207,6 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"></com.gather_excellent_help.ui.widget.NumberAddSubView>
                 </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/x9"
-                    android:background="#eeeeee" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

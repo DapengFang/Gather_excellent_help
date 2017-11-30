@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,34 +82,37 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
                 holder.tv_item_order_topay.setVisibility(View.VISIBLE);
                 holder.tv_item_order_cancel.setVisibility(View.VISIBLE);
                 holder.tv_item_order_extra.setVisibility(View.GONE);
+                holder.rl_suning_order_func.setVisibility(View.VISIBLE);
                 holder.tv_item_order_topay.setText("立即付款");
                 holder.tv_item_order_cancel.setText("取消订单");
             } else if (status == 2) {
                 holder.tv_item_order_type.setText("等待卖家发货");
                 holder.tv_item_order_topay.setVisibility(View.VISIBLE);
-                holder.tv_item_order_cancel.setVisibility(View.VISIBLE);
-                holder.tv_item_order_extra.setVisibility(View.VISIBLE);
+                holder.tv_item_order_cancel.setVisibility(View.GONE);
+                holder.tv_item_order_extra.setVisibility(View.GONE);
+                holder.rl_suning_order_func.setVisibility(View.VISIBLE);
                 holder.tv_item_order_topay.setText("提醒发货");
-                holder.tv_item_order_cancel.setText("查看物流");
-                holder.tv_item_order_extra.setText("取消订单");
             } else if (status == 3) {
                 holder.tv_item_order_type.setText("卖家已发货");
                 holder.tv_item_order_topay.setVisibility(View.VISIBLE);
-                holder.tv_item_order_cancel.setVisibility(View.GONE);
+                holder.tv_item_order_cancel.setVisibility(View.VISIBLE);
                 holder.tv_item_order_extra.setVisibility(View.GONE);
-                holder.tv_item_order_topay.setText("查看物流");
+                holder.rl_suning_order_func.setVisibility(View.VISIBLE);
+                holder.tv_item_order_topay.setText("确认收货");
+                holder.tv_item_order_cancel.setText("查看物流");
             } else if (status == 4) {
                 holder.tv_item_order_type.setText("交易完成");
                 holder.tv_item_order_topay.setVisibility(View.VISIBLE);
-                holder.tv_item_order_cancel.setVisibility(View.VISIBLE);
+                holder.tv_item_order_cancel.setVisibility(View.GONE);
                 holder.tv_item_order_extra.setVisibility(View.GONE);
-                holder.tv_item_order_topay.setText("确认订单");
-                holder.tv_item_order_cancel.setText("申请售后");
+                holder.rl_suning_order_func.setVisibility(View.VISIBLE);
+                holder.tv_item_order_topay.setText("评价");
             } else if (status == 5) {
                 holder.tv_item_order_type.setText("订单作废");
                 holder.tv_item_order_topay.setVisibility(View.GONE);
                 holder.tv_item_order_cancel.setVisibility(View.GONE);
                 holder.tv_item_order_extra.setVisibility(View.GONE);
+                holder.rl_suning_order_func.setVisibility(View.GONE);
             }
             holder.tv_item_order_topay.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -190,6 +194,7 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
         TextView tv_item_order_topay;
         TextView tv_item_order_cancel;
         TextView tv_item_order_extra;
+        RelativeLayout rl_suning_order_func;
         View itemView;
 
         public SuningOrderViewHolder(View itemView) {
@@ -203,6 +208,7 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
             tv_item_order_topay = (TextView) itemView.findViewById(R.id.tv_item_order_topay);
             tv_item_order_cancel = (TextView) itemView.findViewById(R.id.tv_item_order_cancel);
             tv_item_order_extra = (TextView) itemView.findViewById(R.id.tv_item_order_extra);
+            rl_suning_order_func = (RelativeLayout) itemView.findViewById(R.id.rl_suning_order_func);
         }
     }
 

@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:text="¥"
                     android:textStyle="bold"
-                    android:textColor="#eeff0000"
+                    android:textColor="#ff6600"
                     android:textSize="@dimen/x12" />
 
                 <TextView
@@ -79,18 +79,26 @@
                     android:layout_marginLeft="@dimen/x3"
                     android:text=""
                     android:textStyle="bold"
-                    android:textColor="#eeff0000"
+                    android:textColor="#ff6600"
                     android:textSize="@dimen/x16" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="¥"
+                    android:textColor="#909090"
+                    android:textSize="@dimen/x10"
+                    android:layout_marginLeft="@dimen/x8"/>
 
                 <TextView
                     android:id="@+id/tv_good_detail_cprice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/x8"
                     android:layout_weight="1"
                     android:text=""
                     android:textColor="#909090"
-                    android:textSize="@dimen/x12" />
+                    android:textSize="@dimen/x12"
+                    android:layout_marginLeft="@dimen/x1"/>
 
                 <TextView
                     android:id="@+id/tv_good_detail_salery"

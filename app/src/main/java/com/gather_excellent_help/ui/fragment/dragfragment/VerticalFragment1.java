@@ -542,30 +542,15 @@ public class VerticalFragment1 extends Fragment {
                     suningStandardPopupwindow.dismiss();
                     vShadow.setVisibility(View.GONE);
 
-//                    boolean b = checkIsToBuy();
-//                    if (!b) {
-//                        Toast.makeText(context, "该地区暂不支持购买该商品！！!", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//                    String pcs = getPcs();
-//                    pcs = "江苏省,南京市,玄武区";
-//                    int ware_num = getWare_num();
-//                    checkIsHave(pcs, goods_id, String.valueOf(ware_num));
-                    if (what_buy == 1) {
-                        String buyInfo = getBuyInfo();
-                        LogUtil.e("buyInfo = " + buyInfo);
-                        Intent intent = new Intent(context, OrderConfirmActivity.class);
-                        intent.putExtra("ware_json", buyInfo);
-                        intent.putExtra("goods_img", goods_img);
-                        intent.putExtra("goods_title", goods_title);
-                        intent.putExtra("goods_price", goods_price);
-                        intent.putExtra("c_price", c_price);
-                        startActivity(intent);
-                    } else if (what_buy == 2) {
-                        Toast.makeText(context, "加入购物车", Toast.LENGTH_SHORT).show();
-                        getSpecId();
+                    boolean b = checkIsToBuy();
+                    if (!b) {
+                        Toast.makeText(context, "该地区暂不支持购买该商品！！!", Toast.LENGTH_SHORT).show();
+                        return;
                     }
-
+                    String pcs = getPcs();
+                    pcs = "江苏省,南京市,玄武区";
+                    int ware_num = getWare_num();
+                    checkIsHave(pcs, goods_id, String.valueOf(ware_num));
                 }
             });
         }
@@ -576,7 +561,7 @@ public class VerticalFragment1 extends Fragment {
      * 获取商品产品规格后的id
      */
     private void getSpecId() {
-        if(netUtil == null) {
+        if (netUtil == null) {
             netUtil = new NetUtil();
         }
         whick = "specids";
@@ -634,17 +619,17 @@ public class VerticalFragment1 extends Fragment {
                 SuningSpecBean.DataBean dataBean = data.get(i);
                 String title = dataBean.getTitle();
                 List<SuningSpecBean.DataBean.ContentBean> content = dataBean.getContent();
-                if(content!=null && content.size()>0) {
+                if (content != null && content.size() > 0) {
                     SuningSpecBean.DataBean.ContentBean contentBean = content.get(0);
                     int spec_id = contentBean.getSpec_id();
                     spec_ids += spec_id + ",";
                     spec_titel += title + ":" + contentBean.getTitle() + ",";
                 }
             }
-            if(spec_titel!=null && !TextUtils.isEmpty(spec_titel)) {
+            if (spec_titel != null && !TextUtils.isEmpty(spec_titel)) {
                 spec_titel = spec_titel.substring(0, spec_titel.length() - 1);
             }
-            if(spec_ids!=null && !TextUtils.isEmpty(spec_ids)) {
+            if (spec_ids != null && !TextUtils.isEmpty(spec_ids)) {
                 spec_ids = spec_ids.substring(0, spec_ids.length() - 1);
             }
             tv_vertical_standard_title.setText(spec_titel);
@@ -780,7 +765,6 @@ public class VerticalFragment1 extends Fragment {
      * @param response
      */
     private void parseSpecData(String response) {
-
         SuningSpecBean suningSpecBean = new Gson().fromJson(response, SuningSpecBean.class);
         data = suningSpecBean.getData();
         if (data != null && data.size() > 0) {
@@ -801,20 +785,21 @@ public class VerticalFragment1 extends Fragment {
 
         @Override
         public void getSuccessResponse(String response) {
+            LogUtil.e(response);
             if (whick.equals("spec")) {
                 parseSpecData(response);
             } else if (whick.equals("isHaveGoods")) {
                 parseIsHaveGoodsData(response);
             } else if (whick.equals("checkIsHave")) {
                 parseCheckIshavaData(response);
-            } else if(whick.equals("specids")) {
+            } else if (whick.equals("specids")) {
                 parseSpecidData(response);
             }
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            LogUtil.e("网络连接出现问题~");
+            LogUtil.e(call.toString() + "-" + e.getMessage());
         }
     }
 
@@ -834,19 +819,24 @@ public class VerticalFragment1 extends Fragment {
                     SuningSpecidBackBean.DataBean dataBean = data.get(0);
                     if (dataBean != null) {
                         String spec_back_id = dataBean.getGoods_specid();
-                        String[] str = {goods_id};
+                        String[] str = {article_id};
                         Map<String, String> map = manager.selectGoodsId(str);
                         int size = map.size();
                         LogUtil.e("size = " + size);
                         if (size > 0) {
-                            String product_num = map.get("product_num");
-                            String id = map.get("id");
-                            int num = Integer.parseInt(product_num);
-                            int c_num = ware_num + num;
-                            LogUtil.e(product_num + "---" + c_num + "--" + id);
-                            manager.updateGoods(new String[]{String.valueOf(c_num), id});
+                            String product_spec_id = map.get("product_spec_id");
+                            if (spec_back_id.equals(product_spec_id)) {
+                                String product_num = map.get("product_num");
+                                String id = map.get("id");
+                                int num = Integer.parseInt(product_num);
+                                int c_num = ware_num + num;
+                                LogUtil.e(product_num + "---" + c_num + "--" + id);
+                                manager.updateGoods(new String[]{String.valueOf(c_num), id});
+                            } else {
+                                manager.addGoods(new String[]{article_id, goods_title, String.valueOf(ware_num), spec_titel, goods_price, c_price, goods_img, spec_back_id, "1"});
+                            }
                         } else {
-                            manager.addGoods(new String[]{article_id, goods_title, String.valueOf(ware_num), spec_titel, goods_price, c_price, goods_img,spec_back_id,"1"});
+                            manager.addGoods(new String[]{article_id, goods_title, String.valueOf(ware_num), spec_titel, goods_price, c_price, goods_img, spec_back_id, "1"});
                         }
                     }
                 } else {
@@ -871,10 +861,24 @@ public class VerticalFragment1 extends Fragment {
         int statusCode = suningStockBean.getStatusCode();
         switch (statusCode) {
             case 1:
-                String buyInfo = getBuyInfo();
-                Intent intent = new Intent(context, OrderConfirmActivity.class);
-                intent.putExtra("ware_json", buyInfo);
-                startActivity(intent);
+//                String buyInfo = getBuyInfo();
+//                Intent intent = new Intent(context, OrderConfirmActivity.class);
+//                intent.putExtra("ware_json", buyInfo);
+//                startActivity(intent);
+                if (what_buy == 1) {
+                    String buyInfo = getBuyInfo();
+                    LogUtil.e("buyInfo = " + buyInfo);
+                    Intent intent = new Intent(context, OrderConfirmActivity.class);
+                    intent.putExtra("ware_json", buyInfo);
+                    intent.putExtra("goods_img", goods_img);
+                    intent.putExtra("goods_title", goods_title);
+                    intent.putExtra("goods_price", goods_price);
+                    intent.putExtra("c_price", c_price);
+                    startActivity(intent);
+                } else if (what_buy == 2) {
+                    Toast.makeText(context, "加入购物车", Toast.LENGTH_SHORT).show();
+                    getSpecId();
+                }
                 break;
             case 0:
                 Toast.makeText(context, "该地区暂不支持购买该商品！！！", Toast.LENGTH_SHORT).show();

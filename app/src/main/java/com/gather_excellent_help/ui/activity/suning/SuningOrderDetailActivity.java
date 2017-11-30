@@ -22,6 +22,7 @@ import com.gather_excellent_help.bean.suning.SuningOrderBean;
 import com.gather_excellent_help.bean.suning.SuningOrderConfirmBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
+import com.gather_excellent_help.ui.activity.suning.saleafter.SaleAfterActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -105,7 +106,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
         tv_suning_detail_accepttime = (TextView) findViewById(R.id.tv_suning_detail_accepttime);
         tv_item_detail_right = (TextView) findViewById(R.id.tv_item_detail_right);
         tv_item_detail_left = (TextView) findViewById(R.id.tv_item_detail_left);
-        tv_item_detail_extra = (TextView)findViewById(R.id.tv_item_detail_extra);
+        tv_item_detail_extra = (TextView) findViewById(R.id.tv_item_detail_extra);
     }
 
     /**
@@ -187,11 +188,9 @@ public class SuningOrderDetailActivity extends BaseActivity {
             if (payment_time != null) {
                 tv_suning_detail_paytime.setText("付款时间：" + payment_time);
             }
-            tv_item_detail_extra.setVisibility(View.VISIBLE);
-            tv_item_detail_left.setVisibility(View.VISIBLE);
+            tv_item_detail_extra.setVisibility(View.GONE);
+            tv_item_detail_left.setVisibility(View.GONE);
             tv_item_detail_right.setVisibility(View.VISIBLE);
-            tv_item_detail_extra.setText("取消订单");
-            tv_item_detail_left.setText("查看物流");
             tv_item_detail_right.setText("提醒发货");
         } else if (status == 3) {
             tv_suning_detail_createtime.setVisibility(View.VISIBLE);
@@ -208,9 +207,10 @@ public class SuningOrderDetailActivity extends BaseActivity {
                 tv_suning_detail_sendtime.setText("发货时间：" + express_time);
             }
             tv_item_detail_extra.setVisibility(View.GONE);
-            tv_item_detail_left.setVisibility(View.GONE);
+            tv_item_detail_left.setVisibility(View.VISIBLE);
             tv_item_detail_right.setVisibility(View.VISIBLE);
-            tv_item_detail_right.setText("查看物流");
+            tv_item_detail_left.setText("查看物流");
+            tv_item_detail_right.setText("确认收货");
         } else if (status == 4) {
             tv_suning_detail_createtime.setVisibility(View.VISIBLE);
             tv_suning_detail_paytime.setVisibility(View.VISIBLE);
@@ -229,10 +229,9 @@ public class SuningOrderDetailActivity extends BaseActivity {
                 tv_suning_detail_accepttime.setText("完成时间：" + complete_time);
             }
             tv_item_detail_extra.setVisibility(View.GONE);
-            tv_item_detail_left.setVisibility(View.VISIBLE);
+            tv_item_detail_left.setVisibility(View.GONE);
             tv_item_detail_right.setVisibility(View.VISIBLE);
-            tv_item_detail_left.setText("申请售后");
-            tv_item_detail_right.setText("确认订单");
+            tv_item_detail_right.setText("评价");
         }
     }
 
@@ -254,8 +253,9 @@ public class SuningOrderDetailActivity extends BaseActivity {
      * @param dataBean
      * @param df
      */
-    private void showWareInfo(SuningOrderBean.DataBean dataBean, DecimalFormat df) {
+    private void showWareInfo(SuningOrderBean.DataBean dataBean, final DecimalFormat df) {
         List<SuningOrderBean.DataBean.GoodListBean> goodList = dataBean.getGoodList();
+        final int order_id = dataBean.getId();
         if (goodList != null && goodList.size() > 0) {
             ll_suning_detail_container.removeAllViews();
             for (int i = 0; i < goodList.size(); i++) {
@@ -266,13 +266,16 @@ public class SuningOrderDetailActivity extends BaseActivity {
                 TextView tv_suning_order_realprice = (TextView) inflate.findViewById(R.id.tv_suning_order_realprice);
                 TextView tv_suning_order_oldprice = (TextView) inflate.findViewById(R.id.tv_suning_order_oldprice);
                 TextView tv_suning_order_number = (TextView) inflate.findViewById(R.id.tv_suning_order_number);
-                SuningOrderBean.DataBean.GoodListBean goodListBean = goodList.get(i);
+                RelativeLayout rl_suning_detail_back = (RelativeLayout) inflate.findViewById(R.id.rl_suning_detail_back);
+                TextView tv_item_order_back = (TextView) inflate.findViewById(R.id.tv_item_order_back);
+                final SuningOrderBean.DataBean.GoodListBean goodListBean = goodList.get(i);
                 if (goodListBean != null) {
-                    String goods_title = goodListBean.getGoods_title();
-                    String spec_text = goodListBean.getSpec_text();
-                    double real_price = goodListBean.getReal_price();
-                    double goods_price = goodListBean.getGoods_price();
-                    int quantity = goodListBean.getQuantity();
+                    final int article_id = goodListBean.getArticle_id();
+                    final String goods_title = goodListBean.getGoods_title();
+                    final String spec_text = goodListBean.getSpec_text();
+                    final double real_price = goodListBean.getReal_price();
+                    final double goods_price = goodListBean.getGoods_price();
+                    final int quantity = goodListBean.getQuantity();
                     if (goodListBean.getImg_url() != null) {
                         String img_url = goodListBean.getImg_url().replace("800x800", "400x400");
                         Glide.with(SuningOrderDetailActivity.this).load(img_url)
@@ -293,6 +296,43 @@ public class SuningOrderDetailActivity extends BaseActivity {
                     tv_suning_order_oldprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
                     tv_suning_order_oldprice.setText("￥" + String.valueOf(df.format(goods_price)));
                     tv_suning_order_number.setText("x" + quantity);
+                    if (status == 1) {
+                        rl_suning_detail_back.setVisibility(View.GONE);
+                    } else if (status == 2) {
+                        rl_suning_detail_back.setVisibility(View.VISIBLE);
+                    } else if (status == 3) {
+                        rl_suning_detail_back.setVisibility(View.VISIBLE);
+                    } else if (status == 4) {
+                        rl_suning_detail_back.setVisibility(View.VISIBLE);
+                    } else {
+                        rl_suning_detail_back.setVisibility(View.GONE);
+                    }
+                    rl_suning_detail_back.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            if (goodListBean != null) {
+                                Intent intent = new Intent(SuningOrderDetailActivity.this, SaleAfterActivity.class);
+                                Bundle bundle = new Bundle();
+                                if (goodListBean.getImg_url() != null) {
+                                    bundle.putString("ware_img", goodListBean.getImg_url());
+                                }
+                                if (goods_title != null) {
+                                    bundle.putString("ware_title", goods_title);
+                                }
+                                if (spec_text != null) {
+                                    bundle.putString("spec_text", spec_text);
+                                }
+                                bundle.putString("real_price", df.format(real_price) + "");
+                                bundle.putString("goods_price", df.format(goods_price) + "");
+                                bundle.putString("quantity", String.valueOf(quantity));
+                                bundle.putString("article_id", String.valueOf(article_id));
+                                bundle.putString("order_id", String.valueOf(order_id));
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            }
+                        }
+                    });
                     ll_suning_detail_container.addView(inflate);
                 }
             }
@@ -302,6 +342,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
 
     /**
      * 展示收货地址
+     *
      * @param dataBean
      */
     private void showOrderAddress(SuningOrderBean.DataBean dataBean) {
@@ -320,13 +361,13 @@ public class SuningOrderDetailActivity extends BaseActivity {
      * @param status
      */
     private void showOrderStatus(int status) {
-        if (status == 4) {
+        if (status == 1) {
             tv_suning_detail_status.setText("买家待付款，支付后将及时为您安排发货。");
-        } else if (status == 1) {
-            tv_suning_detail_status.setText("买家已付款，等待卖家发货。");
         } else if (status == 2) {
-            tv_suning_detail_status.setText("卖家已发货，请您查看物流信息。");
+            tv_suning_detail_status.setText("买家已付款，等待卖家发货。");
         } else if (status == 3) {
+            tv_suning_detail_status.setText("卖家已发货，请您查看物流信息。");
+        } else if (status == 4) {
             tv_suning_detail_status.setText("买家已签收，交易完成。");
         }
     }
@@ -356,14 +397,14 @@ public class SuningOrderDetailActivity extends BaseActivity {
      * 处理右边button的点击事件
      */
     private void rightButtonHandler() {
-        if (status == 4) {
+        if (status == 1) {
             toPayOrder(real_amount, order_no, order_id);
-        } else if (status == 1) {
-            remindSend();
         } else if (status == 2) {
-            seeLogisticsInfo();
+            remindSend();
         } else if (status == 3) {
             confirmOrder(String.valueOf(order_id));
+        } else if (status == 4) {
+            //评价
         }
     }
 
@@ -371,7 +412,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
      * 处理左边button的点击事件
      */
     private void leftButtonHandler() {
-        if (status == 4) {
+        if (status == 1) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("温馨提示")
                     .setMessage("你确定要取消的订单吗?")
@@ -386,6 +427,8 @@ public class SuningOrderDetailActivity extends BaseActivity {
             if (SuningOrderDetailActivity.this != null && !SuningOrderDetailActivity.this.isFinishing()) {
                 alertDialog.show();
             }
+        } else if (status == 3) {
+            seeLogisticsInfo();
         }
     }
 

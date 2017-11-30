@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#f2f2f2">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x80"
+        android:layout_marginTop="@dimen/x10"
+        android:layout_marginLeft="@dimen/x10"
+        android:layout_marginRight="@dimen/x10"
+        android:background="#ffffff">
+
+        <EditText
+            android:id="@+id/et_sale_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x3"
+            android:hint="请输入退款说明，最多200字。"
+            android:textSize="@dimen/x12"
+            android:textColorHint="#999999"
+            android:textColor="#333333"
+            android:background="@null"/>
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#e5e5e5"
+        android:layout_marginTop="@dimen/x10"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_back_sale_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="取消"
+            android:gravity="center"
+            android:textSize="@dimen/x14"
+            android:textColor="#999999"/>
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#e5e5e5"/>
+        <TextView
+            android:id="@+id/tv_back_sale_confirm"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="确定"
+            android:gravity="center"
+            android:textSize="@dimen/x14"
+            android:textColor="#333333"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

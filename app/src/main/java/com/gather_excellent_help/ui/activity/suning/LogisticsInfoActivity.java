@@ -39,6 +39,7 @@ public class LogisticsInfoActivity extends BaseActivity {
     private String logistics_url = Url.BASE_URL + "";//物流信息接口
     private int order_id;//订单自增id
     private FullyLinearLayoutManager fullyLinearLayoutManager;
+    private LogisticsInfoAdapter logisticsInfoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,6 @@ public class LogisticsInfoActivity extends BaseActivity {
         tv_top_title_name.setText("物流信息");
         Intent intent = getIntent();
         order_id = intent.getIntExtra("order_id", 0);
-
         recyclerView = wan_suning_logistics.getRefreshableView();
 
         fullyLinearLayoutManager = new FullyLinearLayoutManager(LogisticsInfoActivity.this);
@@ -86,19 +86,11 @@ public class LogisticsInfoActivity extends BaseActivity {
 
         });
         netUtil = new NetUtil();
-
+        getLogisticsInfoData();
         OnServerResponseListener onServerResponseListener = new OnServerResponseListener();
         netUtil.setOnServerResponseListener(onServerResponseListener);
         MyonclickListener myonclickListener = new MyonclickListener();
         rl_exit.setOnClickListener(myonclickListener);
-
-        String response = "{\"statusCode\":1,\"statusMessage\":\"获取物流成功！\",\"data\":[{\"orderId\":\"100000555321\",\"isPackage\":\"Y\",\"logisticsDetail\":[{\"operateState\":\"您的订单已生成，请尽快完成支付\",\"operateTime\":\"20171115110157\"},{\"operateState\":\"您的订单已支付完成，等待发货\",\"operateTime\":\"20171116111026\"},{\"operateState\":\"您的发货清单【苏宁南京大件配送中心】已打印，待打印发票\",\"operateTime\":\"20171116145156\"}],\"orderItemIds\":[{\"orderItemId\":\"10000055532101\",\"skuId\":\"121347616\"}]}]}\n";
-        SuningLogisticsBean suningLogisticsBean = new Gson().fromJson(response, SuningLogisticsBean.class);
-        List<SuningLogisticsBean.DataBean> data = suningLogisticsBean.getData();
-        SuningLogisticsBean.DataBean dataBean = data.get(0);
-        List<SuningLogisticsBean.DataBean.OrderItemIdsBean> orderItemIds = dataBean.getOrderItemIds();
-        LogisticsInfoAdapter logisticsInfoAdapter = new LogisticsInfoAdapter(this, data, orderItemIds);
-        recyclerView.setAdapter(logisticsInfoAdapter);
     }
 
     /**
@@ -133,6 +125,13 @@ public class LogisticsInfoActivity extends BaseActivity {
         @Override
         public void getSuccessResponse(String response) {
             LogUtil.e("物流信息 = " + response);
+            //String response = "{\"statusCode\":1,\"statusMessage\":\"获取物流成功！\",\"data\":[{\"orderId\":\"100000555321\",\"isPackage\":\"Y\",\"logisticsDetail\":[{\"operateState\":\"您的订单已生成，请尽快完成支付\",\"operateTime\":\"20171115110157\"},{\"operateState\":\"您的订单已支付完成，等待发货\",\"operateTime\":\"20171116111026\"},{\"operateState\":\"您的发货清单【苏宁南京大件配送中心】已打印，待打印发票\",\"operateTime\":\"20171116145156\"}],\"orderItemIds\":[{\"orderItemId\":\"10000055532101\",\"skuId\":\"121347616\"}]}]}\n";
+            SuningLogisticsBean suningLogisticsBean = new Gson().fromJson(response, SuningLogisticsBean.class);
+            List<SuningLogisticsBean.DataBean> data = suningLogisticsBean.getData();
+            SuningLogisticsBean.DataBean dataBean = data.get(0);
+            List<SuningLogisticsBean.DataBean.OrderItemIdsBean> orderItemIds = dataBean.getOrderItemIds();
+            logisticsInfoAdapter = new LogisticsInfoAdapter(LogisticsInfoActivity.this, data, orderItemIds);
+            recyclerView.setAdapter(logisticsInfoAdapter);
         }
 
         @Override

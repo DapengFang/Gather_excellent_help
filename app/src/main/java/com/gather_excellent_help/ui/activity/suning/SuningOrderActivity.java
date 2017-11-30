@@ -69,7 +69,7 @@ public class SuningOrderActivity extends BaseActivity {
     private String userLogin;
     private String pagesize = "10";//每页显示多少条数据
     private String pageindex = "1";//页数
-    private String order_status = "4";//订单状态
+    private String order_status = "1";//订单状态
     private int tab_p = 0;//当前的订单位置
     private int page = 1;//当前页数
     private boolean isLoaderMore;//是否加载更多
@@ -83,6 +83,7 @@ public class SuningOrderActivity extends BaseActivity {
     private String pay_status;
 
     private CatLoadingView catView;
+    private boolean isShowCat;//刷新页面不让其显示
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,15 +124,15 @@ public class SuningOrderActivity extends BaseActivity {
         if (pay_status != null) {
             if (pay_status.equals("2")) {
                 isCanLoad = true;
-                order_status = "1";
-                defaultViewIndicator(childCount,1);
+                order_status = "2";
+                defaultViewIndicator(childCount, 1);
             } else if (pay_status.equals("1")) {
                 isCanLoad = true;
-                order_status = "4";
-               defaultViewIndicator(childCount,0);
+                order_status = "1";
+                defaultViewIndicator(childCount, 0);
             }
         }
-        defaultViewIndicator(childCount,0);
+        defaultViewIndicator(childCount, 0);
         getSuningOrderData();
         OnServerResponseListener onServerResponseListener = new OnServerResponseListener();
         netUtil.setOnServerResponseListener(onServerResponseListener);
@@ -193,6 +194,7 @@ public class SuningOrderActivity extends BaseActivity {
 
     /**
      * 默认设置顶部指示器
+     *
      * @param childCount
      * @param index
      */
@@ -229,7 +231,10 @@ public class SuningOrderActivity extends BaseActivity {
      * 获取苏宁订单数据
      */
     private void getSuningOrderData() {
-        showCatView();
+        if(!isShowCat) {
+            showCatView();
+        }
+        //userLogin = "9369";
         whick = "order_list";
         map = new HashMap<>();
         map.put("user_id", userLogin);
@@ -289,19 +294,19 @@ public class SuningOrderActivity extends BaseActivity {
                     switch (tab_p) {
                         case 0:
                             isCanLoad = true;
-                            order_status = "4";
+                            order_status = "1";
                             break;
                         case 1:
                             isCanLoad = true;
-                            order_status = "1";
+                            order_status = "2";
                             break;
                         case 2:
                             isCanLoad = true;
-                            order_status = "2";
+                            order_status = "3";
                             break;
                         case 3:
                             isCanLoad = true;
-                            order_status = "3";
+                            order_status = "4";
                             break;
                         case 4:
                             isCanLoad = true;
@@ -340,7 +345,10 @@ public class SuningOrderActivity extends BaseActivity {
         @Override
         public void getSuccessResponse(String response) {
             LogUtil.e(response);
-            hindCatView();
+            if(!isShowCat) {
+                hindCatView();
+            }
+            isShowCat = false;
             if (whick.equals("order_list")) {
                 parseOrderListData(response);
             } else if (whick.equals("cancel_order")) {
@@ -483,14 +491,14 @@ public class SuningOrderActivity extends BaseActivity {
                 double real_amount = dataBean.getReal_amount();
                 String order_no = dataBean.getOrder_no();
                 int id = dataBean.getId();
-                if (status == 4) {
+                if (status == 1) {
                     toPayOrder(real_amount, order_no, id);
-                } else if (status == 1) {
-                    remindSend();
                 } else if (status == 2) {
-                    seeLogisticsInfo();
+                    remindSend();
                 } else if (status == 3) {
                     confirmOrder(String.valueOf(id));
+                } else if (status == 4) {
+                    //评价
                 }
             }
         }
@@ -508,7 +516,7 @@ public class SuningOrderActivity extends BaseActivity {
             SuningOrderBean.DataBean dataBean = allData.get(position);
             if (dataBean != null) {
                 final int id = dataBean.getId();
-                if (status == 4) {
+                if (status == 1) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("温馨提示")
                             .setMessage("你确定要取消的订单吗?")
@@ -523,6 +531,8 @@ public class SuningOrderActivity extends BaseActivity {
                     if (SuningOrderActivity.this != null && !SuningOrderActivity.this.isFinishing()) {
                         alertDialog.show();
                     }
+                } else if (status == 3) {
+                    seeLogisticsInfo(String.valueOf(id));
                 }
             }
         }
@@ -552,7 +562,11 @@ public class SuningOrderActivity extends BaseActivity {
      * @param status
      */
     private void onItemclickHandler(View view, int position, int status) {
-        seeOrderDetail(view, position, status);
+        if (status > 4) {
+            Toast.makeText(SuningOrderActivity.this, "订单已经作废，无法查看详情哦~", Toast.LENGTH_SHORT).show();
+        } else {
+            seeOrderDetail(view, position, status);
+        }
     }
 
     /**
@@ -589,8 +603,10 @@ public class SuningOrderActivity extends BaseActivity {
     /**
      * 查看物流信息
      */
-    private void seeLogisticsInfo() {
-
+    private void seeLogisticsInfo(String order_id) {
+        Intent intent = new Intent(SuningOrderActivity.this, LogisticsInfoActivity.class);
+        intent.putExtra("order_id", order_id);
+        startActivity(intent);
     }
 
     /**
@@ -601,7 +617,7 @@ public class SuningOrderActivity extends BaseActivity {
         map = new HashMap<>();
         map.put("user_id", userLogin);
         map.put("order_id", order_id);
-        map.put("order_status", "3");
+        map.put("order_status", "2");
         netUtil.okHttp2Server2(confrim_url, map);
     }
 
@@ -629,6 +645,7 @@ public class SuningOrderActivity extends BaseActivity {
         if (event.getType() == EventType.UPDATA_ORDER_LIST) {
             String msg = "onEventMainThread收到了消息：" + event.getMessage();
             LogUtil.e(msg);
+            isShowCat = true;
             initData();
         }
     }

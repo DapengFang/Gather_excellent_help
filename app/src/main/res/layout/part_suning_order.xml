@@ -69,6 +69,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/x8"
         android:background="#ffffff">
 
         <TextView
@@ -109,6 +110,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_suning_order_func"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x50"
         android:background="#ffffff">
