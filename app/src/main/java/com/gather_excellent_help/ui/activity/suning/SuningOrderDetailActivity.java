@@ -207,9 +207,8 @@ public class SuningOrderDetailActivity extends BaseActivity {
                 tv_suning_detail_sendtime.setText("发货时间：" + express_time);
             }
             tv_item_detail_extra.setVisibility(View.GONE);
-            tv_item_detail_left.setVisibility(View.VISIBLE);
+            tv_item_detail_left.setVisibility(View.GONE);
             tv_item_detail_right.setVisibility(View.VISIBLE);
-            tv_item_detail_left.setText("查看物流");
             tv_item_detail_right.setText("确认收货");
         } else if (status == 4) {
             tv_suning_detail_createtime.setVisibility(View.VISIBLE);
@@ -268,6 +267,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
                 TextView tv_suning_order_number = (TextView) inflate.findViewById(R.id.tv_suning_order_number);
                 RelativeLayout rl_suning_detail_back = (RelativeLayout) inflate.findViewById(R.id.rl_suning_detail_back);
                 TextView tv_item_order_back = (TextView) inflate.findViewById(R.id.tv_item_order_back);
+                TextView tv_item_order_seelogistic = (TextView) inflate.findViewById(R.id.tv_item_order_seelogistic);
                 final SuningOrderBean.DataBean.GoodListBean goodListBean = goodList.get(i);
                 if (goodListBean != null) {
                     final int article_id = goodListBean.getArticle_id();
@@ -307,7 +307,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
                     } else {
                         rl_suning_detail_back.setVisibility(View.GONE);
                     }
-                    rl_suning_detail_back.setOnClickListener(new View.OnClickListener() {
+                    tv_item_order_back.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
 
@@ -331,6 +331,15 @@ public class SuningOrderDetailActivity extends BaseActivity {
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                             }
+                        }
+                    });
+                    tv_item_order_seelogistic.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(SuningOrderDetailActivity.this, LogisticsInfoActivity.class);
+                            intent.putExtra("order_id", order_id);
+                            intent.putExtra("article_id",article_id);
+                            startActivity(intent);
                         }
                     });
                     ll_suning_detail_container.addView(inflate);

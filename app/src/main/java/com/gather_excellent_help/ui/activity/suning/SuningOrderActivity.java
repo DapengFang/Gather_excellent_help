@@ -117,7 +117,8 @@ public class SuningOrderActivity extends BaseActivity {
         Intent intent = getIntent();
         pay_status = intent.getStringExtra("pay_status");
         tv_top_title_name.setText("苏宁订单");
-        userLogin = Tools.getUserLogin(this);
+        //userLogin = Tools.getUserLogin(this);
+        userLogin ="9369";
         netUtil = new NetUtil();
         vidacatorControll();
         final int childCount = vid_order_manager.getChildCount();
@@ -234,7 +235,6 @@ public class SuningOrderActivity extends BaseActivity {
         if(!isShowCat) {
             showCatView();
         }
-        //userLogin = "9369";
         whick = "order_list";
         map = new HashMap<>();
         map.put("user_id", userLogin);
@@ -248,7 +248,7 @@ public class SuningOrderActivity extends BaseActivity {
      * 展示CatLoadingView
      */
     private void showCatView() {
-        if (catView != null) {
+        if (catView != null && !catView.isAdded()) {
             catView.show(getSupportFragmentManager(), "");
         }
     }
@@ -499,9 +499,17 @@ public class SuningOrderActivity extends BaseActivity {
                     confirmOrder(String.valueOf(id));
                 } else if (status == 4) {
                     //评价
+                    evaluteOrder();
                 }
             }
         }
+    }
+
+    /**
+     * 评价订单
+     */
+    private void evaluteOrder() {
+        Toast.makeText(SuningOrderActivity.this, "该功能正在开发中，敬请期待。", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -532,7 +540,7 @@ public class SuningOrderActivity extends BaseActivity {
                         alertDialog.show();
                     }
                 } else if (status == 3) {
-                    seeLogisticsInfo(String.valueOf(id));
+                    seeOrderDetail(view,position,status);
                 }
             }
         }

@@ -124,7 +124,55 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/tuikuan_icon" />
+            android:src="@drawable/sale_money_icon" />
+
+        <LinearLayout
+            android:id="@+id/ll_sale_after_money_tuikuan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x5"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="仅退款"
+                android:textColor="#333333"
+                android:textSize="@dimen/x12" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="未收到货，需要退款"
+                android:textColor="#999999"
+                android:textSize="@dimen/x10" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/arraw_right_jiantou" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="#11000000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/x10">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/sale_back_icon" />
 
         <LinearLayout
             android:id="@+id/ll_sale_after_choice_tuikuan"
@@ -139,15 +187,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="退货退款"
-                android:textColor="#000000"
-                android:textSize="@dimen/x14" />
+                android:textColor="#333333"
+                android:textSize="@dimen/x12" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="已收到货，需要退货并退款"
-                android:textColor="#aa000000"
-                android:textSize="@dimen/x12" />
+                android:textColor="#999999"
+                android:textSize="@dimen/x10" />
         </LinearLayout>
 
         <ImageView
@@ -173,7 +221,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/huanhuo_icon" />
+            android:src="@drawable/sale_exchange_icon" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -188,15 +236,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="换货"
-                android:textColor="#000000"
-                android:textSize="@dimen/x14" />
+                android:textColor="#333333"
+                android:textSize="@dimen/x12" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="对已收到的货不满意，联系聚优帮客服协商换货"
-                android:textColor="#aa000000"
-                android:textSize="@dimen/x12" />
+                android:text="暂时不支持换货功能"
+                android:textColor="#999999"
+                android:textSize="@dimen/x10" />
         </LinearLayout>
 
         <ImageView

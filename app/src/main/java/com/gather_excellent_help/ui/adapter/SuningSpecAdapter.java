@@ -45,7 +45,7 @@ public class SuningSpecAdapter extends RecyclerView.Adapter<SuningSpecAdapter.Su
         String title = dataBean.getTitle();
         final List<SuningSpecBean.DataBean.ContentBean> content = dataBean.getContent();
         holder.tv_spec_title.setText(title);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 4);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
         holder.rcv_first_item_spce.setLayoutManager(gridLayoutManager);
         final SuningSpecDetailAdapter suningSpecDetailAdapter = new SuningSpecDetailAdapter(context, content);
         holder.rcv_first_item_spce.setAdapter(suningSpecDetailAdapter);

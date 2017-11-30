@@ -121,6 +121,20 @@
             android:text="退款"
             android:textColor="#555555"
             android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tv_item_order_seelogistic"
+            android:layout_width="@dimen/x80"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x8"
+            android:layout_toLeftOf="@id/tv_item_order_back"
+            android:background="@drawable/order_suning_bg_shape"
+            android:gravity="center"
+            android:paddingBottom="@dimen/x8"
+            android:paddingTop="@dimen/x8"
+            android:text="物流详情"
+            android:textColor="#555555"
+            android:textSize="12sp" />
     </RelativeLayout>
 
 </LinearLayout>

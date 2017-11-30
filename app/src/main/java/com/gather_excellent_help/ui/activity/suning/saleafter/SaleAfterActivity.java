@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -21,6 +22,7 @@ public class SaleAfterActivity extends BaseActivity {
     private RelativeLayout rl_exit;
     private TextView tv_top_title_name;
 
+    private LinearLayout ll_sale_after_money_tuikuan;
     private LinearLayout ll_sale_after_choice_tuikuan;
     private LinearLayout ll_sale_after_choice_huanhuo;
     private ImageView iv_suning_order_ware;
@@ -52,6 +54,7 @@ public class SaleAfterActivity extends BaseActivity {
     private void initView() {
         rl_exit = (RelativeLayout) findViewById(R.id.rl_exit);
         tv_top_title_name = (TextView) findViewById(R.id.tv_top_title_name);
+        ll_sale_after_money_tuikuan = (LinearLayout)findViewById(R.id.ll_sale_after_money_tuikuan);
         ll_sale_after_choice_tuikuan = (LinearLayout) findViewById(R.id.ll_sale_after_choice_tuikuan);
         ll_sale_after_choice_huanhuo = (LinearLayout) findViewById(R.id.ll_sale_after_choice_huanhuo);
         iv_suning_order_ware = (ImageView) findViewById(R.id.iv_suning_order_ware);
@@ -83,6 +86,7 @@ public class SaleAfterActivity extends BaseActivity {
 
         MyonclickListener myonclickListener = new MyonclickListener();
         rl_exit.setOnClickListener(myonclickListener);
+        ll_sale_after_money_tuikuan.setOnClickListener(myonclickListener);
         ll_sale_after_choice_tuikuan.setOnClickListener(myonclickListener);
         ll_sale_after_choice_huanhuo.setOnClickListener(myonclickListener);
     }
@@ -120,21 +124,17 @@ public class SaleAfterActivity extends BaseActivity {
                 case R.id.rl_exit:
                     finish();
                     break;
-                case R.id.ll_sale_after_choice_tuikuan:
+                case R.id.ll_sale_after_money_tuikuan:
                     saleBackMoney();
+                    break;
+                case R.id.ll_sale_after_choice_tuikuan:
+                    saleBackMoneyAndGoods();
                     break;
                 case R.id.ll_sale_after_choice_huanhuo:
                     saleExahangeGoods();
                     break;
             }
         }
-    }
-
-    /**
-     * 换货
-     */
-    private void saleExahangeGoods() {
-
     }
 
     /**
@@ -157,6 +157,39 @@ public class SaleAfterActivity extends BaseActivity {
         bundle.putString("quantity", String.valueOf(quantity));
         bundle.putString("article_id", String.valueOf(article_id));
         bundle.putString("order_id", String.valueOf(order_id));
+        bundle.putInt("apply_type",1);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    /**
+     * 换货
+     */
+    private void saleExahangeGoods() {
+       Toast.makeText(SaleAfterActivity.this, "暂不支持换货功能，敬请期待。", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 退款退货
+     */
+    private void saleBackMoneyAndGoods() {
+        Intent intent = new Intent(this, BackMoneyActivity.class);
+        Bundle bundle = new Bundle();
+        if (ware_img != null) {
+            bundle.putString("ware_img", ware_img);
+        }
+        if (ware_title != null) {
+            bundle.putString("ware_title", ware_title);
+        }
+        if (spec_text != null) {
+            bundle.putString("spec_text", spec_text);
+        }
+        bundle.putString("real_price", real_price);
+        bundle.putString("goods_price", goods_price);
+        bundle.putString("quantity", String.valueOf(quantity));
+        bundle.putString("article_id", String.valueOf(article_id));
+        bundle.putString("order_id", String.valueOf(order_id));
+        bundle.putInt("apply_type",2);
         intent.putExtras(bundle);
         startActivity(intent);
     }

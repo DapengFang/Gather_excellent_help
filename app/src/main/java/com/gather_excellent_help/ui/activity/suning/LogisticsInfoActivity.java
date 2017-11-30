@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
@@ -16,6 +17,7 @@ import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.roger.catloadinglibrary.CatLoadingView;
@@ -36,10 +38,12 @@ public class LogisticsInfoActivity extends BaseActivity {
 
     private NetUtil netUtil;
     private Map<String, String> map;
-    private String logistics_url = Url.BASE_URL + "";//物流信息接口
+    private String logistics_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=Getlogistics";//物流信息接口
     private int order_id;//订单自增id
     private FullyLinearLayoutManager fullyLinearLayoutManager;
     private LogisticsInfoAdapter logisticsInfoAdapter;
+    private String userLogin;
+    private int article_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +66,13 @@ public class LogisticsInfoActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
+        netUtil = new NetUtil();
         tv_top_title_name.setText("物流信息");
+        userLogin = Tools.getUserLogin(this);
+        userLogin = "9369";
         Intent intent = getIntent();
         order_id = intent.getIntExtra("order_id", 0);
+        article_id = intent.getIntExtra("article_id", 0);
         recyclerView = wan_suning_logistics.getRefreshableView();
 
         fullyLinearLayoutManager = new FullyLinearLayoutManager(LogisticsInfoActivity.this);
@@ -85,7 +93,6 @@ public class LogisticsInfoActivity extends BaseActivity {
             }
 
         });
-        netUtil = new NetUtil();
         getLogisticsInfoData();
         OnServerResponseListener onServerResponseListener = new OnServerResponseListener();
         netUtil.setOnServerResponseListener(onServerResponseListener);
@@ -98,7 +105,9 @@ public class LogisticsInfoActivity extends BaseActivity {
      */
     private void getLogisticsInfoData() {
         map = new HashMap<>();
+        map.put("user_id",userLogin);
         map.put("order_id", String.valueOf(order_id));
+        map.put("article_id",String.valueOf(article_id));
         netUtil.okHttp2Server2(logistics_url, map);
     }
 
@@ -127,11 +136,20 @@ public class LogisticsInfoActivity extends BaseActivity {
             LogUtil.e("物流信息 = " + response);
             //String response = "{\"statusCode\":1,\"statusMessage\":\"获取物流成功！\",\"data\":[{\"orderId\":\"100000555321\",\"isPackage\":\"Y\",\"logisticsDetail\":[{\"operateState\":\"您的订单已生成，请尽快完成支付\",\"operateTime\":\"20171115110157\"},{\"operateState\":\"您的订单已支付完成，等待发货\",\"operateTime\":\"20171116111026\"},{\"operateState\":\"您的发货清单【苏宁南京大件配送中心】已打印，待打印发票\",\"operateTime\":\"20171116145156\"}],\"orderItemIds\":[{\"orderItemId\":\"10000055532101\",\"skuId\":\"121347616\"}]}]}\n";
             SuningLogisticsBean suningLogisticsBean = new Gson().fromJson(response, SuningLogisticsBean.class);
-            List<SuningLogisticsBean.DataBean> data = suningLogisticsBean.getData();
-            SuningLogisticsBean.DataBean dataBean = data.get(0);
-            List<SuningLogisticsBean.DataBean.OrderItemIdsBean> orderItemIds = dataBean.getOrderItemIds();
-            logisticsInfoAdapter = new LogisticsInfoAdapter(LogisticsInfoActivity.this, data, orderItemIds);
-            recyclerView.setAdapter(logisticsInfoAdapter);
+            int statusCode = suningLogisticsBean.getStatusCode();
+            switch (statusCode) {
+                case 1 :
+                    List<SuningLogisticsBean.DataBean> data = suningLogisticsBean.getData();
+                    SuningLogisticsBean.DataBean dataBean = data.get(0);
+                    List<SuningLogisticsBean.DataBean.OrderItemIdsBean> orderItemIds = dataBean.getOrderItemIds();
+                    logisticsInfoAdapter = new LogisticsInfoAdapter(LogisticsInfoActivity.this, data, orderItemIds);
+                    recyclerView.setAdapter(logisticsInfoAdapter);
+                    break;
+                case 0:
+                    Toast.makeText(LogisticsInfoActivity.this, suningLogisticsBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                    break;
+            }
+
         }
 
         @Override

@@ -9,4 +9,9 @@
 
     <include layout="@layout/top_zhuangai_bar"/>
 
+    <com.gather_excellent_help.ui.widget.taggroup.TagGroup
+        android:id="@+id/tag_exchange"
+        style="@style/TagGroup"
+        android:layout_marginTop="@dimen/x20"/>
+
 </LinearLayout>

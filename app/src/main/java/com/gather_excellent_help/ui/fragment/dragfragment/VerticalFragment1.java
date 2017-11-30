@@ -38,6 +38,7 @@ import com.gather_excellent_help.ui.activity.suning.OrderConfirmActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningDetailActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningGoodscartActivity;
 import com.gather_excellent_help.ui.widget.PcsChoicePopupwindow;
+import com.gather_excellent_help.ui.widget.PcsDetailChoicePopupwindow;
 import com.gather_excellent_help.ui.widget.SuningPcsChoicePopupwindow;
 import com.gather_excellent_help.ui.widget.SuningStandardPopupwindow;
 import com.gather_excellent_help.ui.widget.SuningWarenumPopupwindow;
@@ -91,7 +92,7 @@ public class VerticalFragment1 extends Fragment {
 
     private String isSpecFirst = "";
 
-    private SuningPcsChoicePopupwindow suningPcsChoicePopupwindow;
+    private PcsDetailChoicePopupwindow pcsDetailChoicePopupwindow;
 
     private View vShadow;
 
@@ -138,6 +139,7 @@ public class VerticalFragment1 extends Fragment {
     private int what_buy = 1;
     private List<SuningSpecBean.DataBean> data;//商品规格数据
     private SqliteServiceManager manager;
+    private String attr_id = "";//省市区id
 
 
     public class Myhandler extends Handler {
@@ -448,33 +450,57 @@ public class VerticalFragment1 extends Fragment {
      * 显示省市区的popupwindow
      */
     private void showPopMenu() {
+//        vShadow.setVisibility(View.VISIBLE);
+//        if (suningPcsChoicePopupwindow == null) {
+//            suningPcsChoicePopupwindow = new SuningPcsChoicePopupwindow(context, vShadow);
+//            suningPcsChoicePopupwindow.showAtLocation(llRoot, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+//        } else if (suningPcsChoicePopupwindow != null
+//                && suningPcsChoicePopupwindow.isShowing()) {
+//            suningPcsChoicePopupwindow.dismiss();
+//        } else {
+//            suningPcsChoicePopupwindow.showAtLocation(llRoot, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+//        }
+//        suningPcsChoicePopupwindow.setOnItemClickListenr(new SuningPcsChoicePopupwindow.OnItemClickListenr() {
+//
+//
+//            @Override
+//            public void getFinalAddress(String address) {
+//                pcs = address;
+//                LogUtil.e(address);
+//                String replace_address = address.replace(",", " ");
+//                tv_vertical_address.setText(replace_address);
+//                if (suningPcsChoicePopupwindow.isShowing()) {
+//                    suningPcsChoicePopupwindow.dismiss();
+//                }
+//                getCurrentIsHave("2", pcs, "", goods_id);
+//                vShadow.setVisibility(View.GONE);
+//            }
+//        });
+
         vShadow.setVisibility(View.VISIBLE);
-        if (suningPcsChoicePopupwindow == null) {
-            suningPcsChoicePopupwindow = new SuningPcsChoicePopupwindow(context, vShadow);
-            suningPcsChoicePopupwindow.showAtLocation(llRoot, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-        } else if (suningPcsChoicePopupwindow != null
-                && suningPcsChoicePopupwindow.isShowing()) {
-            suningPcsChoicePopupwindow.dismiss();
+        if (pcsDetailChoicePopupwindow == null) {
+            pcsDetailChoicePopupwindow = new PcsDetailChoicePopupwindow(context, vShadow);
+            pcsDetailChoicePopupwindow.showAtLocation(llRoot, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        } else if (pcsDetailChoicePopupwindow != null
+                && pcsDetailChoicePopupwindow.isShowing()) {
+            pcsDetailChoicePopupwindow.dismiss();
         } else {
-            suningPcsChoicePopupwindow.showAtLocation(llRoot, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+            pcsDetailChoicePopupwindow.showAtLocation(llRoot, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         }
-        suningPcsChoicePopupwindow.setOnItemClickListenr(new SuningPcsChoicePopupwindow.OnItemClickListenr() {
-
-
+        pcsDetailChoicePopupwindow.setOnItemClickListenr(new PcsDetailChoicePopupwindow.OnItemClickListenr() {
             @Override
-            public void getFinalAddress(String address) {
-                pcs = address;
+            public void getFinalAddress(String address, String a, String a_id) {
                 LogUtil.e(address);
-                String replace_address = address.replace(",", " ");
-                tv_vertical_address.setText(replace_address);
-                if (suningPcsChoicePopupwindow.isShowing()) {
-                    suningPcsChoicePopupwindow.dismiss();
+                pcs = a;
+                attr_id = a_id;
+                tv_vertical_address.setText(address);
+                if (pcsDetailChoicePopupwindow.isShowing()) {
+                    pcsDetailChoicePopupwindow.dismiss();
                 }
-                getCurrentIsHave("2", pcs, "", goods_id);
+                getCurrentIsHave("2", attr_id, "", goods_id);
                 vShadow.setVisibility(View.GONE);
             }
         });
-
     }
 
     /**
@@ -548,7 +574,7 @@ public class VerticalFragment1 extends Fragment {
                         return;
                     }
                     String pcs = getPcs();
-                    pcs = "江苏省,南京市,玄武区";
+                    //pcs = "江苏省,南京市,玄武区";
                     int ware_num = getWare_num();
                     checkIsHave(pcs, goods_id, String.valueOf(ware_num));
                 }
@@ -631,6 +657,11 @@ public class VerticalFragment1 extends Fragment {
             }
             if (spec_ids != null && !TextUtils.isEmpty(spec_ids)) {
                 spec_ids = spec_ids.substring(0, spec_ids.length() - 1);
+            }
+            if(spec_titel!=null) {
+                if(spec_titel.length()>16) {
+                    spec_titel = spec_titel.substring(0,16)+"...";
+                }
             }
             tv_vertical_standard_title.setText(spec_titel);
             map = new HashMap<String, String>();

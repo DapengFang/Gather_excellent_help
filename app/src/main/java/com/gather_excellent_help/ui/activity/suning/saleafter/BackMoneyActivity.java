@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
+import com.gather_excellent_help.bean.sale.ApplyBackBean;
 import com.gather_excellent_help.bean.sale.TuihuoBean;
 import com.gather_excellent_help.ui.activity.SetActivity;
 import com.gather_excellent_help.ui.adapter.sale.TuihuanAdapter;
@@ -33,6 +34,7 @@ import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
 import com.gather_excellent_help.utils.Tools;
+import com.google.gson.Gson;
 import com.umeng.socialize.media.Base;
 
 import java.util.ArrayList;
@@ -79,6 +81,7 @@ public class BackMoneyActivity extends BaseActivity {
     private TextView tv_suning_order_realprice;
     private TextView tv_suning_order_oldprice;
     private TextView tv_suning_order_number;
+    private int apply_type;
 
 
     @Override
@@ -128,6 +131,7 @@ public class BackMoneyActivity extends BaseActivity {
         quantity = bundle.getString("quantity");
         article_id = bundle.getString("article_id");
         order_id = bundle.getString("order_id");
+        apply_type = bundle.getInt("apply_type", 0);
         LogUtil.e(article_id + "-" +order_id);
         wareDataShow();
 
@@ -203,6 +207,7 @@ public class BackMoneyActivity extends BaseActivity {
         map.put("order_id", order_id);
         map.put("article_id", article_id);
         map.put("apply_reason", apply_reason);
+        map.put("apply_type", String.valueOf(apply_type));
         netUtil.okHttp2Server2(apply_url, map);
     }
 
@@ -283,6 +288,14 @@ public class BackMoneyActivity extends BaseActivity {
         @Override
         public void getSuccessResponse(String response) {
             LogUtil.e(response);
+            ApplyBackBean applyBackBean = new Gson().fromJson(response, ApplyBackBean.class);
+            int statusCode = applyBackBean.getStatusCode();
+            Toast.makeText(BackMoneyActivity.this, applyBackBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+            switch (statusCode) {
+                case 1 :
+                    finish();
+                    break;
+            }
         }
 
         @Override

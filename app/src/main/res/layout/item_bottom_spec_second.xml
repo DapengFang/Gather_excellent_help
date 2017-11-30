@@ -5,12 +5,14 @@
 
     <TextView
         android:id="@+id/tv_spec_detial"
-        android:layout_width="@dimen/x60"
-        android:layout_height="@dimen/x28"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="14寸"
         android:gravity="center"
         android:textColor="@drawable/tv_suning_spec_text_selector"
-        android:textSize="14sp"
+        android:textSize="@dimen/x12"
+        android:padding="@dimen/x3"
+        android:layout_marginTop="@dimen/x10"
         android:background="@drawable/tv_suning_spec_show_selector"></TextView>
 
 </RelativeLayout>
