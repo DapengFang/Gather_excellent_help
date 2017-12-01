@@ -166,7 +166,9 @@ public class SaleAfterActivity extends BaseActivity {
      * 换货
      */
     private void saleExahangeGoods() {
-       Toast.makeText(SaleAfterActivity.this, "暂不支持换货功能，敬请期待。", Toast.LENGTH_SHORT).show();
+       //Toast.makeText(SaleAfterActivity.this, "暂不支持换货功能，敬请期待。", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, ExchangeGoodsActivity.class);
+        startActivity(intent);
     }
 
     /**

@@ -90,6 +90,8 @@ public class VerticalFragment1 extends Fragment {
     private RelativeLayout rl_vertical_address_choice;
     private TextView tv_vertical_address;
 
+    private TextView tv_good_detail_limit;
+
     private String isSpecFirst = "";
 
     private PcsDetailChoicePopupwindow pcsDetailChoicePopupwindow;
@@ -140,6 +142,8 @@ public class VerticalFragment1 extends Fragment {
     private List<SuningSpecBean.DataBean> data;//商品规格数据
     private SqliteServiceManager manager;
     private String attr_id = "";//省市区id
+    private int limit_num;
+    private String addrWay = "1";
 
 
     public class Myhandler extends Handler {
@@ -264,6 +268,7 @@ public class VerticalFragment1 extends Fragment {
 
         iv_suning_detail_back = (ImageView) rootView.findViewById(R.id.iv_suning_detail_back);
         iv_suning_detail_cart = (ImageView) rootView.findViewById(R.id.iv_suning_detail_cart);
+        tv_good_detail_limit = (TextView) rootView.findViewById(R.id.tv_good_detail_limit);
     }
 
 
@@ -493,6 +498,7 @@ public class VerticalFragment1 extends Fragment {
                 LogUtil.e(address);
                 pcs = a;
                 attr_id = a_id;
+                addrWay = "2";
                 tv_vertical_address.setText(address);
                 if (pcsDetailChoicePopupwindow.isShowing()) {
                     pcsDetailChoicePopupwindow.dismiss();
@@ -513,6 +519,7 @@ public class VerticalFragment1 extends Fragment {
         map.put("addrstr", addrstr);
         map.put("lnglat", lnglat);
         map.put("ProductId", productId);
+        map.put("num",String.valueOf(ware_num));
         netUtil.okHttp2Server2(pcs_url, map);
     }
 
@@ -557,6 +564,11 @@ public class VerticalFragment1 extends Fragment {
                     ware_num = number;
                     tv_vertical_standard_ware_num.setText("数量：" + ware_num + "件商品");
                     LogUtil.e(spec_ids + "-----" + "数量 = " + ware_num);
+                    if (spec_titel != null) {
+                        if (spec_titel.length() > 16) {
+                            spec_titel = spec_titel.substring(0, 16) + "...";
+                        }
+                    }
                     tv_vertical_standard_title.setText(spec_titel);
                     map = new HashMap<String, String>();
                     map.put("channel_id", "7");
@@ -576,7 +588,7 @@ public class VerticalFragment1 extends Fragment {
                     String pcs = getPcs();
                     //pcs = "江苏省,南京市,玄武区";
                     int ware_num = getWare_num();
-                    checkIsHave(pcs, goods_id, String.valueOf(ware_num));
+                    checkIsHave(addrWay,attr_id, goods_id, String.valueOf(ware_num));
                 }
             });
         }
@@ -600,13 +612,15 @@ public class VerticalFragment1 extends Fragment {
     /**
      * 判断库存
      */
-    private void checkIsHave(String addstr, String productId, String num) {
+    private void checkIsHave(String addrWay,String addstr, String productId, String num) {
         whick = "checkIsHave";
         map = new HashMap<>();
         map.put("addrstr", addstr);
+        map.put("addrWay",addrWay);
         map.put("ProductId", productId);
+        map.put("lnglat",lalotitude);
         map.put("num", num);
-        netUtil.okHttp2Server2(ishave_url, map);
+        netUtil.okHttp2Server2(pcs_url, map);
     }
 
     /**
@@ -658,9 +672,9 @@ public class VerticalFragment1 extends Fragment {
             if (spec_ids != null && !TextUtils.isEmpty(spec_ids)) {
                 spec_ids = spec_ids.substring(0, spec_ids.length() - 1);
             }
-            if(spec_titel!=null) {
-                if(spec_titel.length()>16) {
-                    spec_titel = spec_titel.substring(0,16)+"...";
+            if (spec_titel != null) {
+                if (spec_titel.length() > 16) {
+                    spec_titel = spec_titel.substring(0, 16) + "...";
                 }
             }
             tv_vertical_standard_title.setText(spec_titel);
@@ -682,6 +696,8 @@ public class VerticalFragment1 extends Fragment {
         if (suningWarennumPopupwindow == null) {
             suningWarennumPopupwindow = new SuningWarenumPopupwindow(context, vShadow);
             suningWarennumPopupwindow.setNumber(ware_num);
+            suningWarennumPopupwindow.setLimitNumber(limit_num);
+            suningWarennumPopupwindow.setNavLimitNumber();
             suningWarennumPopupwindow.setNavNumber();
             suningWarennumPopupwindow.setGoods_id(goods_id);
             suningWarennumPopupwindow.setArticle_id(article_id);
@@ -958,6 +974,8 @@ public class VerticalFragment1 extends Fragment {
                     df.setRoundingMode(RoundingMode.DOWN);
                     SuningWareBean.DataBean dataBean = data.get(0);
                     if (dataBean != null) {
+                        limit_num = dataBean.getLimit_num();
+                        tv_good_detail_limit.setText("每人限购" + limit_num + "件");
                         img_urls = dataBean.getUrls();
                         if (img_urls != null && img_urls.size() > 0) {
                             MyPagerAdapter myPagerAdapter = new MyPagerAdapter();

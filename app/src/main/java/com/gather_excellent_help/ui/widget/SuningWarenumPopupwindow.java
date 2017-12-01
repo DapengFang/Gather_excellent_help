@@ -50,6 +50,7 @@ public class SuningWarenumPopupwindow extends PopupWindow {
     private TextView tv_bottom_pop_goodprice;
     private TextView tv_bottom_pop_ogoodprice;
     private TextView tv_activity_sun_tao_icon;
+    private int limitNumber;//限购数量
 
     public SuningWarenumPopupwindow(Context context, View vShadow) {
         super(context);
@@ -74,7 +75,6 @@ public class SuningWarenumPopupwindow extends PopupWindow {
         tv_activity_sun_tao_icon = (TextView) view.findViewById(R.id.tv_activity_sun_tao_icon);
         nav_bottom_pop_num = (NumberAddSubView) view.findViewById(R.id.nav_bottom_pop_num);
         nav_bottom_pop_num.setMinValue(1);
-        nav_bottom_pop_num.setMaxValue(10);
         nav_bottom_pop_num.setValue(number);
         tv_activity_sun_tao_icon.setSelected(true);
         iv_bottom_pop_exit.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +118,7 @@ public class SuningWarenumPopupwindow extends PopupWindow {
 
     private OnItemClickListenr onItemClickListenr;
 
+
     public interface OnItemClickListenr {
         void onPopupBuy(int num);
 
@@ -125,6 +126,14 @@ public class SuningWarenumPopupwindow extends PopupWindow {
 
     public void setOnItemClickListenr(OnItemClickListenr onItemClickListenr) {
         this.onItemClickListenr = onItemClickListenr;
+    }
+
+    /**
+     * 设置商品限购
+     * @param limitNumber
+     */
+    public void setLimitNumber(int limitNumber) {
+        this.limitNumber = limitNumber;
     }
 
     /**
@@ -142,6 +151,17 @@ public class SuningWarenumPopupwindow extends PopupWindow {
     public void setNavNumber() {
         if (nav_bottom_pop_num != null) {
             nav_bottom_pop_num.setValue(number);
+        }
+    }
+
+    /**
+     * 设置加减器的最大值
+     */
+    public void setNavLimitNumber(){
+        if(nav_bottom_pop_num!=null) {
+            if(limitNumber>0) {
+                nav_bottom_pop_num.setMaxValue(limitNumber);
+            }
         }
     }
 

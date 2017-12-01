@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.utils.LogUtil;
 
 
 /**
@@ -36,7 +37,7 @@ public class NumberAddSubView extends LinearLayout implements View.OnClickListen
     /**
      * 库存里面的最大值
      */
-    private int maxValue = 30;
+    private int maxValue = 50;
 
     public int getValue() {
         String numebr = tv_number.getText().toString();
@@ -159,11 +160,11 @@ public class NumberAddSubView extends LinearLayout implements View.OnClickListen
      * 响应加的按钮
      */
     private void addNumber() {
+        LogUtil.e("maxValue = " + maxValue);
         if(value <maxValue){
             value = value+1;
         }
         tv_number.setText(value+"");
-
     }
 
     /**

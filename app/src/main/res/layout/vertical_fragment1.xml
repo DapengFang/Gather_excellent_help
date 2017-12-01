@@ -101,14 +101,14 @@
                     android:layout_marginLeft="@dimen/x1"/>
 
                 <TextView
-                    android:id="@+id/tv_good_detail_salery"
+                    android:id="@+id/tv_good_detail_limit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/x15"
-                    android:text=""
+                    android:text="--"
                     android:textColor="#99000000"
                     android:textSize="@dimen/x12"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
             </LinearLayout>
 
             <View

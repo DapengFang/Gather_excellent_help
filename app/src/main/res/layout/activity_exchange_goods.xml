@@ -5,13 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.gather_excellent_help.ui.activity.suning.saleafter.ExchangeGoodsActivity">
+    tools:context="com.gather_excellent_help.ui.activity.suning.saleafter.ExchangeGoodsActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <include layout="@layout/top_zhuangai_bar"/>
 
-    <com.gather_excellent_help.ui.widget.taggroup.TagGroup
-        android:id="@+id/tag_exchange"
-        style="@style/TagGroup"
-        android:layout_marginTop="@dimen/x20"/>
+    <com.zhy.view.flowlayout.TagFlowLayout
+        android:id="@+id/tag_flowlayout"
+        app:max_select="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x20">
+    </com.zhy.view.flowlayout.TagFlowLayout>
 
 </LinearLayout>

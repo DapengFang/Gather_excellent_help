@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/x15">
+    android:orientation="vertical"
+    android:padding="@dimen/x6">
 
     <TextView
         android:id="@+id/tv_spec_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="尺寸"
-        android:textSize="14sp"
-        android:textColor="#333333"/>
+        android:textColor="#333333"
+        android:textSize="@dimen/x14" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rcv_first_item_spce"
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:id="@+id/rcv_first_item_spce"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_marginTop="@dimen/x10"></android.support.v7.widget.RecyclerView>-->
+
+    <com.zhy.view.flowlayout.TagFlowLayout
+        android:id="@+id/tag_flowlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/x10"></android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x10"
+        app:max_select="1"></com.zhy.view.flowlayout.TagFlowLayout>
+
 
 </LinearLayout>

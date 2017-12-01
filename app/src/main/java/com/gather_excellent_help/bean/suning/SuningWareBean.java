@@ -62,6 +62,7 @@ public class SuningWareBean {
         private String stock_state;
         private String info_url;
         private List<UrlsBean> urls;
+        private int limit_num;
 
         public int getId() {
             return id;
@@ -125,6 +126,14 @@ public class SuningWareBean {
 
         public void setUrls(List<UrlsBean> urls) {
             this.urls = urls;
+        }
+
+        public int getLimit_num() {
+            return limit_num;
+        }
+
+        public void setLimit_num(int limit_num) {
+            this.limit_num = limit_num;
         }
 
         public static class UrlsBean {
