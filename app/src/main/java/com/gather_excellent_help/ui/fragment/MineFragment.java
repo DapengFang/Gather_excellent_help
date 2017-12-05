@@ -28,6 +28,7 @@ import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.HelpRuleBean;
 import com.gather_excellent_help.bean.MineBean;
 import com.gather_excellent_help.ui.activity.suning.LogisticsInfoActivity;
+import com.gather_excellent_help.ui.activity.suning.SuningOrderLogisticsActivity;
 import com.gather_excellent_help.ui.activity.suning.saleafter.SaleAfterActivity;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
@@ -693,7 +694,7 @@ public class MineFragment extends LazyLoadFragment {
      * 跳转到苏宁购物车
      */
     private void toSuningGoodscart() {
-        Intent intent = new Intent(getContext(), SaleAfterActivity.class);
+        Intent intent = new Intent(getContext(), SuningOrderLogisticsActivity.class);
         startActivity(intent);
     }
 

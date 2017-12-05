@@ -58,6 +58,7 @@ public class SuningStandardPopupwindow extends PopupWindow {
     private TextView tv_bottom_pop_goodprice;
     private TextView tv_bottom_pop_ogoodprice;
     private TextView tv_activity_sun_tao_icon;
+    private int limitNumber;
 
     public SuningStandardPopupwindow(Context context, View vShadow, List<SuningSpecBean.DataBean> data) {
         super(context);
@@ -107,7 +108,7 @@ public class SuningStandardPopupwindow extends PopupWindow {
         for (int i = 0; i < data.size(); i++) {
             SuningSpecBean.DataBean dataBean = data.get(i);
             List<SuningSpecBean.DataBean.ContentBean> content = dataBean.getContent();
-            if(content!=null && content.size()>0) {
+            if (content != null && content.size() > 0) {
                 SuningSpecBean.DataBean.ContentBean contentBean = content.get(0);
                 contentBean.setCheck(true);
             }
@@ -140,6 +141,10 @@ public class SuningStandardPopupwindow extends PopupWindow {
 
     private OnItemClickListenr onItemClickListenr;
 
+    public void setLimitNumber(int limitNumber) {
+        this.limitNumber = limitNumber;
+    }
+
     public interface OnItemClickListenr {
         void onPopupBuy(List<SuningSpecBean.DataBean> data, int num);
 
@@ -156,6 +161,17 @@ public class SuningStandardPopupwindow extends PopupWindow {
      */
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    /**
+     * 设置加减器的最大值
+     */
+    public void setNavLimitNumber() {
+        if (nav_bottom_pop_num != null) {
+            if (limitNumber > 0) {
+                nav_bottom_pop_num.setMaxValue(limitNumber);
+            }
+        }
     }
 
     /**
@@ -225,7 +241,7 @@ public class SuningStandardPopupwindow extends PopupWindow {
      * 设置苏宁商品信息
      */
     public void setSunigWareShow() {
-        if (iv_bottom_pop_img != null && goods_img!=null) {
+        if (iv_bottom_pop_img != null && goods_img != null) {
             String replace_img = goods_img.replace("800x800", "400x400");
             Glide.with(context).load(replace_img)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
@@ -234,15 +250,15 @@ public class SuningStandardPopupwindow extends PopupWindow {
                     .into(iv_bottom_pop_img);//请求成功后把图片设置到的控件
         }
 
-        if (tv_bottom_pop_name != null && goods_title!=null) {
+        if (tv_bottom_pop_name != null && goods_title != null) {
             tv_bottom_pop_name.setText("\t\t\t\t\t\t" + goods_title);
         }
 
-        if (tv_bottom_pop_goodprice != null && goods_price!=null) {
+        if (tv_bottom_pop_goodprice != null && goods_price != null) {
             tv_bottom_pop_goodprice.setText("￥" + goods_price);
         }
 
-        if (tv_bottom_pop_ogoodprice != null && c_price!=null) {
+        if (tv_bottom_pop_ogoodprice != null && c_price != null) {
             tv_bottom_pop_ogoodprice.getPaint().setAntiAlias(true);//抗锯齿
             tv_bottom_pop_ogoodprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); // 设置中划线并加清晰
             tv_bottom_pop_ogoodprice.setText(c_price);

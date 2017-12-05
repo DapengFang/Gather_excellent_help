@@ -25,7 +25,7 @@ import java.util.List;
 public class SuningOrdercartAdapter extends RecyclerView.Adapter<SuningOrdercartAdapter.SuningOrdecartViewHolder> {
 
     private Context context;
-    private List<SuningGoodscartBean.DataBean>  data;
+    private List<SuningGoodscartBean.DataBean> data;
 
     public SuningOrdercartAdapter(Context context, List<SuningGoodscartBean.DataBean> data) {
         this.context = context;
@@ -56,7 +56,7 @@ public class SuningOrdercartAdapter extends RecyclerView.Adapter<SuningOrdercart
             double mprice = Double.parseDouble(product_mprice);
             holder.tv_bottom_pop_cprice.getPaint().setAntiAlias(true);
             holder.tv_bottom_pop_cprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); // 设置中划线并加清晰 
-            holder.tv_bottom_pop_cprice.setText("￥"+df.format(mprice));
+            holder.tv_bottom_pop_cprice.setText("￥" + df.format(mprice));
         }
 
         holder.tv_activity_sun_tao_icon.setSelected(true);
@@ -69,7 +69,7 @@ public class SuningOrdercartAdapter extends RecyclerView.Adapter<SuningOrdercart
                     .into(holder.iv_bottom_pop_img);//请求成功后把图片设置到的控件
         }
         if (product_title != null) {
-            holder.tv_bottom_pop_name.setText("\t\t\t\t\t\t"+product_title);
+            holder.tv_bottom_pop_name.setText("\t\t\t\t\t\t" + product_title);
         }
         if (product_sprice != null) {
             double sprice = Double.parseDouble(product_sprice);
@@ -77,7 +77,7 @@ public class SuningOrdercartAdapter extends RecyclerView.Adapter<SuningOrdercart
         }
 
 
-        if(product_num!=null) {
+        if (product_num != null) {
             int num = Integer.parseInt(product_num);
             holder.tv_bottom_pop_goods_num.setText("x" + num);
             holder.nas_order_confirm_num.setValue(num);
@@ -86,20 +86,22 @@ public class SuningOrdercartAdapter extends RecyclerView.Adapter<SuningOrdercart
         holder.nas_order_confirm_num.setOnButtonClickListener(new NumberAddSubView.OnButtonClickListener() {
             @Override
             public void onSubButton(View view, int value) {
-                String goods_num = String.valueOf(value);
-                holder.tv_bottom_pop_goods_num.setText("x" + value);
-                dataBean.setProduct_num(goods_num);
-                double totalPrice = getTotalPrice();
-                onNumButtonListener.onSubClick(view,position,product_id,goods_num,df.format(totalPrice));
+//                String goods_num = String.valueOf(value);
+//                holder.tv_bottom_pop_goods_num.setText("x" + value);
+//                dataBean.setProduct_num(goods_num);
+//                double totalPrice = getTotalPrice();
+//                onNumButtonListener.onSubClick(view,position,product_id,goods_num,df.format(totalPrice));
+                onNumAddSubListener.onSubClick(view,position,value);
             }
 
             @Override
             public void onAddButton(View view, int value) {
-                String goods_num = String.valueOf(value);
-                holder.tv_bottom_pop_goods_num.setText("x" + value);
-                dataBean.setProduct_num(goods_num);
-                double totalPrice = getTotalPrice();
-                onNumButtonListener.onSubClick(view,position,product_id,goods_num,df.format(totalPrice));
+//                String goods_num = String.valueOf(value);
+//                holder.tv_bottom_pop_goods_num.setText("x" + value);
+//                dataBean.setProduct_num(goods_num);
+//                double totalPrice = getTotalPrice();
+//                onNumButtonListener.onAddClick(view,position,product_id,goods_num,df.format(totalPrice));
+                onNumAddSubListener.onAddClick(view,position,value);
             }
         });
     }
@@ -135,9 +137,9 @@ public class SuningOrdercartAdapter extends RecyclerView.Adapter<SuningOrdercart
     /**
      * 获取商品总价格
      */
-    public double getTotalPrice(){
+    public double getTotalPrice() {
         double total_price = 0;
-        for (int i=0;i<data.size();i++){
+        for (int i = 0; i < data.size(); i++) {
             SuningGoodscartBean.DataBean dataBean = data.get(i);
             String product_sprice = dataBean.getProduct_sprice();
             String product_num = dataBean.getProduct_num();
@@ -149,14 +151,25 @@ public class SuningOrdercartAdapter extends RecyclerView.Adapter<SuningOrdercart
     }
 
 
-    private OnNumButtonListener onNumButtonListener;
+    //    private OnNumButtonListener onNumButtonListener;
+//
+//    public interface OnNumButtonListener{
+//        void onAddClick(View v,int position,String product_id,String num,String totalprice);
+//        void onSubClick(View v,int position,String product_id,String num,String totalprice);
+//    }
+//
+//    public void setOnNumButtonListener(OnNumButtonListener onNumButtonListener) {
+//        this.onNumButtonListener = onNumButtonListener;
+//    }
 
-    public interface OnNumButtonListener{
-        void onAddClick(View v,int position,String product_id,String num,String totalprice);
-        void onSubClick(View v,int position,String product_id,String num,String totalprice);
+    private OnNumAddSubListener onNumAddSubListener;
+
+    public interface OnNumAddSubListener {
+        void onAddClick(View v, int position ,int value);
+        void onSubClick(View v, int position ,int value);
     }
 
-    public void setOnNumButtonListener(OnNumButtonListener onNumButtonListener) {
-        this.onNumButtonListener = onNumButtonListener;
+    public void setOnNumAddSubListener(OnNumAddSubListener onNumAddSubListener) {
+        this.onNumAddSubListener = onNumAddSubListener;
     }
 }

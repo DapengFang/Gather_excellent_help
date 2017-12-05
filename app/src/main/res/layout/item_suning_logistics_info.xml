@@ -13,17 +13,23 @@
         android:orientation="vertical"
         android:padding="@dimen/x15">
 
-        <com.baoyachi.stepview.VerticalStepView
-            android:id="@+id/vstep_logistics"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1">
+
+            <com.baoyachi.stepview.VerticalStepView
+                android:id="@+id/vstep_logistics"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/tv_suning_logistics_ordernum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/x15"
             android:layout_marginTop="@dimen/x15"
             android:gravity="right"
             android:text=""
@@ -34,7 +40,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/x15"
             android:layout_marginTop="@dimen/x15"
             android:gravity="right"
             android:text="物流信息"

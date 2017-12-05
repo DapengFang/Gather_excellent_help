@@ -4,14 +4,18 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.suning.SuningGoodscartBean;
+import com.gather_excellent_help.bean.suning.SuningStockBean;
 import com.gather_excellent_help.db.suning.SqliteServiceManager;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
@@ -20,6 +24,7 @@ import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
 import com.gather_excellent_help.utils.LogUtil;
+import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -31,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+import okhttp3.Call;
 
 public class SuningGoodscartActivity extends BaseActivity {
 
@@ -51,12 +57,23 @@ public class SuningGoodscartActivity extends BaseActivity {
     private boolean edit_status = true;
     private double total_price;
 
+    private String pcs_url = Url.BASE_URL + "suning/GoodsInfo.ashx?action=GetStoreQuantity";//是否有货
     private RelativeLayout rl_zhuangtai_right;
     private TextView tv_zhuangtai_right;
     private LinearLayout ll_goodscast_price_show;
     private SuningGoodscartAdapter suningGoodscartAdapter;
     private LinearLayout ll_goodscast_clear_show;
     private TextView tv_goodscart_clear_toSee;
+    private boolean isHavaGoods = true;
+    private SuningGoodscartBean.DataBean dataBean;
+    private NetUtil netUtil;
+    private Map<String, String> map;
+    private String whick = "";
+    private String area_id = "";
+    private String num_click = "";
+    private String addWay = "";
+    private String lalotitude = "";
+    private int num_value ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,20 +100,30 @@ public class SuningGoodscartActivity extends BaseActivity {
 
         ll_goodscast_price_show = (LinearLayout) findViewById(R.id.ll_goodscast_price_show);
 
-        ll_goodscast_clear_show = (LinearLayout)findViewById(R.id.ll_goodscast_clear_show);
-        tv_goodscart_clear_toSee = (TextView)findViewById(R.id.tv_goodscart_clear_toSee);
+        ll_goodscast_clear_show = (LinearLayout) findViewById(R.id.ll_goodscast_clear_show);
+        tv_goodscart_clear_toSee = (TextView) findViewById(R.id.tv_goodscart_clear_toSee);
     }
 
     /**
      * 初始哈数据
      */
     private void initData() {
+        netUtil = new NetUtil();
         tv_top_title_name.setText("购物车");
+        Intent intent = getIntent();
+        area_id = intent.getStringExtra("area_id");
+        addWay = intent.getStringExtra("addWay");
+        lalotitude = intent.getStringExtra("lalotitude");
+        if(!TextUtils.isEmpty(lalotitude)) {
+            addWay = "1";
+        }else{
+            addWay = "2";
+        }
         setTopEditShow();
         recyclerView = wan_suning_goodscart.getRefreshableView();
         FullyLinearLayoutManager fullyLinearLayoutManager = new FullyLinearLayoutManager(this);
         recyclerView.setLayoutManager(fullyLinearLayoutManager);
-        if (wan_suning_goodscart!=null && wan_suning_goodscart.isRefreshing()) {
+        if (wan_suning_goodscart != null && wan_suning_goodscart.isRefreshing()) {
             wan_suning_goodscart.onRefreshComplete();
         }
 
@@ -143,6 +170,28 @@ public class SuningGoodscartActivity extends BaseActivity {
             showTopay();
             ll_goodscast_clear_show.setVisibility(View.VISIBLE);
         }
+        OnServerResponseListener onServerResponseListener = new OnServerResponseListener();
+        netUtil.setOnServerResponseListener(onServerResponseListener);
+        suningGoodscartAdapter.setOnNumberAddSubListener(new SuningGoodscartAdapter.OnNumberAddSubListener() {
+            @Override
+            public void onAddClick(View v, int position, int value) {
+                dataBean = data.get(position);
+                String product_id = dataBean.getProduct_goodsid();
+                num_click = "add";
+                num_value = value;
+                checkIsHave(addWay, area_id, product_id, String.valueOf(value));
+            }
+
+            @Override
+            public void onSubClick(View v, int position, int value) {
+                LogUtil.e("value --------" + value);
+                dataBean = data.get(position);
+                String product_id = dataBean.getProduct_goodsid();
+                num_click = "sub";
+                num_value = value;
+                checkIsHave(addWay, area_id, product_id, String.valueOf(value));
+            }
+        });
 
         MyonclickListener myonclickListener = new MyonclickListener();
         rl_exit.setOnClickListener(myonclickListener);
@@ -150,6 +199,20 @@ public class SuningGoodscartActivity extends BaseActivity {
         rl_zhuangtai_right.setOnClickListener(myonclickListener);
         tv_topay.setOnClickListener(myonclickListener);
         tv_goodscart_clear_toSee.setOnClickListener(myonclickListener);
+    }
+
+    /**
+     * 判断库存
+     */
+    private void checkIsHave(String addrWay, String addstr, String productId, String num) {
+            whick = "checkIsHave";
+            map = new HashMap<>();
+            map.put("addrstr", addstr);
+            map.put("addrWay", addrWay);
+            map.put("ProductId", productId);
+            map.put("lnglat", lalotitude);
+            map.put("num", num);
+            netUtil.okHttp2Server2(pcs_url, map);
     }
 
     /**
@@ -378,10 +441,13 @@ public class SuningGoodscartActivity extends BaseActivity {
                                 cart_json = new Gson().toJson(suningGoodscartBean);
                                 LogUtil.e("cart_json = " + cart_json);
                             }
-                            Intent intent = new Intent(SuningGoodscartActivity.this, OrderCartConfirmActivity.class);
-                            intent.putExtra("cart_json", cart_json);
-                            startActivity(intent);
-
+                            if(isHavaGoods) {
+                                Intent intent = new Intent(SuningGoodscartActivity.this, OrderCartConfirmActivity.class);
+                                intent.putExtra("cart_json", cart_json);
+                                startActivity(intent);
+                            }else{
+                                Toast.makeText(SuningGoodscartActivity.this, "网络连接出现问题，请您重新加入购物车。", Toast.LENGTH_SHORT).show();
+                            }
 
                         }
                     } else {
@@ -399,7 +465,7 @@ public class SuningGoodscartActivity extends BaseActivity {
                     break;
                 case R.id.tv_goodscart_clear_toSee:
                     finish();
-                    EventBus.getDefault().post(new AnyEvent(EventType.GOODSCART_CLEAR,"购物车空空如也"));
+                    EventBus.getDefault().post(new AnyEvent(EventType.GOODSCART_CLEAR, "购物车空空如也"));
                     break;
             }
         }
@@ -422,6 +488,47 @@ public class SuningGoodscartActivity extends BaseActivity {
                 }
                 manager.deleteGoods(new String[]{id});
             }
+        }
+    }
+
+    /**
+     * 解析判断库存数据
+     *
+     * @param response
+     */
+    private void parseCheckIshavaData(String response) {
+        LogUtil.e(response);
+        isHavaGoods = true;
+        SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
+        int statusCode = suningStockBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                String product_num = dataBean.getProduct_num();
+                String id = dataBean.getId();
+                int num = Integer.parseInt(product_num);
+                manager.updateGoods(new String[]{String.valueOf(num_value), id});
+                break;
+            case 0:
+                Toast.makeText(SuningGoodscartActivity.this, "当前购买数量库存不足！！！", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        initData();
+    }
+
+    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
+
+        @Override
+        public void getSuccessResponse(String response) {
+            if (whick.equals("checkIsHave")) {
+                parseCheckIshavaData(response);
+            }
+        }
+
+        @Override
+        public void getFailResponse(Call call, Exception e) {
+            LogUtil.e("网络连接出现问题~" + call.toString() + "-" + e.getMessage());
+            isHavaGoods = false;
+            initData();
         }
     }
 
@@ -449,4 +556,5 @@ public class SuningGoodscartActivity extends BaseActivity {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
 }

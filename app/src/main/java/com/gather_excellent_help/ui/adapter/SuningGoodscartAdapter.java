@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -59,15 +60,16 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
         String product_pic = dataBean.getProduct_pic();
         String product_num = dataBean.getProduct_num();
         String product_title = dataBean.getProduct_title();
-        if(product_check!=null) {
+        final String product_spec_limit = dataBean.getProduct_spec_limit();
+        if (product_check != null) {
             boolean bool = Tools.getInt2Boolean(product_check);
-            if(bool) {
+            if (bool) {
                 holder.cb_item_shopcart_check.setChecked(true);
-            }else{
+            } else {
                 holder.cb_item_shopcart_check.setChecked(false);
             }
         }
-        if(product_pic!=null) {
+        if (product_pic != null) {
             String replace_img = product_pic.replace("800x800", "400x400");
             Glide.with(context).load(replace_img)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
@@ -75,36 +77,39 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
                     .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
                     .into(holder.iv_suning_order_ware);//请求成功后把图片设置到的控件
         }
-        if(product_title!=null) {
+        if (product_title != null) {
             holder.tv_suning_goodscart_title.setText(product_title);
         }
-        if(product_spec!=null) {
+        if (product_spec != null) {
             holder.tv_suning_goodscart_spec.setText(product_spec);
         }
-        if(product_sprice!=null) {
+        if (product_sprice != null) {
             holder.tv_suning_order_realprice.setText("￥" + product_sprice);
         }
-        if(product_mprice!=null) {
+        if (product_mprice != null) {
             holder.tv_suning_order_oldprice.setText("￥" + product_mprice);
             holder.tv_suning_order_oldprice.getPaint().setAntiAlias(true);//抗锯齿
             holder.tv_suning_order_oldprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); // 设置中划线并加清晰
         }
-        if(product_num!=null) {
+        if (product_num != null) {
             holder.tv_suning_order_number.setText("x" + product_num);
             holder.nas_goodscart_num.setValue(Integer.parseInt(product_num));
+        }
+        if (product_spec_limit != null) {
+            holder.nas_goodscart_num.setMaxValue(Integer.parseInt(product_spec_limit));
         }
         holder.cb_item_shopcart_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LogUtil.e("--------------------");
-                if(dataBean.getProduct_check().equals("1")) {
+                if (dataBean.getProduct_check().equals("1")) {
                     dataBean.setProduct_check("0");
-                }else if(dataBean.getProduct_check().equals("0")) {
+                } else if (dataBean.getProduct_check().equals("0")) {
                     dataBean.setProduct_check("1");
                 }
                 notifyItemChanged(position);
-                LogUtil.e(dataBean.getProduct_check()+"------------");
-                manager.updateGoodsCheck(new String[]{dataBean.getProduct_check(),id});
+                LogUtil.e(dataBean.getProduct_check() + "------------");
+                manager.updateGoodsCheck(new String[]{dataBean.getProduct_check(), id});
                 onUpdatePriceListener.onUpdateData();
 
             }
@@ -112,22 +117,26 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
         holder.iv_item_shopcart_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDeleteDialog(dataBean,position,id);
+                showDeleteDialog(dataBean, position, id);
             }
         });
         holder.nas_goodscart_num.setOnButtonClickListener(new NumberAddSubView.OnButtonClickListener() {
             @Override
             public void onSubButton(View view, int value) {
-                holder.tv_suning_order_number.setText("x" + value);
-                manager.updateGoods(new String[]{value+"",id});
-                onUpdatePriceListener.onUpdateData();
+//                holder.tv_suning_order_number.setText("x" + value);
+//                manager.updateGoods(new String[]{value + "", id});
+//                onUpdatePriceListener.onUpdateData();
+                onNumberAddSubListener.onSubClick(view,position,value);
             }
 
             @Override
             public void onAddButton(View view, int value) {
-                holder.tv_suning_order_number.setText("x" + value);
-                manager.updateGoods(new String[]{value+"",id});
-                onUpdatePriceListener.onUpdateData();
+                if (String.valueOf(value).equals(product_spec_limit)) {
+                    Toast.makeText(context, "当前限购数量" + product_spec_limit + "件", Toast.LENGTH_SHORT).show();
+                }
+//                holder.tv_suning_order_number.setText("x" + value);
+//                onUpdatePriceListener.onUpdateData();
+                onNumberAddSubListener.onAddClick(view,position,value);
             }
         });
 
@@ -173,6 +182,17 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
         }
     }
 
+    private OnNumberAddSubListener onNumberAddSubListener;
+
+    public interface OnNumberAddSubListener{
+        void onAddClick(View v,int position,int value);
+        void onSubClick(View v,int position,int value);
+    }
+
+    public void setOnNumberAddSubListener(OnNumberAddSubListener onNumberAddSubListener) {
+        this.onNumberAddSubListener = onNumberAddSubListener;
+    }
+
     private OnUpdatePriceListener onUpdatePriceListener;
 
     public interface OnUpdatePriceListener {
@@ -190,7 +210,7 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
     /**
      * 解除支付宝绑定的dialog
      */
-    private void showDeleteDialog(final SuningGoodscartBean.DataBean dataBean,final int position,final String id) {
+    private void showDeleteDialog(final SuningGoodscartBean.DataBean dataBean, final int position, final String id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("温馨提示")
                 .setMessage("您确定要删除该商品信息吗?")

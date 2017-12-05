@@ -18,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
+import com.gather_excellent_help.bean.sale.ApplyStateBean;
 import com.gather_excellent_help.bean.suning.SuningOrderBean;
 import com.gather_excellent_help.bean.suning.SuningOrderConfirmBean;
 import com.gather_excellent_help.event.AnyEvent;
@@ -71,9 +72,20 @@ public class SuningOrderDetailActivity extends BaseActivity {
 
     private String cancel_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=DeletSingerOrder";//取消订单
     private String confrim_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=recive_myProduct";//确认订单
+    private String apply_state_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=GetApplyStatus";//检查申请状态
     private int order_id;//订单id
     private String order_no;
     private double real_amount;
+    private SuningOrderBean.DataBean.GoodListBean goodListBean;
+    private String goods_title;
+    private String spec_text;
+    private double real_price;
+    private double goods_price;
+    private int quantity;
+    private int w_order_id;
+    private int w_itemId;
+    private int article_id;
+    private DecimalFormat df;
 
 
     @Override
@@ -140,7 +152,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
                 order_no = dataBean.getOrder_no();
                 order_id = dataBean.getId();
                 real_amount = dataBean.getReal_amount();
-                DecimalFormat df = new DecimalFormat("#0.00");
+                df = new DecimalFormat("#0.00");
                 showOrderStatus(status);
                 showOrderAddress(dataBean);
                 showWareInfo(dataBean, df);
@@ -254,7 +266,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
      */
     private void showWareInfo(SuningOrderBean.DataBean dataBean, final DecimalFormat df) {
         List<SuningOrderBean.DataBean.GoodListBean> goodList = dataBean.getGoodList();
-        final int order_id = dataBean.getId();
+        order_id = dataBean.getId();
         if (goodList != null && goodList.size() > 0) {
             ll_suning_detail_container.removeAllViews();
             for (int i = 0; i < goodList.size(); i++) {
@@ -268,14 +280,16 @@ public class SuningOrderDetailActivity extends BaseActivity {
                 RelativeLayout rl_suning_detail_back = (RelativeLayout) inflate.findViewById(R.id.rl_suning_detail_back);
                 TextView tv_item_order_back = (TextView) inflate.findViewById(R.id.tv_item_order_back);
                 TextView tv_item_order_seelogistic = (TextView) inflate.findViewById(R.id.tv_item_order_seelogistic);
-                final SuningOrderBean.DataBean.GoodListBean goodListBean = goodList.get(i);
+                goodListBean = goodList.get(i);
                 if (goodListBean != null) {
-                    final int article_id = goodListBean.getArticle_id();
-                    final String goods_title = goodListBean.getGoods_title();
-                    final String spec_text = goodListBean.getSpec_text();
-                    final double real_price = goodListBean.getReal_price();
-                    final double goods_price = goodListBean.getGoods_price();
-                    final int quantity = goodListBean.getQuantity();
+                    article_id = goodListBean.getArticle_id();
+                    goods_title = goodListBean.getGoods_title();
+                    spec_text = goodListBean.getSpec_text();
+                    real_price = goodListBean.getReal_price();
+                    goods_price = goodListBean.getGoods_price();
+                    quantity = goodListBean.getQuantity();
+                    w_order_id = goodListBean.getOrder_id();
+                    w_itemId = goodListBean.getItemId();
                     if (goodListBean.getImg_url() != null) {
                         String img_url = goodListBean.getImg_url().replace("800x800", "400x400");
                         Glide.with(SuningOrderDetailActivity.this).load(img_url)
@@ -310,27 +324,8 @@ public class SuningOrderDetailActivity extends BaseActivity {
                     tv_item_order_back.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
-                            if (goodListBean != null) {
-                                Intent intent = new Intent(SuningOrderDetailActivity.this, SaleAfterActivity.class);
-                                Bundle bundle = new Bundle();
-                                if (goodListBean.getImg_url() != null) {
-                                    bundle.putString("ware_img", goodListBean.getImg_url());
-                                }
-                                if (goods_title != null) {
-                                    bundle.putString("ware_title", goods_title);
-                                }
-                                if (spec_text != null) {
-                                    bundle.putString("spec_text", spec_text);
-                                }
-                                bundle.putString("real_price", df.format(real_price) + "");
-                                bundle.putString("goods_price", df.format(goods_price) + "");
-                                bundle.putString("quantity", String.valueOf(quantity));
-                                bundle.putString("article_id", String.valueOf(article_id));
-                                bundle.putString("order_id", String.valueOf(order_id));
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-                            }
+                            checkApplyState(String.valueOf(w_order_id), String.valueOf(w_itemId));
+                            //toBackApply(goodListBean, goods_title, spec_text, df, real_price, goods_price, quantity, article_id, order_id);
                         }
                     });
                     tv_item_order_seelogistic.setOnClickListener(new View.OnClickListener() {
@@ -338,7 +333,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
                         public void onClick(View v) {
                             Intent intent = new Intent(SuningOrderDetailActivity.this, LogisticsInfoActivity.class);
                             intent.putExtra("order_id", order_id);
-                            intent.putExtra("article_id",article_id);
+                            intent.putExtra("article_id", article_id);
                             startActivity(intent);
                         }
                     });
@@ -346,6 +341,42 @@ public class SuningOrderDetailActivity extends BaseActivity {
                 }
             }
 
+        }
+    }
+
+    /**
+     * 跳转到申请退款服务界面
+     *
+     * @param goodListBean
+     * @param goods_title
+     * @param spec_text
+     * @param df
+     * @param real_price
+     * @param goods_price
+     * @param quantity
+     * @param article_id
+     * @param order_id
+     */
+    private void toBackApply(SuningOrderBean.DataBean.GoodListBean goodListBean, String goods_title, String spec_text, DecimalFormat df, double real_price, double goods_price, int quantity, int article_id, int order_id) {
+        if (goodListBean != null) {
+            Intent intent = new Intent(SuningOrderDetailActivity.this, SaleAfterActivity.class);
+            Bundle bundle = new Bundle();
+            if (goodListBean.getImg_url() != null) {
+                bundle.putString("ware_img", goodListBean.getImg_url());
+            }
+            if (goods_title != null) {
+                bundle.putString("ware_title", goods_title);
+            }
+            if (spec_text != null) {
+                bundle.putString("spec_text", spec_text);
+            }
+            bundle.putString("real_price", df.format(real_price) + "");
+            bundle.putString("goods_price", df.format(goods_price) + "");
+            bundle.putString("quantity", String.valueOf(quantity));
+            bundle.putString("article_id", String.valueOf(article_id));
+            bundle.putString("order_id", String.valueOf(order_id));
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
     }
 
@@ -512,12 +543,54 @@ public class SuningOrderDetailActivity extends BaseActivity {
                 parseCancelOrderData(response);
             } else if (whick.equals("confirm_order")) {
                 parderConfirmOrderData(response);
+            } else if (whick.equals("apply_state")) {
+                parseApplyState(response);
             }
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "-" + e.getMessage());
+        }
+    }
+
+    /**
+     * 解析申请状态
+     *
+     * @param response
+     */
+    private void parseApplyState(String response) {
+        LogUtil.e("申请状态 = " + response);
+        ApplyStateBean applyStateBean = new Gson().fromJson(response, ApplyStateBean.class);
+        int statusCode = applyStateBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                List<ApplyStateBean.DataBean> data = applyStateBean.getData();
+                if (data != null && data.size() > 0) {
+                    ApplyStateBean.DataBean dataBean = data.get(0);
+                    if (dataBean != null) {
+                        int apply_status = dataBean.getApply_status();
+                        if (apply_status == 0) {
+                            toBackApply(goodListBean, goods_title, spec_text, df, real_price, goods_price, quantity, article_id, order_id);
+                        } else if (apply_status == 1) {
+                            Toast.makeText(SuningOrderDetailActivity.this, "您的退货申请正在审核中。", Toast.LENGTH_SHORT).show();
+                        } else if (apply_status == 2) {
+                            Toast.makeText(SuningOrderDetailActivity.this, "您的退货申请已被驳回。", Toast.LENGTH_SHORT).show();
+                        } else if (apply_status == 3) {
+                            Toast.makeText(SuningOrderDetailActivity.this, "正在退货。", Toast.LENGTH_SHORT).show();
+                        } else if (apply_status == 4) {
+                            Toast.makeText(SuningOrderDetailActivity.this, "退货成功。", Toast.LENGTH_SHORT).show();
+                        } else if (apply_status == 5) {
+                            Toast.makeText(SuningOrderDetailActivity.this, "已退款。", Toast.LENGTH_SHORT).show();
+                        } else if (apply_status == 6) {
+                            Toast.makeText(SuningOrderDetailActivity.this, "已退货。", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                break;
+            case 0:
+                Toast.makeText(SuningOrderDetailActivity.this, applyStateBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -559,5 +632,19 @@ public class SuningOrderDetailActivity extends BaseActivity {
                 Toast.makeText(SuningOrderDetailActivity.this, "确认订单失败！！！", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    /**
+     * 检查申请状态
+     */
+    private void checkApplyState(String order_id, String orderItemId) {
+        if (netUtil == null) {
+            netUtil = new NetUtil();
+        }
+        whick = "apply_state";
+        map = new HashMap<>();
+        map.put("order_id", order_id);
+        map.put("orderItemId", orderItemId);
+        netUtil.okHttp2Server2(apply_state_url, map);
     }
 }

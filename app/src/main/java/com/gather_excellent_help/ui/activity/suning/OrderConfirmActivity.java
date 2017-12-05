@@ -19,6 +19,7 @@ import com.gather_excellent_help.bean.AddressDetailBean;
 import com.gather_excellent_help.bean.suning.SuningCreateBean;
 import com.gather_excellent_help.bean.suning.SuningFreeBean;
 import com.gather_excellent_help.bean.suning.SuningSpecidBackBean;
+import com.gather_excellent_help.bean.suning.SuningStockBean;
 import com.gather_excellent_help.bean.suning.SuningWjsonBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
@@ -46,6 +47,7 @@ public class OrderConfirmActivity extends BaseActivity {
     private RelativeLayout rl_exit;
     private TextView tv_top_title_name;
     private TextView tv_order_create_confirm;
+
     //地址相关控件
     private TextView tv_sunng_add_newaddress;
     private RelativeLayout rl_suning_default_address;
@@ -80,6 +82,7 @@ public class OrderConfirmActivity extends BaseActivity {
     private String address_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=GetUserAddress";//地址列表接口
     private String free_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=GetSerfree";//运费接口
     private String specsid_url = Url.BASE_URL + "suning/GoodsInfo.ashx?action=Get_Specs_Id";//商品规格返回id接口
+    private String pcs_url = Url.BASE_URL + "suning/GoodsInfo.ashx?action=GetStoreQuantity";//是否有货
     private String whick = "";
     private Map<String, String> map;
     private NetUtil netUtil;
@@ -106,6 +109,9 @@ public class OrderConfirmActivity extends BaseActivity {
     private String spec_id = "";//一组产品规格（33,32,39）
     private String channel_id = "";//产品参数
     private String spec_back_id = "";//一组产品
+    private String product_id = "";
+
+    private boolean isHavaGoods = true;
 
 
     @Override
@@ -162,6 +168,7 @@ public class OrderConfirmActivity extends BaseActivity {
     private void initData() {
         userLogin = Tools.getUserLogin(this);
         Intent intent = getIntent();
+        product_id = intent.getStringExtra("product_id");
         ware_json = intent.getStringExtra("ware_json");
         goods_img = intent.getStringExtra("goods_img");
         goods_title = intent.getStringExtra("goods_title");
@@ -183,7 +190,7 @@ public class OrderConfirmActivity extends BaseActivity {
                     .into(iv_bottom_pop_img);//请求成功后把图片设置到的控件
         }
         if (goods_title != null) {
-            tv_bottom_pop_name.setText("\t\t\t\t\t\t"+goods_title);
+            tv_bottom_pop_name.setText("\t\t\t\t\t\t" + goods_title);
         }
         if (ware_price != null) {
             tv_bottom_pop_goodprice.setText("￥" + goods_price);
@@ -225,16 +232,14 @@ public class OrderConfirmActivity extends BaseActivity {
         nas_order_confirm_num.setOnButtonClickListener(new NumberAddSubView.OnButtonClickListener() {
             @Override
             public void onSubButton(View view, int value) {
-                goods_num = value;
-                ware_num = String.valueOf(goods_num);
-                showTotalprice();
+                LogUtil.e("value = " + value);
+                checkIsHave("2", area_id, product_id, String.valueOf(value));
             }
 
             @Override
             public void onAddButton(View view, int value) {
-                goods_num = value;
-                ware_num = String.valueOf(goods_num);
-                showTotalprice();
+                LogUtil.e("value = " + value);
+                checkIsHave("2", area_id, product_id, String.valueOf(value));
             }
         });
     }
@@ -265,7 +270,11 @@ public class OrderConfirmActivity extends BaseActivity {
                     tv_order_create_confirm.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            pushBuyOrder();
+                            if (isHavaGoods) {
+                                pushBuyOrder();
+                            } else {
+                                Toast.makeText(OrderConfirmActivity.this, "当前网络连接出现问题，请您重新下单再试。", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }, 1000);
                     break;
@@ -344,6 +353,8 @@ public class OrderConfirmActivity extends BaseActivity {
                 parseAddressData(response);
             } else if (whick.equals("specids")) {
                 parseSpecidData(response);
+            } else if (whick.equals("checkIsHave")) {
+                parseCheckIshavaData(response);
             }
         }
 
@@ -352,6 +363,33 @@ public class OrderConfirmActivity extends BaseActivity {
             LogUtil.e("网络连接出现问题~" + call.toString() + "-" + e.getMessage());
             rl_net_show.setVisibility(View.GONE);
             tv_order_create_confirm.setClickable(true);
+            isHavaGoods = false;
+        }
+    }
+
+    /**
+     * 解析判断库存数据
+     *
+     * @param response
+     */
+    private void parseCheckIshavaData(String response) {
+        LogUtil.e(response);
+        isHavaGoods = true;
+        SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
+        int statusCode = suningStockBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                goods_num = goods_num + 1;
+                ware_num = String.valueOf(goods_num);
+                nas_order_confirm_num.setValue(goods_num);
+                showTotalprice();
+                break;
+            case 0:
+                Toast.makeText(OrderConfirmActivity.this, "当前购买数量库存不足！！！", Toast.LENGTH_SHORT).show();
+                nas_order_confirm_num.setValue(goods_num);
+                ware_num = String.valueOf(goods_num);
+                showTotalprice();
+                break;
         }
     }
 
@@ -409,7 +447,7 @@ public class OrderConfirmActivity extends BaseActivity {
     }
 
 
-    private void showTotalprice(){
+    private void showTotalprice() {
         DecimalFormat df = new DecimalFormat("#0.00");
         tv_confirm_postage.setText("免邮费");
         tv_confirm_goods_price.setText("￥" + df.format(goods_price));
@@ -470,19 +508,19 @@ public class OrderConfirmActivity extends BaseActivity {
                         }
                     }
                     AddressDetailBean.DataBean dataBean = data.get(default_index);
-                    if(dataBean!=null) {
+                    if (dataBean != null) {
                         address = dataBean.getAddress();
-                        if(dataBean.getAccept_name()!=null) {
+                        if (dataBean.getAccept_name() != null) {
                             tv_suning_address_name.setText(dataBean.getAccept_name());
                         }
-                        if(dataBean.getMobile()!=null) {
+                        if (dataBean.getMobile() != null) {
                             tv_suning_address_phone.setText(dataBean.getMobile());
                         }
-                        if(dataBean.getArea()!=null && address!=null) {
+                        if (dataBean.getArea() != null && address != null) {
                             tv_suning_address_details.setText(dataBean.getArea() + address);
                         }
                         addr_id = String.valueOf(dataBean.getId());
-                        area_id = dataBean.getArea_id();
+                        this.area_id = dataBean.getArea_id();
                     }
                 } else {
                     tv_sunng_add_newaddress.setVisibility(View.VISIBLE);
@@ -534,6 +572,26 @@ public class OrderConfirmActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 判断库存
+     */
+    private void checkIsHave(String addrWay, String addstr, String productId, String num) {
+        if(addstr!=null && !TextUtils.isEmpty(addstr)) {
+            String[] split = addstr.split(",");
+            addstr = split[0] + "," +split[1] + "," + split[2];
+            whick = "checkIsHave";
+            map = new HashMap<>();
+            map.put("addrstr", addstr);
+            map.put("addrWay", addrWay);
+            map.put("ProductId", productId);
+            map.put("lnglat", "");
+            map.put("num", num);
+            netUtil.okHttp2Server2(pcs_url, map);
+        }else{
+            Toast.makeText(OrderConfirmActivity.this, "请选择收货地址", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

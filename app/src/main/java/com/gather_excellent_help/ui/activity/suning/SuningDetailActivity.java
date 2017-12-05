@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -95,7 +96,6 @@ public class SuningDetailActivity extends FragmentActivity {
      * 初始化控件
      */
     private void initView() {
-
         draglayout = (DragLayout) findViewById(R.id.draglayout);
         fl_suning_top = (FrameLayout) findViewById(R.id.fl_suning_top);
         fl_suning_bottom = (FrameLayout) findViewById(R.id.fl_suning_bottom);
@@ -149,6 +149,15 @@ public class SuningDetailActivity extends FragmentActivity {
         tv_suning_detail_cart.setOnClickListener(myonclickListener);
         tv_suning_detail_buy.setClickable(false);
         tv_suning_detail_cart.setClickable(false);
+        fragment1.setOnLimitNumListener(new VerticalFragment1.OnLimitNumListener() {
+            @Override
+            public void onLimitResult() {
+                tv_suning_detail_buy.setBackgroundColor(Color.parseColor("#aaaaaa"));
+                tv_suning_detail_cart.setBackgroundColor(Color.parseColor("#aaaaaa"));
+                tv_suning_detail_cart.setText("超过限购数量");
+                tv_suning_detail_buy.setText("无法购买");
+            }
+        });
 
     }
 

@@ -30,7 +30,9 @@ public class GoodscartOpenHelper extends SQLiteOpenHelper {
                 + "product_mprice text,"
                 + "product_pic text,"
                 + "product_spec_id text,"
-                + "product_check text)";
+                + "product_check text,"
+                + "product_goodsid text,"
+                + "product_spec_limit text)";
         db.execSQL(sql);
     }
 

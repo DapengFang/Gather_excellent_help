@@ -9,4 +9,37 @@
 
     <include layout="@layout/top_zhuangai_bar"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:text="add"
+        android:onClick="add"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x9"
+        android:background="#fff"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:text="del"
+        android:onClick="del"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x9"
+        android:background="#fff"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:text="upd"
+        android:onClick="upd"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x9"
+        android:background="#fff"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:text="get"
+        android:onClick="get"/>
+
 </LinearLayout>

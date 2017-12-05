@@ -30,7 +30,7 @@ public class SqliteServiceManager implements GoodscartService {
     public void addGoods(Object[] params) {
         try {
             db = goodscartOpenHelper.getWritableDatabase();
-            String sql = "insert into goods_cart(product_id,product_title,product_num,product_spec,product_sprice,product_mprice,product_pic,product_spec_id,product_check) values(?,?,?,?,?,?,?,?,?)";
+            String sql = "insert into goods_cart(product_id,product_title,product_num,product_spec,product_sprice,product_mprice,product_pic,product_spec_id,product_check,product_goodsid,product_spec_limit) values(?,?,?,?,?,?,?,?,?,?,?)";
             db.execSQL(sql, params);
         } catch (Exception e) {
             e.printStackTrace();

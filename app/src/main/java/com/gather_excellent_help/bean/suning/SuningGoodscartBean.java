@@ -41,6 +41,8 @@ public class SuningGoodscartBean {
         private String product_spec;
         private String product_sprice;
         private String product_spec_id;
+        private String product_spec_limit;
+        private String product_goodsid;
 
         public String getProduct_mprice() {
             return product_mprice;
@@ -120,6 +122,22 @@ public class SuningGoodscartBean {
 
         public void setProduct_spec_id(String product_spec_id) {
             this.product_spec_id = product_spec_id;
+        }
+
+        public String getProduct_spec_limit() {
+            return product_spec_limit;
+        }
+
+        public void setProduct_spec_limit(String product_spec_limit) {
+            this.product_spec_limit = product_spec_limit;
+        }
+
+        public String getProduct_goodsid() {
+            return product_goodsid;
+        }
+
+        public void setProduct_goodsid(String product_goodsid) {
+            this.product_goodsid = product_goodsid;
         }
     }
 }

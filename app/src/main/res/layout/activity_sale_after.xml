@@ -121,11 +121,6 @@
         android:orientation="horizontal"
         android:padding="@dimen/x10">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/sale_money_icon" />
-
         <LinearLayout
             android:id="@+id/ll_sale_after_money_tuikuan"
             android:layout_width="0dp"
@@ -135,12 +130,26 @@
             android:gravity="center_vertical"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="仅退款"
-                android:textColor="#333333"
-                android:textSize="@dimen/x12" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/sale_money_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x3"
+                    android:text="仅退款"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/x12" />
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -169,11 +178,6 @@
         android:orientation="horizontal"
         android:padding="@dimen/x10">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/sale_back_icon" />
-
         <LinearLayout
             android:id="@+id/ll_sale_after_choice_tuikuan"
             android:layout_width="0dp"
@@ -183,12 +187,26 @@
             android:gravity="center_vertical"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="退货退款"
-                android:textColor="#333333"
-                android:textSize="@dimen/x12" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/sale_back_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x3"
+                    android:text="退货退款"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/x12" />
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -218,11 +236,6 @@
         android:orientation="horizontal"
         android:padding="@dimen/x10">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/sale_exchange_icon" />
-
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -232,12 +245,26 @@
             android:gravity="center_vertical"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="换货"
-                android:textColor="#333333"
-                android:textSize="@dimen/x12" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/sale_exchange_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x3"
+                    android:text="换货"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/x12" />
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"

@@ -117,8 +117,7 @@ public class SuningOrderActivity extends BaseActivity {
         Intent intent = getIntent();
         pay_status = intent.getStringExtra("pay_status");
         tv_top_title_name.setText("苏宁订单");
-        //userLogin = Tools.getUserLogin(this);
-        userLogin ="9369";
+        userLogin = Tools.getUserLogin(this);
         netUtil = new NetUtil();
         vidacatorControll();
         final int childCount = vid_order_manager.getChildCount();

@@ -13,6 +13,7 @@ import com.baoyachi.stepview.VerticalStepView;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.BackRebateBean;
 import com.gather_excellent_help.bean.suning.SuningLogisticsBean;
+import com.gather_excellent_help.utils.LogUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,16 +58,29 @@ public class LogisticsInfoAdapter extends RecyclerView.Adapter<LogisticsInfoAdap
         List<SuningLogisticsBean.DataBean.LogisticsDetailBean> logisticsDetail = dataBean.getLogisticsDetail();
         if (logisticsDetail != null && logisticsDetail.size() > 0) {
             ArrayList<String> list = new ArrayList<>();
+            list.add("欢迎您在聚优帮平台购物");
             for (int i = 0; i < logisticsDetail.size(); i++) {
                 SuningLogisticsBean.DataBean.LogisticsDetailBean logisticsDetailBean = logisticsDetail.get(i);
-                String operateState = logisticsDetailBean.getOperateState();
-                String operateTime = logisticsDetailBean.getOperateTime();
-                try {
-                    Date date = df.parse(operateTime);
-                    String curr_time = df2.format(date);
-                    list.add(operateState+"\n"+curr_time);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                if (logisticsDetailBean != null) {
+                    String operateState = logisticsDetailBean.getOperateState();
+                    String operateTime = logisticsDetailBean.getOperateTime();
+                    try {
+                        String curr_time = "";
+                        String curr_state = "";
+                        if (operateState != null && !TextUtils.isEmpty(operateState)) {
+                            curr_state = operateState;
+                        }
+                        if (operateTime != null && !TextUtils.isEmpty(operateTime)) {
+                            Date date = df.parse(operateTime);
+                            curr_time = df2.format(date);
+                        }
+                        if(!TextUtils.isEmpty(curr_state) || !TextUtils.isEmpty(curr_time)) {
+                            list.add(curr_state + "\n" + curr_time);
+                            LogUtil.e(curr_state + "\n" + curr_time);
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             holder.vstep_logistics.setStepsViewIndicatorComplectingPosition(list.size())//设置完成的步数

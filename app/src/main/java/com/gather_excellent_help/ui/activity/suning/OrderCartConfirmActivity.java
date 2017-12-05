@@ -21,6 +21,7 @@ import com.gather_excellent_help.bean.suning.SuningCreateBean;
 import com.gather_excellent_help.bean.suning.SuningFreeBean;
 import com.gather_excellent_help.bean.suning.SuningGoodscartBean;
 import com.gather_excellent_help.bean.suning.SuningSpecidBackBean;
+import com.gather_excellent_help.bean.suning.SuningStockBean;
 import com.gather_excellent_help.bean.suning.SuningWjsonBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
@@ -42,6 +43,8 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import okhttp3.Call;
+
+import static com.gather_excellent_help.R.id.nas_order_confirm_num;
 
 public class OrderCartConfirmActivity extends BaseActivity {
 
@@ -71,11 +74,11 @@ public class OrderCartConfirmActivity extends BaseActivity {
     private RecyclerView rcv_cart_order_confirm;
 
 
-
     private RelativeLayout rl_net_show;
 
     private String pushorder_url = Url.BASE_URL + "suning/AddSNOrder.aspx";//提交订单接口
     private String address_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=GetUserAddress";//地址列表接口
+    private String pcs_url = Url.BASE_URL + "suning/GoodsInfo.ashx?action=GetStoreQuantity";//是否有货
     private String whick = "";
     private Map<String, String> map;
     private NetUtil netUtil;
@@ -98,6 +101,8 @@ public class OrderCartConfirmActivity extends BaseActivity {
     private SuningOrdercartAdapter suningOrdercartAdapter;
 
     private String totalprice = "";//总价
+    private SuningGoodscartBean.DataBean dataBean;
+    private boolean isHavaGoods = true;
 
 
     @Override
@@ -138,7 +143,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
 
 
         //商品信息
-        rcv_cart_order_confirm = (RecyclerView)findViewById(R.id.rcv_cart_order_confirm);
+        rcv_cart_order_confirm = (RecyclerView) findViewById(R.id.rcv_cart_order_confirm);
 
         rl_net_show = (RelativeLayout) findViewById(R.id.rl_net_show);
     }
@@ -154,7 +159,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
         FullyLinearLayoutManager layoutManager = new FullyLinearLayoutManager(this);
         rcv_cart_order_confirm.setLayoutManager(layoutManager);
         getCartData();
-        if(cartData == null) {
+        if (cartData == null) {
             cartData = new ArrayList<>();
         }
         suningOrdercartAdapter = new SuningOrdercartAdapter(this, cartData);
@@ -173,17 +178,32 @@ public class OrderCartConfirmActivity extends BaseActivity {
         tv_sunng_add_newaddress.setOnClickListener(myonclickListener);
         rl_suning_default_address.setOnClickListener(myonclickListener);
         rl_suning_order_invoice_show.setOnClickListener(myonclickListener);
-        suningOrdercartAdapter.setOnNumButtonListener(new SuningOrdercartAdapter.OnNumButtonListener() {
+//        suningOrdercartAdapter.setOnNumButtonListener(new SuningOrdercartAdapter.OnNumButtonListener() {
+//            @Override
+//            public void onAddClick(View v, int position, String product_id, String num,String price) {
+//                totalprice =price;
+//                showTotalPrice();
+//            }
+//
+//            @Override
+//            public void onSubClick(View v, int position, String product_id, String num,String price) {
+//                totalprice = price;
+//                showTotalPrice();
+//            }
+//        });
+        suningOrdercartAdapter.setOnNumAddSubListener(new SuningOrdercartAdapter.OnNumAddSubListener() {
             @Override
-            public void onAddClick(View v, int position, String product_id, String num,String price) {
-                totalprice =price;
-                showTotalPrice();
+            public void onAddClick(View v, int position,int value) {
+                dataBean = cartData.get(position);
+                String product_id = dataBean.getProduct_id();
+                checkIsHave("2", area_id, product_id, String.valueOf(value));
             }
 
             @Override
-            public void onSubClick(View v, int position, String product_id, String num,String price) {
-                totalprice = price;
-                showTotalPrice();
+            public void onSubClick(View v, int position,int value) {
+                dataBean = cartData.get(position);
+                String product_id = dataBean.getProduct_id();
+                checkIsHave("2", area_id, product_id, String.valueOf(value));
             }
         });
     }
@@ -194,7 +214,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
     private void getCartData() {
         Intent intent = getIntent();
         String cart_json = intent.getStringExtra("cart_json");
-        if(cart_json!=null && !TextUtils.isEmpty(cart_json)) {
+        if (cart_json != null && !TextUtils.isEmpty(cart_json)) {
             SuningGoodscartBean suningGoodscartBean = new Gson().fromJson(cart_json, SuningGoodscartBean.class);
             cartData = suningGoodscartBean.getData();
         }
@@ -283,11 +303,11 @@ public class OrderCartConfirmActivity extends BaseActivity {
             return;
         }
         ArrayList<SuningWjsonBean> suningWjsonLists = new ArrayList<>();
-        if(cartData!=null && cartData.size()>0) {
-            for (int i=0;i<cartData.size();i++){
+        if (cartData != null && cartData.size() > 0) {
+            for (int i = 0; i < cartData.size(); i++) {
                 SuningGoodscartBean.DataBean dataBean = cartData.get(i);
                 goods_id = dataBean.getProduct_id();
-                spec_back_id =dataBean.getProduct_spec_id();
+                spec_back_id = dataBean.getProduct_spec_id();
                 ware_num = dataBean.getProduct_num();
                 SuningWjsonBean suningWjsonBean = new SuningWjsonBean();
                 suningWjsonBean.setArticle_id(goods_id);
@@ -323,6 +343,8 @@ public class OrderCartConfirmActivity extends BaseActivity {
             } else if (whick.equals("getaddress")) {
                 tv_order_create_confirm.setClickable(true);
                 parseAddressData(response);
+            } else if (whick.equals("checkIsHave")) {
+                parseCheckIshavaData(response);
             }
         }
 
@@ -331,12 +353,35 @@ public class OrderCartConfirmActivity extends BaseActivity {
             LogUtil.e("网络连接出现问题~" + call.toString() + "-" + e.getMessage());
             rl_net_show.setVisibility(View.GONE);
             tv_order_create_confirm.setClickable(true);
+            isHavaGoods = false;
         }
     }
 
     /**
-     * 展示付款金额
+     * 解析判断库存数据
      *
+     * @param response
+     */
+    private void parseCheckIshavaData(String response) {
+        LogUtil.e(response);
+        isHavaGoods = true;
+        SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
+        int statusCode = suningStockBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                String product_num = dataBean.getProduct_num();
+                int num = Integer.parseInt(product_num);
+                dataBean.setProduct_num(String.valueOf(num + 1));
+                break;
+            case 0:
+                Toast.makeText(OrderCartConfirmActivity.this, "当前购买数量库存不足！！！", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        initData();
+    }
+
+    /**
+     * 展示付款金额
      */
     private void showTotalPrice() {
         tv_confirm_postage.setText("免邮费");
@@ -365,7 +410,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
                         toCheckStand(pay_price, order_num, orderId);
                     }
                 }
-                EventBus.getDefault().post(new AnyEvent(EventType.CLEAR_ALL_GOODSCART,"清空购物车"));
+                EventBus.getDefault().post(new AnyEvent(EventType.CLEAR_ALL_GOODSCART, "清空购物车"));
                 break;
             case 0:
                 Toast.makeText(OrderCartConfirmActivity.this, suningCreateBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -397,21 +442,21 @@ public class OrderCartConfirmActivity extends BaseActivity {
                         }
                     }
                     AddressDetailBean.DataBean dataBean = data.get(default_index);
-                    if(dataBean!=null) {
+                    if (dataBean != null) {
                         address = dataBean.getAddress();
-                        if(dataBean.getAccept_name()!=null) {
+                        if (dataBean.getAccept_name() != null) {
                             tv_suning_address_name.setText(dataBean.getAccept_name());
                         }
-                        if(dataBean.getMobile()!=null) {
+                        if (dataBean.getMobile() != null) {
                             tv_suning_address_phone.setText(dataBean.getMobile());
                         }
-                        if(dataBean.getArea()!=null && address!=null) {
+                        if (dataBean.getArea() != null && address != null) {
                             tv_suning_address_details.setText(dataBean.getArea() + address);
                         }
                         addr_id = String.valueOf(dataBean.getId());
                         area_id = dataBean.getArea_id();
-                        if(area_id!=null) {
-                            if(suningOrdercartAdapter!=null) {
+                        if (area_id != null) {
+                            if (suningOrdercartAdapter != null) {
                                 double price = suningOrdercartAdapter.getTotalPrice();
                                 this.totalprice = String.valueOf(price);
                                 showTotalPrice();
@@ -468,5 +513,22 @@ public class OrderCartConfirmActivity extends BaseActivity {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
+    /**
+     * 判断库存
+     */
+    private void checkIsHave(String addrWay, String addstr, String productId, String num) {
+        String[] split = addstr.split(",");
+        addstr = split[0] + "," +split[1] + "," + split[2];
+        whick = "checkIsHave";
+        map = new HashMap<>();
+        map.put("addrstr", addstr);
+        map.put("addrWay", addrWay);
+        map.put("ProductId", productId);
+        map.put("lnglat", "");
+        map.put("num", num);
+        netUtil.okHttp2Server2(pcs_url, map);
+    }
+
 
 }
