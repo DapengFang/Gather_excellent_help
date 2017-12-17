@@ -24,6 +24,7 @@ import com.gather_excellent_help.bean.suning.SuningOrderConfirmBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.suning.saleafter.SaleAfterActivity;
+import com.gather_excellent_help.ui.adapter.SuningLogisticsInfoAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -86,6 +87,10 @@ public class SuningOrderDetailActivity extends BaseActivity {
     private int w_itemId;
     private int article_id;
     private DecimalFormat df;
+    private int goods_id;
+    private String productId = "";
+    private int count;
+    private boolean isContinue;
 
 
     @Override
@@ -265,82 +270,131 @@ public class SuningOrderDetailActivity extends BaseActivity {
      * @param df
      */
     private void showWareInfo(SuningOrderBean.DataBean dataBean, final DecimalFormat df) {
-        List<SuningOrderBean.DataBean.GoodListBean> goodList = dataBean.getGoodList();
-        order_id = dataBean.getId();
-        if (goodList != null && goodList.size() > 0) {
-            ll_suning_detail_container.removeAllViews();
-            for (int i = 0; i < goodList.size(); i++) {
-                View inflate = View.inflate(SuningOrderDetailActivity.this, R.layout.suning_order_detail_ware, null);
-                ImageView iv_suning_order_ware = (ImageView) inflate.findViewById(R.id.iv_suning_order_ware);
-                TextView tv_suning_order_title = (TextView) inflate.findViewById(R.id.tv_suning_order_title);
-                TextView tv_suning_order_type = (TextView) inflate.findViewById(R.id.tv_suning_order_type);
-                TextView tv_suning_order_realprice = (TextView) inflate.findViewById(R.id.tv_suning_order_realprice);
-                TextView tv_suning_order_oldprice = (TextView) inflate.findViewById(R.id.tv_suning_order_oldprice);
-                TextView tv_suning_order_number = (TextView) inflate.findViewById(R.id.tv_suning_order_number);
-                RelativeLayout rl_suning_detail_back = (RelativeLayout) inflate.findViewById(R.id.rl_suning_detail_back);
-                TextView tv_item_order_back = (TextView) inflate.findViewById(R.id.tv_item_order_back);
-                TextView tv_item_order_seelogistic = (TextView) inflate.findViewById(R.id.tv_item_order_seelogistic);
-                goodListBean = goodList.get(i);
-                if (goodListBean != null) {
-                    article_id = goodListBean.getArticle_id();
-                    goods_title = goodListBean.getGoods_title();
-                    spec_text = goodListBean.getSpec_text();
-                    real_price = goodListBean.getReal_price();
-                    goods_price = goodListBean.getGoods_price();
-                    quantity = goodListBean.getQuantity();
-                    w_order_id = goodListBean.getOrder_id();
-                    w_itemId = goodListBean.getItemId();
-                    if (goodListBean.getImg_url() != null) {
-                        String img_url = goodListBean.getImg_url().replace("800x800", "400x400");
-                        Glide.with(SuningOrderDetailActivity.this).load(img_url)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
-                                .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
-                                .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
-                                .into(iv_suning_order_ware);//请求成功后把图片设置到的控件
-                    }
-                    if (spec_text != null) {
-                        tv_suning_order_type.setText(spec_text);
-                    }
+        try {
+            final List<SuningOrderBean.DataBean.GoodListBean> goodList = dataBean.getGoodList();
+            order_id = dataBean.getId();
+            if (goodList != null && goodList.size() > 0) {
+                ll_suning_detail_container.removeAllViews();
+                for (int i = 0; i < goodList.size(); i++) {
+                    View inflate = View.inflate(SuningOrderDetailActivity.this, R.layout.suning_order_detail_ware, null);
+                    LinearLayout ll_order_detail_ware = (LinearLayout) inflate.findViewById(R.id.ll_order_detail_ware);
+                    ImageView iv_suning_order_ware = (ImageView) inflate.findViewById(R.id.iv_suning_order_ware);
+                    TextView tv_suning_order_title = (TextView) inflate.findViewById(R.id.tv_suning_order_title);
+                    TextView tv_suning_order_type = (TextView) inflate.findViewById(R.id.tv_suning_order_type);
+                    TextView tv_suning_order_realprice = (TextView) inflate.findViewById(R.id.tv_suning_order_realprice);
+                    TextView tv_suning_order_oldprice = (TextView) inflate.findViewById(R.id.tv_suning_order_oldprice);
+                    TextView tv_suning_order_number = (TextView) inflate.findViewById(R.id.tv_suning_order_number);
+                    RelativeLayout rl_suning_detail_back = (RelativeLayout) inflate.findViewById(R.id.rl_suning_detail_back);
+                    TextView tv_item_order_back = (TextView) inflate.findViewById(R.id.tv_item_order_back);
+                    TextView tv_item_order_seelogistic = (TextView) inflate.findViewById(R.id.tv_item_order_seelogistic);
+                    goodListBean = goodList.get(i);
+                    if (goodListBean != null) {
+                        article_id = goodListBean.getArticle_id();
+                        goods_id = goodListBean.getGoods_id();
+                        productId = goodListBean.getProductId();
+                        goods_title = goodListBean.getGoods_title();
+                        spec_text = goodListBean.getSpec_text();
+                        real_price = goodListBean.getReal_price();
+                        goods_price = goodListBean.getGoods_price();
+                        quantity = goodListBean.getQuantity();
+                        w_order_id = goodListBean.getOrder_id();
+                        w_itemId = goodListBean.getItemId();
+                        if (goodListBean.getImg_url() != null) {
+                            String img_url = goodListBean.getImg_url().replace("800x800", "400x400");
+                            Glide.with(SuningOrderDetailActivity.this).load(img_url)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                                    .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                                    .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                                    .into(iv_suning_order_ware);//请求成功后把图片设置到的控件
+                        }
+                        if (spec_text != null) {
+                            if (spec_text.length() > 16) {
+                                String new_spec = spec_text.substring(0, 16) + "...";
+                                tv_suning_order_type.setText(new_spec);
+                            } else {
+                                tv_suning_order_type.setText(spec_text);
+                            }
+                        }
 
-                    if (goods_title != null) {
-                        tv_suning_order_title.setText(goods_title);
-                    }
-                    tv_suning_order_realprice.setText("￥" + String.valueOf(df.format(real_price)));
-                    tv_suning_order_oldprice.getPaint().setAntiAlias(true);
-                    tv_suning_order_oldprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-                    tv_suning_order_oldprice.setText("￥" + String.valueOf(df.format(goods_price)));
-                    tv_suning_order_number.setText("x" + quantity);
-                    if (status == 1) {
-                        rl_suning_detail_back.setVisibility(View.GONE);
-                    } else if (status == 2) {
-                        rl_suning_detail_back.setVisibility(View.VISIBLE);
-                    } else if (status == 3) {
-                        rl_suning_detail_back.setVisibility(View.VISIBLE);
-                    } else if (status == 4) {
-                        rl_suning_detail_back.setVisibility(View.VISIBLE);
-                    } else {
-                        rl_suning_detail_back.setVisibility(View.GONE);
-                    }
-                    tv_item_order_back.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            checkApplyState(String.valueOf(w_order_id), String.valueOf(w_itemId));
-                            //toBackApply(goodListBean, goods_title, spec_text, df, real_price, goods_price, quantity, article_id, order_id);
+                        if (goods_title != null) {
+                            tv_suning_order_title.setText(goods_title);
                         }
-                    });
-                    tv_item_order_seelogistic.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(SuningOrderDetailActivity.this, LogisticsInfoActivity.class);
-                            intent.putExtra("order_id", order_id);
-                            intent.putExtra("article_id", article_id);
-                            startActivity(intent);
+                        tv_suning_order_realprice.setText("￥" + String.valueOf(df.format(real_price)));
+                        tv_suning_order_oldprice.getPaint().setAntiAlias(true);
+                        tv_suning_order_oldprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+                        tv_suning_order_oldprice.setText("￥" + String.valueOf(df.format(goods_price)));
+                        tv_suning_order_number.setText("x" + quantity);
+                        if (status == 1) {
+                            rl_suning_detail_back.setVisibility(View.GONE);
+                        } else if (status == 2) {
+                            rl_suning_detail_back.setVisibility(View.VISIBLE);
+                        } else if (status == 3) {
+                            rl_suning_detail_back.setVisibility(View.VISIBLE);
+                        } else if (status == 4) {
+                            rl_suning_detail_back.setVisibility(View.VISIBLE);
+                        } else {
+                            rl_suning_detail_back.setVisibility(View.GONE);
                         }
-                    });
-                    ll_suning_detail_container.addView(inflate);
+                        final int finalI = i;
+                        tv_item_order_back.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                goodListBean = goodList.get(finalI);
+                                if (goodListBean != null) {
+                                    w_order_id = goodListBean.getOrder_id();
+                                    w_itemId = goodListBean.getItemId();
+                                }
+                                checkApplyState(String.valueOf(w_order_id), String.valueOf(w_itemId));
+                                //toBackApply(goodListBean, goods_title, spec_text, df, real_price, goods_price, quantity, article_id, order_id);
+                            }
+                        });
+                        tv_item_order_seelogistic.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                goodListBean = goodList.get(finalI);
+                                if (goodListBean != null) {
+                                    article_id = goodListBean.getArticle_id();
+                                }
+                                Intent intent = new Intent(SuningOrderDetailActivity.this, SuningLogisticsDetailInfoActivity.class);
+                                intent.putExtra("order_id", order_id);
+                                intent.putExtra("article_id", article_id);
+                                startActivity(intent);
+                            }
+                        });
+                        ll_order_detail_ware.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                goodListBean = goodList.get(finalI);
+                                if (goodListBean != null) {
+                                    article_id = goodListBean.getArticle_id();
+                                    goods_id = goodListBean.getGoods_id();
+                                    productId = goodListBean.getProductId();
+                                    goods_title = goodListBean.getGoods_title();
+                                    spec_text = goodListBean.getSpec_text();
+                                    real_price = goodListBean.getReal_price();
+                                    goods_price = goodListBean.getGoods_price();
+                                    quantity = goodListBean.getQuantity();
+                                    w_order_id = goodListBean.getOrder_id();
+                                    w_itemId = goodListBean.getItemId();
+                                }
+                                Intent intent = new Intent(SuningOrderDetailActivity.this, SuningDetailActivity.class);
+                                intent.putExtra("article_id", article_id);
+                                intent.putExtra("goods_id", productId);
+                                intent.putExtra("goods_img", goodListBean.getImg_url());
+                                intent.putExtra("goods_title", goods_title);
+                                intent.putExtra("goods_price", df.format(real_price));
+                                intent.putExtra("c_price", df.format(goods_price));
+                                startActivity(intent);
+                                LogUtil.e("suning detail = " + article_id + "-" + goods_id + "-" + goodListBean.getImg_url() + "-" + real_price + "-" + goods_price);
+                            }
+                        });
+                        ll_suning_detail_container.addView(inflate);
+                    }
                 }
             }
-
+        } catch (Exception e) {
+            LogUtil.e("SuningOrderDetailActivity error");
+            Toast.makeText(SuningOrderDetailActivity.this, "系统出现故障，请退出后重新打开！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -468,7 +522,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
                 alertDialog.show();
             }
         } else if (status == 3) {
-            seeLogisticsInfo();
+            //seeLogisticsInfo();
         }
     }
 
@@ -507,14 +561,22 @@ public class SuningOrderDetailActivity extends BaseActivity {
      * 提醒发货
      */
     private void remindSend() {
-        Toast.makeText(this, "已经提醒卖家发货了，请您耐心等待。。。", Toast.LENGTH_SHORT).show();
+        if (count > 2) {
+            if (isContinue) {
+                Toast.makeText(SuningOrderDetailActivity.this, "超过提醒次数。", Toast.LENGTH_SHORT).show();
+                isContinue = true;
+            }
+            return;
+        }
+        Toast.makeText(this, "提醒成功。", Toast.LENGTH_SHORT).show();
+        count++;
     }
 
     /**
      * 查看物流信息
      */
     private void seeLogisticsInfo() {
-        Intent intent = new Intent(SuningOrderDetailActivity.this, LogisticsInfoActivity.class);
+        Intent intent = new Intent(SuningOrderDetailActivity.this, SuningLogisticsDetailInfoActivity.class);
         intent.putExtra("order_id", order_id);
         startActivity(intent);
     }

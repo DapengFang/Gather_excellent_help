@@ -3,7 +3,11 @@ package com.gather_excellent_help.presenter.homepresenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -168,18 +172,31 @@ public class VipPresenter extends BasePresenter {
                     double tkRate = dataBean.getTkRate() / 100;
                     double zhuan = (sell_price - couponsPrice) * tkRate * 0.9f * user_rate * dataBean.getCommission_rate();
                     double coast = sell_price - couponsPrice - zhuan;
+
+                    double suning_rate = dataBean.getSuning_rate();
+                    double s_zhuan = sell_price * suning_rate * user_rate;
+                    double s_coast = sell_price - s_zhuan;
+
                     tv_vip_ware_person.setVisibility(View.GONE);
-                    if (title != null && tv_vip_ware_title != null) {
-                        tv_vip_ware_title.setText("\t\t\t\t\t\t" + title);
-                    }
+
                     if (tv_vip_ware_price != null) {
                         tv_vip_ware_price.setText("￥" + df.format(sell_price));
                     }
                     if (site_id == 1) {
-                        if (tv_activity_sun_tao_icon != null) {
-                            tv_activity_sun_tao_icon.setSelected(false);
-                            tv_activity_sun_tao_icon.setText("淘宝");
-                        }
+//
+//                        if (title != null && tv_vip_ware_title != null) {
+//                            tv_vip_ware_title.setText("\t\t\t\t\t\t" + title);
+//                        }
+
+                        SpannableString span = new SpannableString("\t\t" + title);
+                        ImageSpan image = new ImageSpan(context, R.drawable.taobao_order_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+                        span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tv_vip_ware_title.setText(span);
+
+//                        if (tv_activity_sun_tao_icon != null) {
+//                            tv_activity_sun_tao_icon.setSelected(false);
+//                            tv_activity_sun_tao_icon.setText("淘宝");
+//                        }
                         if (img_url != null && iv_vip_ware_img != null) {
                             if (context != null && !context.isFinishing()) {
                                 Glide.with(context).load(img_url + "_320x320q90.jpg")
@@ -219,13 +236,37 @@ public class VipPresenter extends BasePresenter {
                             ll_vip_zera_zhuan.setVisibility(View.GONE);
                         }
                     } else if (site_id == 2) {
-                        if (ll_vip_zera_zhuan != null) {
+                        if (tv_vip_ware_zhuan != null) {
+                            tv_vip_ware_zhuan.setText("￥" + df.format(s_zhuan));
+                        }
+                        if (tv_vip_ware_coast != null) {
+                            tv_vip_ware_coast.setText("￥" + df.format(s_coast));
+                        }
+
+                        if (shopType == 1) {
+                            if (isToggle) {
+                                ll_vip_zera_zhuan.setVisibility(View.GONE);
+                            } else {
+                                ll_vip_zera_zhuan.setVisibility(View.VISIBLE);
+                            }
+                        } else {
                             ll_vip_zera_zhuan.setVisibility(View.GONE);
                         }
-                        if (tv_activity_sun_tao_icon != null) {
-                            tv_activity_sun_tao_icon.setSelected(true);
-                            tv_activity_sun_tao_icon.setText("苏宁");
+
+                        if (s_zhuan == 0) {
+                            ll_vip_zera_zhuan.setVisibility(View.GONE);
                         }
+
+                        SpannableString span = new SpannableString("\t\t" + title);
+                        ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+                        span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tv_vip_ware_title.setText(span);
+
+//                        if (tv_activity_sun_tao_icon != null) {
+//                            tv_activity_sun_tao_icon.setSelected(true);
+//                            tv_activity_sun_tao_icon.setText("苏宁");
+//                        }
+
                         if (img_url != null && iv_vip_ware_img != null) {
                             if (context != null && !context.isFinishing()) {
                                 Glide.with(context).load(img_url.replace("800x800", "400x400"))

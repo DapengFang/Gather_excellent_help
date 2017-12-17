@@ -18,22 +18,5 @@
         android:layout_marginBottom="@dimen/x30"
         android:orientation="horizontal"></LinearLayout>
 
-    <ImageView
-        android:id="@+id/iv_suning_detail_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/x10"
-        android:layout_marginTop="@dimen/x10"
-        android:src="@drawable/suning_detatil_back_icon" />
-
-    <ImageView
-        android:id="@+id/iv_suning_detail_cart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/x10"
-        android:layout_marginTop="@dimen/x10"
-        android:src="@drawable/suning_detail_cart_icon" />
-
 
 </RelativeLayout>

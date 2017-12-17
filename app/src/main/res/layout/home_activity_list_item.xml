@@ -26,17 +26,6 @@
                 android:layout_centerInParent="true"
                 android:background="#11000000" />
 
-            <TextView
-                android:id="@+id/tv_activity_ware_coupon"
-                android:layout_width="@dimen/x53"
-                android:layout_height="@dimen/x12"
-                android:layout_alignTop="@id/iv_activity_list_ware_img"
-                android:layout_alignRight="@id/iv_activity_list_ware_img"
-                android:background="@drawable/juxing_coupon_shape"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/x8"
-                android:textStyle="bold" />
         </RelativeLayout>
 
 
@@ -70,6 +59,7 @@
                     android:textColor="@drawable/sun_tao_text_selector"
                     android:textSize="@dimen/x10"
                     android:layout_marginTop="@dimen/x3"
+                    android:visibility="gone"
                     android:background="@drawable/sun_tao_icon_selector"/>
 
             </RelativeLayout>
@@ -175,6 +165,20 @@
         android:layout_marginBottom="@dimen/x6"
         android:layout_alignBottom="@id/ll_activity_list_ware"
         android:background="@drawable/activity_list_red_shape"/>
+
+    <TextView
+        android:id="@+id/tv_activity_ware_coupon"
+        android:layout_width="@dimen/x53"
+        android:layout_height="@dimen/x12"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@id/ll_activity_list_ware"
+        android:layout_marginRight="@dimen/x3"
+        android:layout_marginBottom="@dimen/x6"
+        android:background="@drawable/activity_list_red_shape"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x8"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="match_parent"

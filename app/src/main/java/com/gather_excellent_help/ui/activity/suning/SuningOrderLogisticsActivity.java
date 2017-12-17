@@ -70,15 +70,17 @@ public class SuningOrderLogisticsActivity extends BaseActivity {
     }
     public void del(View v){
         Toast.makeText(SuningOrderLogisticsActivity.this, "del", Toast.LENGTH_SHORT).show();
-        netCartUtil.deleteCart("0","9368","6");
+        netCartUtil.deleteCart("1","9368","6");
     }
     public void upd(View v){
-        Toast.makeText(SuningOrderLogisticsActivity.this, "upd", Toast.LENGTH_SHORT).show();
-        netCartUtil.updateCart("6","9368","7","2937","21787","2");
+
+
     }
     public void get(View v){
-        Toast.makeText(SuningOrderLogisticsActivity.this, "get", Toast.LENGTH_SHORT).show();
-        netCartUtil.getCartList("9368","10","1");
+        //Toast.makeText(SuningOrderLogisticsActivity.this, "get", Toast.LENGTH_SHORT).show();
+        //netCartUtil.getCartList("9368","10","1");
+        Toast.makeText(SuningOrderLogisticsActivity.this, "upd", Toast.LENGTH_SHORT).show();
+        netCartUtil.updateCart("8","9368","7","2936","35","2");
     }
 
     public class OnCartResponseListener implements NetCartUtil.OnCartResponseListener {
@@ -86,13 +88,13 @@ public class SuningOrderLogisticsActivity extends BaseActivity {
         @Override
         public void onCartResponse(String response, String whick) {
             LogUtil.e(whick + "=" +response);
-            if (whick == NetCartUtil.WHICH_ADD) {
+            if (whick.equals(NetCartUtil.WHICH_ADD)) {
 
-            } else if (whick == NetCartUtil.WHICH_DEL) {
+            } else if (whick.equals(NetCartUtil.WHICH_DEL)) {
 
-            } else if (whick == NetCartUtil.WHICH_UPD) {
+            } else if (whick.equals(NetCartUtil.WHICH_UPD)) {
 
-            } else if (whick == NetCartUtil.WHICH_GET) {
+            } else if (whick.equals(NetCartUtil.WHICH_GET)) {
 
             }
         }

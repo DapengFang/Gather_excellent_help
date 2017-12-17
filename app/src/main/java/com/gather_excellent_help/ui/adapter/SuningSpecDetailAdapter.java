@@ -6,9 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.suning.SuningSpecBean;
+import com.gather_excellent_help.utils.LogUtil;
 
 import java.util.List;
 
@@ -34,20 +36,25 @@ public class SuningSpecDetailAdapter extends RecyclerView.Adapter<SuningSpecDeta
 
     @Override
     public void onBindViewHolder(SuningSpecDetailViewHolder holder, final int position) {
-        SuningSpecBean.DataBean.ContentBean contentBean = data.get(position);
-        String title = contentBean.getTitle();
-        holder.tv_spec_detial.setText(title);
-        if (contentBean.isCheck()) {
-            holder.tv_spec_detial.setSelected(true);
-        } else {
-            holder.tv_spec_detial.setSelected(false);
-        }
-        holder.tv_spec_detial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSecondItemClickListenre.onSecondItemClick(v,position);
+        try {
+            SuningSpecBean.DataBean.ContentBean contentBean = data.get(position);
+            String title = contentBean.getTitle();
+            holder.tv_spec_detial.setText(title);
+            if (contentBean.isCheck()) {
+                holder.tv_spec_detial.setSelected(true);
+            } else {
+                holder.tv_spec_detial.setSelected(false);
             }
-        });
+            holder.tv_spec_detial.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onSecondItemClickListenre.onSecondItemClick(v,position);
+                }
+            });
+        }catch (Exception e){
+            LogUtil.e("SuningSpecDetailAdapter error");
+            Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

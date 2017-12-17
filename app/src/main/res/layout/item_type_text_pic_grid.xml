@@ -24,17 +24,6 @@
                 android:layout_centerInParent="true"
                 android:background="#11000000" />
 
-            <TextView
-                android:id="@+id/tv_rush_ware_coupons"
-                android:layout_width="@dimen/x70"
-                android:layout_height="@dimen/x15"
-                android:layout_alignRight="@id/iv_home_type_photo"
-                android:layout_alignTop="@id/iv_home_type_photo"
-                android:background="@drawable/juxing_coupon_shape"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/x10"
-                android:textStyle="bold" />
         </RelativeLayout>
 
         <LinearLayout
@@ -54,6 +43,7 @@
                    android:layout_width="match_parent"
                    android:layout_height="match_parent"
                    android:lineSpacingExtra="@dimen/x2"
+                   android:lines="2"
                    android:text="正品长虹全自动洗衣机7.5KG家用大容量波正品长虹全自动洗衣机7.5KG家用大容量波"
                    android:textColor="#333333"
                    android:textSize="@dimen/x14" />
@@ -68,6 +58,7 @@
                    android:textColor="@drawable/sun_tao_text_selector"
                    android:textSize="@dimen/x10"
                    android:layout_marginTop="@dimen/x3"
+                   android:visibility="gone"
                    android:background="@drawable/sun_tao_icon_selector"/>
 
            </RelativeLayout>
@@ -159,6 +150,20 @@
         android:background="@drawable/activity_list_red_shape"
         android:gravity="center"
         android:text="点我还有券"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x8"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_rush_ware_coupons"
+        android:layout_width="@dimen/x48"
+        android:layout_height="@dimen/x15"
+        android:layout_alignBottom="@id/ll_type_grid"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/x3"
+        android:layout_marginBottom="@dimen/x6"
+        android:background="@drawable/activity_list_red_shape"
+        android:gravity="center"
         android:textColor="@color/white"
         android:textSize="@dimen/x8"
         android:textStyle="bold" />

@@ -1,17 +1,27 @@
 package com.gather_excellent_help.ui.fragment.dragfragment;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,13 +43,16 @@ import com.gather_excellent_help.bean.suning.SuningSpecidBackBean;
 import com.gather_excellent_help.bean.suning.SuningStockBean;
 import com.gather_excellent_help.bean.suning.SuningWareBean;
 import com.gather_excellent_help.bean.suning.SuningWjsonBean;
+import com.gather_excellent_help.bean.suning.netcart.NetGoodscartAddBean;
 import com.gather_excellent_help.db.suning.SqliteServiceManager;
+import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.activity.suning.HackySeeBigimgActivity;
 import com.gather_excellent_help.ui.activity.suning.OrderConfirmActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningDetailActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningGoodscartActivity;
 import com.gather_excellent_help.ui.widget.PcsChoicePopupwindow;
 import com.gather_excellent_help.ui.widget.PcsDetailChoicePopupwindow;
+import com.gather_excellent_help.ui.widget.SharePopupwindow;
 import com.gather_excellent_help.ui.widget.SuningPcsChoicePopupwindow;
 import com.gather_excellent_help.ui.widget.SuningStandardPopupwindow;
 import com.gather_excellent_help.ui.widget.SuningWarenumPopupwindow;
@@ -47,7 +60,13 @@ import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
+import com.gather_excellent_help.utils.cartutils.NetCartUtil;
 import com.google.gson.Gson;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -152,6 +171,16 @@ public class VerticalFragment1 extends Fragment {
     private int purchased_num;
     private int sale_num;
 
+    private ImageView iv_suning_detail_share;
+
+    private NetCartUtil netCartUtil;
+    private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
+    private SharePopupwindow sharePopupwindow;
+    private AlertDialog dialog;
+    private String store_text;
+    private int store_status;
+    private int cancel_order_num;
+
 
     public class Myhandler extends Handler {
         @Override
@@ -223,8 +252,13 @@ public class VerticalFragment1 extends Fragment {
         //联网初始化
         netUtil = new NetUtil();
         netUtil2 = new NetUtil();
-        manager = new SqliteServiceManager(context);
+
+        //购物车数据相关
+        netCartUtil = new NetCartUtil();
+        OnCartResponseListener onCartResponseListener = new OnCartResponseListener();
+        netCartUtil.setOnCartResponseListener(onCartResponseListener);
         userLogin = Tools.getUserLogin(context);
+
         Bundle bundle = getArguments();
         article_id = bundle.getString("article_id");
         goods_id = bundle.getString("goods_id");
@@ -232,7 +266,6 @@ public class VerticalFragment1 extends Fragment {
         goods_title = bundle.getString("goods_title");
         goods_price = bundle.getString("goods_price");
         c_price = bundle.getString("c_price");
-        tv_activity_sun_tao_icon.setSelected(true);
         if (myhandler == null) {
             myhandler = new Myhandler();
         }
@@ -262,6 +295,7 @@ public class VerticalFragment1 extends Fragment {
         rl_vertical_see_ware_num.setOnClickListener(myonclickListener);
         iv_suning_detail_back.setOnClickListener(myonclickListener);
         iv_suning_detail_cart.setOnClickListener(myonclickListener);
+        iv_suning_detail_share.setOnClickListener(myonclickListener);
     }
 
     /**
@@ -276,6 +310,7 @@ public class VerticalFragment1 extends Fragment {
         map.put("user_id", userLogin);
         map.put("article_id", article_id);
         netUtil2.okHttp2Server2(limit_url, map);
+        LogUtil.e("------------------" + article_id);
     }
 
 
@@ -305,6 +340,7 @@ public class VerticalFragment1 extends Fragment {
 
         iv_suning_detail_back = (ImageView) rootView.findViewById(R.id.iv_suning_detail_back);
         iv_suning_detail_cart = (ImageView) rootView.findViewById(R.id.iv_suning_detail_cart);
+        iv_suning_detail_share = (ImageView) rootView.findViewById(R.id.iv_suning_detail_share);
         tv_good_detail_limit = (TextView) rootView.findViewById(R.id.tv_good_detail_limit);
     }
 
@@ -476,8 +512,213 @@ public class VerticalFragment1 extends Fragment {
                 case R.id.iv_suning_detail_cart:
                     toGoodsCart();
                     break;
+                case R.id.iv_suning_detail_share:
+                    shareToPlatform();
+                    break;
             }
         }
+    }
+
+    /**
+     * 分享到不同的平台
+     */
+    private void shareToPlatform() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP, Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_APN_SETTINGS};
+            ActivityCompat.requestPermissions((SuningDetailActivity) context, mPermissionList, STORAGE_PERMISSIONS_REQUEST_CODE);
+        } else {
+            shareWareUrl();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case STORAGE_PERMISSIONS_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    shareWareUrl();
+                } else {
+                    Toast.makeText(context, "请允许打开操作SDCard权限！！", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+
+    /**
+     * 商品转链分享
+     */
+    private void shareWareUrl() {
+        vShadow.setVisibility(View.VISIBLE);
+        showSharePopMenu();
+        sharePopupwindow.setOnItemClickListenr(new SharePopupwindow.OnItemClickListenr() {
+            @Override
+            public void onQQClick() {
+                showCopyDialog(SHARE_MEDIA.QQ);
+            }
+
+            @Override
+            public void onWeixinClick() {
+                showCopyDialog(SHARE_MEDIA.WEIXIN);
+            }
+
+            @Override
+            public void onSinaClick() {
+                showCopyDialog(SHARE_MEDIA.SINA);
+            }
+
+            @Override
+            public void onWeixinFriendClick() {
+                showCopyDialog(SHARE_MEDIA.WEIXIN_CIRCLE);
+            }
+        });
+    }
+
+    /**
+     * 剪切板剪切淘口令
+     *
+     * @param paltform
+     */
+    private void showCopyDialog(final SHARE_MEDIA paltform) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View inflate = View.inflate(context, R.layout.item_copy_taoword_dialog, null);
+        TextView tvCopyContent = (TextView) inflate.findViewById(R.id.tv_copy_taoword_content);
+        TextView tvCopyDismiss = (TextView) inflate.findViewById(R.id.tv_copy_taoword_dismiss);
+        TextView tvCopyShare = (TextView) inflate.findViewById(R.id.tv_copy_taoword_share);
+        final String share_content = "仅" + goods_price + "元" + goods_title;
+        tvCopyContent.setText(share_content);
+        dialog = builder.setView(inflate)
+                .show();
+
+        tvCopyDismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        tvCopyShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                cmb.setText(share_content);
+                shareDiffSolfplam(paltform);
+            }
+        });
+    }
+
+    /**
+     * 分享淘口令链接到不同给的平台
+     *
+     * @param platform
+     */
+    private void shareDiffSolfplam(SHARE_MEDIA platform) {
+        LogUtil.e(goods_img);
+        UMImage image = new UMImage(context, goods_img);//网络图片
+        UMImage thumb = new UMImage(context, R.mipmap.juyoubang_logo);
+        image.setThumb(thumb);
+        UMWeb web = new UMWeb("http://www.baidu.com");
+        web.setTitle(goods_title);//标题
+        web.setThumb(image);  //缩略图
+        web.setDescription("我在聚优帮看到了一件不错的商品,你也看看吧");//描述
+        new ShareAction((SuningDetailActivity) context)
+                .setPlatform(platform)//传入平台
+                .withMedia(web)//分享内容
+                .setCallback(shareListener)//回调监听器
+                .share();
+    }
+
+    private UMShareListener shareListener = new UMShareListener() {
+        /**
+         * @descrption 分享开始的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+
+        /**
+         * @descrption 分享成功的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            Toast.makeText(context, "分享成功", Toast.LENGTH_LONG).show();
+            if (dialog != null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            if (sharePopupwindow != null && sharePopupwindow.isShowing()) {
+                sharePopupwindow.dismiss();
+            }
+            if (vShadow != null) {
+                vShadow.setVisibility(View.GONE);
+            }
+        }
+
+        /**
+         * @descrption 分享失败的回调
+         * @param platform 平台类型
+         * @param t 错误原因
+         */
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            Toast.makeText(context, "分享失败" + t.getMessage(), Toast.LENGTH_LONG).show();
+            if (dialog != null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            if (sharePopupwindow != null && sharePopupwindow.isShowing()) {
+                sharePopupwindow.dismiss();
+            }
+            if (vShadow != null) {
+                vShadow.setVisibility(View.GONE);
+            }
+        }
+
+        /**
+         * @descrption 分享取消的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            Toast.makeText(context, "分享取消", Toast.LENGTH_LONG).show();
+            if (dialog != null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            if (sharePopupwindow != null && sharePopupwindow.isShowing()) {
+                sharePopupwindow.dismiss();
+            }
+            if (vShadow != null) {
+                vShadow.setVisibility(View.GONE);
+            }
+        }
+    };
+
+
+    private void showSharePopMenu() {
+        if (sharePopupwindow == null) {
+            sharePopupwindow = new SharePopupwindow(context, vShadow);
+            sharePopupwindow.showAtLocation(llRoot, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        } else if (sharePopupwindow != null
+                && sharePopupwindow.isShowing()) {
+            sharePopupwindow.dismiss();
+        } else {
+            sharePopupwindow.showAtLocation(llRoot, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        }
+
+    }
+
+    public String getAttr_id() {
+        return attr_id;
+    }
+
+    public String getAddrWay() {
+        return addrWay;
+    }
+
+    public String getLalotitude() {
+        return lalotitude;
     }
 
     /**
@@ -567,7 +808,7 @@ public class VerticalFragment1 extends Fragment {
      * 弹出选择规格的popwindow
      */
     private void showStandardPop(List<SuningSpecBean.DataBean> data) {
-        if(sale_num <=0 ) {
+        if (sale_num <= 0) {
             return;
         }
         vShadow.setVisibility(View.VISIBLE);
@@ -624,14 +865,12 @@ public class VerticalFragment1 extends Fragment {
                     LogUtil.e(ware_json);
                     suningStandardPopupwindow.dismiss();
                     vShadow.setVisibility(View.GONE);
-
+                    LogUtil.e("----------" + spec_ids);
                     boolean b = checkIsToBuy();
                     if (!b) {
-                        Toast.makeText(context, "该地区暂不支持购买该商品！！!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "定位失败，请您手动选择送货地区！", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    //String pcs = getPcs();
-                    //pcs = "江苏省,南京市,玄武区";
                     int ware_num = getWare_num();
                     checkIsHave(addrWay, attr_id, goods_id, String.valueOf(ware_num));
                 }
@@ -677,23 +916,34 @@ public class VerticalFragment1 extends Fragment {
      * @param data
      */
     private void setSpecShowAndData(List<SuningSpecBean.DataBean> data) {
-        for (int i = 0; i < data.size(); i++) {
-            SuningSpecBean.DataBean dataBean = data.get(i);
-            String title = dataBean.getTitle();
-            LogUtil.e("title = " + title);
-            List<SuningSpecBean.DataBean.ContentBean> content = dataBean.getContent();
-            for (int j = 0; j < content.size(); j++) {
-                SuningSpecBean.DataBean.ContentBean contentBean = content.get(j);
-                if (contentBean.isCheck()) {
-                    int spec_id = contentBean.getSpec_id();
-                    spec_ids += spec_id + ",";
-                    spec_titel += title + ":" + contentBean.getTitle() + ",";
+        if (data != null) {
+            if (data.size() > 0) {
+                for (int i = 0; i < data.size(); i++) {
+                    SuningSpecBean.DataBean dataBean = data.get(i);
+                    String title = dataBean.getTitle();
+                    LogUtil.e("title = " + title);
+                    List<SuningSpecBean.DataBean.ContentBean> content = dataBean.getContent();
+                    for (int j = 0; j < content.size(); j++) {
+                        SuningSpecBean.DataBean.ContentBean contentBean = content.get(j);
+                        if (contentBean.isCheck()) {
+                            int spec_id = contentBean.getSpec_id();
+                            spec_ids += spec_id + ",";
+                            spec_titel += title + ":" + contentBean.getTitle() + ",";
+                        }
+                    }
                 }
-            }
-        }
+                spec_titel = spec_titel.substring(0, spec_titel.length() - 1);
+                spec_ids = spec_ids.substring(0, spec_ids.length() - 1);
 
-        spec_titel = spec_titel.substring(0, spec_titel.length() - 1);
-        spec_ids = spec_ids.substring(0, spec_ids.length() - 1);
+            } else {
+                spec_titel = "";
+                spec_ids = "";
+            }
+        } else {
+            spec_titel = "";
+            spec_ids = "";
+        }
+        LogUtil.e(spec_titel + "------------" + spec_ids);
     }
 
     /**
@@ -702,37 +952,47 @@ public class VerticalFragment1 extends Fragment {
      * @param data
      */
     private void setDefaultSpecShowAndData(List<SuningSpecBean.DataBean> data) {
-        if (data != null && data.size() > 0) {
-            for (int i = 0; i < data.size(); i++) {
-                SuningSpecBean.DataBean dataBean = data.get(i);
-                String title = dataBean.getTitle();
-                List<SuningSpecBean.DataBean.ContentBean> content = dataBean.getContent();
-                if (content != null && content.size() > 0) {
-                    SuningSpecBean.DataBean.ContentBean contentBean = content.get(0);
-                    int spec_id = contentBean.getSpec_id();
-                    spec_ids += spec_id + ",";
-                    spec_titel += title + ":" + contentBean.getTitle() + ",";
+        try {
+            if (data != null) {
+                if (data.size() > 0) {
+                    for (int i = 0; i < data.size(); i++) {
+                        SuningSpecBean.DataBean dataBean = data.get(i);
+                        String title = dataBean.getTitle();
+                        List<SuningSpecBean.DataBean.ContentBean> content = dataBean.getContent();
+                        if (content != null && content.size() > 0) {
+                            SuningSpecBean.DataBean.ContentBean contentBean = content.get(0);
+                            int spec_id = contentBean.getSpec_id();
+                            spec_ids += spec_id + ",";
+                            spec_titel += title + ":" + contentBean.getTitle() + ",";
+                        }
+                    }
+                    if (spec_titel != null && !TextUtils.isEmpty(spec_titel)) {
+                        spec_titel = spec_titel.substring(0, spec_titel.length() - 1);
+                    }
+                    if (spec_ids != null && !TextUtils.isEmpty(spec_ids)) {
+                        spec_ids = spec_ids.substring(0, spec_ids.length() - 1);
+                    }
+                    if (spec_titel != null) {
+                        if (spec_titel.length() > 16) {
+                            spec_titel = spec_titel.substring(0, 16) + "...";
+                        }
+                    }
+                } else {
+                    spec_ids = "";
+                    spec_titel = "";
                 }
+                tv_vertical_standard_title.setText(spec_titel);
+                map = new HashMap<String, String>();
+                map.put("channel_id", "7");
+                map.put("article_id", article_id);
+                map.put("goods_id", spec_ids);
+                map.put("quantity", String.valueOf(ware_num));
+                ware_json = new Gson().toJson(map);
+                LogUtil.e("当前json = " + ware_json);
             }
-            if (spec_titel != null && !TextUtils.isEmpty(spec_titel)) {
-                spec_titel = spec_titel.substring(0, spec_titel.length() - 1);
-            }
-            if (spec_ids != null && !TextUtils.isEmpty(spec_ids)) {
-                spec_ids = spec_ids.substring(0, spec_ids.length() - 1);
-            }
-            if (spec_titel != null) {
-                if (spec_titel.length() > 16) {
-                    spec_titel = spec_titel.substring(0, 16) + "...";
-                }
-            }
-            tv_vertical_standard_title.setText(spec_titel);
-            map = new HashMap<String, String>();
-            map.put("channel_id", "7");
-            map.put("article_id", article_id);
-            map.put("goods_id", spec_ids);
-            map.put("quantity", String.valueOf(ware_num));
-            ware_json = new Gson().toJson(map);
-            LogUtil.e("当前json = " + ware_json);
+        } catch (Exception e) {
+            LogUtil.e("VerticalFragment setDefaultSpecShowAndData error");
+            Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -863,7 +1123,7 @@ public class VerticalFragment1 extends Fragment {
     private void parseSpecData(String response) {
         SuningSpecBean suningSpecBean = new Gson().fromJson(response, SuningSpecBean.class);
         data = suningSpecBean.getData();
-        if (data != null && data.size() > 0) {
+        if (data != null) {
             if (!TextUtils.isEmpty(isSpecFirst)) {
                 showStandardPop(data);
                 isSpecFirst = "";
@@ -881,7 +1141,7 @@ public class VerticalFragment1 extends Fragment {
 
         @Override
         public void getSuccessResponse(String response) {
-            LogUtil.e(response);
+            LogUtil.e(whick + "--" + response);
             if (whick.equals("spec")) {
                 parseSpecData(response);
             } else if (whick.equals("isHaveGoods")) {
@@ -909,26 +1169,40 @@ public class VerticalFragment1 extends Fragment {
         SuningLimitBean suningLimitBean = new Gson().fromJson(response, SuningLimitBean.class);
         int statusCode = suningLimitBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
-                List<SuningLimitBean.DataBean> data = suningLimitBean.getData();
-                if(data!=null && data.size()>0) {
-                    SuningLimitBean.DataBean dataBean = data.get(0);
-                    limit_num = dataBean.getLimit_num();
-                    purchased_num = dataBean.getPurchased_num();
-                    sale_num = limit_num - purchased_num;
-                    if(sale_num <=0) {
-                        rl_vertical_see_spec.setClickable(false);
-                        rl_vertical_see_ware_num.setClickable(false);
-                        onLimitNumListener.onLimitResult();
-                        tv_good_detail_limit.setText("限购" +  "--件");
-                    }else{
-                        limit_num = sale_num;
-                        tv_good_detail_limit.setText("限购" + limit_num + "件");
+            case 1:
+                try {
+                    List<SuningLimitBean.DataBean> data = suningLimitBean.getData();
+                    if (data != null && data.size() > 0) {
+                        SuningLimitBean.DataBean dataBean = data.get(0);
+                        limit_num = dataBean.getLimit_num();
+                        if (limit_num <= 0) {
+                            tv_good_detail_limit.setText("");
+                            limit_num = 100000;
+                            sale_num = 100000;
+                        } else {
+                            cancel_order_num = dataBean.getCancel_order_num();
+                            purchased_num = dataBean.getPurchased_num();
+                            sale_num = limit_num - purchased_num + cancel_order_num;
+                            if (sale_num <= 0) {
+                                rl_vertical_see_spec.setClickable(false);
+                                rl_vertical_see_ware_num.setClickable(false);
+                                if (onLimitNumListener != null) {
+                                    onLimitNumListener.onLimitResult();
+                                }
+                                tv_good_detail_limit.setText("限购0件");
+                            } else {
+                                limit_num = sale_num;
+                                tv_good_detail_limit.setText("限购" + limit_num + "件");
+                            }
+                        }
                     }
+                } catch (Exception e) {
+                    LogUtil.e("VerticalFragment1 parseLimitData error");
+                    Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case 0:
-
+                Toast.makeText(context, suningLimitBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -949,29 +1223,10 @@ public class VerticalFragment1 extends Fragment {
                     SuningSpecidBackBean.DataBean dataBean = data.get(0);
                     if (dataBean != null) {
                         String spec_back_id = dataBean.getGoods_specid();
-                        String[] str = {article_id};
-                        Map<String, String> map = manager.selectGoodsId(str);
-                        int size = map.size();
-                        LogUtil.e("size = " + size);
-                        if (size > 0) {
-                            String product_spec_id = map.get("product_spec_id");
-                            if (spec_back_id.equals(product_spec_id)) {
-//                                String product_num = map.get("product_num");
-//                                String id = map.get("id");
-//                                int num = Integer.parseInt(product_num);
-//                                int c_num = ware_num + num;
-//                                LogUtil.e(product_num + "---" + c_num + "--" + id);
-//                                manager.updateGoods(new String[]{String.valueOf(c_num), id});
-                                Toast.makeText(context, "已经添加过该商品了", Toast.LENGTH_SHORT).show();
-                                toGoodsCart();
-                            } else {
-                                manager.addGoods(new String[]{article_id, goods_title, String.valueOf(ware_num), spec_titel, goods_price, c_price, goods_img, spec_back_id, "1", goods_id, String.valueOf(limit_num)});
-                                Toast.makeText(context, "加入购物车成功", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            manager.addGoods(new String[]{article_id, goods_title, String.valueOf(ware_num), spec_titel, goods_price, c_price, goods_img, spec_back_id, "1", goods_id, String.valueOf(limit_num)});
-                            Toast.makeText(context, "加入购物车成功", Toast.LENGTH_SHORT).show();
+                        if (spec_back_id == null || TextUtils.isEmpty(spec_back_id)) {
+                            spec_back_id = "0";
                         }
+                        netCartUtil.addCart(userLogin, "7", article_id, spec_back_id, String.valueOf(ware_num));
                     }
                 } else {
                     Toast.makeText(context, "无法获取商品信息！", Toast.LENGTH_SHORT).show();
@@ -995,27 +1250,37 @@ public class VerticalFragment1 extends Fragment {
         int statusCode = suningStockBean.getStatusCode();
         switch (statusCode) {
             case 1:
-//                String buyInfo = getBuyInfo();
-//                Intent intent = new Intent(context, OrderConfirmActivity.class);
-//                intent.putExtra("ware_json", buyInfo);
-//                startActivity(intent);
-                if (what_buy == 1) {
-                    String buyInfo = getBuyInfo();
-                    LogUtil.e("buyInfo = " + buyInfo);
-                    Intent intent = new Intent(context, OrderConfirmActivity.class);
-                    intent.putExtra("ware_json", buyInfo);
-                    intent.putExtra("goods_img", goods_img);
-                    intent.putExtra("goods_title", goods_title);
-                    intent.putExtra("goods_price", goods_price);
-                    intent.putExtra("product_id", goods_id);
-                    intent.putExtra("c_price", c_price);
-                    startActivity(intent);
-                } else if (what_buy == 2) {
-                    getSpecId();
+                try {
+                    List<SuningStockBean.DataBean> data = suningStockBean.getData();
+                    SuningStockBean.DataBean dataBean = data.get(0);
+                    store_status = dataBean.getStore_status();
+                    store_text = dataBean.getStore_text();
+                    if (store_status == 0) {
+                        if (what_buy == 1) {
+                            String buyInfo = getBuyInfo();
+                            LogUtil.e("buyInfo = " + buyInfo);
+                            Intent intent = new Intent(context, OrderConfirmActivity.class);
+                            intent.putExtra("ware_json", buyInfo);
+                            intent.putExtra("goods_img", goods_img);
+                            intent.putExtra("goods_title", goods_title);
+                            intent.putExtra("goods_price", goods_price);
+                            intent.putExtra("product_id", goods_id);
+                            intent.putExtra("c_price", c_price);
+                            intent.putExtra("spec_content", spec_titel);
+                            startActivity(intent);
+                        } else if (what_buy == 2) {
+                            getSpecId();
+                        }
+                    } else {
+                        Toast.makeText(context, store_text, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    LogUtil.e("Vertical parseCheckIshavaData error");
+                    Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case 0:
-                Toast.makeText(context, "该地区暂不支持购买该商品！！！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, suningStockBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -1034,12 +1299,14 @@ public class VerticalFragment1 extends Fragment {
                 List<SuningStockBean.DataBean> data = suningStockBean.getData();
                 if (data != null && data.size() > 0) {
                     SuningStockBean.DataBean dataBean = data.get(0);
-                    tv_vertical_ishave_quarity.setText(dataBean.getStore_text());
+                    store_status = dataBean.getStore_status();
+                    store_text = dataBean.getStore_text();
+                    tv_vertical_ishave_quarity.setText(store_text);
                     isHave = "1";
                 }
                 break;
             case 0:
-                tv_vertical_ishave_quarity.setText("暂无库存信息");
+                tv_vertical_ishave_quarity.setText("获取库存失败");
                 isHave = "0";
                 break;
         }
@@ -1073,7 +1340,10 @@ public class VerticalFragment1 extends Fragment {
                         double sell_price = dataBean.getSell_price();
                         double market_price = dataBean.getMarket_price();
                         if (title != null) {
-                            tv_good_detail_name.setText("\t\t\t\t\t\t\t" + title);
+                            SpannableString span = new SpannableString("\t\t" + title);
+                            ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+                            span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            tv_good_detail_name.setText(span);
                         }
                         tv_good_detail_goodprice.setText(String.valueOf(df.format(sell_price)));
                         tv_good_detail_cprice.getPaint().setAntiAlias(true);//抗锯齿
@@ -1203,11 +1473,49 @@ public class VerticalFragment1 extends Fragment {
 
     private OnLimitNumListener onLimitNumListener;
 
-    public interface OnLimitNumListener{
+    public interface OnLimitNumListener {
         void onLimitResult();
     }
 
     public void setOnLimitNumListener(OnLimitNumListener onLimitNumListener) {
         this.onLimitNumListener = onLimitNumListener;
+    }
+
+    /**
+     * 购物车添加数据相关
+     */
+    public class OnCartResponseListener implements NetCartUtil.OnCartResponseListener {
+
+        @Override
+        public void onCartResponse(String response, String whick) {
+            LogUtil.e(whick + "=" + response);
+            if (whick.equals(NetCartUtil.WHICH_ADD)) {
+                parseAddCartData(response);
+            }
+        }
+
+        @Override
+        public void onCartFail() {
+            Toast.makeText(context, "网络连接异常~", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 解析添加数据库数据
+     *
+     * @param response
+     */
+    private void parseAddCartData(String response) {
+
+        NetGoodscartAddBean netGoodscartAddBean = new Gson().fromJson(response, NetGoodscartAddBean.class);
+        int statusCode = netGoodscartAddBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                Toast.makeText(context, "添加购物车成功", Toast.LENGTH_SHORT).show();
+                break;
+            case 0:
+                Toast.makeText(context, netGoodscartAddBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

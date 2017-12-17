@@ -19,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.suning.SuningStockBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
+import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.fragment.dragfragment.VerticalFragment1;
 import com.gather_excellent_help.ui.fragment.dragfragment.VerticalFragment3;
 import com.gather_excellent_help.ui.widget.DragLayout;
@@ -40,6 +42,7 @@ import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.PhotoUtils;
 import com.gather_excellent_help.utils.ToastUtils;
+import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -58,6 +61,9 @@ public class SuningDetailActivity extends FragmentActivity {
     private TextView tv_suning_detail_cart;
     private VerticalFragment1 fragment1;
     private VerticalFragment3 fragment3;
+
+    private ImageView iv_suning_detail_back;
+    private ImageView iv_suning_detail_cart;
 
     private View vShadow;
 
@@ -101,12 +107,18 @@ public class SuningDetailActivity extends FragmentActivity {
         fl_suning_bottom = (FrameLayout) findViewById(R.id.fl_suning_bottom);
         tv_suning_detail_buy = (TextView) findViewById(R.id.tv_suning_detail_buy);
         tv_suning_detail_cart = (TextView) findViewById(R.id.tv_suning_detail_cart);
+        iv_suning_detail_back = (ImageView) findViewById(R.id.iv_suning_detail_back);
+        iv_suning_detail_cart = (ImageView) findViewById(R.id.iv_suning_detail_cart);
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
+        boolean login = Tools.isLogin(this);
+        if (!login) {
+            toLogin();
+        }
         Intent intent = getIntent();
         article_id = intent.getIntExtra("article_id", 0);
         goods_id = intent.getStringExtra("goods_id");
@@ -147,6 +159,8 @@ public class SuningDetailActivity extends FragmentActivity {
         MyonclickListener myonclickListener = new MyonclickListener();
         tv_suning_detail_buy.setOnClickListener(myonclickListener);
         tv_suning_detail_cart.setOnClickListener(myonclickListener);
+        iv_suning_detail_back.setOnClickListener(myonclickListener);
+        iv_suning_detail_cart.setOnClickListener(myonclickListener);
         tv_suning_detail_buy.setClickable(false);
         tv_suning_detail_cart.setClickable(false);
         fragment1.setOnLimitNumListener(new VerticalFragment1.OnLimitNumListener() {
@@ -154,11 +168,18 @@ public class SuningDetailActivity extends FragmentActivity {
             public void onLimitResult() {
                 tv_suning_detail_buy.setBackgroundColor(Color.parseColor("#aaaaaa"));
                 tv_suning_detail_cart.setBackgroundColor(Color.parseColor("#aaaaaa"));
-                tv_suning_detail_cart.setText("超过限购数量");
-                tv_suning_detail_buy.setText("无法购买");
             }
         });
 
+    }
+
+    /**
+     * 去登录
+     */
+    private void toLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     /**
@@ -245,7 +266,7 @@ public class SuningDetailActivity extends FragmentActivity {
     private void showDrglayout() {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fl_suning_top, fragment1).add(R.id.fl_suning_bottom, fragment3)
-                .commit();
+                .commitAllowingStateLoss();
 
         DragLayout.ShowNextPageNotifier nextIntf = new DragLayout.ShowNextPageNotifier() {
             @Override
@@ -273,8 +294,32 @@ public class SuningDetailActivity extends FragmentActivity {
                 case R.id.rl_exit:
                     finish();
                     break;
+                case R.id.iv_suning_detail_back:
+                    finish();
+                    break;
+                case R.id.iv_suning_detail_cart:
+                    toGoodsCart();
+                    break;
             }
         }
+    }
+
+    private void toGoodsCart() {
+        try {
+            if (fragment1 != null) {
+                String attr_id = fragment1.getAttr_id();
+                String addrWay = fragment1.getAddrWay();
+                Intent intent = new Intent(SuningDetailActivity.this, SuningGoodscartActivity.class);
+                intent.putExtra("area_id", attr_id);
+                intent.putExtra("addWay", addrWay);
+                intent.putExtra("lalotitude", lalotitude);
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            LogUtil.e("SuningDetailActivity error");
+            Toast.makeText(SuningDetailActivity.this, "系统出错，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     /**
@@ -344,6 +389,8 @@ public class SuningDetailActivity extends FragmentActivity {
             String msg = "onEventMainThread收到了消息：" + event.getMessage();
             LogUtil.e(msg);
             finish();
+        } else if (event.getType() == EventType.GOODS_PAY_LIMIT) {
+            initData();
         }
     }
 

@@ -16,4 +16,5 @@ public class EventType {
     public static final int CLEAR_ALL_GOODSCART= 8;//清空购物车
     public static final int UNBIND_ALIPAY= 9;//解除绑定支付宝
     public static final int GOODSCART_CLEAR = 10;//购物车空空如也
+    public static final int GOODS_PAY_LIMIT = 11;//立即购买后详情页限购
 }

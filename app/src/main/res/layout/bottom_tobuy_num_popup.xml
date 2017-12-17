@@ -52,8 +52,10 @@
                         android:layout_width="@dimen/x180"
                         android:layout_height="wrap_content"
                         android:text=""
+                        android:lineSpacingExtra="@dimen/x2"
+                        android:lines="2"
                         android:textColor="#aa000000"
-                        android:textSize="@dimen/x12" />
+                        android:textSize="@dimen/x14" />
 
                     <TextView
                         android:id="@+id/tv_activity_sun_tao_icon"
@@ -65,7 +67,8 @@
                         android:textColor="@drawable/sun_tao_text_selector"
                         android:textSize="@dimen/x8"
                         android:layout_marginTop="@dimen/x2"
-                        android:background="@drawable/sun_tao_icon_selector"/>
+                        android:background="@drawable/sun_tao_icon_selector"
+                        android:visibility="gone"/>
 
                 </RelativeLayout>
 
@@ -93,6 +96,15 @@
                         android:layout_height="wrap_content"
                         android:text=""
                         android:layout_marginLeft="@dimen/x3"
+                        android:textColor="#aa000000"
+                        android:textSize="@dimen/x10" />
+
+                    <TextView
+                        android:id="@+id/tv_bottom_pop_limit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:layout_marginLeft="@dimen/x8"
                         android:textColor="#aa000000"
                         android:textSize="@dimen/x10" />
 

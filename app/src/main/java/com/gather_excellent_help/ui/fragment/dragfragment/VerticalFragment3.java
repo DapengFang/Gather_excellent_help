@@ -46,7 +46,7 @@ public class VerticalFragment3 extends Fragment {
                             if (data != null && data.size() > 0) {
                                 SuningWareBean.DataBean dataBean = data.get(0);
                                 String info_url = dataBean.getInfo_url();
-                                webview.loadUrl(Url.IMG_URL+ info_url);
+                                webview.loadUrl(Url.IMG_URL + info_url);
                             }
                             break;
                         case 0:
@@ -87,7 +87,7 @@ public class VerticalFragment3 extends Fragment {
             //将图片调整到适合webview的大小
             webSettings.setUseWideViewPort(true);  //将图片调整到适合webview的大小
             //webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);  //关闭webview中缓存
-            webSettings.setJavaScriptCanOpenWindowsAutomatically(true); //支持通过JS打开新窗口
+            webSettings.setJavaScriptCanOpenWindowsAutomatically(false); //支持通过JS打开新窗口
             webSettings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
             webSettings.setLoadsImagesAutomatically(true);  //支持自动加载图片
             webview.setWebChromeClient(new WebChromeClient());

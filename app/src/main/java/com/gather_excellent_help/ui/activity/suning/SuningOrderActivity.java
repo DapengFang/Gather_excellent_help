@@ -30,10 +30,10 @@ import com.gather_excellent_help.ui.widget.ViewpagerIndicator;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.ScreenUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -82,8 +82,9 @@ public class SuningOrderActivity extends BaseActivity {
     private AlertDialog alertDialog;
     private String pay_status;
 
-    private CatLoadingView catView;
     private boolean isShowCat;//刷新页面不让其显示
+    private int count;
+    private boolean isContinue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +114,6 @@ public class SuningOrderActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
-        catView = new CatLoadingView();
         Intent intent = getIntent();
         pay_status = intent.getStringExtra("pay_status");
         tv_top_title_name.setText("苏宁订单");
@@ -121,6 +121,7 @@ public class SuningOrderActivity extends BaseActivity {
         netUtil = new NetUtil();
         vidacatorControll();
         final int childCount = vid_order_manager.getChildCount();
+        defaultViewIndicator(childCount, 0);
         if (pay_status != null) {
             if (pay_status.equals("2")) {
                 isCanLoad = true;
@@ -132,7 +133,6 @@ public class SuningOrderActivity extends BaseActivity {
                 defaultViewIndicator(childCount, 0);
             }
         }
-        defaultViewIndicator(childCount, 0);
         getSuningOrderData();
         OnServerResponseListener onServerResponseListener = new OnServerResponseListener();
         netUtil.setOnServerResponseListener(onServerResponseListener);
@@ -231,7 +231,7 @@ public class SuningOrderActivity extends BaseActivity {
      * 获取苏宁订单数据
      */
     private void getSuningOrderData() {
-        if(!isShowCat) {
+        if (!isShowCat) {
             showCatView();
         }
         whick = "order_list";
@@ -247,14 +247,27 @@ public class SuningOrderActivity extends BaseActivity {
      * 展示CatLoadingView
      */
     private void showCatView() {
-        if (catView != null && !catView.isAdded()) {
-            catView.show(getSupportFragmentManager(), "");
+        View inflate = View.inflate(this, R.layout.loading_dialog_view, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(inflate);
+        alertDialog = builder.create();
+        if (SuningOrderActivity.this != null && !SuningOrderActivity.this.isFinishing()) {
+            alertDialog.show();
         }
+        alertDialog.getWindow().setLayout(ScreenUtil.getScreenWidth(this) / 2, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
     private void hindCatView() {
-        if (catView != null) {
-            catView.dismiss();
+        if (SuningOrderActivity.this != null && !SuningOrderActivity.this.isFinishing()) {
+            if (alertDialog != null && alertDialog.isShowing()) {
+                View view = new View(SuningOrderActivity.this);
+                view.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        alertDialog.dismiss();
+                    }
+                }, 1000);
+            }
         }
     }
 
@@ -344,7 +357,7 @@ public class SuningOrderActivity extends BaseActivity {
         @Override
         public void getSuccessResponse(String response) {
             LogUtil.e(response);
-            if(!isShowCat) {
+            if (!isShowCat) {
                 hindCatView();
             }
             isShowCat = false;
@@ -539,7 +552,7 @@ public class SuningOrderActivity extends BaseActivity {
                         alertDialog.show();
                     }
                 } else if (status == 3) {
-                    seeOrderDetail(view,position,status);
+                    seeOrderDetail(view, position, status);
                 }
             }
         }
@@ -570,7 +583,7 @@ public class SuningOrderActivity extends BaseActivity {
      */
     private void onItemclickHandler(View view, int position, int status) {
         if (status > 4) {
-            Toast.makeText(SuningOrderActivity.this, "订单已经作废，无法查看详情哦~", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SuningOrderActivity.this, "此订单交易关闭，无法查看详情哦~", Toast.LENGTH_SHORT).show();
         } else {
             seeOrderDetail(view, position, status);
         }
@@ -597,14 +610,21 @@ public class SuningOrderActivity extends BaseActivity {
         map.put("user_id", userLogin);
         map.put("order_id", order_id);
         netUtil.okHttp2Server2(cancel_url, map);
-
     }
 
     /**
      * 提醒发货
      */
     private void remindSend() {
-        Toast.makeText(this, "已提醒卖家发货，请您耐心等待。。。", Toast.LENGTH_SHORT).show();
+        if (count > 2) {
+            if (!isContinue) {
+                Toast.makeText(SuningOrderActivity.this, "超过提醒次数。", Toast.LENGTH_SHORT).show();
+                isContinue = true;
+            }
+            return;
+        }
+        Toast.makeText(this, "提醒成功。", Toast.LENGTH_SHORT).show();
+        count++;
     }
 
     /**

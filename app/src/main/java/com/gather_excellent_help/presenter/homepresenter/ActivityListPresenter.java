@@ -47,7 +47,7 @@ public class ActivityListPresenter extends BasePresenter {
     private String pageSize = "10";
     private String pageIndex = "1";
     private NetUtil netUtil;
-    private Map<String,String> map;
+    private Map<String, String> map;
     private List<ActivityListBean.DataBean> activityData;
     private boolean isLoadMore = false;
     private int page = 1;
@@ -81,25 +81,25 @@ public class ActivityListPresenter extends BasePresenter {
 
     private void net2Server() {
         map = new HashMap<>();
-        map.put("pageSize",pageSize);
-        map.put("pageIndex",pageIndex);
-        netUtil.okHttp2Server2(activity_url,map);
+        map.put("pageSize", pageSize);
+        map.put("pageIndex", pageIndex);
+        netUtil.okHttp2Server2(activity_url, map);
     }
-    
-    public class MyOnServerResponseListener implements NetUtil.OnServerResponseListener{
+
+    public class MyOnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
-            if(context!=null) {
+            if (context != null) {
                 parseData(response);
             }
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-           if(context!=null) {
-               Toast.makeText(context, "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
-           }
+            if (context != null) {
+                Toast.makeText(context, "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -108,17 +108,17 @@ public class ActivityListPresenter extends BasePresenter {
         ActivityListBean activityListBean = new Gson().fromJson(response, ActivityListBean.class);
         int statusCode = activityListBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
-                if(isLoadMore) {
+            case 1:
+                if (isLoadMore) {
                     page++;
-                    LogUtil.e("page == "+page);
+                    LogUtil.e("page == " + page);
                     currData = activityListBean.getData();
                     activityData.addAll(currData);
                     homeActivityListAdapter.notifyDataSetChanged();
-                }else{
+                } else {
                     currData = activityListBean.getData();
                     activityData = currData;
-                    homeActivityListAdapter = new HomeActivityListAdapter(context,activityData);
+                    homeActivityListAdapter = new HomeActivityListAdapter(context, activityData);
                     rcvHomeActivityList.setAdapter(homeActivityListAdapter);
                     page = 2;
                 }
@@ -140,40 +140,41 @@ public class ActivityListPresenter extends BasePresenter {
                         double sell_price = dataBean.getSell_price();
                         double market_price = dataBean.getMarket_price();
                         int couponsPrice = dataBean.getCouponsPrice();
-                        if(site_id == 1) {
+                        if (site_id == 1) {
                             //淘宝
-                            if(couponsPrice>0) {
-                                if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
+                            if (couponsPrice > 0) {
+                                if (couponsUrl != null && !TextUtils.isEmpty(couponsUrl)) {
                                     Intent intent = new Intent(context, WebActivity.class);
-                                    intent.putExtra("web_url",couponsUrl);
+                                    intent.putExtra("web_url", couponsUrl);
                                     intent.putExtra("url", link_url);
                                     intent.putExtra("goods_id", goods_id);
                                     intent.putExtra("goods_img", goods_img);
                                     intent.putExtra("goods_title", goods_title);
-                                    intent.putExtra("goods_price", df.format(sell_price)+"");
+                                    intent.putExtra("goods_price", df.format(sell_price) + "");
                                     intent.putExtra("goods_coupon", String.valueOf(couponsPrice));
                                     intent.putExtra("goods_coupon_url", couponsUrl);
                                     context.startActivity(intent);
                                 }
-                            } else{
+                            } else {
                                 Intent intent = new Intent(context, WebRecordActivity.class);
                                 intent.putExtra("url", link_url);
                                 intent.putExtra("goods_id", goods_id);
                                 intent.putExtra("goods_img", goods_img);
                                 intent.putExtra("goods_title", goods_title);
-                                intent.putExtra("goods_price", df.format(sell_price)+"");
+                                intent.putExtra("goods_price", df.format(sell_price) + "");
                                 context.startActivity(intent);
                             }
-                        }else if(site_id == 2) {
+                        } else if (site_id == 2) {
                             //苏宁
                             Intent intent = new Intent(context, SuningDetailActivity.class);
-                            intent.putExtra("article_id",article_id);
+                            intent.putExtra("article_id", article_id);
                             intent.putExtra("goods_id", goods_id);
                             intent.putExtra("goods_img", goods_img);
                             intent.putExtra("goods_title", goods_title);
-                            intent.putExtra("goods_price", df.format(sell_price)+"");
-                            intent.putExtra("c_price", df.format(market_price)+"");
+                            intent.putExtra("goods_price", df.format(sell_price) + "");
+                            intent.putExtra("c_price", df.format(market_price) + "");
                             context.startActivity(intent);
+                            LogUtil.e(article_id + "--" + goods_id + "--" + goods_img + "--" + goods_title + "--" + sell_price + "--" + market_price);
                         }
                     }
                 });
@@ -184,7 +185,7 @@ public class ActivityListPresenter extends BasePresenter {
         }
     }
 
-        public class MyOnTouchClickListener implements View.OnTouchListener {
+    public class MyOnTouchClickListener implements View.OnTouchListener {
 
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -202,7 +203,7 @@ public class ActivityListPresenter extends BasePresenter {
                         ll_home_loadmore.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if(currData.size()<Integer.parseInt(pageSize)) {
+                                if (currData.size() < Integer.parseInt(pageSize)) {
                                     ll_home_loadmore.setVisibility(View.VISIBLE);
                                     ll_home_loadmore.getChildAt(0).setVisibility(View.GONE);
                                     TextView tv = (TextView) ll_home_loadmore.getChildAt(1);
@@ -212,13 +213,13 @@ public class ActivityListPresenter extends BasePresenter {
                                         public void run() {
                                             ll_home_loadmore.setVisibility(View.GONE);
                                         }
-                                    },1000);
-                                }else{
+                                    }, 1000);
+                                } else {
                                     pageIndex = String.valueOf(page);
                                     net2Server();
                                 }
                             }
-                        },1000);
+                        }, 1000);
                     }
                     break;
             }
@@ -229,7 +230,7 @@ public class ActivityListPresenter extends BasePresenter {
 
     private OnActivityListCompleteListener onActivityListCompleteListener;
 
-    public interface OnActivityListCompleteListener{
+    public interface OnActivityListCompleteListener {
         void onComplete();
     }
 

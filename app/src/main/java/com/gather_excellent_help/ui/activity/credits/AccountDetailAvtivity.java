@@ -1,5 +1,6 @@
 package com.gather_excellent_help.ui.activity.credits;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,10 +24,10 @@ import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.ScreenUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -67,8 +69,8 @@ public class AccountDetailAvtivity extends BaseActivity {
     private int lastVisibleItem;
     private FullyLinearLayoutManager layoutManager;
     private AcccountDetailAdapter acccountDetailAdapter;
+    private AlertDialog alertDialog;
 
-    private CatLoadingView catLoadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,14 +85,13 @@ public class AccountDetailAvtivity extends BaseActivity {
      * 初始化控件
      */
     private void initView() {
-        wan_account_detail = (WanRecycleView)findViewById(R.id.wan_account_detail);
+        wan_account_detail = (WanRecycleView) findViewById(R.id.wan_account_detail);
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
-        catLoadingView = new CatLoadingView();
         netUtil = new NetUtil();
         tvTopTitleName.setText("账户明细");
         tvAccountQueryTime.setSelected(true);
@@ -129,7 +130,7 @@ public class AccountDetailAvtivity extends BaseActivity {
             public void getSuccessResponse(String response) {
                 LogUtil.e(response);
                 hindCatView();
-                if(wan_account_detail!=null) {
+                if (wan_account_detail != null) {
                     wan_account_detail.onRefreshComplete();
                 }
                 CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
@@ -159,7 +160,7 @@ public class AccountDetailAvtivity extends BaseActivity {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    if(!isCanLoad) {
+                    if (!isCanLoad) {
                         return;
                     }
                     lastVisibleItem = layoutManager
@@ -205,18 +206,31 @@ public class AccountDetailAvtivity extends BaseActivity {
     /**
      * 显示CatView
      */
-    private void showCatView(){
-        if(catLoadingView!=null) {
-            catLoadingView.show(getSupportFragmentManager(),"");
+    private void showCatView() {
+        View inflate = View.inflate(this, R.layout.loading_dialog_view, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(inflate);
+        alertDialog = builder.create();
+        if (AccountDetailAvtivity.this != null && !AccountDetailAvtivity.this.isFinishing()) {
+            alertDialog.show();
         }
+        alertDialog.getWindow().setLayout(ScreenUtil.getScreenWidth(this) / 2, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
     /**
      * 隐藏CatView
      */
-    private void hindCatView(){
-        if(catLoadingView!=null) {
-            catLoadingView.dismiss();
+    private void hindCatView() {
+        if (AccountDetailAvtivity.this != null && !AccountDetailAvtivity.this.isFinishing()) {
+            if (alertDialog != null && alertDialog.isShowing()) {
+                View view = new View(AccountDetailAvtivity.this);
+                view.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        alertDialog.dismiss();
+                    }
+                }, 1000);
+            }
         }
     }
 
@@ -238,10 +252,10 @@ public class AccountDetailAvtivity extends BaseActivity {
             accountData.addAll(currData);
             acccountDetailAdapter.notifyDataSetChanged();
         } else {
-            if(currData!=null) {
-                if(currData.size() > 0) {
+            if (currData != null) {
+                if (currData.size() > 0) {
                     ivOrderNoZhanwei.setVisibility(View.GONE);
-                }else{
+                } else {
                     ivOrderNoZhanwei.setVisibility(View.VISIBLE);
                 }
             }

@@ -21,14 +21,16 @@
 
     <RelativeLayout
         android:layout_width="@dimen/x95"
-        android:layout_height="@dimen/x14">
+        android:layout_height="@dimen/x18">
 
         <TextView
             android:id="@+id/tv_activity_ware_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Haier/海尔EC"
-            android:textSize="@dimen/x12"
+            android:lineSpacingExtra="@dimen/x2"
+            android:textSize="@dimen/x14"
+            android:gravity="center"
             android:textColor="#333333"/>
 
         <TextView
@@ -41,6 +43,7 @@
             android:textColor="@drawable/sun_tao_text_selector"
             android:textSize="@dimen/x8"
             android:layout_marginTop="@dimen/x2"
+            android:visibility="gone"
             android:background="@drawable/sun_tao_icon_selector"/>
 
     </RelativeLayout>

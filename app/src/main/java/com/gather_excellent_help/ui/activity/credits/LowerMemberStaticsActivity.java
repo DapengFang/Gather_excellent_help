@@ -35,10 +35,11 @@ import com.gather_excellent_help.ui.widget.MyNestedScrollView;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.ScreenUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.roger.catloadinglibrary.CatLoadingView;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -105,8 +106,8 @@ public class LowerMemberStaticsActivity extends BaseActivity {
     private int firstVisbleItem;
 
     private boolean isAnimationFirst = true;
+    private AlertDialog alertDialog;
 
-    private CatLoadingView catView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +126,6 @@ public class LowerMemberStaticsActivity extends BaseActivity {
 
 
     private void initData() {
-        catView = new CatLoadingView();
         tvTopTitleName.setText("下级会员统计");
         netUtil = new NetUtil();
         Id = Tools.getUserLogin(this);
@@ -186,17 +186,30 @@ public class LowerMemberStaticsActivity extends BaseActivity {
      * 展示CatView
      */
     private void showCatView() {
-        if (catView != null) {
-            catView.show(getSupportFragmentManager(), "");
+        View inflate = View.inflate(this, R.layout.loading_dialog_view, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(inflate);
+        alertDialog = builder.create();
+        if (LowerMemberStaticsActivity.this != null && !LowerMemberStaticsActivity.this.isFinishing()) {
+            alertDialog.show();
         }
+        alertDialog.getWindow().setLayout(ScreenUtil.getScreenWidth(this) / 2, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
     /**
      * 隐藏CatView
      */
     private void hindCatView() {
-        if (catView != null) {
-            catView.dismiss();
+        if (LowerMemberStaticsActivity.this != null && !LowerMemberStaticsActivity.this.isFinishing()) {
+            if (alertDialog != null && alertDialog.isShowing()) {
+                View view = new View(LowerMemberStaticsActivity.this);
+                view.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        alertDialog.dismiss();
+                    }
+                }, 1000);
+            }
         }
     }
 
@@ -209,7 +222,7 @@ public class LowerMemberStaticsActivity extends BaseActivity {
         public void getSuccessResponse(String response) {
             LogUtil.e(response);
             hindCatView();
-            if(swip_refresh!=null) {
+            if (swip_refresh != null) {
                 swip_refresh.setRefreshing(false);
             }
             LowerMermberBean lowerMermberBean = new Gson().fromJson(response, LowerMermberBean.class);

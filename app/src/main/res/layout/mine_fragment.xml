@@ -93,7 +93,7 @@
                     android:layout_width="@dimen/x14"
                     android:layout_height="@dimen/x14"
                     android:src="@drawable/icon_user_type"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_mine_mobietype"
@@ -131,6 +131,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
+
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -141,14 +142,13 @@
 
                     </RelativeLayout>
 
-
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/x3"
                         android:layout_weight="4"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        android:layout_marginLeft="@dimen/x3">
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tv_account_money_title1"
@@ -163,9 +163,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0.00/0.00"
-                            android:visibility="gone"
                             android:textColor="#55000000"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:visibility="gone" />
                     </LinearLayout>
 
 
@@ -198,6 +198,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
+
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -210,10 +211,10 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/x3"
                         android:layout_weight="4"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        android:layout_marginLeft="@dimen/x3">
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tv_account_money_title2"
@@ -228,9 +229,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0.00"
-                            android:visibility="gone"
                             android:textColor="#55000000"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:visibility="gone" />
                     </LinearLayout>
 
 
@@ -255,20 +256,28 @@
             android:orientation="horizontal"
             android:visibility="visible">
 
-            <ImageView
-                android:layout_width="@dimen/x18"
-                android:layout_height="@dimen/x18"
-                android:layout_marginLeft="@dimen/x10"
-                android:src="@drawable/taobao_order_icon" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/x10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/taobao_order_icon" />
+
+            </RelativeLayout>
+
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/x9"
                 android:layout_weight="1"
                 android:text="我的淘宝订单"
+                android:layout_marginLeft="@dimen/x6"
                 android:textColor="#99000000"
-                android:textSize="16sp" />
+                android:textSize="@dimen/x14" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -276,7 +285,7 @@
                 android:layout_marginRight="@dimen/x7"
                 android:text="查看"
                 android:textColor="#55000000"
-                android:textSize="12sp" />
+                android:textSize="@dimen/x10" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -299,20 +308,27 @@
             android:orientation="horizontal"
             android:visibility="visible">
 
-            <ImageView
-                android:layout_width="@dimen/x18"
-                android:layout_height="@dimen/x18"
-                android:layout_marginLeft="@dimen/x10"
-                android:src="@drawable/suning_order_icon" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/x10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/suning_me_zi_icon" />
+
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/x9"
                 android:layout_weight="1"
-                android:text="我的苏宁订单"
+                android:text="我的自营订单"
+                android:layout_marginLeft="@dimen/x6"
                 android:textColor="#99000000"
-                android:textSize="16sp" />
+                android:textSize="@dimen/x14" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -320,7 +336,7 @@
                 android:layout_marginRight="@dimen/x7"
                 android:text="查看"
                 android:textColor="#55000000"
-                android:textSize="12sp" />
+                android:textSize="@dimen/x10" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -333,7 +349,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/x1"
             android:background="#efefef"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/ll_mine_juyoubang_order"
@@ -344,20 +360,28 @@
             android:orientation="horizontal"
             android:visibility="gone">
 
-            <ImageView
-                android:layout_width="@dimen/x18"
-                android:layout_height="@dimen/x18"
-                android:layout_marginLeft="@dimen/x10"
-                android:src="@drawable/juyoubang_order_icon" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/x10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/juyoubang_order_icon" />
+
+            </RelativeLayout>
+
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/x9"
                 android:layout_weight="1"
                 android:text="我的聚优帮订单"
+                android:layout_marginLeft="@dimen/x6"
                 android:textColor="#99000000"
-                android:textSize="16sp" />
+                android:textSize="@dimen/x14" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -365,7 +389,7 @@
                 android:layout_marginRight="@dimen/x7"
                 android:text="查看"
                 android:textColor="#55000000"
-                android:textSize="12sp" />
+                android:textSize="@dimen/x10" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -389,20 +413,27 @@
             android:orientation="horizontal"
             android:visibility="visible">
 
-            <ImageView
-                android:layout_width="@dimen/x18"
-                android:layout_height="@dimen/x18"
-                android:layout_marginLeft="@dimen/x10"
-                android:src="@drawable/zhuan_order_icon" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/x10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/zhuan_order_icon" />
+
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/x9"
                 android:layout_weight="1"
                 android:text="我的推广赚订单"
+                android:layout_marginLeft="@dimen/x6"
                 android:textColor="#99000000"
-                android:textSize="16sp" />
+                android:textSize="@dimen/x14" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -410,7 +441,7 @@
                 android:layout_marginRight="@dimen/x7"
                 android:text="查看"
                 android:textColor="#55000000"
-                android:textSize="12sp" />
+                android:textSize="@dimen/x10" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -447,7 +478,7 @@
                 android:layout_toLeftOf="@id/tbn_mine_control"
                 android:text="推广赚显示开关"
                 android:textColor="#99000000"
-                android:textSize="12sp" />
+                android:textSize="@dimen/x10" />
 
         </RelativeLayout>
 
@@ -467,21 +498,30 @@
             android:orientation="horizontal"
             android:visibility="visible">
 
-            <ImageView
-                android:layout_width="@dimen/x18"
-                android:layout_height="@dimen/x18"
-                android:layout_marginLeft="@dimen/x10"
-                android:src="@drawable/lower_member_icon"
-                android:visibility="visible"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/x10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/lower_member_icon"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
+
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/x9"
                 android:layout_weight="1"
                 android:text="下级会员统计"
+                android:layout_marginLeft="@dimen/x6"
                 android:textColor="#99000000"
-                android:textSize="16sp" />
+                android:textSize="@dimen/x14" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -489,7 +529,7 @@
                 android:layout_marginRight="@dimen/x7"
                 android:text="查看"
                 android:textColor="#55000000"
-                android:textSize="12sp" />
+                android:textSize="@dimen/x10" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -537,11 +577,11 @@
                     android:id="@+id/tv_mine_compont_l01"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x3"
+                    android:layout_marginBottom="@dimen/x4"
+                    android:layout_marginTop="@dimen/x9"
                     android:text="提取现金"
                     android:textColor="#333333"
-                    android:textSize="12sp"
-                    android:layout_marginBottom="@dimen/x4"/>
+                    android:textSize="@dimen/x10" />
             </LinearLayout>
 
             <View
@@ -569,11 +609,11 @@
                     android:id="@+id/tv_mine_compont_l02"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x3"
+                    android:layout_marginBottom="@dimen/x4"
+                    android:layout_marginTop="@dimen/x9"
                     android:text="邀请好友赚钱啦"
                     android:textColor="#333333"
-                    android:textSize="12sp"
-                    android:layout_marginBottom="@dimen/x4"/>
+                    android:textSize="@dimen/x10" />
             </LinearLayout>
 
             <View
@@ -601,11 +641,11 @@
                     android:id="@+id/tv_mine_compont_l03"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x3"
+                    android:layout_marginBottom="@dimen/x4"
+                    android:layout_marginTop="@dimen/x9"
                     android:text="账号明细"
                     android:textColor="#333333"
-                    android:textSize="12sp"
-                    android:layout_marginBottom="@dimen/x4"/>
+                    android:textSize="@dimen/x10" />
             </LinearLayout>
 
         </LinearLayout>
@@ -642,11 +682,11 @@
                     android:id="@+id/tv_mine_compont_l04"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x3"
+                    android:layout_marginBottom="@dimen/x4"
+                    android:layout_marginTop="@dimen/x9"
                     android:text="商家信息"
                     android:textColor="#333333"
-                    android:textSize="12sp"
-                    android:layout_marginBottom="@dimen/x4"/>
+                    android:textSize="@dimen/x10" />
             </LinearLayout>
 
             <View
@@ -674,11 +714,11 @@
                     android:id="@+id/tv_mine_compont_l05"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x3"
+                    android:layout_marginBottom="@dimen/x4"
+                    android:layout_marginTop="@dimen/x9"
                     android:text="商家入驻"
                     android:textColor="#333333"
-                    android:textSize="12sp"
-                    android:layout_marginBottom="@dimen/x4"/>
+                    android:textSize="@dimen/x10" />
             </LinearLayout>
 
             <View
@@ -706,11 +746,11 @@
                     android:id="@+id/tv_mine_compont_l06"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x3"
+                    android:layout_marginBottom="@dimen/x4"
+                    android:layout_marginTop="@dimen/x9"
                     android:text="返佣规则"
                     android:textColor="#333333"
-                    android:textSize="12sp"
-                    android:layout_marginBottom="@dimen/x4"/>
+                    android:textSize="@dimen/x10" />
             </LinearLayout>
 
         </LinearLayout>
@@ -734,7 +774,7 @@
                 android:layout_marginLeft="@dimen/x3"
                 android:text="猜你喜欢"
                 android:textColor="#99000000"
-                android:textSize="14sp" />
+                android:textSize="@dimen/x12" />
 
             <ImageView
                 android:layout_width="@dimen/x12"

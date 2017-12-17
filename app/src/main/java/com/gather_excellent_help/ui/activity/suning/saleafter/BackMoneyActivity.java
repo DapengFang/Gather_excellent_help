@@ -56,7 +56,7 @@ public class BackMoneyActivity extends BaseActivity {
 
     private LayoutInflater layoutInflater;
     //private String[] reasons = {"收到商品破损", "商品错发、漏发", "商品需要维修", "发票问题", "收到商品与描述不符", "商品质量问题", "未按约定时间发货", "其他"};
-    private String[] reasons = {"缺货", "排错了/订单信息有误", "不想要了", "其他"};
+    private String[] reasons = {"缺货", "拍错了/订单信息有误", "不想要了", "其他"};
     private String explain = "";//退款说明
     private String reason = "";//退款原因
     private AlertDialog alertDialog;
@@ -81,6 +81,7 @@ public class BackMoneyActivity extends BaseActivity {
     private TextView tv_suning_order_realprice;
     private TextView tv_suning_order_oldprice;
     private TextView tv_suning_order_number;
+    private TextView tv_back_apply_type;
     private int apply_type;
 
 
@@ -111,6 +112,7 @@ public class BackMoneyActivity extends BaseActivity {
         tv_suning_order_realprice = (TextView) findViewById(R.id.tv_suning_order_realprice);
         tv_suning_order_oldprice = (TextView) findViewById(R.id.tv_suning_order_oldprice);
         tv_suning_order_number = (TextView) findViewById(R.id.tv_suning_order_number);
+        tv_back_apply_type = (TextView) findViewById(R.id.tv_back_apply_type);
     }
 
     /**
@@ -120,7 +122,6 @@ public class BackMoneyActivity extends BaseActivity {
         user_id = Tools.getUserLogin(this);
         netUtil = new NetUtil();
         tv_top_title_name.setText("申请退款");
-
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         ware_img = bundle.getString("ware_img");
@@ -132,7 +133,7 @@ public class BackMoneyActivity extends BaseActivity {
         article_id = bundle.getString("article_id");
         order_id = bundle.getString("order_id");
         apply_type = bundle.getInt("apply_type", 0);
-        LogUtil.e(article_id + "-" +order_id);
+        LogUtil.e(article_id + "-" + order_id);
         wareDataShow();
 
         MyonclickListener myonclickListener = new MyonclickListener();
@@ -167,6 +168,13 @@ public class BackMoneyActivity extends BaseActivity {
         tv_suning_order_oldprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
         tv_suning_order_oldprice.setText("￥" + goods_price);
         tv_suning_order_number.setText("x" + quantity);
+        if (apply_type == 1) {
+            tv_back_apply_type.setText("仅退款");
+            rl_tuihuo_reason.setVisibility(View.GONE);
+        } else if (apply_type == 2) {
+            tv_back_apply_type.setText("退货退款");
+            rl_tuihuo_reason.setVisibility(View.VISIBLE);
+        }
     }
 
     public class MyonclickListener implements View.OnClickListener {
@@ -194,9 +202,11 @@ public class BackMoneyActivity extends BaseActivity {
      * 申请退款n
      */
     private void applyBackMoney() {
-        if (TextUtils.isEmpty(reason) || reason.equals("请选择退货原因")) {
-            Toast.makeText(BackMoneyActivity.this, "请选择退货原因", Toast.LENGTH_SHORT).show();
-            return;
+        if (apply_type == 2) {
+            if (TextUtils.isEmpty(reason) || reason.equals("请选择退货原因")) {
+                Toast.makeText(BackMoneyActivity.this, "请选择退货原因", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
         if (explain.equals("选填")) {
             explain = "";
@@ -292,7 +302,7 @@ public class BackMoneyActivity extends BaseActivity {
             int statusCode = applyBackBean.getStatusCode();
             Toast.makeText(BackMoneyActivity.this, applyBackBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
             switch (statusCode) {
-                case 1 :
+                case 1:
                     finish();
                     break;
             }

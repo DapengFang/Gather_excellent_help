@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_logistics_part_one"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="@dimen/x60"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <View
+                android:id="@+id/v_zero"
+                android:layout_width="2px"
+                android:layout_height="@dimen/x12"
+                android:background="#cccccc" />
+
+            <ImageView
+                android:id="@+id/iv_logistics_part_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/orange_up_arraw_icon" />
+
+            <View
+                android:id="@+id/v_one"
+                android:layout_width="2px"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="#cccccc" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_logistics_part_position"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingTop="@dimen/x8"
+            android:text="fdfdfdfdfdfd"
+            android:textColor="#ff6600"
+            android:textSize="@dimen/x14" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x30"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="@dimen/x60"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/v_two"
+                android:layout_width="2px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#cccccc" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_logistics_part_time"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingTop="@dimen/x8"
+            android:text="fdfdfdfdfdfdfdf"
+            android:textColor="#cccccc"
+            android:textSize="@dimen/x12" />
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -143,6 +143,48 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x36"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="会员名称"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/x14" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="成交笔数"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/x14" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="成交金额"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/x14" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="分得金额"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/x14" />
+
+                </LinearLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"

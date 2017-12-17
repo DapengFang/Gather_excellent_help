@@ -3,7 +3,11 @@ package com.gather_excellent_help.presenter.homepresenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -182,16 +186,26 @@ public class GroupPresenter extends BasePresenter {
                 double zhuan = (sell_price - couponsPrice) * tkRate * 0.9f * user_rate * dataBean.getCommission_rate();
                 double coast = sell_price - couponsPrice - zhuan;
                 final String goods_id = String.valueOf(dataBean.getProductId());
-                if (title != null && tv_group_ware_title != null) {
-                    tv_group_ware_title.setText("\t\t\t\t\t\t" + title);
-                }
+
+                double suning_rate = dataBean.getSuning_rate();
+                double s_zhuan = sell_price * suning_rate * user_rate;
+                double s_coast = sell_price - s_zhuan;
+
                 if (tv_group_ware_price != null) {
                     tv_group_ware_price.setText("￥" + df.format(sell_price));
                 }
                 if (site_id == 1) {
-                    if (tv_activity_sun_tao_icon != null) {
-                        tv_activity_sun_tao_icon.setSelected(false);
-                        tv_activity_sun_tao_icon.setText("淘宝");
+//                    if (tv_activity_sun_tao_icon != null) {
+//                        tv_activity_sun_tao_icon.setSelected(false);
+//                        tv_activity_sun_tao_icon.setText("淘宝");
+//                    }
+                    if (title != null && tv_group_ware_title != null) {
+                        //tv_group_ware_title.setText("\t\t\t\t\t\t" + title);
+                        SpannableString span = new SpannableString("\t\t" + title);
+                        ImageSpan image = new ImageSpan(context, R.drawable.taobao_order_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+
+                        span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tv_group_ware_title.setText(span);
                     }
                     if (img_url != null && iv_group_ware_img != null) {
                         if (context != null && !context.isFinishing()) {
@@ -233,16 +247,46 @@ public class GroupPresenter extends BasePresenter {
                         }
                     }
                 } else if (site_id == 2) {
-                    if (ll_group_ware_zhuan != null) {
-                        ll_group_ware_zhuan.setVisibility(View.GONE);
+
+                    if (tv_group_ware_zhuan != null) {
+                        tv_group_ware_zhuan.setText("￥" + df.format(s_zhuan));
                     }
+                    if (tv_group_ware_coast != null) {
+                        tv_group_ware_coast.setText("￥" + df.format(s_coast));
+                    }
+
+                    if (ll_group_ware_zhuan != null) {
+                        if (shopType == 1) {
+                            if (isToggle) {
+                                ll_group_ware_zhuan.setVisibility(View.GONE);
+                            } else {
+                                ll_group_ware_zhuan.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            ll_group_ware_zhuan.setVisibility(View.GONE);
+                        }
+                        if (s_zhuan == 0) {
+                            ll_group_ware_zhuan.setVisibility(View.GONE);
+                        }
+                    }
+
                     if (tv_group_ware_coupon != null) {
                         tv_group_ware_coupon.setVisibility(View.GONE);
                     }
-                    if (tv_activity_sun_tao_icon != null) {
-                        tv_activity_sun_tao_icon.setSelected(true);
-                        tv_activity_sun_tao_icon.setText("淘宝");
+
+                    if (title != null && tv_group_ware_title != null) {
+                        //tv_group_ware_title.setText("\t\t\t\t\t\t" + title);
+                        SpannableString span = new SpannableString("\t\t" + title);
+                        ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+
+                        span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tv_group_ware_title.setText(span);
                     }
+
+//                    if (tv_activity_sun_tao_icon != null) {
+//                        tv_activity_sun_tao_icon.setSelected(true);
+//                        tv_activity_sun_tao_icon.setText("苏宁");
+//                    }
                     if (img_url != null && iv_group_ware_img != null) {
                         if (context != null && !context.isFinishing()) {
                             Glide.with(context).load(img_url.replace("800x800", "400x400"))
@@ -258,7 +302,7 @@ public class GroupPresenter extends BasePresenter {
                     ll_group_right_ware.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if(site_id == 1) {
+                            if (site_id == 1) {
                                 if (couponsPrice > 0) {
                                     if (couponsUrl != null && !TextUtils.isEmpty(couponsUrl)) {
                                         Intent intent = new Intent(context, WebActivity.class);
@@ -281,14 +325,14 @@ public class GroupPresenter extends BasePresenter {
                                     intent.putExtra("goods_price", df.format(sell_price) + "");
                                     context.startActivity(intent);
                                 }
-                            }else if(site_id == 2) {
+                            } else if (site_id == 2) {
                                 Intent intent = new Intent(context, SuningDetailActivity.class);
-                                intent.putExtra("article_id",article_id);
+                                intent.putExtra("article_id", article_id);
                                 intent.putExtra("goods_id", goods_id);
                                 intent.putExtra("goods_img", img_url);
                                 intent.putExtra("goods_title", title);
-                                intent.putExtra("goods_price", df.format(sell_price)+"");
-                                intent.putExtra("c_price", df.format(market_price)+"");
+                                intent.putExtra("goods_price", df.format(sell_price) + "");
+                                intent.putExtra("c_price", df.format(market_price) + "");
                                 context.startActivity(intent);
                             }
                         }
@@ -313,6 +357,11 @@ public class GroupPresenter extends BasePresenter {
         double zhuan = (sell_price - couponsPrice) * tkRate * 0.9f * user_rate * dataBean.getCommission_rate();
         double coast = sell_price - couponsPrice - zhuan;
         final String goods_id = String.valueOf(dataBean.getProductId());
+
+        double suning_rate = dataBean.getSuning_rate();
+        double s_zhuan = sell_price * suning_rate * user_rate;
+        double s_coast = sell_price - s_zhuan;
+
         if (title != null && tv_group_ware_title != null) {
             tv_group_ware_title.setText("\t\t\t\t\t\t" + title);
         }
@@ -320,10 +369,20 @@ public class GroupPresenter extends BasePresenter {
             tv_group_ware_price.setText("￥" + df.format(sell_price));
         }
         if (site_id == 1) {
-            if (tv_activity_sun_tao_icon != null) {
-                tv_activity_sun_tao_icon.setSelected(false);
-                tv_activity_sun_tao_icon.setText("淘宝");
+//            if (tv_activity_sun_tao_icon != null) {
+//                tv_activity_sun_tao_icon.setSelected(false);
+//                tv_activity_sun_tao_icon.setText("淘宝");
+//            }
+
+            if (title != null && tv_group_ware_title != null) {
+                //tv_group_ware_title.setText("\t\t\t\t\t\t" + title);
+                SpannableString span = new SpannableString("\t\t" + title);
+                ImageSpan image = new ImageSpan(context, R.drawable.taobao_order_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+
+                span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tv_group_ware_title.setText(span);
             }
+
             if (img_url != null && iv_group_ware_img != null) {
                 if (context != null && !context.isFinishing()) {
                     Glide.with(context).load(img_url + "_320x320q90.jpg")
@@ -361,16 +420,46 @@ public class GroupPresenter extends BasePresenter {
                 ll_group_ware_zhuan.setVisibility(View.GONE);
             }
         } else if (site_id == 2) {
+
+            if (tv_group_ware_zhuan != null) {
+                tv_group_ware_zhuan.setText("￥" + df.format(s_zhuan));
+            }
+            if (tv_group_ware_coast != null) {
+                tv_group_ware_coast.setText("￥" + df.format(s_coast));
+            }
+
+            if (ll_group_ware_zhuan != null) {
+                if (shopType == 1) {
+                    if (isToggle) {
+                        ll_group_ware_zhuan.setVisibility(View.GONE);
+                    } else {
+                        ll_group_ware_zhuan.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    ll_group_ware_zhuan.setVisibility(View.GONE);
+                }
+                if (s_zhuan == 0) {
+                    ll_group_ware_zhuan.setVisibility(View.GONE);
+                }
+            }
+
             if (tv_group_ware_coupon != null) {
                 tv_group_ware_coupon.setVisibility(View.GONE);
             }
-            if (ll_group_ware_zhuan != null) {
-                ll_group_ware_zhuan.setVisibility(View.GONE);
+
+            if (title != null && tv_group_ware_title != null) {
+                //tv_group_ware_title.setText("\t\t\t\t\t\t" + title);
+                SpannableString span = new SpannableString("\t\t" + title);
+                ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+
+                span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tv_group_ware_title.setText(span);
             }
-            if (tv_activity_sun_tao_icon != null) {
-                tv_activity_sun_tao_icon.setSelected(true);
-                tv_activity_sun_tao_icon.setText("苏宁");
-            }
+
+//            if (tv_activity_sun_tao_icon != null) {
+//                tv_activity_sun_tao_icon.setSelected(true);
+//                tv_activity_sun_tao_icon.setText("苏宁");
+//            }
             if (img_url != null && iv_group_ware_img != null) {
                 if (context != null && !context.isFinishing()) {
                     Glide.with(context).load(img_url.replace("800x800", "400x400"))
@@ -386,7 +475,7 @@ public class GroupPresenter extends BasePresenter {
         ll_group_right_ware.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(site_id == 1) {
+                if (site_id == 1) {
                     if (couponsPrice > 0) {
                         if (couponsUrl != null && !TextUtils.isEmpty(couponsUrl)) {
                             Intent intent = new Intent(context, WebActivity.class);
@@ -409,14 +498,14 @@ public class GroupPresenter extends BasePresenter {
                         intent.putExtra("goods_price", df.format(sell_price) + "");
                         context.startActivity(intent);
                     }
-                }else if(site_id == 2) {
+                } else if (site_id == 2) {
                     Intent intent = new Intent(context, SuningDetailActivity.class);
-                    intent.putExtra("article_id",article_id);
+                    intent.putExtra("article_id", article_id);
                     intent.putExtra("goods_id", goods_id);
                     intent.putExtra("goods_img", img_url);
                     intent.putExtra("goods_title", title);
-                    intent.putExtra("goods_price", df.format(sell_price)+"");
-                    intent.putExtra("c_price", df.format(market_price)+"");
+                    intent.putExtra("goods_price", df.format(sell_price) + "");
+                    intent.putExtra("c_price", df.format(market_price) + "");
                     context.startActivity(intent);
                 }
 

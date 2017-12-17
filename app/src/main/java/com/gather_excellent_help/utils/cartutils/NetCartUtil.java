@@ -18,10 +18,12 @@ public class NetCartUtil {
     public static final String del_url = Url.BASE_URL + "suning/MyShoppingCart.ashx?action=cart_goods_delete";
     public static final String upd_url = Url.BASE_URL + "suning/MyShoppingCart.ashx?action=cart_goods_update";
     public static final String get_url = Url.BASE_URL + "suning/MyShoppingCart.ashx?action=cart_goods_list";
+    public static final String total_url = Url.BASE_URL + "suning/MyShoppingCart.ashx?action=cart_goods_buy";
     public static final String WHICH_ADD = "cart_add";
     public static final String WHICH_DEL = "cart_del";
     public static final String WHICH_UPD = "cart_upd";
     public static final String WHICH_GET = "cart_get";
+    public static final String WHICH_TOTAL = "cart_TOTAL";
     private NetUtil netUtil;
     private Map<String, String> map;
     private String whick;
@@ -67,13 +69,18 @@ public class NetCartUtil {
         netUtil.okHttp2Server2(upd_url, map);
     }
 
-    public void getCartList(String user_id, String pagesize, String pageindex) {
+    public void getCartList(String user_id) {
         whick = WHICH_GET;
         map = new HashMap<>();
         map.put("user_id", user_id);
-        map.put("pagesize", pagesize);
-        map.put("pageindex", pageindex);
         netUtil.okHttp2Server2(get_url, map);
+    }
+
+    public void getTotalPrice(String jsonData) {
+        whick = WHICH_TOTAL;
+        map = new HashMap<>();
+        map.put("jsonData", jsonData);
+        netUtil.okHttp2Server2(total_url, map);
     }
 
     public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
@@ -81,7 +88,7 @@ public class NetCartUtil {
         @Override
         public void getSuccessResponse(String response) {
             LogUtil.e(response);
-            onCartResponseListener.onCartResponse(response,whick);
+            onCartResponseListener.onCartResponse(response, whick);
         }
 
         @Override
@@ -94,7 +101,8 @@ public class NetCartUtil {
     private OnCartResponseListener onCartResponseListener;
 
     public interface OnCartResponseListener {
-        void onCartResponse(String response,String whick);
+        void onCartResponse(String response, String whick);
+
         void onCartFail();
     }
 

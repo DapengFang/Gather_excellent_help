@@ -55,6 +55,9 @@ public class CacheUtils {
 	//保存热更新加载的提示次数
 	public static final String HOT_FIX_SHOW_TOAST = "hot_fix_show_toast";
 
+	//保存购物车勾选状态
+	public static final String NETCART_CHECK_DATA = "netcart_check_data";
+
 	public static SharedPreferences sp;
 
 	public static void putBoolean(Context context,String key,boolean value){

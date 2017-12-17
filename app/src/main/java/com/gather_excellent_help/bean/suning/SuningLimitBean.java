@@ -8,10 +8,11 @@ import java.util.List;
 
 public class SuningLimitBean {
 
+
     /**
      * statusCode : 1
      * statusMessage : 限购详情获取成功！
-     * data : [{"limit_num":1,"Purchased_num":2}]
+     * data : [{"limit_num":30,"Purchased_num":20,"cancel_order_num":2}]
      */
 
     private int statusCode;
@@ -44,12 +45,14 @@ public class SuningLimitBean {
 
     public static class DataBean {
         /**
-         * limit_num : 1
-         * Purchased_num : 2
+         * limit_num : 30
+         * Purchased_num : 20
+         * cancel_order_num : 2
          */
 
         private int limit_num;
         private int Purchased_num;
+        private int cancel_order_num;
 
         public int getLimit_num() {
             return limit_num;
@@ -65,6 +68,14 @@ public class SuningLimitBean {
 
         public void setPurchased_num(int Purchased_num) {
             this.Purchased_num = Purchased_num;
+        }
+
+        public int getCancel_order_num() {
+            return cancel_order_num;
+        }
+
+        public void setCancel_order_num(int cancel_order_num) {
+            this.cancel_order_num = cancel_order_num;
         }
     }
 }

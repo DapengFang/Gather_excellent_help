@@ -367,6 +367,8 @@
         <activity android:name=".ui.activity.suning.saleafter.SaleAfterActivity" />
         <activity android:name=".ui.activity.suning.saleafter.BackMoneyActivity" />
         <activity android:name=".ui.activity.suning.saleafter.ExchangeGoodsActivity"></activity>
+
+        <activity android:name=".ui.activity.suning.SuningLogisticsDetailInfoActivity" />
     </application>
 
 </manifest>

@@ -164,15 +164,15 @@ public class AddNewAddressActivity extends BaseActivity {
             return;
         }
         if(TextUtils.isEmpty(pcs)) {
-            Toast.makeText(AddNewAddressActivity.this, "请选择省市区！！!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddNewAddressActivity.this, "请选择省市区！！！", Toast.LENGTH_SHORT).show();
             return;
         }
         if(TextUtils.isEmpty(address)) {
             Toast.makeText(AddNewAddressActivity.this, "详细地址不能为空！！！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(postall)) {
-            Toast.makeText(AddNewAddressActivity.this, "邮政编码不能为空！！！", Toast.LENGTH_SHORT).show();
+        if(postall.length()!=6 && !TextUtils.isEmpty(postall)) {
+            Toast.makeText(AddNewAddressActivity.this, "邮政编码为6位！！！", Toast.LENGTH_SHORT).show();
             return;
         }
         String check_default = String.valueOf(isdefault);

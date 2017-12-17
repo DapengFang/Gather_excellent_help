@@ -79,6 +79,7 @@ public class SearchWareBean {
         private double sell_price;
         private double tkRate;
         private double commission_rate;
+        private double suning_rate;
 
         public int getSite_id() {
             return site_id;
@@ -222,6 +223,14 @@ public class SearchWareBean {
 
         public void setCommission_rate(double commission_rate) {
             this.commission_rate = commission_rate;
+        }
+
+        public double getSuning_rate() {
+            return suning_rate;
+        }
+
+        public void setSuning_rate(double suning_rate) {
+            this.suning_rate = suning_rate;
         }
     }
 }

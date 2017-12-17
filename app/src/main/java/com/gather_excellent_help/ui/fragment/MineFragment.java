@@ -27,6 +27,7 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.HelpRuleBean;
 import com.gather_excellent_help.bean.MineBean;
+import com.gather_excellent_help.ui.activity.BindPhoneActivity;
 import com.gather_excellent_help.ui.activity.suning.LogisticsInfoActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningOrderLogisticsActivity;
 import com.gather_excellent_help.ui.activity.suning.saleafter.SaleAfterActivity;
@@ -681,7 +682,7 @@ public class MineFragment extends LazyLoadFragment {
                     Toast.makeText(getContext(), "热修复测试成功！！！", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.ll_mine_u_like:
-                    toSuningGoodscart();
+                    //toSuningGoodscart();
                     break;
                 case R.id.ll_mine_suning_order:
                     toSuningOrder();
@@ -694,7 +695,7 @@ public class MineFragment extends LazyLoadFragment {
      * 跳转到苏宁购物车
      */
     private void toSuningGoodscart() {
-        Intent intent = new Intent(getContext(), SuningOrderLogisticsActivity.class);
+        Intent intent = new Intent(getContext(), BindPhoneActivity.class);
         startActivity(intent);
     }
 

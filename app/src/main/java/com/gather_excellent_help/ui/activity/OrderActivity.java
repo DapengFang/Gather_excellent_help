@@ -1,5 +1,6 @@
 package com.gather_excellent_help.ui.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,9 +29,9 @@ import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.PhotoUtils;
+import com.gather_excellent_help.utils.ScreenUtil;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +75,7 @@ public class OrderActivity extends BaseActivity {
     private int lastVisibleItem;
     private List<OrderAllBean.DataBean> allData;
     private Handler handler = new Handler();
-    private CatLoadingView catLoadingView;
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +97,6 @@ public class OrderActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
-        catLoadingView = new CatLoadingView();
         rcvOrderManager = wan_order_manager.getRefreshableView();
         fullyLinearLayoutManager = new FullyLinearLayoutManager(OrderActivity.this);
         rcvOrderManager.setLayoutManager(fullyLinearLayoutManager);
@@ -288,17 +289,30 @@ public class OrderActivity extends BaseActivity {
      * 展示CatView
      */
     private void showCatView() {
-        if (catLoadingView != null) {
-            catLoadingView.show(getSupportFragmentManager(), "");
+        View inflate = View.inflate(this, R.layout.loading_dialog_view, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(inflate);
+        alertDialog = builder.create();
+        if (OrderActivity.this != null && !OrderActivity.this.isFinishing()) {
+            alertDialog.show();
         }
+        alertDialog.getWindow().setLayout(ScreenUtil.getScreenWidth(this) / 2, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
     /**
      * 隐藏CatView
      */
     private void hindCatView() {
-        if (catLoadingView != null) {
-            catLoadingView.dismiss();
+        if (OrderActivity.this != null && !OrderActivity.this.isFinishing()) {
+            if (alertDialog != null && alertDialog.isShowing()) {
+                View view = new View(OrderActivity.this);
+                view.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        alertDialog.dismiss();
+                    }
+                }, 1000);
+            }
         }
     }
 

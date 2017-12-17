@@ -367,6 +367,7 @@ public class SuningOrderBean {
             private double real_price;
             private int quantity;
             private int quantpointity;
+            private String ProductId;
 
             public int getItemId() {
                 return itemId;
@@ -464,7 +465,13 @@ public class SuningOrderBean {
                 this.quantpointity = quantpointity;
             }
 
+            public String getProductId() {
+                return ProductId;
+            }
 
+            public void setProductId(String productId) {
+                ProductId = productId;
+            }
         }
     }
 }

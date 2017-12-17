@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.pm.LauncherApps;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -40,107 +41,122 @@ public class Tools {
 
     /**
      * 用户是否登录
+     *
      * @param context
      * @return
      */
-    public static boolean isLogin(Context context){
-        return CacheUtils.getBoolean(context,CacheUtils.LOGIN_STATE,false);
+    public static boolean isLogin(Context context) {
+        return CacheUtils.getBoolean(context, CacheUtils.LOGIN_STATE, false);
     }
 
     /**
      * 用户是否绑定支付宝
+     *
      * @param context
      * @return
      */
-    public static boolean isBindAlipay(Context context){
-        return CacheUtils.getBoolean(context,CacheUtils.PAY_STATE,false);
+    public static boolean isBindAlipay(Context context) {
+        return CacheUtils.getBoolean(context, CacheUtils.PAY_STATE, false);
     }
 
 
     /**
      * 用户是否登录
+     *
      * @param context
      * @return
      */
-    public static boolean isBindTao(Context context){
-        return CacheUtils.getBoolean(context,CacheUtils.BIND_STATE,false);
+    public static boolean isBindTao(Context context) {
+        return CacheUtils.getBoolean(context, CacheUtils.BIND_STATE, false);
     }
 
-    public static boolean isToggleShow(Context context){
+    public static boolean isToggleShow(Context context) {
         return CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
     }
 
     /**
      * 用户登录后的标识
+     *
      * @param context
      * @return
      */
-    public static String getUserLogin(Context context){
-        return CacheUtils.getString(context,CacheUtils.LOGIN_VALUE,"");
-    }
-    /**
-     * 用户登录后的广告位id
-     * @param context
-     * @return
-     */
-    public static String getAdverId(Context context){
-        return CacheUtils.getString(context,CacheUtils.ADVER_ID,"");
+    public static String getUserLogin(Context context) {
+        return CacheUtils.getString(context, CacheUtils.LOGIN_VALUE, "");
     }
 
-    public static String getSampleUser(Context context){
-        return CacheUtils.getString(context,CacheUtils.SAMPLE_VALUE,"");
-    }
     /**
-     * 用户登录后的佣金比率
+     * 用户登录后的广告位id
+     *
      * @param context
      * @return
      */
-    public static String getUserRate(Context context){
-        return CacheUtils.getString(context,CacheUtils.USER_RATE,"");
+    public static String getAdverId(Context context) {
+        return CacheUtils.getString(context, CacheUtils.ADVER_ID, "");
+    }
+
+    public static String getSampleUser(Context context) {
+        return CacheUtils.getString(context, CacheUtils.SAMPLE_VALUE, "");
+    }
+
+    /**
+     * 用户登录后的佣金比率
+     *
+     * @param context
+     * @return
+     */
+    public static String getUserRate(Context context) {
+        return CacheUtils.getString(context, CacheUtils.USER_RATE, "");
     }
 
     /**
      * 获取支付状态
+     *
      * @param context
      * @return
      */
-    public static int getPayState(Context context){
-        return CacheUtils.getInteger(context,CacheUtils.PAY_STATUS,-1);
+    public static int getPayState(Context context) {
+        return CacheUtils.getInteger(context, CacheUtils.PAY_STATUS, -1);
     }
+
     /**
      * 获取申请状态
+     *
      * @param context
      * @return
      */
-    public static int getApplyState(Context context){
-        return CacheUtils.getInteger(context,CacheUtils.APPLAY_STATUS,-1);
+    public static int getApplyState(Context context) {
+        return CacheUtils.getInteger(context, CacheUtils.APPLAY_STATUS, -1);
     }
+
     /**
      * 用户登录后的手机号
+     *
      * @param context
      * @return
      */
-    public static String getUserPhone(Context context){
-        return CacheUtils.getString(context,CacheUtils.LOGIN_PHONE,"");
+    public static String getUserPhone(Context context) {
+        return CacheUtils.getString(context, CacheUtils.LOGIN_PHONE, "");
     }
-
 
 
     /**
      * 用户登录后的类型
+     *
      * @param context
      * @return
      */
-    public static int getGroupId(Context context){
-        return CacheUtils.getInteger(context,CacheUtils.GROUP_TYPE,-1);
+    public static int getGroupId(Context context) {
+        return CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
     }
+
     /**
      * 用户登录后的类型
+     *
      * @param context
      * @return
      */
-    public static int getShopType(Context context){
-        return CacheUtils.getInteger(context,CacheUtils.SHOP_TYPE,-1);
+    public static int getShopType(Context context) {
+        return CacheUtils.getInteger(context, CacheUtils.SHOP_TYPE, -1);
     }
 
     public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
@@ -190,6 +206,7 @@ public class Tools {
 
     /**
      * 对图片大小进行压缩
+     *
      * @param bitmap
      * @param width
      * @param height
@@ -209,20 +226,21 @@ public class Tools {
     /**
      * 设置部分字体颜色为红色(后面)
      */
-    public static void setPartTextColor(TextView tv,String str,String s) {
+    public static void setPartTextColor(TextView tv, String str, String s) {
         int end = str.indexOf(s);
         SpannableStringBuilder style = new SpannableStringBuilder(str);
-        style.setSpan(new ForegroundColorSpan(Color.RED),end, str.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        style.setSpan(new ForegroundColorSpan(Color.RED), end, str.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         tv.setText(style);
     }
+
     /**
      * 设置部分字体颜色为红色(前面)
      */
-    public static void setPartTextColor2(TextView tv,String str,String s) {
-        if(str!=null && str.length()>0 && s!=null && s.length()>0) {
+    public static void setPartTextColor2(TextView tv, String str, String s) {
+        if (str != null && str.length() > 0 && s != null && s.length() > 0) {
             int end = str.indexOf(s);
             SpannableStringBuilder style = new SpannableStringBuilder(str);
-            style.setSpan(new ForegroundColorSpan(Color.RED),0, end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+            style.setSpan(new ForegroundColorSpan(Color.RED), 0, end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
             tv.setText(style);
         }
     }
@@ -262,7 +280,7 @@ public class Tools {
             InputStream is = connection.getInputStream();
             byte[] buffer = new byte[2048];
             int len = -1;
-            while((len=is.read(buffer))>0) {
+            while ((len = is.read(buffer)) > 0) {
                 fos.write(buffer, 0, len);
                 pd.incrementProgressBy(len);//更新进度
             }
@@ -285,7 +303,7 @@ public class Tools {
     }
 
 
-    public static void hideSystemKeyBoard(Context mcontext,View v) {
+    public static void hideSystemKeyBoard(Context mcontext, View v) {
         InputMethodManager imm = (InputMethodManager) mcontext
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -315,45 +333,55 @@ public class Tools {
 
     }
 
-    public static String getDeviceId(Activity activity){
+    public static String getDeviceId(Activity activity) {
         final TelephonyManager tm = (TelephonyManager) activity.getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
 
         final String tmDevice, tmSerial, androidId;
         tmDevice = "" + tm.getDeviceId();
         tmSerial = "" + tm.getSimSerialNumber();
         androidId = "" + android.provider.Settings.Secure.getString(activity.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
         String uniqueId = deviceUuid.toString();
         return uniqueId;
     }
+
     //保存阿里云热修复冷启动的状态
-    public static void saveHotfixStute(Context context,boolean bool){
-        CacheUtils.putBoolean(context,CacheUtils.HOT_FIX_STATUS,bool);
+    public static void saveHotfixStute(Context context, boolean bool) {
+        CacheUtils.putBoolean(context, CacheUtils.HOT_FIX_STATUS, bool);
     }
+
     //得到阿里云热修复冷启动的状态
-    public static boolean getHotfixStute(Context context){
-        return CacheUtils.getBoolean(context,CacheUtils.HOT_FIX_STATUS,false);
+    public static boolean getHotfixStute(Context context) {
+        return CacheUtils.getBoolean(context, CacheUtils.HOT_FIX_STATUS, false);
     }
 
     //保存第一次加载时候弹出提示状态
-    public static void saveFirstHotfixToast(Context context,int count){
-        CacheUtils.putInteger(context,CacheUtils.HOT_FIX_SHOW_TOAST,count);
+    public static void saveFirstHotfixToast(Context context, int count) {
+        CacheUtils.putInteger(context, CacheUtils.HOT_FIX_SHOW_TOAST, count);
     }
 
     //取出第一次保存的弹出提示状态
-    public static int getFirstHotfixToast(Context context){
-        return CacheUtils.getInteger(context,CacheUtils.HOT_FIX_SHOW_TOAST,0);
+    public static int getFirstHotfixToast(Context context) {
+        return CacheUtils.getInteger(context, CacheUtils.HOT_FIX_SHOW_TOAST, 0);
     }
 
     //获取红包开启状态
-    public static int getOpenRedStute(Context context){
-        return CacheUtils.getInteger(context,CacheUtils.IS_OPEN_RED,0);
+    public static int getOpenRedStute(Context context) {
+        return CacheUtils.getInteger(context, CacheUtils.IS_OPEN_RED, 0);
     }
 
-    public static boolean getInt2Boolean(String str){
-        if(str.equals("1")) {
+    public static boolean getInt2Boolean(String str) {
+        if (str.equals("1")) {
             return true;
         }
         return false;
+    }
+
+    public static void saveCartCheck(Context context, String result) {
+        CacheUtils.putString(context, CacheUtils.NETCART_CHECK_DATA,result);
+    }
+
+    public static String getCartCheck(Context context){
+        return CacheUtils.getString(context,CacheUtils.NETCART_CHECK_DATA,"");
     }
 }

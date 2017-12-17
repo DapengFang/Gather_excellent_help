@@ -3,7 +3,11 @@ package com.gather_excellent_help.ui.activity.suning;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -75,8 +79,11 @@ public class OrderConfirmActivity extends BaseActivity {
     private TextView tv_bottom_pop_cprice;
     private TextView tv_bottom_pop_goods_num;
     private TextView tv_activity_sun_tao_icon;
+    private TextView tv_order_confirm_warespec;
 
     private RelativeLayout rl_net_show;
+
+    private RelativeLayout rl_order_confirm_ware;
 
     private String pushorder_url = Url.BASE_URL + "suning/AddSNOrder.aspx";//提交订单接口
     private String address_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=GetUserAddress";//地址列表接口
@@ -103,7 +110,7 @@ public class OrderConfirmActivity extends BaseActivity {
     private String goods_title = "";//商品标题
     private String goods_img = "";//商品图片链接
     private double goods_price;//商品价格
-    private String c_price;//商品超市价格
+    private String m_price = "";//商品超市价格
     private int goods_num = 1;//商品数量
     private SuningWjsonBean suningWjsonBean;
     private String spec_id = "";//一组产品规格（33,32,39）
@@ -112,6 +119,7 @@ public class OrderConfirmActivity extends BaseActivity {
     private String product_id = "";
 
     private boolean isHavaGoods = true;
+    private String spec_content = "";//规格内容
 
 
     @Override
@@ -158,6 +166,8 @@ public class OrderConfirmActivity extends BaseActivity {
         tv_bottom_pop_cprice = (TextView) findViewById(R.id.tv_bottom_pop_cprice);
         tv_bottom_pop_goods_num = (TextView) findViewById(R.id.tv_bottom_pop_goods_num);
         tv_activity_sun_tao_icon = (TextView) findViewById(R.id.tv_activity_sun_tao_icon);
+        rl_order_confirm_ware = (RelativeLayout) findViewById(R.id.rl_order_confirm_ware);
+        tv_order_confirm_warespec = (TextView) findViewById(R.id.tv_order_confirm_warespec);
 
         rl_net_show = (RelativeLayout) findViewById(R.id.rl_net_show);
     }
@@ -172,15 +182,16 @@ public class OrderConfirmActivity extends BaseActivity {
         ware_json = intent.getStringExtra("ware_json");
         goods_img = intent.getStringExtra("goods_img");
         goods_title = intent.getStringExtra("goods_title");
+        spec_content = intent.getStringExtra("spec_content");
         String ware_price = intent.getStringExtra("goods_price");
         String c_price = intent.getStringExtra("c_price");
         if (c_price != null) {
             tv_bottom_pop_cprice.getPaint().setAntiAlias(true);
             tv_bottom_pop_cprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); // 设置中划线并加清晰 
-            tv_bottom_pop_cprice.setText(c_price);
+            tv_bottom_pop_cprice.setText("￥" + c_price);
+            m_price = c_price;
         }
         goods_price = Double.parseDouble(ware_price);
-        tv_activity_sun_tao_icon.setSelected(true);
         if (goods_img != null) {
             String replace_img = goods_img.replace("800x800", "400x400");
             Glide.with(this).load(replace_img)
@@ -189,8 +200,21 @@ public class OrderConfirmActivity extends BaseActivity {
                     .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
                     .into(iv_bottom_pop_img);//请求成功后把图片设置到的控件
         }
+
+        if (spec_content != null) {
+            if (spec_content.length() > 10) {
+                String s = spec_content.substring(0, 10) + "...";
+                tv_order_confirm_warespec.setText(s);
+            } else {
+                tv_order_confirm_warespec.setText(spec_content);
+            }
+        }
+
         if (goods_title != null) {
-            tv_bottom_pop_name.setText("\t\t\t\t\t\t" + goods_title);
+            SpannableString span = new SpannableString("\t\t" + goods_title);
+            ImageSpan image = new ImageSpan(OrderConfirmActivity.this, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+            span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tv_bottom_pop_name.setText(span);
         }
         if (ware_price != null) {
             tv_bottom_pop_goodprice.setText("￥" + goods_price);
@@ -229,6 +253,8 @@ public class OrderConfirmActivity extends BaseActivity {
         tv_sunng_add_newaddress.setOnClickListener(myonclickListener);
         rl_suning_default_address.setOnClickListener(myonclickListener);
         rl_suning_order_invoice_show.setOnClickListener(myonclickListener);
+        rl_order_confirm_ware.setOnClickListener(myonclickListener);
+        et_suning_order_mark.setOnClickListener(myonclickListener);
         nas_order_confirm_num.setOnButtonClickListener(new NumberAddSubView.OnButtonClickListener() {
             @Override
             public void onSubButton(View view, int value) {
@@ -278,8 +304,14 @@ public class OrderConfirmActivity extends BaseActivity {
                         }
                     }, 1000);
                     break;
+                case R.id.et_suning_order_mark:
+                    et_suning_order_mark.setCursorVisible(true);
+                    break;
                 case R.id.tv_sunng_add_newaddress:
                     toPersonAdderssManager();
+                    break;
+                case R.id.rl_order_confirm_ware:
+                    toSuningDetailPage();
                     break;
                 case R.id.rl_suning_default_address:
                     toPersonAdderssManager();
@@ -289,6 +321,13 @@ public class OrderConfirmActivity extends BaseActivity {
                     break;
             }
         }
+    }
+
+    /**
+     * 跳转到苏宁详情页面
+     */
+    private void toSuningDetailPage() {
+        finish();
     }
 
     /**
@@ -315,6 +354,7 @@ public class OrderConfirmActivity extends BaseActivity {
      */
     private void toCheckStand(double pay_price, String order_num, int orderId) {
         LogUtil.e(pay_price + "--" + order_num);
+        EventBus.getDefault().post(new AnyEvent(EventType.GOODS_PAY_LIMIT, "更新限购数量！"));
         Intent intent = new Intent(OrderConfirmActivity.this, CheckStandActivity.class);
         intent.putExtra("pay_price", pay_price);
         intent.putExtra("order_num", order_num);
@@ -404,40 +444,47 @@ public class OrderConfirmActivity extends BaseActivity {
         int statusCode = suningSpecidBackBean.getStatusCode();
         switch (statusCode) {
             case 1:
-                List<SuningSpecidBackBean.DataBean> data = suningSpecidBackBean.getData();
-                if (data != null && data.size() > 0) {
-                    SuningSpecidBackBean.DataBean dataBean = data.get(0);
-                    if (dataBean != null) {
-                        spec_back_id = dataBean.getGoods_specid();
-
-                        remark = et_suning_order_mark.getText().toString().trim();
-                        if (TextUtils.isEmpty(addr_id)) {
-                            Toast.makeText(OrderConfirmActivity.this, "请选择收货地址！！！", Toast.LENGTH_SHORT).show();
-                            return;
+                try {
+                    List<SuningSpecidBackBean.DataBean> data = suningSpecidBackBean.getData();
+                    if (data != null && data.size() > 0) {
+                        SuningSpecidBackBean.DataBean dataBean = data.get(0);
+                        if (dataBean != null) {
+                            spec_back_id = dataBean.getGoods_specid();
+                            if (spec_back_id == null || TextUtils.isEmpty(spec_back_id)) {
+                                spec_back_id = "0";
+                            }
+                            remark = et_suning_order_mark.getText().toString().trim();
+                            if (TextUtils.isEmpty(addr_id)) {
+                                Toast.makeText(OrderConfirmActivity.this, "请选择收货地址！！！", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            ArrayList<SuningWjsonBean> suningWjsonLists = new ArrayList<>();
+                            SuningWjsonBean suningWjsonBean = new SuningWjsonBean();
+                            suningWjsonBean.setArticle_id(goods_id);
+                            suningWjsonBean.setChannel_id(channel_id);
+                            suningWjsonBean.setGoods_id(spec_back_id);
+                            suningWjsonBean.setQuantity(ware_num);
+                            suningWjsonLists.add(suningWjsonBean);
+                            json = new Gson().toJson(suningWjsonLists);
+                            LogUtil.e("提交订单 = " + json);
+                            whick = "pushorder";
+                            map = new HashMap<>();
+                            map.put("user_id", userLogin);
+                            map.put("addr_id", addr_id);
+                            map.put("remark", remark);
+                            map.put("orderType", "1");
+                            map.put("goodsJSON", json);
+                            map.put("invoiceState", invoiceState);
+                            map.put("invoiceTitle", invoiceTitle);
+                            map.put("taxNo", taxNo);
+                            netUtil.okHttp2Server2(pushorder_url, map);
                         }
-                        ArrayList<SuningWjsonBean> suningWjsonLists = new ArrayList<>();
-                        SuningWjsonBean suningWjsonBean = new SuningWjsonBean();
-                        suningWjsonBean.setArticle_id(goods_id);
-                        suningWjsonBean.setChannel_id(channel_id);
-                        suningWjsonBean.setGoods_id(spec_back_id);
-                        suningWjsonBean.setQuantity(ware_num);
-                        suningWjsonLists.add(suningWjsonBean);
-                        json = new Gson().toJson(suningWjsonLists);
-                        LogUtil.e("提交订单 = " + json);
-                        whick = "pushorder";
-                        map = new HashMap<>();
-                        map.put("user_id", userLogin);
-                        map.put("addr_id", addr_id);
-                        map.put("remark", remark);
-                        map.put("orderType", "1");
-                        map.put("goodsJSON", json);
-                        map.put("invoiceState", invoiceState);
-                        map.put("invoiceTitle", invoiceTitle);
-                        map.put("taxNo", taxNo);
-                        netUtil.okHttp2Server2(pushorder_url, map);
+                    } else {
+                        Toast.makeText(OrderConfirmActivity.this, "无法获取商品信息！", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(OrderConfirmActivity.this, "无法获取商品信息！", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    LogUtil.e("OrderConfirmActivity error");
+                    Toast.makeText(OrderConfirmActivity.this, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case 0:
@@ -578,9 +625,9 @@ public class OrderConfirmActivity extends BaseActivity {
      * 判断库存
      */
     private void checkIsHave(String addrWay, String addstr, String productId, String num) {
-        if(addstr!=null && !TextUtils.isEmpty(addstr)) {
+        if (addstr != null && !TextUtils.isEmpty(addstr)) {
             String[] split = addstr.split(",");
-            addstr = split[0] + "," +split[1] + "," + split[2];
+            addstr = split[0] + "," + split[1] + "," + split[2];
             whick = "checkIsHave";
             map = new HashMap<>();
             map.put("addrstr", addstr);
@@ -589,7 +636,7 @@ public class OrderConfirmActivity extends BaseActivity {
             map.put("lnglat", "");
             map.put("num", num);
             netUtil.okHttp2Server2(pcs_url, map);
-        }else{
+        } else {
             Toast.makeText(OrderConfirmActivity.this, "请选择收货地址", Toast.LENGTH_SHORT).show();
         }
     }

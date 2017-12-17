@@ -48,7 +48,16 @@ public class SuningStockBean {
          * store_text : 现货
          */
 
+        private int store_status;
         private String store_text;
+
+        public int getStore_status() {
+            return store_status;
+        }
+
+        public void setStore_status(int store_status) {
+            this.store_status = store_status;
+        }
 
         public String getStore_text() {
             return store_text;
@@ -57,5 +66,6 @@ public class SuningStockBean {
         public void setStore_text(String store_text) {
             this.store_text = store_text;
         }
+
     }
 }

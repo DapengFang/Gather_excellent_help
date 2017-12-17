@@ -126,6 +126,7 @@ public class HomeActivityAdapter extends RecyclerView.Adapter<HomeActivityAdapte
                             context.startActivity(intent);
                         }
                     }else if(site_id == 2) {
+
                         Intent intent = new Intent(context, SuningDetailActivity.class);
                         intent.putExtra("article_id",article_id);
                         intent.putExtra("goods_id", goods_id);

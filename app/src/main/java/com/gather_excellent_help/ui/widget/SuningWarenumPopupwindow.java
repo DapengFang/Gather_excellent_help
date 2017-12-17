@@ -6,6 +6,10 @@ import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +55,7 @@ public class SuningWarenumPopupwindow extends PopupWindow {
     private TextView tv_bottom_pop_ogoodprice;
     private TextView tv_activity_sun_tao_icon;
     private int limitNumber;//限购数量
+    private TextView tv_bottom_pop_limit;
 
     public SuningWarenumPopupwindow(Context context, View vShadow) {
         super(context);
@@ -72,9 +77,9 @@ public class SuningWarenumPopupwindow extends PopupWindow {
         tv_bottom_pop_name = (TextView) view.findViewById(R.id.tv_bottom_pop_name);
         tv_bottom_pop_goodprice = (TextView) view.findViewById(R.id.tv_bottom_pop_goodprice);
         tv_bottom_pop_ogoodprice = (TextView) view.findViewById(R.id.tv_bottom_pop_ogoodprice);
+        tv_bottom_pop_limit = (TextView) view.findViewById(R.id.tv_bottom_pop_limit);
         tv_activity_sun_tao_icon = (TextView) view.findViewById(R.id.tv_activity_sun_tao_icon);
         nav_bottom_pop_num = (NumberAddSubView) view.findViewById(R.id.nav_bottom_pop_num);
-        nav_bottom_pop_num.setMinValue(1);
         nav_bottom_pop_num.setValue(number);
         tv_activity_sun_tao_icon.setSelected(true);
         iv_bottom_pop_exit.setOnClickListener(new View.OnClickListener() {
@@ -161,6 +166,9 @@ public class SuningWarenumPopupwindow extends PopupWindow {
         if(nav_bottom_pop_num!=null) {
             if(limitNumber>0) {
                 nav_bottom_pop_num.setMaxValue(limitNumber);
+                if(limitNumber!=100000) {
+                    tv_bottom_pop_limit.setText("限购" + limitNumber + "件");
+                }
             }
         }
     }
@@ -203,7 +211,10 @@ public class SuningWarenumPopupwindow extends PopupWindow {
         }
 
         if (tv_bottom_pop_name != null && goods_title != null) {
-            tv_bottom_pop_name.setText("\t\t\t\t\t\t" + goods_title);
+            SpannableString span = new SpannableString("\t\t" + goods_title);
+            ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+            span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tv_bottom_pop_name.setText(span);
         }
 
         if (tv_bottom_pop_goodprice != null && goods_price != null) {

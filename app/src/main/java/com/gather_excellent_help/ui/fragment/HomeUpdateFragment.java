@@ -205,14 +205,14 @@ public class HomeUpdateFragment extends LazyLoadFragment {
             @Override
             public void onSuccessResponse(long t) {
                 if (llHomeQiangZera != null) {
-                    llHomeQiangZera.setVisibility(View.VISIBLE);
+                    llHomeQiangZera.setVisibility(View.GONE);
                 }
-                time = t;
-                rushDownTimer = new RushDownTimer(getContext());
-                if(handler!=null) {
-                    handler.removeMessages(TIME_DOWN);
-                    handler.sendEmptyMessage(TIME_DOWN);
-                }
+//                time = t;
+//                rushDownTimer = new RushDownTimer(getContext());
+//                if(handler!=null) {
+//                    handler.removeMessages(TIME_DOWN);
+//                    handler.sendEmptyMessage(TIME_DOWN);
+//                }
             }
 
             @Override

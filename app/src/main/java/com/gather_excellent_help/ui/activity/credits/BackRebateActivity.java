@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,10 +26,10 @@ import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.ScreenUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +54,6 @@ public class BackRebateActivity extends BaseActivity {
     private WanRecycleView wan_back_rebate;
     private RecyclerView rcvBackRebate;
 
-    private CatLoadingView catLoadingView;
     private List<BackRebateBean.DataBean> data;
     private List<BackRebateBean.DataBean> currData;
     private String back_url = Url.BASE_URL + "RebateLog.aspx";
@@ -68,6 +69,7 @@ public class BackRebateActivity extends BaseActivity {
     private boolean isCanLoad = true;
     private FullyLinearLayoutManager fullyLinearLayoutManager;
     private BackRebateAdapter backRebateAdapter;
+    private AlertDialog alertDialog;
 
 
     @Override
@@ -90,7 +92,6 @@ public class BackRebateActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
-        catLoadingView = new CatLoadingView();
         type = "1";
         tvTopTitleName.setText("返佣明细");
         ArrayList<String> mTitles = new ArrayList<>();
@@ -176,7 +177,7 @@ public class BackRebateActivity extends BaseActivity {
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                if(wan_back_rebate!=null) {
+                if (wan_back_rebate != null) {
                     wan_back_rebate.onRefreshComplete();
                 }
                 LogUtil.e(response);
@@ -255,17 +256,30 @@ public class BackRebateActivity extends BaseActivity {
      * 显示CatView
      */
     private void showCatView() {
-        if (catLoadingView != null) {
-            catLoadingView.show(getSupportFragmentManager(), "");
+        View inflate = View.inflate(this, R.layout.loading_dialog_view, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(inflate);
+        alertDialog = builder.create();
+        if (BackRebateActivity.this != null && !BackRebateActivity.this.isFinishing()) {
+            alertDialog.show();
         }
+        alertDialog.getWindow().setLayout(ScreenUtil.getScreenWidth(this) / 2, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
     /**
      * 隐藏CatView
      */
     private void hindCatView() {
-        if (catLoadingView != null) {
-            catLoadingView.dismiss();
+        if (BackRebateActivity.this != null && !BackRebateActivity.this.isFinishing()) {
+            if (alertDialog != null && alertDialog.isShowing()) {
+                View view = new View(BackRebateActivity.this);
+                view.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        alertDialog.dismiss();
+                    }
+                }, 1000);
+            }
         }
     }
 

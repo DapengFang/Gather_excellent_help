@@ -178,6 +178,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
         tv_sunng_add_newaddress.setOnClickListener(myonclickListener);
         rl_suning_default_address.setOnClickListener(myonclickListener);
         rl_suning_order_invoice_show.setOnClickListener(myonclickListener);
+        et_suning_order_mark.setOnClickListener(myonclickListener);
 //        suningOrdercartAdapter.setOnNumButtonListener(new SuningOrdercartAdapter.OnNumButtonListener() {
 //            @Override
 //            public void onAddClick(View v, int position, String product_id, String num,String price) {
@@ -238,6 +239,9 @@ public class OrderCartConfirmActivity extends BaseActivity {
                         }
                     }, 1000);
                     break;
+                case R.id.et_suning_order_mark:
+                    et_suning_order_mark.setCursorVisible(true);
+                    break;
                 case R.id.tv_sunng_add_newaddress:
                     toPersonAdderssManager();
                     break;
@@ -274,7 +278,9 @@ public class OrderCartConfirmActivity extends BaseActivity {
      * 跳转到收银台
      */
     private void toCheckStand(double pay_price, String order_num, int orderId) {
+        EventBus.getDefault().post(new AnyEvent(EventType.GOODS_PAY_LIMIT, "更新限购数量！"));
         LogUtil.e(pay_price + "--" + order_num);
+        EventBus.getDefault().post(new AnyEvent(EventType.CLEAR_ALL_GOODSCART, "清空购物车"));
         Intent intent = new Intent(OrderCartConfirmActivity.this, CheckStandActivity.class);
         intent.putExtra("pay_price", pay_price);
         intent.putExtra("order_num", order_num);
@@ -410,7 +416,6 @@ public class OrderCartConfirmActivity extends BaseActivity {
                         toCheckStand(pay_price, order_num, orderId);
                     }
                 }
-                EventBus.getDefault().post(new AnyEvent(EventType.CLEAR_ALL_GOODSCART, "清空购物车"));
                 break;
             case 0:
                 Toast.makeText(OrderCartConfirmActivity.this, suningCreateBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -458,7 +463,8 @@ public class OrderCartConfirmActivity extends BaseActivity {
                         if (area_id != null) {
                             if (suningOrdercartAdapter != null) {
                                 double price = suningOrdercartAdapter.getTotalPrice();
-                                this.totalprice = String.valueOf(price);
+                                DecimalFormat df = new DecimalFormat("#0.00");
+                                this.totalprice = df.format(price);
                                 showTotalPrice();
                             }
                         }

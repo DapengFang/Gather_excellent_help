@@ -2,7 +2,11 @@ package com.gather_excellent_help.update;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -68,16 +72,29 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
         double zhuan = (sell_price - couponsPrice) * tkRate * 0.9f * user_rate * itemBean.getCommission_rate();
         double coast = sell_price - couponsPrice - zhuan;
 
-        if (holder.tvActivityWareTitle != null && title != null) {
-            holder.tvActivityWareTitle.setText("\t\t\t\t\t\t" + title);
-        }
+        double suning_rate = itemBean.getSuning_rate();
+        double s_zhuan = sell_price * suning_rate * user_rate;
+        double s_coast = sell_price - s_zhuan;
+
+//        if (holder.tvActivityWareTitle != null && title != null) {
+//            holder.tvActivityWareTitle.setText("\t\t\t\t\t\t" + title);
+//        }
 
         if (site_id == 1) {
-            if (holder.tv_activity_sun_tao_icon != null) {
-                holder.tv_activity_sun_tao_icon.setSelected(false);
-                holder.tv_activity_sun_tao_icon.setText("淘宝");
+
+            if (holder.tvActivityWareTitle != null && title != null) {
+                SpannableString span = new SpannableString("\t\t" + title);
+                ImageSpan image = new ImageSpan(context, R.drawable.taobao_order_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+
+                span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.tvActivityWareTitle.setText(span);
             }
-            if (holder.tvActivityWarePrice != null && holder.tvActivityWarePrice != null) {
+
+//            if (holder.tv_activity_sun_tao_icon != null) {
+//                holder.tv_activity_sun_tao_icon.setSelected(false);
+//                holder.tv_activity_sun_tao_icon.setText("淘宝");
+//            }
+            if (holder.tvActivityWarePrice != null) {
                 if (shopType == 1) {
                     if (isToggle) {
                         holder.tvActivityWarePrice.setText("￥" + df.format(sell_price));
@@ -100,10 +117,18 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
                         .into(holder.ivActivityWareImg);//请求成功后把图片设置到的控件
             }
         } else if (site_id == 2) {
-            if (holder.tv_activity_sun_tao_icon != null) {
-                holder.tv_activity_sun_tao_icon.setSelected(true);
-                holder.tv_activity_sun_tao_icon.setText("苏宁");
+
+            if (holder.tvActivityWareTitle != null && title != null) {
+                SpannableString span = new SpannableString("\t\t" + title);
+                ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+                span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.tvActivityWareTitle.setText(span);
             }
+
+//            if (holder.tv_activity_sun_tao_icon != null) {
+//                holder.tv_activity_sun_tao_icon.setSelected(true);
+//                holder.tv_activity_sun_tao_icon.setText("苏宁");
+//            }
             if (holder.ivActivityWareImg != null && img_url != null) {
                 Glide.with(context).load(img_url.replace("800x800", "400x400"))
                         .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
@@ -112,9 +137,19 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
                         .into(holder.ivActivityWareImg);//请求成功后把图片设置到的控件
             }
 
-            if (holder.tvActivityWarePrice != null && holder.tvActivityWarePrice != null) {
-                holder.tvActivityWarePrice.setText("￥" + df.format(sell_price));
-                holder.tvActivityWareType.setText("页面价");
+            if (holder.tvActivityWarePrice != null) {
+                if (shopType == 1) {
+                    if (isToggle) {
+                        holder.tvActivityWarePrice.setText("￥" + df.format(sell_price));
+                        holder.tvActivityWareType.setText("页面价");
+                    } else {
+                        holder.tvActivityWarePrice.setText("￥" + df.format(s_coast));
+                        holder.tvActivityWareType.setText("成本");
+                    }
+                } else {
+                    holder.tvActivityWarePrice.setText("￥" + df.format(sell_price));
+                    holder.tvActivityWareType.setText("页面价");
+                }
             }
 
         }

@@ -45,9 +45,9 @@ import com.gather_excellent_help.ui.widget.SharePopupwindow;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.ScreenUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
-import com.roger.catloadinglibrary.CatLoadingView;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
@@ -128,7 +128,6 @@ public class WebRecordActivity extends BaseActivity {
     private AlibcLogin alibcLogin;
     private AlertDialog dialog;
 
-    private CatLoadingView catView;
 
     private ImageView iv_order_no_zhanwei;
     private AlertDialog alertDialog;
@@ -155,7 +154,6 @@ public class WebRecordActivity extends BaseActivity {
     private void initData() {
         rlShare.setVisibility(View.VISIBLE);
         tvTopTitleName.setText("商品详情");
-        catView = new CatLoadingView();
         which = "";
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
@@ -263,27 +261,31 @@ public class WebRecordActivity extends BaseActivity {
      * 隐藏CatView
      */
     private void hindCatView(final int w) {
-        View view = new View(this);
-        view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (w == 1) {
-                    iv_order_no_zhanwei.setVisibility(View.VISIBLE);
-                }
-                if (catView != null) {
-                    catView.dismiss();
-                }
+        if (WebRecordActivity.this != null && !WebRecordActivity.this.isFinishing()) {
+            if (alertDialog != null && alertDialog.isShowing()) {
+                View view = new View(WebRecordActivity.this);
+                view.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        alertDialog.dismiss();
+                    }
+                }, 1000);
             }
-        }, 1200);
+        }
     }
 
     /**
      * 显示CatView
      */
     private void showCatView() {
-        if (catView != null) {
-            catView.show(getSupportFragmentManager(), "");
+        View inflate = View.inflate(this, R.layout.loading_dialog_view, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(inflate);
+        alertDialog = builder.create();
+        if (WebRecordActivity.this != null && !WebRecordActivity.this.isFinishing()) {
+            alertDialog.show();
         }
+        alertDialog.getWindow().setLayout(ScreenUtil.getScreenWidth(this) / 2, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
     /**

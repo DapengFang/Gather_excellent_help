@@ -84,6 +84,7 @@ public class ActivityListBean {
         private String add_time;
         private String lately_order_time;
         private double commission_rate;
+        private double suning_rate;
 
         public String getTitle() {
             return title;
@@ -243,6 +244,14 @@ public class ActivityListBean {
 
         public void setArticle_id(int article_id) {
             this.article_id = article_id;
+        }
+
+        public double getSuning_rate() {
+            return suning_rate;
+        }
+
+        public void setSuning_rate(double suning_rate) {
+            this.suning_rate = suning_rate;
         }
     }
 }

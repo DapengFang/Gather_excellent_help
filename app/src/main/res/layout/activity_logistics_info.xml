@@ -14,6 +14,6 @@
         android:id="@+id/wan_suning_logistics"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/popupwind_bg_icon"/>
+        android:background="#eeeeee"/>
 
 </LinearLayout>

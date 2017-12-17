@@ -3,7 +3,11 @@ package com.gather_excellent_help.update;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -43,9 +47,9 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
         shopType = Tools.getShopType(context);
         LogUtil.e("type shopType = " + shopType);
         String userRate = Tools.getUserRate(context);
-        if(!TextUtils.isEmpty(userRate)) {
+        if (!TextUtils.isEmpty(userRate)) {
             double v = Double.parseDouble(userRate);
-            user_rate = v/100;
+            user_rate = v / 100;
         }
         isToggle = Tools.isToggleShow(context);
     }
@@ -68,52 +72,61 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
         final String title = dataBean.getTitle();
         final double sell_price = dataBean.getSell_price();
         final String link_url = dataBean.getLink_url();
-        double tkRate = dataBean.getTkRate()/100;
-        double zhuan = (sell_price -couponsPrice)*tkRate*0.9f*user_rate*dataBean.getCommission_rate();
-        double coast = sell_price -couponsPrice-zhuan;
+        double tkRate = dataBean.getTkRate() / 100;
+        double zhuan = (sell_price - couponsPrice) * tkRate * 0.9f * user_rate * dataBean.getCommission_rate();
+        double coast = sell_price - couponsPrice - zhuan;
         final String goods_id = String.valueOf(dataBean.getProductId());
         final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
 
-        if(holder.tvActivityWareTitle!=null && title!=null) {
-            holder.tvActivityWareTitle.setText("\t\t\t\t\t\t\t" + title);
+        double suning_rate = dataBean.getSuning_rate();
+        double s_zhuan = sell_price * suning_rate * user_rate;
+        double s_coast = sell_price - s_zhuan;
+
+        if (holder.tvActivityWarePrice != null) {
+            holder.tvActivityWarePrice.setText("￥" + df.format(sell_price));
         }
 
-        if(holder.tvActivityWarePrice!=null) {
-            holder.tvActivityWarePrice.setText("￥"+df.format(sell_price));
-        }
+        if (site_id == 1) {
 
-        if(site_id == 1) {
+            if (holder.tvActivityWareTitle != null && title != null) {
+                holder.tvActivityWareTitle.setText("\t\t" + title);
+                SpannableString span = new SpannableString("\t\t" + title);
+                ImageSpan image = new ImageSpan(context, R.drawable.taobao_order_icon, DynamicDrawableSpan.ALIGN_BASELINE);
 
-            if(holder.tv_activity_sun_tao_icon!=null) {
-                holder.tv_activity_sun_tao_icon.setSelected(false);
-                holder.tv_activity_sun_tao_icon.setText("淘宝");
+                span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.tvActivityWareTitle.setText(span);
             }
-            if(holder.ivActivityListWareImg!=null  && img_url!=null) {
+
+//            if (holder.tv_activity_sun_tao_icon != null) {
+//                holder.tv_activity_sun_tao_icon.setSelected(false);
+//                holder.tv_activity_sun_tao_icon.setText("淘宝");
+//            }
+            if (holder.ivActivityListWareImg != null && img_url != null) {
                 //mImageLoader.loadImage(img_url+"_320x320q90.jpg",holder.ivActivityListWareImg,true);
-                Glide.with(context).load(img_url+"_320x320q90.jpg")
+                Glide.with(context).load(img_url + "_320x320q90.jpg")
                         .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                         .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
                         .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
                         .into(holder.ivActivityListWareImg);//请求成功后把图片设置到的控件
             }
-            if(holder.tvActivityWareCoupon!=null) {
-                holder.tvActivityWareCoupon.setText("领券减"+couponsPrice);
+            if (holder.tvActivityWareCoupon != null) {
+                holder.tvActivityWareCoupon.setText("领券减" + couponsPrice);
             }
 
-            if(holder.tvActivityWareZhuan!=null) {
-                holder.tvActivityWareZhuan.setText("￥"+df.format(zhuan));
+            if (holder.tvActivityWareZhuan != null) {
+                holder.tvActivityWareZhuan.setText("￥" + df.format(zhuan));
             }
-            if(holder.tvActivityWareCoast!=null) {
-                holder.tvActivityWareCoast.setText("￥"+df.format(coast));
+            if (holder.tvActivityWareCoast != null) {
+                holder.tvActivityWareCoast.setText("￥" + df.format(coast));
             }
-            if(holder.tvActivityWareCoupon!=null) {
-                if(couponsPrice>0) {
+            if (holder.tvActivityWareCoupon != null) {
+                if (couponsPrice > 0) {
                     holder.tvActivityWareCoupon.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     holder.tvActivityWareCoupon.setVisibility(View.GONE);
                 }
             }
-            if(holder.ll_activity_list_ware_zhuan!=null) {
+            if (holder.ll_activity_list_ware_zhuan != null) {
                 if (shopType == 1) {
                     if (isToggle) {
                         holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
@@ -124,14 +137,14 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
                     holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
                 }
 
-                if(zhuan == 0) {
+                if (zhuan == 0) {
                     holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
                 }
             }
-            if(holder.tvActivityWareCouponSecond!=null) {
-                if(secondCouponsUrl!=null && !TextUtils.isEmpty(secondCouponsUrl)) {
+            if (holder.tvActivityWareCouponSecond != null) {
+                if (secondCouponsUrl != null && !TextUtils.isEmpty(secondCouponsUrl)) {
                     holder.tvActivityWareCouponSecond.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     holder.tvActivityWareCouponSecond.setVisibility(View.GONE);
                 }
 
@@ -140,29 +153,58 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
                     public void onClick(View view) {
                         Intent intent = new Intent(context, WebActivity.class);
                         intent.putExtra("web_url", secondCouponsUrl);
-                        intent.putExtra("type","second");
+                        intent.putExtra("type", "second");
                         context.startActivity(intent);
                     }
                 });
             }
-        }else if(site_id == 2) {
-            if(holder.tvActivityWareCoupon!=null) {
+        } else if (site_id == 2) {
+            if (holder.tvActivityWareCoupon != null) {
                 holder.tvActivityWareCoupon.setVisibility(View.GONE);
             }
-            if(holder.tvActivityWareCouponSecond!=null) {
+            if (holder.tvActivityWareCouponSecond != null) {
                 holder.tvActivityWareCouponSecond.setVisibility(View.GONE);
             }
-            if(holder.ll_activity_list_ware_zhuan!=null) {
-                holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
+
+            if (holder.tvActivityWareZhuan != null) {
+                holder.tvActivityWareZhuan.setText("￥" + df.format(s_zhuan));
             }
-            if(holder.tv_activity_sun_tao_icon!=null) {
-                holder.tv_activity_sun_tao_icon.setSelected(true);
-                holder.tv_activity_sun_tao_icon.setText("苏宁");
+            if (holder.tvActivityWareCoast != null) {
+                holder.tvActivityWareCoast.setText("￥" + df.format(s_coast));
+            }
+            if (holder.ll_activity_list_ware_zhuan != null) {
+                if (shopType == 1) {
+                    if (isToggle) {
+                        holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
+                    } else {
+                        holder.ll_activity_list_ware_zhuan.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
+                }
+
+                if (s_zhuan == 0) {
+                    holder.ll_activity_list_ware_zhuan.setVisibility(View.GONE);
+                }
             }
 
-            if(holder.ivActivityListWareImg!=null  && img_url!=null) {
+            if (holder.tvActivityWareTitle != null && title != null) {
+                holder.tvActivityWareTitle.setText("\t\t" + title);
+                SpannableString span = new SpannableString("\t\t" + title);
+                ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+
+                span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.tvActivityWareTitle.setText(span);
+            }
+
+//            if (holder.tv_activity_sun_tao_icon != null) {
+//                holder.tv_activity_sun_tao_icon.setSelected(true);
+//                holder.tv_activity_sun_tao_icon.setText("苏宁");
+//            }
+
+            if (holder.ivActivityListWareImg != null && img_url != null) {
                 //mImageLoader.loadImage(img_url+"_320x320q90.jpg",holder.ivActivityListWareImg,true);
-                Glide.with(context).load(img_url.replace("800x800","400x400"))
+                Glide.with(context).load(img_url.replace("800x800", "400x400"))
                         .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                         .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
                         .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
@@ -171,11 +213,11 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
         }
 
 
-        if(holder.llActivityListWare!=null) {
+        if (holder.llActivityListWare != null) {
             holder.llActivityListWare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onItemclickListener.onItemClick(view,position);
+                    onItemclickListener.onItemClick(view, position);
                 }
             });
         }
@@ -214,14 +256,14 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
 
         public HomeActivityListViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
             tv_activity_sun_tao_icon = (TextView) itemView.findViewById(R.id.tv_activity_sun_tao_icon);
         }
     }
 
     private OnItemclickListener onItemclickListener;
 
-    public interface OnItemclickListener{
+    public interface OnItemclickListener {
         void onItemClick(View v, int position);
     }
 

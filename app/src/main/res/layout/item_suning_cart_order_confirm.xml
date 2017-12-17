@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/rl_order_cart_ware"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x100"
         android:padding="@dimen/x10">
@@ -17,6 +18,7 @@
             android:src="@mipmap/juyoubangs" />
 
         <RelativeLayout
+            android:id="@+id/rl_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/iv_bottom_pop_img"
@@ -28,6 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
+                android:lineSpacingExtra="@dimen/x2"
                 android:textColor="#aa000000"
                 android:textSize="@dimen/x12" />
 
@@ -41,8 +44,21 @@
                 android:text="苏宁"
                 android:textColor="@drawable/sun_tao_text_selector"
                 android:textSize="@dimen/x8"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"/>
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_activity_suning_warespec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#aa000000"
+            android:textSize="@dimen/x12"
+            android:layout_below="@id/rl_top"
+            android:layout_toRightOf="@+id/iv_bottom_pop_img"
+            android:layout_marginLeft="@dimen/x5"
+            android:layout_marginTop="@dimen/x3"/>
 
         <LinearLayout
             android:layout_width="match_parent"
