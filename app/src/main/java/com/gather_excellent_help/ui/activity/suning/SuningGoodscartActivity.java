@@ -112,17 +112,6 @@ public class SuningGoodscartActivity extends BaseActivity {
     private boolean isEvent;
     private boolean isCheckState = false;
     private boolean isInitState = false;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 0:
-
-                    break;
-            }
-        }
-    };
 
 
     @Override
@@ -488,76 +477,80 @@ public class SuningGoodscartActivity extends BaseActivity {
                     }
                     break;
                 case R.id.tv_topay:
-                    if (edit_status) {
-                        //提交订单
-                        ArrayList<Integer> check_carts = new ArrayList<>();
-                        if (checkData != null && checkData.size() > 0) {
-                            for (int i = 0; i < checkData.size(); i++) {
-                                NetGoodscartCheckBean.DataBean checkBean = checkData.get(i);
-                                boolean bool = Tools.getInt2Boolean(String.valueOf(checkBean.getIs_check()));
-                                if (bool) {
-                                    int cart_id = checkBean.getCart_id();
-                                    check_carts.add(cart_id);
+                    try {
+                        if (edit_status) {
+                            //提交订单
+                            ArrayList<Integer> check_carts = new ArrayList<>();
+                            if (checkData != null && checkData.size() > 0) {
+                                for (int i = 0; i < checkData.size(); i++) {
+                                    NetGoodscartCheckBean.DataBean checkBean = checkData.get(i);
+                                    boolean bool = Tools.getInt2Boolean(String.valueOf(checkBean.getIs_check()));
+                                    if (bool) {
+                                        int cart_id = checkBean.getCart_id();
+                                        check_carts.add(cart_id);
+                                    }
                                 }
-                            }
-                            if (check_carts != null && check_carts.size() > 0) {
-                                if (netData != null && netData.size() > 0) {
-                                    SuningGoodscartBean suningGoodscartBean = new SuningGoodscartBean();
-                                    List<SuningGoodscartBean.DataBean> suningCartdata = new ArrayList<>();
-                                    for (int i = 0; i < netData.size(); i++) {
-                                        NetGoodscartBean.DataBean dataBean = netData.get(i);
-                                        int cart_id = dataBean.getCart_id();
-                                        if (check_carts.contains(cart_id)) {
-                                            DecimalFormat df = new DecimalFormat("#0.00");
-                                            SuningGoodscartBean.DataBean ndatabean = new SuningGoodscartBean.DataBean();
-                                            int channel_id = dataBean.getChannel_id();
-                                            int goods_id = dataBean.getGoods_id();
-                                            int article_id = dataBean.getArticle_id();
-                                            int quantity = dataBean.getQuantity();
-                                            int purchase_num = dataBean.getPurchase_num();
-                                            goods_list = dataBean.getGoods_list();
-                                            gg_list = dataBean.getGg_list();
-                                            if (goods_list != null && goods_list.size() > 0) {
-                                                goodsListBean = goods_list.get(0);
-                                                t_goods_title = goodsListBean.getGoods_title();
-                                                t_img_url = goodsListBean.getImg_url();
-                                                t_market_price = goodsListBean.getMarket_price();
-                                                t_sell_price = goodsListBean.getSell_price();
-                                                t_productId = goodsListBean.getProductId();
+                                if (check_carts != null && check_carts.size() > 0) {
+                                    if (netData != null && netData.size() > 0) {
+                                        SuningGoodscartBean suningGoodscartBean = new SuningGoodscartBean();
+                                        List<SuningGoodscartBean.DataBean> suningCartdata = new ArrayList<>();
+                                        for (int i = 0; i < netData.size(); i++) {
+                                            NetGoodscartBean.DataBean dataBean = netData.get(i);
+                                            int cart_id = dataBean.getCart_id();
+                                            if (check_carts.contains(cart_id)) {
+                                                DecimalFormat df = new DecimalFormat("#0.00");
+                                                SuningGoodscartBean.DataBean ndatabean = new SuningGoodscartBean.DataBean();
+                                                int channel_id = dataBean.getChannel_id();
+                                                int goods_id = dataBean.getGoods_id();
+                                                int article_id = dataBean.getArticle_id();
+                                                int quantity = dataBean.getQuantity();
+                                                int purchase_num = dataBean.getPurchase_num();
+                                                goods_list = dataBean.getGoods_list();
+                                                gg_list = dataBean.getGg_list();
+                                                if (goods_list != null && goods_list.size() > 0) {
+                                                    goodsListBean = goods_list.get(0);
+                                                    t_goods_title = goodsListBean.getGoods_title();
+                                                    t_img_url = goodsListBean.getImg_url();
+                                                    t_market_price = goodsListBean.getMarket_price();
+                                                    t_sell_price = goodsListBean.getSell_price();
+                                                    t_productId = goodsListBean.getProductId();
+                                                }
+                                                if (gg_list != null && gg_list.size() > 0) {
+                                                    ggListBean = gg_list.get(0);
+                                                    t_spec_text = ggListBean.getSpec_text();
+                                                }
+                                                ndatabean.setProduct_spec_limit(String.valueOf(purchase_num));
+                                                ndatabean.setProduct_spec(t_spec_text);
+                                                ndatabean.setProduct_sprice(df.format(t_sell_price));
+                                                ndatabean.setProduct_mprice(df.format(t_market_price));
+                                                ndatabean.setProduct_title(t_goods_title);
+                                                ndatabean.setProduct_spec_id(String.valueOf(goods_id));
+                                                ndatabean.setProduct_goodsid(t_productId);
+                                                ndatabean.setProduct_id(String.valueOf(article_id));
+                                                ndatabean.setProduct_num(String.valueOf(quantity));
+                                                ndatabean.setProduct_pic(t_img_url);
+                                                suningCartdata.add(ndatabean);
                                             }
-                                            if (gg_list != null && gg_list.size() > 0) {
-                                                ggListBean = gg_list.get(0);
-                                                t_spec_text = ggListBean.getSpec_text();
-                                            }
-                                            ndatabean.setProduct_spec_limit(String.valueOf(purchase_num));
-                                            ndatabean.setProduct_spec(t_spec_text);
-                                            ndatabean.setProduct_sprice(df.format(t_sell_price));
-                                            ndatabean.setProduct_mprice(df.format(t_market_price));
-                                            ndatabean.setProduct_title(t_goods_title);
-                                            ndatabean.setProduct_spec_id(String.valueOf(goods_id));
-                                            ndatabean.setProduct_goodsid(t_productId);
-                                            ndatabean.setProduct_id(String.valueOf(article_id));
-                                            ndatabean.setProduct_num(String.valueOf(quantity));
-                                            ndatabean.setProduct_pic(t_img_url);
-                                            suningCartdata.add(ndatabean);
+                                        }
+                                        suningGoodscartBean.setData(suningCartdata);
+                                        String cart_json = new Gson().toJson(suningGoodscartBean);
+                                        if (isHavaGoods) {
+                                            Intent intent = new Intent(SuningGoodscartActivity.this, OrderCartConfirmActivity.class);
+                                            intent.putExtra("cart_json", cart_json);
+                                            startActivity(intent);
+                                        } else {
+                                            Toast.makeText(SuningGoodscartActivity.this, "网络连接出现问题，请您重新加入购物车。", Toast.LENGTH_SHORT).show();
                                         }
                                     }
-                                    suningGoodscartBean.setData(suningCartdata);
-                                    String cart_json = new Gson().toJson(suningGoodscartBean);
-                                    if (isHavaGoods) {
-                                        Intent intent = new Intent(SuningGoodscartActivity.this, OrderCartConfirmActivity.class);
-                                        intent.putExtra("cart_json", cart_json);
-                                        startActivity(intent);
-                                    } else {
-                                        Toast.makeText(SuningGoodscartActivity.this, "网络连接出现问题，请您重新加入购物车。", Toast.LENGTH_SHORT).show();
-                                    }
                                 }
                             }
+                        } else {
+                            //删除购物车数据
+                            deletNetGoodscartData();
                         }
-
-                    } else {
-                        //删除购物车数据
-                        deletNetGoodscartData();
+                    } catch (Exception e) {
+                        LogUtil.e("SuningGoodscartActivity MyonclickListener tv_topay error");
+                        Toast.makeText(SuningGoodscartActivity.this, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.tv_goodscart_clear_toSee:
@@ -606,22 +599,27 @@ public class SuningGoodscartActivity extends BaseActivity {
      */
     private void parseCheckIshavaData(String response) {
         LogUtil.e(response);
-        isHavaGoods = true;
-        SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
-        int statusCode = suningStockBean.getStatusCode();
-        switch (statusCode) {
-            case 1:
-                int cart_id = dataBean.getCart_id();
-                int article_id = dataBean.getArticle_id();
-                int goods_id = dataBean.getGoods_id();
-                netCartUtil.updateCart(String.valueOf(cart_id), userLogin, "7", String.valueOf(article_id), String.valueOf(goods_id),
-                        String.valueOf(num_value));
-                break;
-            case 0:
-                Toast.makeText(SuningGoodscartActivity.this, "当前购买数量库存不足！！！", Toast.LENGTH_SHORT).show();
-                break;
+        try {
+            isHavaGoods = true;
+            SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
+            int statusCode = suningStockBean.getStatusCode();
+            switch (statusCode) {
+                case 1:
+                    int cart_id = dataBean.getCart_id();
+                    int article_id = dataBean.getArticle_id();
+                    int goods_id = dataBean.getGoods_id();
+                    netCartUtil.updateCart(String.valueOf(cart_id), userLogin, "7", String.valueOf(article_id), String.valueOf(goods_id),
+                            String.valueOf(num_value));
+                    break;
+                case 0:
+                    Toast.makeText(SuningGoodscartActivity.this, "当前购买数量库存不足！！！", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            initData();
+        } catch (Exception e) {
+            LogUtil.e("SuningGoodscartActivity parseCheckIshavaData error");
+            Toast.makeText(SuningGoodscartActivity.this, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
         }
-        initData();
     }
 
     public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
@@ -641,6 +639,9 @@ public class SuningGoodscartActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 购物车删除，修改，查询的操作的联网回调
+     */
     public class OnCartResponseListener implements NetCartUtil.OnCartResponseListener {
 
         @Override
@@ -665,7 +666,7 @@ public class SuningGoodscartActivity extends BaseActivity {
 
         @Override
         public void onCartFail() {
-
+            //联网失败的操作
         }
     }
 
@@ -720,7 +721,7 @@ public class SuningGoodscartActivity extends BaseActivity {
     }
 
     /**
-     * 解析总计价格
+     * 解析总计价格返回数据
      *
      * @param response
      */
@@ -863,7 +864,7 @@ public class SuningGoodscartActivity extends BaseActivity {
                     intent.putExtra("c_price", df.format(market_price) + "");
                     startActivity(intent);
                 } catch (Exception e) {
-                    LogUtil.e("SuningGoodscartActivity error");
+                    LogUtil.e("SuningGoodscartActivity clickItemComplete error");
                     Toast.makeText(SuningGoodscartActivity.this, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -922,7 +923,6 @@ public class SuningGoodscartActivity extends BaseActivity {
                     if (goods_list != null && goods_list.size() > 0) {
                         NetGoodscartBean.DataBean.GoodsListBean goodsListBean = goods_list.get(0);
                         String product_id = goodsListBean.getProductId();
-                        //num_click = "sub";
                         num_value = value;
                         checkIsHave(addWay, area_id, product_id, String.valueOf(value));
                     }
@@ -931,6 +931,11 @@ public class SuningGoodscartActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 获取到选中的数据
+     *
+     * @param netData
+     */
     private void getCheckData(List<NetGoodscartBean.DataBean> netData) {
         isCheckState = true;
         if (netData != null && netData.size() > 0) {

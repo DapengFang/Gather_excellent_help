@@ -42,18 +42,14 @@ import com.gather_excellent_help.bean.suning.SuningSpecBean;
 import com.gather_excellent_help.bean.suning.SuningSpecidBackBean;
 import com.gather_excellent_help.bean.suning.SuningStockBean;
 import com.gather_excellent_help.bean.suning.SuningWareBean;
-import com.gather_excellent_help.bean.suning.SuningWjsonBean;
 import com.gather_excellent_help.bean.suning.netcart.NetGoodscartAddBean;
 import com.gather_excellent_help.db.suning.SqliteServiceManager;
-import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.activity.suning.HackySeeBigimgActivity;
 import com.gather_excellent_help.ui.activity.suning.OrderConfirmActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningDetailActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningGoodscartActivity;
-import com.gather_excellent_help.ui.widget.PcsChoicePopupwindow;
 import com.gather_excellent_help.ui.widget.PcsDetailChoicePopupwindow;
 import com.gather_excellent_help.ui.widget.SharePopupwindow;
-import com.gather_excellent_help.ui.widget.SuningPcsChoicePopupwindow;
 import com.gather_excellent_help.ui.widget.SuningStandardPopupwindow;
 import com.gather_excellent_help.ui.widget.SuningWarenumPopupwindow;
 import com.gather_excellent_help.utils.DensityUtil;
@@ -70,18 +66,16 @@ import com.umeng.socialize.media.UMWeb;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import okhttp3.Call;
 
-import static com.gather_excellent_help.R.id.add;
-import static com.gather_excellent_help.R.id.nav_bottom_pop_num;
-import static com.gather_excellent_help.R.id.tv_address_pcs;
 
-
+/**
+ * VerticalFragment1 商品详情页顶部上半部分
+ */
 public class VerticalFragment1 extends Fragment {
 
     private Context context;
@@ -163,7 +157,6 @@ public class VerticalFragment1 extends Fragment {
 
     private int what_buy = 1;
     private List<SuningSpecBean.DataBean> data;//商品规格数据
-    private SqliteServiceManager manager;
     private String attr_id = "";//省市区id
     private int limit_num;
     private String addrWay = "1";
@@ -210,7 +203,6 @@ public class VerticalFragment1 extends Fragment {
                     parseWareData(response);
                 } else {
                     myhandler.sendEmptyMessageDelayed(1, 1000);
-
                 }
             } else if (msg.what == 2) {
                 if (!TextUtils.isEmpty(address) && !TextUtils.isEmpty(lalotitude)) {
@@ -243,7 +235,6 @@ public class VerticalFragment1 extends Fragment {
         initData();
         return rootView;
     }
-
 
     /**
      * 初始化数据
@@ -373,6 +364,9 @@ public class VerticalFragment1 extends Fragment {
     }
 
 
+    /**
+     * 顶部轮播图滚动的PagerAdapter
+     */
     class MyPagerAdapter extends PagerAdapter {
 
         @Override
@@ -428,6 +422,9 @@ public class VerticalFragment1 extends Fragment {
 
     }
 
+    /**
+     * 发送Handler消息
+     */
     private void sendHandler() {
         if (myhandler == null) {
             myhandler = new Myhandler();
@@ -438,6 +435,9 @@ public class VerticalFragment1 extends Fragment {
 
     private boolean isDrager = false;
 
+    /**
+     * 顶部轮播图滚动的时候的监听
+     */
     class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
@@ -531,6 +531,13 @@ public class VerticalFragment1 extends Fragment {
         }
     }
 
+    /**
+     * 请求权限打开的回调
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -696,6 +703,9 @@ public class VerticalFragment1 extends Fragment {
     };
 
 
+    /**
+     * 创建分享内容的Popupwindow
+     */
     private void showSharePopMenu() {
         if (sharePopupwindow == null) {
             sharePopupwindow = new SharePopupwindow(context, vShadow);
@@ -736,6 +746,7 @@ public class VerticalFragment1 extends Fragment {
      * 显示省市区的popupwindow
      */
     private void showPopMenu() {
+
 //        vShadow.setVisibility(View.VISIBLE);
 //        if (suningPcsChoicePopupwindow == null) {
 //            suningPcsChoicePopupwindow = new SuningPcsChoicePopupwindow(context, vShadow);
@@ -1038,7 +1049,7 @@ public class VerticalFragment1 extends Fragment {
                     ware_num = number;
                     tv_vertical_standard_ware_num.setText("数量：" + ware_num + "件商品");
                     LogUtil.e(spec_ids + "-----" + "数量 = " + ware_num);
-                    map = new HashMap<String, String>();
+                    map = new HashMap<>();
                     map.put("channel_id", "7");
                     map.put("article_id", article_id);
                     map.put("goods_id", spec_ids);
@@ -1166,11 +1177,11 @@ public class VerticalFragment1 extends Fragment {
      */
     private void parseLimitData(String response) {
         LogUtil.e("限购 = " + response);
-        SuningLimitBean suningLimitBean = new Gson().fromJson(response, SuningLimitBean.class);
-        int statusCode = suningLimitBean.getStatusCode();
-        switch (statusCode) {
-            case 1:
-                try {
+        try {
+            SuningLimitBean suningLimitBean = new Gson().fromJson(response, SuningLimitBean.class);
+            int statusCode = suningLimitBean.getStatusCode();
+            switch (statusCode) {
+                case 1:
                     List<SuningLimitBean.DataBean> data = suningLimitBean.getData();
                     if (data != null && data.size() > 0) {
                         SuningLimitBean.DataBean dataBean = data.get(0);
@@ -1196,14 +1207,14 @@ public class VerticalFragment1 extends Fragment {
                             }
                         }
                     }
-                } catch (Exception e) {
-                    LogUtil.e("VerticalFragment1 parseLimitData error");
-                    Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case 0:
-                Toast.makeText(context, suningLimitBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                break;
+                    break;
+                case 0:
+                    Toast.makeText(context, suningLimitBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        } catch (Exception e) {
+            LogUtil.e("VerticalFragment1 parseLimitData error");
+            Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1246,11 +1257,11 @@ public class VerticalFragment1 extends Fragment {
      */
     private void parseCheckIshavaData(String response) {
         LogUtil.e(response);
-        SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
-        int statusCode = suningStockBean.getStatusCode();
-        switch (statusCode) {
-            case 1:
-                try {
+        try {
+            SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
+            int statusCode = suningStockBean.getStatusCode();
+            switch (statusCode) {
+                case 1:
                     List<SuningStockBean.DataBean> data = suningStockBean.getData();
                     SuningStockBean.DataBean dataBean = data.get(0);
                     store_status = dataBean.getStore_status();
@@ -1274,14 +1285,14 @@ public class VerticalFragment1 extends Fragment {
                     } else {
                         Toast.makeText(context, store_text, Toast.LENGTH_SHORT).show();
                     }
-                } catch (Exception e) {
-                    LogUtil.e("Vertical parseCheckIshavaData error");
-                    Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case 0:
-                Toast.makeText(context, suningStockBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                break;
+                    break;
+                case 0:
+                    Toast.makeText(context, suningStockBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        } catch (Exception e) {
+            LogUtil.e("Vertical parseCheckIshavaData error");
+            Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1292,23 +1303,28 @@ public class VerticalFragment1 extends Fragment {
      */
     private void parseIsHaveGoodsData(String response) {
         LogUtil.e(response);
-        SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
-        int statusCode = suningStockBean.getStatusCode();
-        switch (statusCode) {
-            case 1:
-                List<SuningStockBean.DataBean> data = suningStockBean.getData();
-                if (data != null && data.size() > 0) {
-                    SuningStockBean.DataBean dataBean = data.get(0);
-                    store_status = dataBean.getStore_status();
-                    store_text = dataBean.getStore_text();
-                    tv_vertical_ishave_quarity.setText(store_text);
-                    isHave = "1";
-                }
-                break;
-            case 0:
-                tv_vertical_ishave_quarity.setText("获取库存失败");
-                isHave = "0";
-                break;
+        try {
+            SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
+            int statusCode = suningStockBean.getStatusCode();
+            switch (statusCode) {
+                case 1:
+                    List<SuningStockBean.DataBean> data = suningStockBean.getData();
+                    if (data != null && data.size() > 0) {
+                        SuningStockBean.DataBean dataBean = data.get(0);
+                        store_status = dataBean.getStore_status();
+                        store_text = dataBean.getStore_text();
+                        tv_vertical_ishave_quarity.setText(store_text);
+                        isHave = "1";
+                    }
+                    break;
+                case 0:
+                    tv_vertical_ishave_quarity.setText("获取库存失败");
+                    isHave = "0";
+                    break;
+            }
+        } catch (Exception e) {
+            LogUtil.e("VerticalFragment1 parseIsHaveGoodsData error");
+            Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1318,52 +1334,57 @@ public class VerticalFragment1 extends Fragment {
      * @param response
      */
     private void parseWareData(String response) {
-        SuningWareBean suningWareBean = new Gson().fromJson(response, SuningWareBean.class);
-        int statusCode = suningWareBean.getStatusCode();
-        switch (statusCode) {
-            case 1:
-                List<SuningWareBean.DataBean> data = suningWareBean.getData();
-                if (data != null && data.size() > 0) {
-                    DecimalFormat df = new DecimalFormat("#0.00");
-                    df.setRoundingMode(RoundingMode.DOWN);
-                    SuningWareBean.DataBean dataBean = data.get(0);
-                    if (dataBean != null) {
-                        img_urls = dataBean.getUrls();
-                        if (img_urls != null && img_urls.size() > 0) {
-                            MyPagerAdapter myPagerAdapter = new MyPagerAdapter();
-                            vp_top_home.setAdapter(myPagerAdapter);
-                            addPoint();
-                            sendHandler();
-                            vp_top_home.addOnPageChangeListener(new MyOnPageChangeListener());
+        try {
+            SuningWareBean suningWareBean = new Gson().fromJson(response, SuningWareBean.class);
+            int statusCode = suningWareBean.getStatusCode();
+            switch (statusCode) {
+                case 1:
+                    List<SuningWareBean.DataBean> data = suningWareBean.getData();
+                    if (data != null && data.size() > 0) {
+                        DecimalFormat df = new DecimalFormat("#0.00");
+                        df.setRoundingMode(RoundingMode.DOWN);
+                        SuningWareBean.DataBean dataBean = data.get(0);
+                        if (dataBean != null) {
+                            img_urls = dataBean.getUrls();
+                            if (img_urls != null && img_urls.size() > 0) {
+                                MyPagerAdapter myPagerAdapter = new MyPagerAdapter();
+                                vp_top_home.setAdapter(myPagerAdapter);
+                                addPoint();
+                                sendHandler();
+                                vp_top_home.addOnPageChangeListener(new MyOnPageChangeListener());
+                            }
+                            String title = dataBean.getTitle();
+                            double sell_price = dataBean.getSell_price();
+                            double market_price = dataBean.getMarket_price();
+                            if (title != null) {
+                                SpannableString span = new SpannableString("\t\t" + title);
+                                ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+                                span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                tv_good_detail_name.setText(span);
+                            }
+                            tv_good_detail_goodprice.setText(String.valueOf(df.format(sell_price)));
+                            tv_good_detail_cprice.getPaint().setAntiAlias(true);//抗锯齿
+                            tv_good_detail_cprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); // 设置中划线并加清晰 
+                            tv_good_detail_cprice.setText(String.valueOf(df.format(market_price)));
+                            onLoadCompleteListenr.onLoadComplete();
                         }
-                        String title = dataBean.getTitle();
-                        double sell_price = dataBean.getSell_price();
-                        double market_price = dataBean.getMarket_price();
-                        if (title != null) {
-                            SpannableString span = new SpannableString("\t\t" + title);
-                            ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
-                            span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            tv_good_detail_name.setText(span);
-                        }
-                        tv_good_detail_goodprice.setText(String.valueOf(df.format(sell_price)));
-                        tv_good_detail_cprice.getPaint().setAntiAlias(true);//抗锯齿
-                        tv_good_detail_cprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); // 设置中划线并加清晰 
-                        tv_good_detail_cprice.setText(String.valueOf(df.format(market_price)));
-                        onLoadCompleteListenr.onLoadComplete();
                     }
-                }
-                break;
-            case 0:
+                    break;
+                case 0:
 
-                break;
+                    break;
+            }
+        } catch (Exception e) {
+            LogUtil.e("VerticalFragment1 parseWareData error");
+            Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     @Override
     public void onDestroy() {
         super.onDestroy();
     }
+
 
     @Override
     public void onDestroyView() {
@@ -1448,6 +1469,11 @@ public class VerticalFragment1 extends Fragment {
         return vShadow;
     }
 
+    /**
+     * 返回何种购买方式
+     *
+     * @return
+     */
     public int getWhat_buy() {
         return what_buy;
     }
@@ -1460,7 +1486,9 @@ public class VerticalFragment1 extends Fragment {
         this.isSpecFirst = isSpecFirst;
     }
 
-
+    /**
+     * 加载完成的监听
+     */
     private OnLoadCompleteListenr onLoadCompleteListenr;
 
     public interface OnLoadCompleteListenr {
@@ -1471,6 +1499,9 @@ public class VerticalFragment1 extends Fragment {
         this.onLoadCompleteListenr = onLoadCompleteListenr;
     }
 
+    /**
+     * 监听限购件数的监听
+     */
     private OnLimitNumListener onLimitNumListener;
 
     public interface OnLimitNumListener {

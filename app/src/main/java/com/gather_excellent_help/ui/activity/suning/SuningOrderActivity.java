@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
+import com.gather_excellent_help.bean.suning.RemindCountBean;
 import com.gather_excellent_help.bean.suning.SuningOrderBean;
 import com.gather_excellent_help.bean.suning.SuningOrderConfirmBean;
 import com.gather_excellent_help.event.AnyEvent;
@@ -35,6 +36,7 @@ import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,8 +85,7 @@ public class SuningOrderActivity extends BaseActivity {
     private String pay_status;
 
     private boolean isShowCat;//刷新页面不让其显示
-    private int count;
-    private boolean isContinue;
+    private ArrayList<RemindCountBean> remind_counts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -290,44 +291,49 @@ public class SuningOrderActivity extends BaseActivity {
      * 顶部指示条控制ViewPager
      */
     private void vidacatorControll() {
-        vid_order_manager.setCount(5);
-        final int childCount = vid_order_manager.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View child = vid_order_manager.getChildAt(i);
-            final int finalI = i;
-            child.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showDiffIndicator((TextView) v, finalI, childCount);
-                    tab_p = finalI;
-                    pageindex = "1";
-                    page = 1;
-                    isLoaderMore = false;
-                    switch (tab_p) {
-                        case 0:
-                            isCanLoad = true;
-                            order_status = "1";
-                            break;
-                        case 1:
-                            isCanLoad = true;
-                            order_status = "2";
-                            break;
-                        case 2:
-                            isCanLoad = true;
-                            order_status = "3";
-                            break;
-                        case 3:
-                            isCanLoad = true;
-                            order_status = "4";
-                            break;
-                        case 4:
-                            isCanLoad = true;
-                            order_status = "0";
-                            break;
+        try {
+            vid_order_manager.setCount(5);
+            final int childCount = vid_order_manager.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = vid_order_manager.getChildAt(i);
+                final int finalI = i;
+                child.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDiffIndicator((TextView) v, finalI, childCount);
+                        tab_p = finalI;
+                        pageindex = "1";
+                        page = 1;
+                        isLoaderMore = false;
+                        switch (tab_p) {
+                            case 0:
+                                isCanLoad = true;
+                                order_status = "1";
+                                break;
+                            case 1:
+                                isCanLoad = true;
+                                order_status = "2";
+                                break;
+                            case 2:
+                                isCanLoad = true;
+                                order_status = "3";
+                                break;
+                            case 3:
+                                isCanLoad = true;
+                                order_status = "4";
+                                break;
+                            case 4:
+                                isCanLoad = true;
+                                order_status = "0";
+                                break;
+                        }
+                        getSuningOrderData();
                     }
-                    getSuningOrderData();
-                }
-            });
+                });
+            }
+        } catch (Exception e) {
+            LogUtil.e("SuningOrderActivity vidacatorControll error");
+            Toast.makeText(SuningOrderActivity.this, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -428,64 +434,78 @@ public class SuningOrderActivity extends BaseActivity {
      * @param response
      */
     private void parseOrderListData(String response) {
-        wanRecycleView.onRefreshComplete();
-        SuningOrderBean suningOrderBean = new Gson().fromJson(response, SuningOrderBean.class);
-        int statusCode = suningOrderBean.getStatusCode();
-        switch (statusCode) {
-            case 1:
-                List<SuningOrderBean.DataBean> data = suningOrderBean.getData();
-                isCanLoad = true;
-                if (isLoaderMore) {
-                    if (data.size() == 0) {
-                        showLoadMore(2);
-                        return;
+        try {
+            wanRecycleView.onRefreshComplete();
+            SuningOrderBean suningOrderBean = new Gson().fromJson(response, SuningOrderBean.class);
+            int statusCode = suningOrderBean.getStatusCode();
+            switch (statusCode) {
+                case 1:
+                    List<SuningOrderBean.DataBean> data = suningOrderBean.getData();
+                    isCanLoad = true;
+                    if (isLoaderMore) {
+                        if (data.size() == 0) {
+                            showLoadMore(2);
+                            return;
+                        } else {
+                            showLoadMore(1);
+                            allData.addAll(data);
+                        }
+                        suningOrderAdapter.notifyDataSetChanged();
                     } else {
                         showLoadMore(1);
-                        allData.addAll(data);
+                        allData = data;
+                        if (allData != null && allData.size() > 0) {
+                            ll_suning_show.setVisibility(View.VISIBLE);
+                            iv_order_no_zhanwei.setVisibility(View.GONE);
+                        } else {
+                            ll_suning_show.setVisibility(View.GONE);
+                            iv_order_no_zhanwei.setVisibility(View.VISIBLE);
+                        }
+                        suningOrderAdapter = new SuningOrderAdapter(SuningOrderActivity.this, data, order_status);
+                        rcv_suning_order_list.setAdapter(suningOrderAdapter);
+                        suningOrderAdapter.notifyDataSetChanged();
                     }
-                    suningOrderAdapter.notifyDataSetChanged();
-                } else {
-                    showLoadMore(1);
-                    allData = data;
                     if (allData != null && allData.size() > 0) {
-                        ll_suning_show.setVisibility(View.VISIBLE);
-                        iv_order_no_zhanwei.setVisibility(View.GONE);
-                    } else {
-                        ll_suning_show.setVisibility(View.GONE);
-                        iv_order_no_zhanwei.setVisibility(View.VISIBLE);
+                        remind_counts = new ArrayList<>();
+                        for (int i = 0; i < allData.size(); i++) {
+                            RemindCountBean remindCountBean = new RemindCountBean();
+                            remindCountBean.setCount(0);
+                            remindCountBean.setIs_continue(false);
+                            remind_counts.add(remindCountBean);
+                        }
                     }
-                    suningOrderAdapter = new SuningOrderAdapter(SuningOrderActivity.this, data, order_status);
-                    rcv_suning_order_list.setAdapter(suningOrderAdapter);
-                    suningOrderAdapter.notifyDataSetChanged();
-                }
-                if (suningOrderAdapter != null) {
-                    suningOrderAdapter.setOnButtonClickListener(new SuningOrderAdapter.OnButtonClickListener() {
-                        @Override
-                        public void onItemClickListener(View view, int position, int status) {
-                            onItemclickHandler(view, position, status);
-                        }
+                    if (suningOrderAdapter != null) {
+                        suningOrderAdapter.setOnButtonClickListener(new SuningOrderAdapter.OnButtonClickListener() {
+                            @Override
+                            public void onItemClickListener(View view, int position, int status) {
+                                onItemclickHandler(view, position, status);
+                            }
 
-                        @Override
-                        public void onLeftButtonClick(View view, int position, int status) {
-                            onLeftButtonHandler(view, position, status);
-                        }
+                            @Override
+                            public void onLeftButtonClick(View view, int position, int status) {
+                                onLeftButtonHandler(view, position, status);
+                            }
 
-                        @Override
-                        public void onRightButtonClick(View view, int position, int status) {
-                            onRightButtonHandler(view, position, status);
-                        }
+                            @Override
+                            public void onRightButtonClick(View view, int position, int status) {
+                                onRightButtonHandler(view, position, status);
+                            }
 
-                        @Override
-                        public void onExtraButtonClick(View view, int position, int status) {
+                            @Override
+                            public void onExtraButtonClick(View view, int position, int status) {
 
-                        }
-                    });
-                }
-                break;
-            case 0:
-                wanRecycleView.onRefreshComplete();
-                Toast.makeText(SuningOrderActivity.this, suningOrderBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                break;
+                            }
+                        });
+                    }
+                    break;
+                case 0:
+                    wanRecycleView.onRefreshComplete();
+                    Toast.makeText(SuningOrderActivity.this, suningOrderBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        } catch (Exception e) {
+            LogUtil.e("SuningOrderActivity parseOrderListData error");
+            Toast.makeText(SuningOrderActivity.this, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -506,7 +526,7 @@ public class SuningOrderActivity extends BaseActivity {
                 if (status == 1) {
                     toPayOrder(real_amount, order_no, id);
                 } else if (status == 2) {
-                    remindSend();
+                    remindSend(position);
                 } else if (status == 3) {
                     confirmOrder(String.valueOf(id));
                 } else if (status == 4) {
@@ -614,17 +634,26 @@ public class SuningOrderActivity extends BaseActivity {
 
     /**
      * 提醒发货
+     *
+     * @param position
      */
-    private void remindSend() {
-        if (count > 2) {
-            if (!isContinue) {
-                Toast.makeText(SuningOrderActivity.this, "超过提醒次数。", Toast.LENGTH_SHORT).show();
-                isContinue = true;
+    private void remindSend(int position) {
+        if (remind_counts != null && remind_counts.size() > 0) {
+            RemindCountBean remindCountBean = remind_counts.get(position);
+            int count = remindCountBean.getCount();
+            boolean aContinue = remindCountBean.is_continue();
+            if (count > 2) {
+                if (!aContinue) {
+                    Toast.makeText(SuningOrderActivity.this, "超过提醒次数。", Toast.LENGTH_SHORT).show();
+                    aContinue = true;
+                    remindCountBean.setIs_continue(aContinue);
+                }
+                return;
             }
-            return;
+            Toast.makeText(this, "提醒成功。", Toast.LENGTH_SHORT).show();
+            count++;
+            remindCountBean.setCount(count);
         }
-        Toast.makeText(this, "提醒成功。", Toast.LENGTH_SHORT).show();
-        count++;
     }
 
     /**

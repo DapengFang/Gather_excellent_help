@@ -384,4 +384,12 @@ public class Tools {
     public static String getCartCheck(Context context){
         return CacheUtils.getString(context,CacheUtils.NETCART_CHECK_DATA,"");
     }
+
+    /**
+     * 点击其他地方使其EditText可以获取到焦点
+     */
+    public static void edit2Cursible(Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
 }

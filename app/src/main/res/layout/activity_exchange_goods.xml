@@ -10,12 +10,5 @@
 
     <include layout="@layout/top_zhuangai_bar"/>
 
-    <com.zhy.view.flowlayout.TagFlowLayout
-        android:id="@+id/tag_flowlayout"
-        app:max_select="1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/x20">
-    </com.zhy.view.flowlayout.TagFlowLayout>
 
 </LinearLayout>

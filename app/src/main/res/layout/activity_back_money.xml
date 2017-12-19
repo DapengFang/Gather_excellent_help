@@ -44,7 +44,7 @@
                     android:id="@+id/tv_suning_order_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="鸟笼取暖节能电暖气台式电暖炉家用电暖器办公室小太阳烤火炉"
+                    android:text=""
                     android:textColor="#555555"
                     android:textSize="12sp" />
 
@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_suning_order_title"
                     android:layout_marginTop="@dimen/x3"
-                    android:text="颜色分类：大号、黑色"
+                    android:text=""
                     android:textColor="#aaaaaa"
                     android:textSize="12sp" />
 
@@ -70,7 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="￥28.90"
+                    android:text=""
                     android:textColor="#333333"
                     android:textSize="12sp" />
 
@@ -81,7 +81,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/tv_suning_order_realprice"
                     android:layout_marginTop="@dimen/x3"
-                    android:text="￥66.99"
+                    android:text=""
                     android:textColor="#aaaaaa"
                     android:textSize="12sp" />
 

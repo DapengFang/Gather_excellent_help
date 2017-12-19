@@ -143,20 +143,21 @@ public class SuningStandardPopupwindow extends PopupWindow {
         this.setBackgroundDrawable(dw);
     }
 
-
+    /**
+     * 页面点击事件的监听
+     */
     private OnItemClickListenr onItemClickListenr;
-
-    public void setLimitNumber(int limitNumber) {
-        this.limitNumber = limitNumber;
-    }
 
     public interface OnItemClickListenr {
         void onPopupBuy(List<SuningSpecBean.DataBean> data, int num);
-
     }
 
     public void setOnItemClickListenr(OnItemClickListenr onItemClickListenr) {
         this.onItemClickListenr = onItemClickListenr;
+    }
+
+    public void setLimitNumber(int limitNumber) {
+        this.limitNumber = limitNumber;
     }
 
     /**
@@ -175,7 +176,7 @@ public class SuningStandardPopupwindow extends PopupWindow {
         if (nav_bottom_pop_num != null) {
             if (limitNumber > 0) {
                 nav_bottom_pop_num.setMaxValue(limitNumber);
-                if(limitNumber!=100000) {
+                if (limitNumber != 100000) {
                     tv_bottom_pop_limit.setText("限购" + limitNumber + "件");
                 }
             }

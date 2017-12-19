@@ -1,6 +1,7 @@
 package com.gather_excellent_help.ui.activity.suning.saleafter;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -11,6 +12,7 @@ import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -82,7 +84,7 @@ public class BackMoneyActivity extends BaseActivity {
     private TextView tv_suning_order_oldprice;
     private TextView tv_suning_order_number;
     private TextView tv_back_apply_type;
-    private int apply_type;
+    private int apply_type;//退货的类型
 
 
     @Override
@@ -177,6 +179,9 @@ public class BackMoneyActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 界面上全局的点击事件
+     */
     public class MyonclickListener implements View.OnClickListener {
 
         @Override
@@ -199,7 +204,7 @@ public class BackMoneyActivity extends BaseActivity {
     }
 
     /**
-     * 申请退款n
+     * 申请退款
      */
     private void applyBackMoney() {
         if (apply_type == 2) {
@@ -253,6 +258,7 @@ public class BackMoneyActivity extends BaseActivity {
      */
     private void showExplainDialog() {
         View inflate = layoutInflater.inflate(R.layout.item_back_sale_detail, null, false);
+        RelativeLayout rl_apply_detail = (RelativeLayout) inflate.findViewById(R.id.rl_apply_detail);
         final EditText et_sale_detail = (EditText) inflate.findViewById(R.id.et_sale_detail);
         TextView tv_back_sale_cancel = (TextView) inflate.findViewById(R.id.tv_back_sale_cancel);
         TextView tv_back_sale_confirm = (TextView) inflate.findViewById(R.id.tv_back_sale_confirm);
@@ -264,6 +270,14 @@ public class BackMoneyActivity extends BaseActivity {
         if (BackMoneyActivity.this != null && !BackMoneyActivity.this.isFinishing()) {
             alertDialog.show();
         }
+        //设置此监听点击文本编辑框空白区域可以使EditText获取到焦点
+        rl_apply_detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Tools.edit2Cursible(BackMoneyActivity.this);
+            }
+        });
+        //取消文本编辑框的显示
         tv_back_sale_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -272,6 +286,7 @@ public class BackMoneyActivity extends BaseActivity {
                 }
             }
         });
+        //确定文本框的编辑内容
         tv_back_sale_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

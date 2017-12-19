@@ -146,6 +146,7 @@ public class CheckStandActivity extends BaseActivity {
              * 仅需对sign 做URL编码
              */
             sign = URLEncoder.encode(sign, "UTF-8");
+            LogUtil.e("sign = " + sign);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -154,6 +155,8 @@ public class CheckStandActivity extends BaseActivity {
          * 完整的符合支付宝参数规范的订单信息
          */
         final String payInfo = orderInfo + "&sign=\"" + sign + "\"&" + getSignType();
+
+
 
         LogUtil.e("支付信息 = " + payInfo);
 
@@ -178,29 +181,12 @@ public class CheckStandActivity extends BaseActivity {
 
 
     // 商户PID
-    //public static final String PARTNER = "2088621736065035";
     public static final String PARTNER = "2088621987751299";//最新
     // 商户收款账号
-    //public static final String SELLER = "jurenyunshang@163.com";
     public static final String SELLER = "juyobcom@163.com";//最新
     // 商户私钥，pkcs8格式
-//    public static final String RSA_PRIVATE = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAKAXUb5ILO3ZGkzD\n" +
-//            "LYldxiOOCVEKkWImcZusaFYOHAGqwAbwmtReguAqe48XwuwQ9HxLD4ob+fQilQoa\n" +
-//            "vgNrrre+VL8w6JyCUTYsf93sySa0ZhlOSTaC9WzkZmy2RGTIm+m4XvsBR+7YxFz1\n" +
-//            "oVxTqLBbpGPl/Yv52JZCSzfai6MlAgMBAAECgYBYRsOSc2Yi+XYhIfb4KjdZ37aP\n" +
-//            "c45bWuuGdflKipky6h7dNMuLk1oDlilv7CBV37uQ1isJcwfPcUpRuhFQ/Y3ncMwR\n" +
-//            "jtXcA+rjijwNpDbcSCCxbeiUJ86AuCZlPcjrCut4HT4bJ37n7OsYxlJDTd002ftm\n" +
-//            "jkSYDyp/aXEl6LMbwQJBAMyBeVlW3PT6mln6Li+6Hz2uzP5QtbsptLrcyN2JZNLZ\n" +
-//            "ETl0CxTr/druLlLi7lHuFnVwtaIpVvL0R5Fa7QAan6kCQQDIZtuBZ3q2OHL0QkbE\n" +
-//            "PQAhxcCkDqWkg1TwkyMH2hBwPTTk03GpYxJqNsRaJ4Bo8+Qhc0bTzyzajnW9BRhx\n" +
-//            "50UdAkAlQu3+VjJaPJMFE+14arwofAID0GbcXEP+zB2ZJ+CD/mMCCd+/BySw0DcG\n" +
-//            "iSyNJwlWipu9mTSrfdDQbjXCkBdJAkAPJT7nq8NpbCC79xpUEGwnIUPq4jSAl3Be\n" +
-//            "8i/Okxt08BtEQ/quG4+zuUnjqmKZC/2szYKH1XuFVQju7Sioyxq9AkA1ldoHdbbN\n" +
-//            "cHP8Zpc4Hpz+YIIGJhVifl3rNLAi2CqngrQFjmJxNa0GLkTSc4/zE4L4Q1UKEM2c\n" +
-//            "qs8s8NwJW5RL";
-    //最新
-    public static final String RSA_PRIVATE = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCvhxE+9VmU82wY2FB7Cw4tcuuNnM7fhzYi/KfO3dFr4oR5RhIs1noYcWmC3/YlR+EM6GE5VIhG0dz2gR9YiF8HNBcGGFnWO++Hf0QhW82gf8hGg1t/KA+FfYSK8++g/vQ2kh2W8LLnMa1TX5jFkYpgJAS194zH2deCPqlQXyY8OcxjzcYDwN+M4gYfMVwwxeoEwq66S+FlNeyu/3TfyrU2H73bK4hKbHhhNRTIxHwZbZpwaGme04NZWCJ5H5fvNiQYnxhCNOM0QQWS4vKQZ4rDCi9/Y3VwD+azXpcrePECCxbOJHrjP15XEh0qtSzeYy5bvDg59tb/HtSaGxIlmytxAgMBAAECggEAGO9ZFdaI2U4TRxxDopcZdn9i0wU5pitxF1tJA2wjee3937SClHgLdDl4Qa1LLFSftdO1LA3EJjtd5m7FYzBMP5u4wZbn/DUbe+YqaYq/FVPRwaKbdt7cBZylHZA1tGtDihULuwuKfqlh8/wamcZpH+s9+BOoniNmKAx6xP4fUmKu0QicoAG2w7P0WOSfBO09EQ3EadBPOHXmayqI0yRTO/FrRH4TMCNpKdYhn4hvMckDBStj5fBMC9cfGZhpX+dEgqq2Oo7a+ASv8gqNFyaoZJM1ZKyzyyRku8nF4Ay1u4W9kfW+yx7VNFARJu1nQCOSbLvTxCCRvnirAYfBgA6FmQKBgQDyNXjMLw0BVizhrqc+O6S0QOYuEaL8m8DEGSoNHS6VltO2AG+I2Mz9CbrdWVqWZ2N/8XTfA4mP/EIl7kEWOz9986GiISJiMq5HGnVwmp4P25oBZgZfJa4w3obeDWH+B1TxUW7P7rPsH4fG8HmI/pNnx8F1Nd208pcd5u4BTl4OuwKBgQC5hZ/HKe9Z24/MsyqYAMgQXFapCVIHW34ZNmRIF5mVW77hlKJhDa5nkHii9X0uLB8zBL3ygokx44QBQJW42ptmyuAR1sy6j75pJ1oeUWo976SzaMXy7uuj5e6cMftK9uBaLiQhnB+l004h5nX8CxHdHhBqedUbsimh2fs2Wi4pwwKBgQCSke8uyI47L9XrIFDOpTMvbVKdsEiMSwik4oGC/BTTqzkkmzDjhCbQPVIaXtclyxz4MLrDthVJz6KL55j1hhcO9h7qyNhQylCScJ1+7eIWwJJ6pC3Y6Cl4I0FEIJ8bJX6updPD+rRggFge+Cjj0QKMu+IDNvyaYm82RifjHHRovwKBgHCDS618Dz8N254notNg1fSmK6CEmI0Bve4IgLUAKxLb+13PyNLXe0gv5BngjDSuaZWFcLVc2Vu6QdqIksTzP4AN1eq7vJoAh1g6l3r/oVFCvz5XcoWsxJg34Ig1/9Ms+k924E7J4p+tERuaKz/abtENZKNOlCIh4QHZs3L5KjoFAoGBAKIZwyMCH2W5P7Rw24ZyJcd+zFlpX8r7SzIxLhjkgMFmtmJCmrKJ4MNl/ZfDV1zZg/CQOJD3/tjsEbUPfWH7o/s5a7jDGXJFjOWnN/jp94zupj04Bi72cCTBpX3LwNu/iimK0Lt1X5zIlSuz/Fxl9bcsLCfZjwuCCgwYnBl/Clkn";
-    //public static final String RSA_PUBLIC = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr4cRPvVZlPNsGNhQewsOLXLrjZzO34c2Ivynzt3Ra+KEeUYSLNZ6GHFpgt/2JUfhDOhhOVSIRtHc9oEfWIhfBzQXBhhZ1jvvh39EIVvNoH/IRoNbfygPhX2EivPvoP70NpIdlvCy5zGtU1+YxZGKYCQEtfeMx9nXgj6pUF8mPDnMY83GA8DfjOIGHzFcMMXqBMKuukvhZTXsrv9038q1Nh+92yuISmx4YTUUyMR8GW2acGhpntODWVgieR+X7zYkGJ8YQjTjNEEFkuLykGeKwwovf2N1cA/ms16XK3jxAgsWziR64z9eVxIdKrUs3mMuW7w4OfbW/x7UmhsSJZsrcQIDAQAB";// 支付宝公钥
+    public static final String RSA_PRIVATE = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAMHGKFpaDsLffolLuKZZH7RalrJ+cGUHhOUKAjxGl4boCsdJt8wDNbWo2Wl0yD35M/f5h5qxhUf4cIX+W0nUm+1lsOl7PdoHY5enllYToxOVeu57BCECMg1S/p446ciczazRBNKGDaIqO6oWT4wauF6t3aoQXz3zr6DFdqfeDJOtAgMBAAECgYEAsGsMBC6n783w82koRPMxhU9QklPBWon8+VYicORIQr/ySDyahLiLZsfCoVt8j8faA7OAPVvQH5VWRPgt/sr95g882GaTmypd5gnvsuBI9xuMK96JBDqHXYLg+26/sP4nHUYEGljIBDgu+CePmHGKRg6N7z5/Wdthptk9R/MXchUCQQDylh2vDMc/SMReiK5jB1kab5hOoEkg9BtNeVMEQnRKmjJ7/RAOVQ/CP4lxCgcrWWh58jnQJwoN6Hgz2En3Uf/DAkEAzH0WlUlR6XEIPTnB9v+jnme8DVTsCMAdMyxtk+6H7pNhkAo5oKwLL8UsckjaW5710lqu0SqhYy+852152ibXzwJBAJOgrWHZKewmUXKiRVX4o84Fua+ntbk7NN5aBh5ifrjjy/NOlxXRyCxTVEYZbzF/UKhds7cr+t9p6LTMXH8JRNcCQQDDn8dC+emK0b94ExEkIlt85vBYMK29kUxd8FrD8qXH7uaezaljtDLfeFmU221JyUCSBH7JS2cpZDnrjCfOMuqxAkAjjayEI8clw0S5P/IEtls3vOvyCvffqaqLu2mzGwJherFD6Pv1gpMhvgFQDzdY5xEiopwxDof5wZaxwd1jWWt1";
+    public static final String RSA_PUBLIC = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDBxihaWg7C336JS7imWR+0WpayfnBlB4TlCgI8RpeG6ArHSbfMAzW1qNlpdMg9+TP3+YeasYVH+HCF/ltJ1JvtZbDpez3aB2OXp5ZWE6MTlXruewQhAjINUv6eOOnInM2s0QTShg2iKjuqFk+MGrherd2qEF8986+gxXan3gyTrQIDAQAB";// 支付宝公钥
     private static final int SDK_PAY_FLAG = 1;
 
 
@@ -209,7 +195,6 @@ public class CheckStandActivity extends BaseActivity {
         @SuppressWarnings("unused")
         public void handleMessage(Message msg) {
             switch (msg.what) {
-
                 case SDK_PAY_FLAG: {
                     PayResult payResult = new PayResult((String) msg.obj);
                     /**
@@ -241,7 +226,6 @@ public class CheckStandActivity extends BaseActivity {
                         } else {
                             // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
                             Toast.makeText(CheckStandActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
-
                         }
                         if (pay_status != null && !TextUtils.isEmpty(pay_status)) {
                             map = new HashMap<>();
@@ -258,8 +242,6 @@ public class CheckStandActivity extends BaseActivity {
                     break;
             }
         }
-
-        ;
     };
 
 

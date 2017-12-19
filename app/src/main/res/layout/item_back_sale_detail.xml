@@ -6,6 +6,7 @@
     android:background="#f2f2f2">
 
     <RelativeLayout
+        android:id="@+id/rl_apply_detail"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x80"
         android:layout_marginTop="@dimen/x10"

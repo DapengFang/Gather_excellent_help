@@ -353,12 +353,15 @@
         <activity android:name=".ui.activity.address.PersonAddressActivity" />
         <activity android:name=".ui.activity.address.AddNewAddressActivity" />
         <activity android:name=".ui.activity.suning.HackySeeBigimgActivity" />
-        <activity android:name=".ui.activity.suning.SuningDetailActivity" />
+        <activity android:name=".ui.activity.suning.SuningDetailActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".ui.activity.suning.OrderConfirmActivity" />
         <activity android:name=".ui.activity.suning.OrderCartConfirmActivity" />
         <activity android:name=".ui.activity.suning.InvoiceChoiceActivity" />
         <activity android:name=".ui.activity.suning.CheckStandActivity" />
-        <activity android:name=".ui.activity.suning.SuningOrderActivity" />
+        <activity
+            android:name=".ui.activity.suning.SuningOrderActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".ui.activity.suning.SuningOrderDetailActivity" />
         <activity android:name=".ui.activity.suning.SuningOrderLogisticsActivity" />
         <activity android:name=".ui.activity.suning.LogisticsInfoActivity" />
@@ -366,9 +369,13 @@
         <activity android:name=".ui.activity.AlipayInfoActivity" />
         <activity android:name=".ui.activity.suning.saleafter.SaleAfterActivity" />
         <activity android:name=".ui.activity.suning.saleafter.BackMoneyActivity" />
-        <activity android:name=".ui.activity.suning.saleafter.ExchangeGoodsActivity"></activity>
-
+        <activity android:name=".ui.activity.suning.saleafter.ExchangeGoodsActivity" />
         <activity android:name=".ui.activity.suning.SuningLogisticsDetailInfoActivity" />
+        <activity android:name=".ui.activity.test.TestActivity_l01" />
+        <activity android:name=".ui.activity.test.TestActivity_l02" />
+        <activity android:name=".ui.activity.test.TestActivity_l03" />
+        <activity android:name=".ui.activity.test.TestActivity_l04" />
+        <activity android:name=".ui.activity.test.TestActivity_l05"></activity>
     </application>
 
 </manifest>
