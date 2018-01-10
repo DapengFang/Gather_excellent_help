@@ -7,8 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.content.pm.PackageManager;
-import android.graphics.Color;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,8 +21,6 @@ import android.support.v4.view.ViewPager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.DynamicDrawableSpan;
-import android.text.style.ImageSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -37,13 +36,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
+import com.gather_excellent_help.bean.AddressDetailBean;
 import com.gather_excellent_help.bean.suning.SuningLimitBean;
 import com.gather_excellent_help.bean.suning.SuningSpecBean;
 import com.gather_excellent_help.bean.suning.SuningSpecidBackBean;
 import com.gather_excellent_help.bean.suning.SuningStockBean;
 import com.gather_excellent_help.bean.suning.SuningWareBean;
 import com.gather_excellent_help.bean.suning.netcart.NetGoodscartAddBean;
-import com.gather_excellent_help.db.suning.SqliteServiceManager;
 import com.gather_excellent_help.ui.activity.suning.HackySeeBigimgActivity;
 import com.gather_excellent_help.ui.activity.suning.OrderConfirmActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningDetailActivity;
@@ -57,6 +56,8 @@ import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.cartutils.NetCartUtil;
+import com.gather_excellent_help.utils.span.ImageSpanUtil;
+import com.gather_excellent_help.utils.span.MyImageSpan;
 import com.google.gson.Gson;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
@@ -72,7 +73,6 @@ import java.util.Map;
 
 import okhttp3.Call;
 
-
 /**
  * VerticalFragment1 商品详情页顶部上半部分
  */
@@ -81,11 +81,9 @@ public class VerticalFragment1 extends Fragment {
     private Context context;
     private ViewPager vp_top_home;
     private LinearLayout ll_point_group;
-    private TextView tv_vertical_standard;
     private LinearLayout llRoot;
 
     private TextView tv_good_detail_name;
-    private TextView tv_activity_sun_tao_icon;
     private TextView tv_good_detail_goodprice;
     private TextView tv_good_detail_cprice;
     private TextView tv_vertical_ishave_quarity;
@@ -120,9 +118,10 @@ public class VerticalFragment1 extends Fragment {
     private String pcs = "";//省市区
 
     private String spec_url = Url.BASE_URL + "suning/GoodsInfo.ashx?action=GetSpecs";//规格接口
-
+    private String address_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=GetUserAddress";
     private NetUtil netUtil;
     private NetUtil netUtil2;
+    private NetUtil netUtil3;//获取用户收货地址
     private Map<String, String> map;
 
     private String specs_id = "";//规格id
@@ -174,8 +173,11 @@ public class VerticalFragment1 extends Fragment {
     private int store_status;
     private int cancel_order_num;
 
+    private int address_count;
+
 
     public class Myhandler extends Handler {
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -189,14 +191,17 @@ public class VerticalFragment1 extends Fragment {
                 }
                 if (msg.what == 2) {
                     myhandler.removeMessages(2);
-                    tv_vertical_address.setText("定位失败");
+                    address = "四川省成都市武侯区";
+                    attr_id = "230,028,04";
+                    tv_vertical_address.setText(address);
+                    getCurrentIsHave("2", attr_id, "", goods_id);
                     return;
                 }
             }
             if (msg.what == 0) {
                 int item = (vp_top_home.getCurrentItem() + 1) % img_urls.size();
                 vp_top_home.setCurrentItem(item);
-                myhandler.postDelayed(new MyRunnable(), 4000);
+                myhandler.sendEmptyMessageDelayed(0,4000);
             } else if (msg.what == 1) {
                 if (!TextUtils.isEmpty(response)) {
                     myhandler.removeMessages(1);
@@ -205,25 +210,33 @@ public class VerticalFragment1 extends Fragment {
                     myhandler.sendEmptyMessageDelayed(1, 1000);
                 }
             } else if (msg.what == 2) {
-                if (!TextUtils.isEmpty(address) && !TextUtils.isEmpty(lalotitude)) {
-                    tv_vertical_address.setText(address);
-                    pcs = address.replace(" ", ",");
-                    getCurrentIsHave("1", "", lalotitude, goods_id);
+                LogUtil.e("address = " + address + "------lalotitude = " + lalotitude);
+                if (address_count > 5) {
+                    getUserDefaultAddress();
                     myhandler.removeMessages(2);
+                    return;
+                }
+                if (!TextUtils.isEmpty(address) && !TextUtils.isEmpty(lalotitude)) {
+                    getUserDefaultAddress();
+                    myhandler.removeMessages(2);
+                    address_count = 0;
                 } else {
-                    tv_vertical_address.setText("正在定位");
+                    tv_vertical_address.setText("");
                     myhandler.sendEmptyMessageDelayed(2, 1000);
+                    address_count++;
                 }
             }
         }
     }
 
-    class MyRunnable implements Runnable {
-
-        @Override
-        public void run() {
-            myhandler.sendEmptyMessage(0);
-        }
+    /**
+     * 获取用户默认的收货地址
+     */
+    private void getUserDefaultAddress() {
+        userLogin = Tools.getUserLogin(context);
+        map = new HashMap<>();
+        map.put("user_id", userLogin);
+        netUtil3.okHttp2Server2(address_url, map);
     }
 
     @Override
@@ -240,9 +253,11 @@ public class VerticalFragment1 extends Fragment {
      * 初始化数据
      */
     private void initData() {
+
         //联网初始化
         netUtil = new NetUtil();
         netUtil2 = new NetUtil();
+        netUtil3 = new NetUtil();
 
         //购物车数据相关
         netCartUtil = new NetCartUtil();
@@ -278,6 +293,20 @@ public class VerticalFragment1 extends Fragment {
                 LogUtil.e(call.toString() + "-" + e.getMessage());
             }
         });
+        netUtil3.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
+            @Override
+            public void getSuccessResponse(String response) {
+                parseDefaultAddressData(response);
+            }
+
+            @Override
+            public void getFailResponse(Call call, Exception e) {
+                tv_vertical_address.setText(address);
+                pcs = address.replace(" ", ",");
+                getCurrentIsHave("1", "", lalotitude, goods_id);
+                LogUtil.e(call.toString() + "-" + e.getMessage());
+            }
+        });
         getSpecData();
         getLimitData();
         MyonclickListener myonclickListener = new MyonclickListener();
@@ -287,6 +316,49 @@ public class VerticalFragment1 extends Fragment {
         iv_suning_detail_back.setOnClickListener(myonclickListener);
         iv_suning_detail_cart.setOnClickListener(myonclickListener);
         iv_suning_detail_share.setOnClickListener(myonclickListener);
+    }
+
+    /**
+     * 解析默认收货地址信息
+     *
+     * @param response
+     */
+    private void parseDefaultAddressData(String response) {
+        try {
+            AddressDetailBean addressDetailBean = new Gson().fromJson(response, AddressDetailBean.class);
+            int statusCode = addressDetailBean.getStatusCode();
+            switch (statusCode) {
+                case 1:
+                    List<AddressDetailBean.DataBean> data = addressDetailBean.getData();
+                    if (data != null && data.size() > 0) {
+                        AddressDetailBean.DataBean dataBean = data.get(0);
+                        String area = dataBean.getArea();
+                        String area_id = dataBean.getArea_id();
+                        if (area != null && area.length() > 0) {
+                            String[] split = area.split(",");
+                            if (split.length > 2) {
+                                address = split[0] + " " + split[1] + " " + split[2];
+                                tv_vertical_address.setText(address);
+                            }
+                        }
+                        if (area_id != null && !TextUtils.isEmpty(area_id)) {
+                            getCurrentIsHave("2", area_id, "", goods_id);
+                        }
+                    } else {
+                        tv_vertical_address.setText(address);
+                        pcs = address.replace(" ", ",");
+                        getCurrentIsHave("1", "", lalotitude, goods_id);
+                    }
+                    break;
+                case 0:
+                    tv_vertical_address.setText(address);
+                    pcs = address.replace(" ", ",");
+                    getCurrentIsHave("1", "", lalotitude, goods_id);
+                    break;
+            }
+        } catch (Exception e) {
+            Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -313,11 +385,9 @@ public class VerticalFragment1 extends Fragment {
     private void initView(View rootView) {
         vp_top_home = (ViewPager) rootView.findViewById(R.id.vp_top_home);
         ll_point_group = (LinearLayout) rootView.findViewById(R.id.ll_point_group);
-        tv_vertical_standard = (TextView) rootView.findViewById(R.id.tv_vertical_standard);
         vShadow = rootView.findViewById(R.id.v_shadow);
         llRoot = (LinearLayout) rootView.findViewById(R.id.ll_root);
         tv_good_detail_name = (TextView) rootView.findViewById(R.id.tv_good_detail_name);
-        tv_activity_sun_tao_icon = (TextView) rootView.findViewById(R.id.tv_activity_sun_tao_icon);
         tv_good_detail_goodprice = (TextView) rootView.findViewById(R.id.tv_good_detail_goodprice);
         tv_good_detail_cprice = (TextView) rootView.findViewById(R.id.tv_good_detail_cprice);
         tv_vertical_address = (TextView) rootView.findViewById(R.id.tv_vertical_address);
@@ -397,15 +467,15 @@ public class VerticalFragment1 extends Fragment {
                 public boolean onTouch(View view, MotionEvent motionEvent) {
                     switch (motionEvent.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            myhandler.removeCallbacksAndMessages(null);
+                            myhandler.removeMessages(0);
                             break;
                         case MotionEvent.ACTION_UP:
-                            myhandler.removeCallbacksAndMessages(null);
+                            myhandler.removeMessages(0);
                             myhandler.sendEmptyMessage(0);
                             seeBigImage();
                             break;
                         case MotionEvent.ACTION_CANCEL:
-                            myhandler.postDelayed(new MyRunnable(), 4000);
+                            myhandler.sendEmptyMessageDelayed(0,4000);
                             break;
                     }
                     return true;
@@ -429,8 +499,8 @@ public class VerticalFragment1 extends Fragment {
         if (myhandler == null) {
             myhandler = new Myhandler();
         }
-        myhandler.removeCallbacksAndMessages(null);
-        myhandler.postDelayed(new MyRunnable(), 4000);
+        myhandler.removeMessages(0);
+        myhandler.sendEmptyMessageDelayed(0,4000);
     }
 
     private boolean isDrager = false;
@@ -467,24 +537,23 @@ public class VerticalFragment1 extends Fragment {
                 case ViewPager.SCROLL_STATE_IDLE:
                     if (isDrager) {
                         isDrager = false;
-                        myhandler.removeCallbacksAndMessages(null);
-                        myhandler.postDelayed(new MyRunnable(), 4000);
+                        myhandler.removeCallbacksAndMessages(0);
+                        myhandler.sendEmptyMessageDelayed(0,4000);
                     }
                     break;
                 case ViewPager.SCROLL_STATE_DRAGGING:
-                    myhandler.removeCallbacksAndMessages(null);
+                    myhandler.removeMessages(0);
                     isDrager = true;
                     break;
                 case ViewPager.SCROLL_STATE_SETTLING:
                     if (isDrager) {
                         isDrager = false;
-                        myhandler.removeCallbacksAndMessages(null);
-                        myhandler.postDelayed(new MyRunnable(), 4000);
+                        myhandler.removeMessages(0);
+                        myhandler.sendEmptyMessageDelayed(0,4000);
                     }
                     break;
             }
         }
-
     }
 
     /**
@@ -629,9 +698,14 @@ public class VerticalFragment1 extends Fragment {
         web.setTitle(goods_title);//标题
         web.setThumb(image);  //缩略图
         web.setDescription("我在聚优帮看到了一件不错的商品,你也看看吧");//描述
+//        new ShareAction((SuningDetailActivity) context)
+//                .setPlatform(platform)//传入平台
+//                .withMedia(web)//分享内容
+//                .setCallback(shareListener)//回调监听器
+//                .share();
         new ShareAction((SuningDetailActivity) context)
                 .setPlatform(platform)//传入平台
-                .withMedia(web)//分享内容
+                .withMedia(image)//分享内容
                 .setCallback(shareListener)//回调监听器
                 .share();
     }
@@ -856,37 +930,58 @@ public class VerticalFragment1 extends Fragment {
         if (suningStandardPopupwindow != null) {
             suningStandardPopupwindow.setOnItemClickListenr(new SuningStandardPopupwindow.OnItemClickListenr() {
                 @Override
-                public void onPopupBuy(List<SuningSpecBean.DataBean> data, int number) {
-                    setSpecShowAndData(data);
-                    ware_num = number;
-                    tv_vertical_standard_ware_num.setText("数量：" + ware_num + "件商品");
-                    LogUtil.e(spec_ids + "-----" + "数量 = " + ware_num);
-                    if (spec_titel != null) {
-                        if (spec_titel.length() > 16) {
-                            spec_titel = spec_titel.substring(0, 16) + "...";
-                        }
+                public void onPopupBuy(List<SuningSpecBean.DataBean> data, int number, int submit) {
+                    //规格选择后刷新页面显示
+                    specOverRefreshShow(data, number);
+                    if (submit == 1) {
+                        //规格选择完之后的检查库存等操作
+                        choiceOver2orderPush();
                     }
-                    tv_vertical_standard_title.setText(spec_titel);
-                    map = new HashMap<String, String>();
-                    map.put("channel_id", "7");
-                    map.put("article_id", article_id);
-                    map.put("goods_id", spec_ids);
-                    map.put("quantity", String.valueOf(ware_num));
-                    ware_json = new Gson().toJson(map);
-                    LogUtil.e(ware_json);
-                    suningStandardPopupwindow.dismiss();
-                    vShadow.setVisibility(View.GONE);
-                    LogUtil.e("----------" + spec_ids);
-                    boolean b = checkIsToBuy();
-                    if (!b) {
-                        Toast.makeText(context, "定位失败，请您手动选择送货地区！", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    int ware_num = getWare_num();
-                    checkIsHave(addrWay, attr_id, goods_id, String.valueOf(ware_num));
                 }
             });
         }
+    }
+
+    /**
+     * 规格选择完之后的检查库存等操作
+     */
+    private void choiceOver2orderPush() {
+        map = new HashMap<>();
+        map.put("channel_id", "7");
+        map.put("article_id", article_id);
+        map.put("goods_id", spec_ids);
+        map.put("quantity", String.valueOf(ware_num));
+        ware_json = new Gson().toJson(map);
+        LogUtil.e(ware_json);
+        suningStandardPopupwindow.dismiss();
+        vShadow.setVisibility(View.GONE);
+        LogUtil.e("----------" + spec_ids);
+        boolean b = checkIsToBuy();
+        if (!b) {
+            Toast.makeText(context, "定位失败，请您手动选择送货地区！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int ware_num = getWare_num();
+        checkIsHave(addrWay, attr_id, goods_id, String.valueOf(ware_num));
+    }
+
+    /**
+     * 点击规格完成后刷新页面上显示（之后页面价格、标题、主图等）
+     *
+     * @param data
+     * @param number
+     */
+    private void specOverRefreshShow(List<SuningSpecBean.DataBean> data, int number) {
+        setSpecShowAndData(data);
+        ware_num = number;
+        tv_vertical_standard_ware_num.setText("数量：" + ware_num + "件商品");
+        LogUtil.e(spec_ids + "-----" + "数量 = " + ware_num);
+        if (spec_titel != null) {
+            if (spec_titel.length() > 16) {
+                spec_titel = spec_titel.substring(0, 16) + "...";
+            }
+        }
+        tv_vertical_standard_title.setText(spec_titel);
     }
 
 
@@ -1358,7 +1453,9 @@ public class VerticalFragment1 extends Fragment {
                             double market_price = dataBean.getMarket_price();
                             if (title != null) {
                                 SpannableString span = new SpannableString("\t\t" + title);
-                                ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+                                Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+                                Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+                                MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 tv_good_detail_name.setText(span);
                             }
@@ -1380,12 +1477,16 @@ public class VerticalFragment1 extends Fragment {
         }
     }
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
     }
 
 
+    /**
+     * 试图销毁时候释放已经存在的资源
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -1470,7 +1571,7 @@ public class VerticalFragment1 extends Fragment {
     }
 
     /**
-     * 返回何种购买方式
+     * 获取以哪种购买方式
      *
      * @return
      */
@@ -1478,6 +1579,9 @@ public class VerticalFragment1 extends Fragment {
         return what_buy;
     }
 
+    /**
+     * @param what_buy
+     */
     public void setWhat_buy(int what_buy) {
         this.what_buy = what_buy;
     }

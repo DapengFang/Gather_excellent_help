@@ -58,14 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
-        <ImageView
-            android:id="@+id/iv_order_no_zhanwei"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/x60"
-            android:src="@drawable/juyoubang_no_zhanwei"
-            android:visibility="gone"/>
+        <include layout="@layout/load_no_zhanwei"/>
 
     </FrameLayout>
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.gather_excellent_help.ui.activity.credits.BackRebateActivity">
 
-    <include layout="@layout/top_zhuangai_bar"/>
+    <include layout="@layout/top_zhuangai_bar" />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_back_rebate"
@@ -16,32 +16,25 @@
         android:background="#fff"
         app:tabIndicatorColor="@color/red_button_color"
         app:tabIndicatorHeight="@dimen/x3"></android.support.design.widget.TabLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/x7"
-        android:background="#11000000"/>
+        android:background="#11000000" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#f2f2f2">
+        android:background="#f5f5f5">
 
         <com.gather_excellent_help.ui.widget.WanRecycleView
             android:id="@+id/wan_back_rebate"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/x5"/>
+            android:layout_marginLeft="@dimen/x5" />
 
-        <ImageView
-            android:id="@+id/iv_order_no_zhanwei"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/x60"
-            android:src="@drawable/juyoubang_no_zhanwei"
-            android:visibility="gone"/>
+        <include layout="@layout/load_no_zhanwei" />
     </FrameLayout>
-
 
 
 </LinearLayout>

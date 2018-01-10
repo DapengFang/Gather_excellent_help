@@ -2,12 +2,11 @@ package com.gather_excellent_help.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.SSLCertificateSocketFactory;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.DynamicDrawableSpan;
-import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +18,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
-import com.gather_excellent_help.bean.HomeTypeBean;
 import com.gather_excellent_help.bean.SearchWareBean;
 import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.Tools;
-import com.gather_excellent_help.utils.imageutils.ImageLoader;
+import com.gather_excellent_help.utils.span.ImageSpanUtil;
+import com.gather_excellent_help.utils.span.MyImageSpan;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -108,7 +108,7 @@ public class WareListAdapter extends BaseAdapter {
         final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
 
         double suning_rate = dataBean.getSuning_rate();
-        double s_zhuan = dataBean.getSell_price() * suning_rate * user_rate;
+        double s_zhuan = dataBean.getSell_price() * tkRate * user_rate;
         double s_coast = dataBean.getSell_price() - s_zhuan;
 
 
@@ -119,10 +119,10 @@ public class WareListAdapter extends BaseAdapter {
         if (site_id == 1) {
 
             if (dataBean.getTitle() != null) {
-                //holder.home_type_name.setText("\t\t\t\t\t\t\t" + dataBean.getTitle());
                 SpannableString span = new SpannableString("\t\t" + dataBean.getTitle());
-                ImageSpan image = new ImageSpan(context, R.drawable.taobao_order_icon, DynamicDrawableSpan.ALIGN_BASELINE);
-
+                Drawable drawable = context.getResources().getDrawable(R.drawable.taobao_order_icon);
+                Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+                MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 holder.home_type_name.setText(span);
             }
@@ -195,9 +195,10 @@ public class WareListAdapter extends BaseAdapter {
             LogUtil.e("suning_rate = " + suning_rate);
 
             if (dataBean.getTitle() != null) {
-                //holder.home_type_name.setText("\t\t\t\t\t\t\t" + dataBean.getTitle());
                 SpannableString span = new SpannableString("\t\t" + dataBean.getTitle());
-                ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+                Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+                Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+                MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 holder.home_type_name.setText(span);
             }

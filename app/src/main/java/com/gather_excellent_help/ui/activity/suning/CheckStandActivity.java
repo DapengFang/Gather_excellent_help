@@ -1,14 +1,14 @@
 package com.gather_excellent_help.ui.activity.suning;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.webkit.JavascriptInterface;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,15 +20,11 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.api.pay.PayResult;
 import com.gather_excellent_help.api.pay.SignUtils;
 import com.gather_excellent_help.bean.suning.SuningPaystateBean;
-import com.gather_excellent_help.event.AnyEvent;
-import com.gather_excellent_help.event.EventType;
-import com.gather_excellent_help.ui.activity.AlipayManagerActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
-import com.umeng.analytics.MobclickAgent;
 
 import java.io.UnsupportedEncodingException;
 import java.math.RoundingMode;
@@ -38,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
 public class CheckStandActivity extends BaseActivity {
@@ -137,9 +132,18 @@ public class CheckStandActivity extends BaseActivity {
      * 订单支付
      */
     private void toPayOrder() {
-        String orderInfo = getOrderInfo("聚优帮购物", "聚优帮-商家-购物", "0.01");
-        //String orderInfo = getOrderInfo("聚优帮购物", "聚优帮-商家-购物", String.valueOf(df.format(pay_price)));
-        LogUtil.e(orderInfo);
+        if (TextUtils.isEmpty(PARTNER) || TextUtils.isEmpty(RSA_PRIVATE) || TextUtils.isEmpty(SELLER)) {
+            new AlertDialog.Builder(CheckStandActivity.this).setTitle("警告").setMessage("需要配置PARTNER | RSA_PRIVATE| SELLER")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialoginterface, int i) {
+                            finish();
+                        }
+                    }).show();
+            return;
+        }
+        //String orderInfo = getOrderInfo("聚优帮购物", "聚优帮-商家-购物", "0.01");
+        String orderInfo = getOrderInfo("聚优帮购物", "聚优帮-商家-购物", String.valueOf(df.format(pay_price)));
+        LogUtil.e("checkStandActivity = " + orderInfo);
         String sign = sign(orderInfo);
         try {
             /**
@@ -156,9 +160,7 @@ public class CheckStandActivity extends BaseActivity {
          */
         final String payInfo = orderInfo + "&sign=\"" + sign + "\"&" + getSignType();
 
-
-
-        LogUtil.e("支付信息 = " + payInfo);
+        LogUtil.e("订单信息 = " + payInfo);
 
         Runnable payRunnable = new Runnable() {
 
@@ -216,13 +218,13 @@ public class CheckStandActivity extends BaseActivity {
                             map.put("order_id", String.valueOf(orderId));
                             netUtil.okHttp2Server2(pstatus_url, map);
                         }
+                        LogUtil.e("支付成功 = " + resultInfo);
                     } else {
                         pay_status = "1";
                         // 判断resultStatus 为非"9000"则代表可能支付失败
                         // "8000"代表支付结果因为支付渠道原因或者系统原因还在等待支付结果确认，最终交易是否成功以服务端异步通知为准（小概率状态）
                         if (TextUtils.equals(resultStatus, "8000")) {
                             Toast.makeText(CheckStandActivity.this, "支付结果确认中", Toast.LENGTH_SHORT).show();
-
                         } else {
                             // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
                             Toast.makeText(CheckStandActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
@@ -237,8 +239,8 @@ public class CheckStandActivity extends BaseActivity {
                     }
                     break;
                 }
-
                 default:
+
                     break;
             }
         }
@@ -269,7 +271,7 @@ public class CheckStandActivity extends BaseActivity {
         orderInfo += "&total_fee=" + "\"" + price + "\"";
 
         // 服务器异步通知页面路径
-        orderInfo += "&notify_url=" + "\"" + "http://api.myausplus.com/alipay/andriod_back" + "\"";
+        orderInfo += "&notify_url=" + "\"" + "http://47.92.118.0:8080/Notify_url.aspx" + "\"";
 
         // 服务接口名称， 固定值
         orderInfo += "&service=\"mobile.securitypay.pay\"";

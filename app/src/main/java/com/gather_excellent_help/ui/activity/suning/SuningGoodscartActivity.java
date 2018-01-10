@@ -145,7 +145,7 @@ public class SuningGoodscartActivity extends BaseActivity {
     }
 
     /**
-     * 初始哈数据
+     * 初始化数据
      */
     private void initData() {
         userLogin = Tools.getUserLogin(this);
@@ -220,13 +220,7 @@ public class SuningGoodscartActivity extends BaseActivity {
     private void hindCatView() {
         if (SuningGoodscartActivity.this != null && !SuningGoodscartActivity.this.isFinishing()) {
             if (alertDialog != null && alertDialog.isShowing()) {
-                View view = new View(SuningGoodscartActivity.this);
-                view.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        alertDialog.dismiss();
-                    }
-                }, 1000);
+                alertDialog.dismiss();
             }
         }
     }
@@ -417,7 +411,7 @@ public class SuningGoodscartActivity extends BaseActivity {
     }
 
     /**
-     * 设置下部状态栏
+     * 设置下部状态栏显示
      */
     private void setCheckStatus() {
         DecimalFormat df = new DecimalFormat("#0.00");
@@ -490,6 +484,22 @@ public class SuningGoodscartActivity extends BaseActivity {
                                         check_carts.add(cart_id);
                                     }
                                 }
+                                String cart_ids = "";
+                                if (check_carts != null && check_carts.size() > 0) {
+                                    if (netData != null && netData.size() > 0) {
+                                        SuningGoodscartBean suningGoodscartBean = new SuningGoodscartBean();
+                                        List<SuningGoodscartBean.DataBean> suningCartdata = new ArrayList<>();
+                                        for (int i = 0; i < netData.size(); i++) {
+                                            NetGoodscartBean.DataBean dataBean = netData.get(i);
+                                            int cart_id = dataBean.getCart_id();
+                                            if (check_carts.contains(cart_id)) {
+                                                cart_ids += cart_id + ",";
+                                            }
+                                        }
+                                    }
+                                }
+                                cart_ids = cart_ids.substring(0, cart_ids.length() - 1);
+                                LogUtil.e("cart_ids = " + cart_ids);
                                 if (check_carts != null && check_carts.size() > 0) {
                                     if (netData != null && netData.size() > 0) {
                                         SuningGoodscartBean suningGoodscartBean = new SuningGoodscartBean();
@@ -537,6 +547,7 @@ public class SuningGoodscartActivity extends BaseActivity {
                                         if (isHavaGoods) {
                                             Intent intent = new Intent(SuningGoodscartActivity.this, OrderCartConfirmActivity.class);
                                             intent.putExtra("cart_json", cart_json);
+                                            intent.putExtra("cart_ids", cart_ids);
                                             startActivity(intent);
                                         } else {
                                             Toast.makeText(SuningGoodscartActivity.this, "网络连接出现问题，请您重新加入购物车。", Toast.LENGTH_SHORT).show();

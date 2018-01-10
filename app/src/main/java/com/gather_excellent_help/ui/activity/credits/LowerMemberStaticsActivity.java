@@ -68,15 +68,21 @@ public class LowerMemberStaticsActivity extends BaseActivity {
     @Bind(R.id.tv_ward_statics_confirm)
     TextView tvWardStaticsConfirm;
 
-    @Bind(R.id.iv_order_no_zhanwei)
-    ImageView ivOrderNoZhanwei;
+    private RelativeLayout rl_order_no_zhanwei;
+    private TextView tv_order_no_zhanwei;
     @Bind(R.id.ll_lower_member_show)
     LinearLayout ll_lower_member_show;
 
-    private RecyclerView rcvWardsStatisticsS;
-    private SwipeRefreshLayout swip_refresh;
+//    private SwipeRefreshLayout swip_refresh;
+//
+//    private MyNestedScrollView mynest_scrollview;
 
-    private MyNestedScrollView mynest_scrollview;
+    private RelativeLayout rl_lower_member_coallaspe;
+    private TextView tv_lower_member_collaspe;
+    private ImageView iv_lower_member_arraw;
+
+    private WanRecycleView wan_wards_statistics_s;
+    private RecyclerView rcvWardsStatisticsS;
 
     private String startTime = "";
     private String endTime = "";
@@ -108,6 +114,8 @@ public class LowerMemberStaticsActivity extends BaseActivity {
     private boolean isAnimationFirst = true;
     private AlertDialog alertDialog;
 
+    private boolean isCoallaspe = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,9 +127,17 @@ public class LowerMemberStaticsActivity extends BaseActivity {
     }
 
     private void initView() {
-        mynest_scrollview = (MyNestedScrollView) findViewById(R.id.mynest_scrollview);
-        rcvWardsStatisticsS = (RecyclerView) findViewById(R.id.rcv_wards_statistics_s);
-        swip_refresh = (SwipeRefreshLayout) findViewById(R.id.swip_refresh);
+//        mynest_scrollview = (MyNestedScrollView) findViewById(R.id.mynest_scrollview);
+//        swip_refresh = (SwipeRefreshLayout) findViewById(R.id.swip_refresh);
+        rl_order_no_zhanwei = (RelativeLayout) findViewById(R.id.rl_order_no_zhanwei);
+        tv_order_no_zhanwei = (TextView) findViewById(R.id.tv_order_no_zhanwei);
+
+        rl_lower_member_coallaspe = (RelativeLayout) findViewById(R.id.rl_lower_member_coallaspe);
+        tv_lower_member_collaspe = (TextView) findViewById(R.id.tv_lower_member_collaspe);
+        iv_lower_member_arraw = (ImageView) findViewById(R.id.iv_lower_member_arraw);
+
+        wan_wards_statistics_s = (WanRecycleView) findViewById(R.id.wav_lower_wards_statistics);
+
     }
 
 
@@ -130,56 +146,67 @@ public class LowerMemberStaticsActivity extends BaseActivity {
         netUtil = new NetUtil();
         Id = Tools.getUserLogin(this);
         net2Server();
-        ivOrderNoZhanwei.setVisibility(View.VISIBLE);
-
+        rcvWardsStatisticsS = wan_wards_statistics_s.getRefreshableView();
         layoutManager = new FullyLinearLayoutManager(this);
         rcvWardsStatisticsS.setLayoutManager(layoutManager);
-        setupSwipeRefresh();
 
-//        //设置刷新相关
-//        wan_wards_statistics_s.setScrollingWhileRefreshingEnabled(true);
-//        wan_wards_statistics_s.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-//        wan_wards_statistics_s.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
-//            @Override
-//            public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
-//                isLoadMore = false;
-//                isCanLoad = true;
-//                page = 1;
-//                pageNo = "1";
-//                net2Server();
-//            }
-//
-//            @Override
-//            public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
-//
-//            }
-//
-//        });
+        //设置刷新相关
+        wan_wards_statistics_s.setScrollingWhileRefreshingEnabled(true);
+        wan_wards_statistics_s.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        wan_wards_statistics_s.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+                isLoadMore = false;
+                isCanLoad = true;
+                page = 1;
+                pageNo = "1";
+                net2Server();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+
+            }
+
+        });
         netUtil.setOnServerResponseListener(new LowerMemberStaticsActivity.OnServerResponseListener());
         rlExit.setOnClickListener(new MyOnclikListener());
         rlWardTimeStart.setOnClickListener(new MyOnclikListener());
         rlWardTimeEnd.setOnClickListener(new MyOnclikListener());
         tvWardStaticsConfirm.setOnClickListener(new MyOnclikListener());
-        mynest_scrollview.setOnTouchListener(new MyOnTouchClickListener());
-    }
-
-    private void setupSwipeRefresh() {
-        if (swip_refresh != null) {
-            swip_refresh.setColorSchemeResources(R.color.colorFirst,
-                    R.color.colorSecond, R.color.colorThird);
-            swip_refresh.setProgressViewOffset(true, 0, (int) TypedValue
-                    .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
-            swip_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    isLoadMore = false;
-                    isCanLoad = true;
-                    page = 1;
-                    pageNo = "1";
-                    net2Server();
+        rl_lower_member_coallaspe.setOnClickListener(new MyOnclikListener());
+        //mynest_scrollview.setOnTouchListener(new MyOnTouchClickListener());
+        rcvWardsStatisticsS.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (isCanLoad) {
+                        lastVisibleItem = layoutManager
+                                .findLastVisibleItemPosition();
+                        if (lastVisibleItem + 1 == layoutManager
+                                .getItemCount()) {
+                            isLoadMore = true;
+                            if (currData != null) {
+                                if (currData.size() < 10) {
+                                    Toast.makeText(LowerMemberStaticsActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            isCanLoad = false;
+                            pageNo = String.valueOf(page);
+                            net2Server();
+                        }
+                    }
                 }
-            });
-        }
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+            }
+        });
     }
 
     /**
@@ -202,13 +229,7 @@ public class LowerMemberStaticsActivity extends BaseActivity {
     private void hindCatView() {
         if (LowerMemberStaticsActivity.this != null && !LowerMemberStaticsActivity.this.isFinishing()) {
             if (alertDialog != null && alertDialog.isShowing()) {
-                View view = new View(LowerMemberStaticsActivity.this);
-                view.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        alertDialog.dismiss();
-                    }
-                }, 1000);
+                alertDialog.dismiss();
             }
         }
     }
@@ -222,8 +243,8 @@ public class LowerMemberStaticsActivity extends BaseActivity {
         public void getSuccessResponse(String response) {
             LogUtil.e(response);
             hindCatView();
-            if (swip_refresh != null) {
-                swip_refresh.setRefreshing(false);
+            if (wan_wards_statistics_s != null && wan_wards_statistics_s.isRefreshing()) {
+                wan_wards_statistics_s.onRefreshComplete();
             }
             LowerMermberBean lowerMermberBean = new Gson().fromJson(response, LowerMermberBean.class);
             int statusCode = lowerMermberBean.getStatusCode();
@@ -237,11 +258,12 @@ public class LowerMemberStaticsActivity extends BaseActivity {
                     } else {
                         if (currData != null) {
                             if (currData.size() > 0) {
-                                ivOrderNoZhanwei.setVisibility(View.GONE);
+                                rl_order_no_zhanwei.setVisibility(View.GONE);
                             } else {
-                                ivOrderNoZhanwei.setVisibility(View.VISIBLE);
+                                rl_order_no_zhanwei.setVisibility(View.VISIBLE);
                             }
                         }
+                        tv_order_no_zhanwei.setVisibility(View.GONE);
                         page = 2;
                         lowerData = currData;
                         lowerMemberAdapter = new LowerMemberAdapter(LowerMemberStaticsActivity.this, lowerData);
@@ -294,6 +316,10 @@ public class LowerMemberStaticsActivity extends BaseActivity {
                     break;
                 case R.id.tv_ward_statics_confirm:
                     toQuery();
+                    break;
+                case R.id.rl_lower_member_coallaspe:
+                    isCoallaspe = !isCoallaspe;
+                    coalapseSearch();
                     break;
             }
         }
@@ -356,39 +382,54 @@ public class LowerMemberStaticsActivity extends BaseActivity {
     }
 
     /**
+     * 控制搜索展开和收起
+     */
+    private void coalapseSearch() {
+        if (isCoallaspe) {
+            tv_lower_member_collaspe.setText("展开搜索");
+            iv_lower_member_arraw.setImageResource(R.drawable.down_lower_expand_icon);
+            ll_lower_member_show.setVisibility(View.GONE);
+        } else {
+            tv_lower_member_collaspe.setText("收起搜索");
+            iv_lower_member_arraw.setImageResource(R.drawable.up_lower_collaspe_icon);
+            ll_lower_member_show.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
      * 监听页面上的触摸事件
      */
-    public class MyOnTouchClickListener implements View.OnTouchListener {
-
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            int scrollY = view.getScrollY();
-            int height = view.getHeight();
-            int scrollViewMeasuredHeight = mynest_scrollview.getChildAt(0).getMeasuredHeight();
-            switch (motionEvent.getAction()) {
-                case MotionEvent.ACTION_UP:
-                    if ((scrollY + height) == scrollViewMeasuredHeight) {
-                        if (isCanLoad) {
-                            lastVisibleItem = layoutManager
-                                    .findLastVisibleItemPosition();
-                            if (lastVisibleItem + 1 == layoutManager
-                                    .getItemCount()) {
-                                isLoadMore = true;
-                                if (currData != null) {
-                                    if (currData.size() < 10) {
-                                        Toast.makeText(LowerMemberStaticsActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                                isCanLoad = false;
-                                pageNo = String.valueOf(page);
-                                net2Server();
-                            }
-                        }
-                        break;
-                    }
-            }
-            return false;
-        }
-
-    }
+//    public class MyOnTouchClickListener implements View.OnTouchListener {
+//
+//        @Override
+//        public boolean onTouch(View view, MotionEvent motionEvent) {
+//            int scrollY = view.getScrollY();
+//            int height = view.getHeight();
+//            int scrollViewMeasuredHeight = mynest_scrollview.getChildAt(0).getMeasuredHeight();
+//            switch (motionEvent.getAction()) {
+//                case MotionEvent.ACTION_UP:
+//                    if ((scrollY + height) == scrollViewMeasuredHeight) {
+//                        if (isCanLoad) {
+//                            lastVisibleItem = layoutManager
+//                                    .findLastVisibleItemPosition();
+//                            if (lastVisibleItem + 1 == layoutManager
+//                                    .getItemCount()) {
+//                                isLoadMore = true;
+//                                if (currData != null) {
+//                                    if (currData.size() < 10) {
+//                                        Toast.makeText(LowerMemberStaticsActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//                                isCanLoad = false;
+//                                pageNo = String.valueOf(page);
+//                                net2Server();
+//                            }
+//                        }
+//                        break;
+//                    }
+//            }
+//            return false;
+//        }
+//
+//    }
 }

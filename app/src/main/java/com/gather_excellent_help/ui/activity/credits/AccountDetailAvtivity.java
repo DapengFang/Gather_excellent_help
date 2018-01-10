@@ -48,8 +48,10 @@ public class AccountDetailAvtivity extends BaseActivity {
     TextView tvAccountQueryTime;
     @Bind(R.id.tv_account_query_project)
     TextView tvAccountQueryProject;
-    @Bind(R.id.iv_order_no_zhanwei)
-    ImageView ivOrderNoZhanwei;
+//    @Bind(R.id.iv_order_no_zhanwei)
+//    ImageView ivOrderNoZhanwei;
+
+    private RelativeLayout rl_order_no_zhanwei;
 
     private WanRecycleView wan_account_detail;
     private RecyclerView rcvAccountDetail;
@@ -86,6 +88,7 @@ public class AccountDetailAvtivity extends BaseActivity {
      */
     private void initView() {
         wan_account_detail = (WanRecycleView) findViewById(R.id.wan_account_detail);
+        rl_order_no_zhanwei = (RelativeLayout)findViewById(R.id.rl_order_no_zhanwei);
     }
 
     /**
@@ -223,13 +226,7 @@ public class AccountDetailAvtivity extends BaseActivity {
     private void hindCatView() {
         if (AccountDetailAvtivity.this != null && !AccountDetailAvtivity.this.isFinishing()) {
             if (alertDialog != null && alertDialog.isShowing()) {
-                View view = new View(AccountDetailAvtivity.this);
-                view.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        alertDialog.dismiss();
-                    }
-                }, 1000);
+                alertDialog.dismiss();
             }
         }
     }
@@ -254,9 +251,9 @@ public class AccountDetailAvtivity extends BaseActivity {
         } else {
             if (currData != null) {
                 if (currData.size() > 0) {
-                    ivOrderNoZhanwei.setVisibility(View.GONE);
+                    rl_order_no_zhanwei.setVisibility(View.GONE);
                 } else {
-                    ivOrderNoZhanwei.setVisibility(View.VISIBLE);
+                    rl_order_no_zhanwei.setVisibility(View.VISIBLE);
                 }
             }
             page = 2;

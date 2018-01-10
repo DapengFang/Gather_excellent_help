@@ -2,12 +2,12 @@ package com.gather_excellent_help.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.DynamicDrawableSpan;
-import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +22,10 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.suning.SuningGoodscartBean;
 import com.gather_excellent_help.ui.activity.suning.SuningDetailActivity;
 import com.gather_excellent_help.ui.widget.NumberAddSubView;
+import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.LogUtil;
+import com.gather_excellent_help.utils.span.ImageSpanUtil;
+import com.gather_excellent_help.utils.span.MyImageSpan;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -69,11 +72,11 @@ public class SuningOrdercartAdapter extends RecyclerView.Adapter<SuningOrdercart
                 holder.tv_bottom_pop_cprice.setText("￥" + df.format(mprice));
             }
 
-            if(product_spec !=null) {
-                if(product_spec.length()>10) {
+            if (product_spec != null) {
+                if (product_spec.length() > 10) {
                     String s = product_spec.substring(0, 10) + "...";
                     holder.tv_activity_suning_warespec.setText(s);
-                }else{
+                } else {
                     holder.tv_activity_suning_warespec.setText(product_spec);
                 }
             }
@@ -88,7 +91,9 @@ public class SuningOrdercartAdapter extends RecyclerView.Adapter<SuningOrdercart
             }
             if (product_title != null) {
                 SpannableString span = new SpannableString("\t\t" + product_title);
-                ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+                Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+                Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+                MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 holder.tv_bottom_pop_name.setText(span);
             }
@@ -118,7 +123,7 @@ public class SuningOrdercartAdapter extends RecyclerView.Adapter<SuningOrdercart
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, SuningDetailActivity.class);
-                    intent.putExtra("article_id",Integer.parseInt(product_id));
+                    intent.putExtra("article_id", Integer.parseInt(product_id));
                     intent.putExtra("goods_id", product_goodsid);
                     intent.putExtra("goods_img", product_pic);
                     intent.putExtra("goods_title", product_title);
@@ -180,7 +185,6 @@ public class SuningOrdercartAdapter extends RecyclerView.Adapter<SuningOrdercart
         }
         return total_price;
     }
-
 
 
     private OnNumAddSubListener onNumAddSubListener;

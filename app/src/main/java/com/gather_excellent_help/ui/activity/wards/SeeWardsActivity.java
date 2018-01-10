@@ -43,8 +43,8 @@ public class SeeWardsActivity extends BaseActivity {
     RecyclerView rcvSeeWard;
     @Bind(R.id.ll_taobao_loadmore)
     LinearLayout llTaobaoLoadmore;
-    @Bind(R.id.iv_order_no_zhanwei)
-    ImageView ivOrderNoZhanwei;
+
+    private RelativeLayout rl_order_no_zhanwei;
 
     private NetUtil netUtil;
     private Map<String, String> map;
@@ -67,10 +67,21 @@ public class SeeWardsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_see_wards);
+        initView();
         ButterKnife.bind(this);
         initData();
     }
 
+    /**
+     * 初始化视图
+     */
+    private void initView() {
+        rl_order_no_zhanwei = (RelativeLayout) findViewById(R.id.rl_order_no_zhanwei);
+    }
+
+    /**
+     * 初始化数据
+     */
     private void initData() {
         vidacatorControll();
         tvTopTitleName.setText("奖励明细");
@@ -101,11 +112,11 @@ public class SeeWardsActivity extends BaseActivity {
                             }
                             backRebateAdapter.notifyDataSetChanged();
                         } else {
-                            if(currData!=null) {
-                                if(currData.size() > 0) {
-                                    ivOrderNoZhanwei.setVisibility(View.GONE);
-                                }else{
-                                    ivOrderNoZhanwei.setVisibility(View.VISIBLE);
+                            if (currData != null) {
+                                if (currData.size() > 0) {
+                                    rl_order_no_zhanwei.setVisibility(View.GONE);
+                                } else {
+                                    rl_order_no_zhanwei.setVisibility(View.VISIBLE);
                                 }
                             }
                             rewardData = currData;

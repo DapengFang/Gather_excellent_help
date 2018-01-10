@@ -22,8 +22,6 @@ import com.gather_excellent_help.bean.suning.SuningOrderBean;
 import com.gather_excellent_help.bean.suning.SuningOrderConfirmBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
-import com.gather_excellent_help.ui.activity.OrderActivity;
-import com.gather_excellent_help.ui.activity.SetActivity;
 import com.gather_excellent_help.ui.adapter.SuningOrderAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
@@ -53,7 +51,7 @@ public class SuningOrderActivity extends BaseActivity {
     private RecyclerView rcv_suning_order_list;
 
     private LinearLayout ll_suning_show;
-    private ImageView iv_order_no_zhanwei;
+    private RelativeLayout rl_order_no_zhanwei;
 
     private LinearLayout ll_pb_show;
     private TextView tv_pb_show_title;
@@ -108,7 +106,7 @@ public class SuningOrderActivity extends BaseActivity {
         tv_pb_show_title = (TextView) findViewById(R.id.tv_pb_show_title);
         pb_show = (ProgressBar) findViewById(R.id.pb_show);
         ll_suning_show = (LinearLayout) findViewById(R.id.ll_suning_show);
-        iv_order_no_zhanwei = (ImageView) findViewById(R.id.iv_order_no_zhanwei);
+        rl_order_no_zhanwei = (RelativeLayout) findViewById(R.id.rl_order_no_zhanwei);
     }
 
     /**
@@ -158,7 +156,6 @@ public class SuningOrderActivity extends BaseActivity {
             public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
 
             }
-
         });
         MyonclickListener myonclickListener = new MyonclickListener();
         rl_exit.setOnClickListener(myonclickListener);
@@ -192,6 +189,7 @@ public class SuningOrderActivity extends BaseActivity {
             }
         });
     }
+
 
     /**
      * 默认设置顶部指示器
@@ -245,7 +243,7 @@ public class SuningOrderActivity extends BaseActivity {
     }
 
     /**
-     * 展示CatLoadingView
+     * 展示加载中
      */
     private void showCatView() {
         View inflate = View.inflate(this, R.layout.loading_dialog_view, null);
@@ -258,16 +256,13 @@ public class SuningOrderActivity extends BaseActivity {
         alertDialog.getWindow().setLayout(ScreenUtil.getScreenWidth(this) / 2, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
+    /**
+     * 隐藏加载中
+     */
     private void hindCatView() {
         if (SuningOrderActivity.this != null && !SuningOrderActivity.this.isFinishing()) {
             if (alertDialog != null && alertDialog.isShowing()) {
-                View view = new View(SuningOrderActivity.this);
-                view.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        alertDialog.dismiss();
-                    }
-                }, 1000);
+                alertDialog.dismiss();
             }
         }
     }
@@ -456,10 +451,10 @@ public class SuningOrderActivity extends BaseActivity {
                         allData = data;
                         if (allData != null && allData.size() > 0) {
                             ll_suning_show.setVisibility(View.VISIBLE);
-                            iv_order_no_zhanwei.setVisibility(View.GONE);
+                            rl_order_no_zhanwei.setVisibility(View.GONE);
                         } else {
                             ll_suning_show.setVisibility(View.GONE);
-                            iv_order_no_zhanwei.setVisibility(View.VISIBLE);
+                            rl_order_no_zhanwei.setVisibility(View.VISIBLE);
                         }
                         suningOrderAdapter = new SuningOrderAdapter(SuningOrderActivity.this, data, order_status);
                         rcv_suning_order_list.setAdapter(suningOrderAdapter);
@@ -541,7 +536,7 @@ public class SuningOrderActivity extends BaseActivity {
      * 评价订单
      */
     private void evaluteOrder() {
-        Toast.makeText(SuningOrderActivity.this, "该功能正在开发中，敬请期待。", Toast.LENGTH_SHORT).show();
+        Toast.makeText(SuningOrderActivity.this, "该功能正在开发中。", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -579,7 +574,7 @@ public class SuningOrderActivity extends BaseActivity {
     }
 
     /**
-     * 处理额外的button
+     * 点击额外的一个button的操作
      *
      * @param view
      * @param position
@@ -654,15 +649,6 @@ public class SuningOrderActivity extends BaseActivity {
             count++;
             remindCountBean.setCount(count);
         }
-    }
-
-    /**
-     * 查看物流信息
-     */
-    private void seeLogisticsInfo(String order_id) {
-        Intent intent = new Intent(SuningOrderActivity.this, LogisticsInfoActivity.class);
-        intent.putExtra("order_id", order_id);
-        startActivity(intent);
     }
 
     /**

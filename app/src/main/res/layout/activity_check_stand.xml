@@ -106,7 +106,7 @@
                     android:id="@+id/cb_zhifubao_select"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:button="@drawable/rb_checkstand_bg_selector"
+                    android:button="@drawable/cart_checkbox_selector"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"/>
             </RelativeLayout>

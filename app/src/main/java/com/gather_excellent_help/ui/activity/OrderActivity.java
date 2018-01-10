@@ -53,8 +53,8 @@ public class OrderActivity extends BaseActivity {
 
     @Bind(R.id.vid_order_manager)
     ViewpagerIndicator vid_order_manager;
-    @Bind(R.id.iv_order_no_zhanwei)
-    ImageView ivOrderNoZhanwei;
+
+    private RelativeLayout rl_order_no_zhanwei;
     private boolean isCanLoad = true;
 
     private OrderAllAdapter orderAllAdapter;
@@ -91,6 +91,7 @@ public class OrderActivity extends BaseActivity {
      */
     private void initView() {
         wan_order_manager = (WanRecycleView) findViewById(R.id.wan_order_manager);
+        rl_order_no_zhanwei = (RelativeLayout)findViewById(R.id.rl_order_no_zhanwei);
     }
 
     /**
@@ -148,7 +149,7 @@ public class OrderActivity extends BaseActivity {
 
         netUtil = new NetUtil();
         vidacatorControll();
-        tvTopTitleName.setText("推广赚订单");
+        tvTopTitleName.setText("淘宝佣金订单");
         Intent intent = getIntent();
         order_type = intent.getIntExtra("order_type", 7);
         tab_p = intent.getIntExtra("tab_p", -1);
@@ -248,9 +249,9 @@ public class OrderActivity extends BaseActivity {
         } else {
             if (data != null) {
                 if (data.size() > 0) {
-                    ivOrderNoZhanwei.setVisibility(View.GONE);
+                    rl_order_no_zhanwei.setVisibility(View.GONE);
                 } else {
-                    ivOrderNoZhanwei.setVisibility(View.VISIBLE);
+                    rl_order_no_zhanwei.setVisibility(View.VISIBLE);
                 }
             }
             allData = data;
@@ -305,13 +306,7 @@ public class OrderActivity extends BaseActivity {
     private void hindCatView() {
         if (OrderActivity.this != null && !OrderActivity.this.isFinishing()) {
             if (alertDialog != null && alertDialog.isShowing()) {
-                View view = new View(OrderActivity.this);
-                view.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        alertDialog.dismiss();
-                    }
-                }, 1000);
+                alertDialog.dismiss();
             }
         }
     }
@@ -390,6 +385,9 @@ public class OrderActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 在当前页面销毁前处理资源释放
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

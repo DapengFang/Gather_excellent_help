@@ -70,6 +70,7 @@ public class ActivityPresenter extends BasePresenter {
     }
 
     private void parseData(String response) {
+        LogUtil.e("活动版块数据" + response);
         HomeWareBean homeWareBean = new Gson().fromJson(response, HomeWareBean.class);
         int statusCode = homeWareBean.getStatusCode();
         switch (statusCode) {

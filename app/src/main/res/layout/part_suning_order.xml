@@ -33,8 +33,8 @@
             android:layout_centerVertical="true"
             android:text=""
             android:textColor="#ff0000"
-            android:textStyle="bold"
-            android:textSize="@dimen/x12" />
+            android:textSize="@dimen/x12"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_item_order_counttimer"
@@ -66,53 +66,61 @@
         android:layout_height="@dimen/x1"
         android:background="#eeeeee" />
 
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/x8"
-        android:background="#ffffff">
+        android:layout_height="@dimen/x32"
+        android:background="#ffffff"
+        android:padding="@dimen/x6">
 
         <TextView
             android:id="@+id/tv_suning_order_warenum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:text=""
-            android:textSize="@dimen/x14"
             android:textColor="#555555"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/x8"
-            android:layout_marginTop="@dimen/x8"/>
+            android:textSize="@dimen/x12" />
+
+        <TextView
+            android:id="@+id/tv_suning_order_free"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/tv_suning_order_warenum"
+            android:text=""
+            android:layout_marginLeft="@dimen/x12"
+            android:textColor="#ff6600"
+            android:textSize="@dimen/x12" />
 
         <TextView
             android:id="@+id/tv_item_order_shifukuan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/x8"
-            android:layout_below="@id/tv_suning_order_warenum"
-            android:layout_marginTop="@dimen/x8"
+            android:layout_centerVertical="true"
             android:text=""
-            android:textColor="#FF7F00"
-            android:textStyle="bold"
-            android:textSize="@dimen/x14" />
+            android:textColor="#fa2a3b"
+            android:textSize="@dimen/x12"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_shifukuan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/tv_item_order_shifukuan"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x1"
             android:layout_toLeftOf="@id/tv_item_order_shifukuan"
-            android:text="实付款："
-            android:layout_marginRight="@dimen/x3"
+            android:text="实付款:"
             android:textColor="#7a7a7a"
-            android:textSize="@dimen/x14" />
+            android:textSize="@dimen/x12" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_suning_order_func"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x50"
+        android:layout_height="@dimen/x48"
         android:background="#ffffff">
 
         <TextView
@@ -121,11 +129,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x8"
             android:background="@drawable/order_suning_bg_shape"
             android:gravity="center"
-            android:paddingBottom="@dimen/x8"
-            android:paddingTop="@dimen/x8"
-            android:layout_marginRight="@dimen/x8"
+            android:paddingBottom="@dimen/x3"
+            android:paddingTop="@dimen/x3"
             android:text="立即付款"
             android:textColor="#555555"
             android:textSize="@dimen/x12" />
@@ -139,8 +147,8 @@
             android:layout_toLeftOf="@id/tv_item_order_topay"
             android:background="@drawable/order_suning_bg_shape"
             android:gravity="center"
-            android:padding="@dimen/x8"
-            android:paddingTop="@dimen/x8"
+            android:paddingBottom="@dimen/x3"
+            android:paddingTop="@dimen/x3"
             android:text="取消订单"
             android:textColor="#555555"
             android:textSize="@dimen/x12" />
@@ -154,8 +162,8 @@
             android:layout_toLeftOf="@id/tv_item_order_cancel"
             android:background="@drawable/order_suning_bg_shape"
             android:gravity="center"
-            android:padding="@dimen/x8"
-            android:paddingTop="@dimen/x8"
+            android:paddingBottom="@dimen/x3"
+            android:paddingTop="@dimen/x3"
             android:text="额外"
             android:textColor="#555555"
             android:textSize="@dimen/x12" />

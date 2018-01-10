@@ -41,29 +41,16 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/x32">
+            android:layout_height="@dimen/x24">
 
             <TextView
                 android:id="@+id/tv_vip_ware_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:lineSpacingExtra="@dimen/x2"
-                android:lines="2"
+                android:singleLine="true"
                 android:textColor="#333333"
                 android:textSize="@dimen/x12" />
 
-            <TextView
-                android:id="@+id/tv_activity_sun_tao_icon"
-                android:layout_width="@dimen/x32"
-                android:layout_height="@dimen/x13"
-                android:layout_marginTop="@dimen/x2"
-                android:background="@drawable/sun_tao_icon_selector"
-                android:gravity="center"
-                android:text=""
-                android:textColor="@drawable/sun_tao_text_selector"
-                android:textSize="@dimen/x8"
-                android:textStyle="bold"
-                android:visibility="gone" />
         </RelativeLayout>
 
 

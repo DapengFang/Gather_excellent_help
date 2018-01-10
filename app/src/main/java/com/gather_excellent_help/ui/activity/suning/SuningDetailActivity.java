@@ -41,6 +41,7 @@ import com.gather_excellent_help.ui.widget.DragLayout;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.PhotoUtils;
+import com.gather_excellent_help.utils.ScreenUtil;
 import com.gather_excellent_help.utils.ToastUtils;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
@@ -55,8 +56,6 @@ public class SuningDetailActivity extends FragmentActivity {
 
     private static final int LOCATION_PERMISSIONS_REQUEST_CODE = 0x123;
     private DragLayout draglayout;
-    private FrameLayout fl_suning_top;
-    private FrameLayout fl_suning_bottom;
     private TextView tv_suning_detail_buy;
     private TextView tv_suning_detail_cart;
     private VerticalFragment1 fragment1;
@@ -86,8 +85,6 @@ public class SuningDetailActivity extends FragmentActivity {
     private int article_id;//数据库自增id
     private String goods_id = "";//产品id
     private String local_position = "39.934,116.329";//当前位置经纬度
-    private long start_time;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +100,6 @@ public class SuningDetailActivity extends FragmentActivity {
      */
     private void initView() {
         draglayout = (DragLayout) findViewById(R.id.draglayout);
-        fl_suning_top = (FrameLayout) findViewById(R.id.fl_suning_top);
-        fl_suning_bottom = (FrameLayout) findViewById(R.id.fl_suning_bottom);
         tv_suning_detail_buy = (TextView) findViewById(R.id.tv_suning_detail_buy);
         tv_suning_detail_cart = (TextView) findViewById(R.id.tv_suning_detail_cart);
         iv_suning_detail_back = (ImageView) findViewById(R.id.iv_suning_detail_back);
@@ -171,6 +166,8 @@ public class SuningDetailActivity extends FragmentActivity {
             }
         });
 
+        LogUtil.e(ScreenUtil.getScreenWidth(this) + "-----------" + ScreenUtil.getScreenHeight(this));
+
     }
 
     /**
@@ -216,9 +213,9 @@ public class SuningDetailActivity extends FragmentActivity {
             String city = location.getCity();    //获取城市
             String district = location.getDistrict();    //获取区县
             String street = location.getStreet();    //获取街道信息
-            LogUtil.e(addr + "-" + province + "-" + city + "-" + district);
             accept_address = province + " " + city + " " + district;
             lalotitude = latitude + "," + longitude;
+            LogUtil.e(addr + "-" + province + "-" + city + "-" + district + lalotitude);
             fragment1.setCurrentPostion(accept_address, lalotitude);
         }
     }
@@ -264,17 +261,18 @@ public class SuningDetailActivity extends FragmentActivity {
      * 加载上下两个fragment
      */
     private void showDrglayout() {
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fl_suning_top, fragment1).add(R.id.fl_suning_bottom, fragment3)
-                .commitAllowingStateLoss();
-
-        DragLayout.ShowNextPageNotifier nextIntf = new DragLayout.ShowNextPageNotifier() {
-            @Override
-            public void onDragNext() {
-                fragment3.initView();
-            }
-        };
-        draglayout.setNextPageListener(nextIntf);
+        if(SuningDetailActivity.this!=null && !SuningDetailActivity.this.isFinishing()) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fl_suning_top, fragment1).add(R.id.fl_suning_bottom, fragment3)
+                    .commitAllowingStateLoss();
+            DragLayout.ShowNextPageNotifier nextIntf = new DragLayout.ShowNextPageNotifier() {
+                @Override
+                public void onDragNext() {
+                    fragment3.initView();
+                }
+            };
+            draglayout.setNextPageListener(nextIntf);
+        }
     }
 
     /**
@@ -390,6 +388,8 @@ public class SuningDetailActivity extends FragmentActivity {
             LogUtil.e(msg);
             finish();
         } else if (event.getType() == EventType.GOODS_PAY_LIMIT) {
+            initData();
+        }else if(event.getType() == EventType.UPDATA_ADDRESS_ORDER) {
             initData();
         }
     }

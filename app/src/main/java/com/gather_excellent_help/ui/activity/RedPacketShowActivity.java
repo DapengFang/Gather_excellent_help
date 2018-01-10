@@ -40,7 +40,8 @@ import okhttp3.Call;
 
 public class RedpacketShowActivity extends BaseActivity {
 
-    private ImageView iv_zhuangtai_exit;
+
+    private RelativeLayout rl_exit;
     private TextView tv_top_title_name;
     private RelativeLayout rl_share;
     private WebView wv_banner;
@@ -49,9 +50,9 @@ public class RedpacketShowActivity extends BaseActivity {
     private SharePopupwindow sharePopupwindow;
     private String redpacket_url;
 
-    private String get_url =Url.BASE_URL + "GetTpwdNew.aspx";
+    private String get_url = Url.BASE_URL + "GetTpwdNew.aspx";
     private NetUtil netUtil;
-    private Map<String,String> map;
+    private Map<String, String> map;
     private String taoWord;
     private AlertDialog dialog;
 
@@ -67,29 +68,29 @@ public class RedpacketShowActivity extends BaseActivity {
      * 初始化控件
      */
     private void initView() {
-        iv_zhuangtai_exit = (ImageView)findViewById(R.id.iv_zhuangtai_exit);
-        tv_top_title_name = (TextView)findViewById(R.id.tv_top_title_name);
-        rl_share = (RelativeLayout)findViewById(R.id.rl_share);
-        wv_banner = (WebView)findViewById(R.id.wv_banner);
+        rl_exit = (RelativeLayout) findViewById(R.id.rl_exit);
+        tv_top_title_name = (TextView) findViewById(R.id.tv_top_title_name);
+        rl_share = (RelativeLayout) findViewById(R.id.rl_share);
+        wv_banner = (WebView) findViewById(R.id.wv_banner);
         v_shadow = findViewById(R.id.v_shadow);
     }
 
     /**
      * 初始化数据
      */
-    private void initData(){
+    private void initData() {
         //初始化
         netUtil = new NetUtil();
         tv_top_title_name.setText("福利专区");
         rl_share.setVisibility(View.VISIBLE);
         Intent intent = getIntent();
         redpacket_url = intent.getStringExtra("redpacket_url");
-        if(redpacket_url == null) {
+        if (redpacket_url == null) {
             redpacket_url = "";
         }
         //设置点击事件
         MyonclickListener myonclickListener = new MyonclickListener();
-        iv_zhuangtai_exit.setOnClickListener(myonclickListener);
+        rl_exit.setOnClickListener(myonclickListener);
         rl_share.setOnClickListener(myonclickListener);
         //WebView配置
         WebSettings webSettings = wv_banner.getSettings();
@@ -115,19 +116,19 @@ public class RedpacketShowActivity extends BaseActivity {
         map.put("convert_url", redpacket_url);
         map.put("img_url", "http://app.juyob.com/hbback.jpg");
         map.put("title", "每天都有红包，最高1111元！快分享给小伙伴一起来抢吧！");
-        netUtil.okHttp2Server2(get_url,map);
+        netUtil.okHttp2Server2(get_url, map);
         netUtil.setOnServerResponseListener(new OnServerResponseListener());
     }
 
     /**
      * 处理页面上的点击事件
      */
-    public class MyonclickListener implements View.OnClickListener{
+    public class MyonclickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.iv_zhuangtai_exit :
+                case R.id.rl_exit:
                     finish();
                     break;
                 case R.id.rl_share:
@@ -161,7 +162,7 @@ public class RedpacketShowActivity extends BaseActivity {
 
             @Override
             public void onWeixinFriendClick() {
-                showCopyDialog(	SHARE_MEDIA.WEIXIN_CIRCLE);
+                showCopyDialog(SHARE_MEDIA.WEIXIN_CIRCLE);
             }
         });
     }
@@ -177,7 +178,7 @@ public class RedpacketShowActivity extends BaseActivity {
         TextView tvCopyContent = (TextView) inflate.findViewById(R.id.tv_copy_taoword_content);
         TextView tvCopyDismiss = (TextView) inflate.findViewById(R.id.tv_copy_taoword_dismiss);
         TextView tvCopyShare = (TextView) inflate.findViewById(R.id.tv_copy_taoword_share);
-        final String share_content = "每天都有红包，最高1111元！\n快分享给小伙伴一起来抢吧！\n复制这条消息"+taoWord+"\n去淘宝打开就有哦！\n每天很多次机会！";
+        final String share_content = "每天都有红包，最高1111元！\n快分享给小伙伴一起来抢吧！\n复制这条消息" + taoWord + "\n去淘宝打开就有哦！\n每天很多次机会！";
         tvCopyContent.setText(share_content);
         dialog = builder.setView(inflate)
                 .show();
@@ -202,7 +203,7 @@ public class RedpacketShowActivity extends BaseActivity {
 
     private void showPopMenu() {
         if (sharePopupwindow == null) {
-            sharePopupwindow = new SharePopupwindow(RedpacketShowActivity.this,v_shadow);
+            sharePopupwindow = new SharePopupwindow(RedpacketShowActivity.this, v_shadow);
             sharePopupwindow.showAtLocation(wv_banner, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         } else if (sharePopupwindow != null
                 && sharePopupwindow.isShowing()) {
@@ -249,13 +250,13 @@ public class RedpacketShowActivity extends BaseActivity {
         @Override
         public void onResult(SHARE_MEDIA platform) {
             Toast.makeText(RedpacketShowActivity.this, "分享成功", Toast.LENGTH_LONG).show();
-            if(dialog!=null && dialog.isShowing()) {
+            if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
-            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+            if (sharePopupwindow != null && sharePopupwindow.isShowing()) {
                 sharePopupwindow.dismiss();
             }
-            if(v_shadow!=null) {
+            if (v_shadow != null) {
                 v_shadow.setVisibility(View.GONE);
             }
         }
@@ -268,13 +269,13 @@ public class RedpacketShowActivity extends BaseActivity {
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
             Toast.makeText(RedpacketShowActivity.this, "分享失败" + t.getMessage(), Toast.LENGTH_LONG).show();
-            if(dialog!=null && dialog.isShowing()) {
+            if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
-            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+            if (sharePopupwindow != null && sharePopupwindow.isShowing()) {
                 sharePopupwindow.dismiss();
             }
-            if(v_shadow!=null) {
+            if (v_shadow != null) {
                 v_shadow.setVisibility(View.GONE);
             }
         }
@@ -286,26 +287,26 @@ public class RedpacketShowActivity extends BaseActivity {
         @Override
         public void onCancel(SHARE_MEDIA platform) {
             Toast.makeText(RedpacketShowActivity.this, "分享取消", Toast.LENGTH_LONG).show();
-            if(dialog!=null && dialog.isShowing()) {
+            if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
             }
-            if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+            if (sharePopupwindow != null && sharePopupwindow.isShowing()) {
                 sharePopupwindow.dismiss();
             }
-            if(v_shadow!=null) {
+            if (v_shadow != null) {
                 v_shadow.setVisibility(View.GONE);
             }
         }
     };
 
-    public class MyWebviewClient extends WebViewClient{
+    public class MyWebviewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             return super.shouldOverrideUrlLoading(view, request);
         }
     }
 
-    public class OnServerResponseListener implements NetUtil.OnServerResponseListener{
+    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
@@ -322,17 +323,17 @@ public class RedpacketShowActivity extends BaseActivity {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-           LogUtil.e(call.toString() + "-" +e.getMessage());
+            LogUtil.e(call.toString() + "-" + e.getMessage());
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(dialog!=null && dialog.isShowing()) {
+        if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
-        if(sharePopupwindow!=null && sharePopupwindow.isShowing()) {
+        if (sharePopupwindow != null && sharePopupwindow.isShowing()) {
             sharePopupwindow.dismiss();
         }
     }

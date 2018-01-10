@@ -72,10 +72,16 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
                 final int status = dataBean.getOrder_status();
                 String add_time = dataBean.getAdd_time();
                 double real_amount = dataBean.getReal_amount();
+                double sn_freight = dataBean.getSn_freight();
                 String order_no = dataBean.getOrder_no();
                 List<SuningOrderBean.DataBean.GoodListBean> goodList = dataBean.getGoodList();
                 if (add_time != null) {
                     holder.tv_item_order_time.setText(add_time);
+                }
+                if (sn_freight == 0) {
+                    holder.tv_suning_order_free.setText("免运费");
+                } else {
+                    holder.tv_suning_order_free.setText("运费:￥" + df.format(sn_freight));
                 }
                 holder.tv_item_order_shifukuan.setText("￥" + String.valueOf(df.format(real_amount)));
                 if (status == 1) {
@@ -107,7 +113,7 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
                     holder.tv_item_order_cancel.setVisibility(View.GONE);
                     holder.tv_item_order_extra.setVisibility(View.GONE);
                     holder.rl_suning_order_func.setVisibility(View.VISIBLE);
-                    holder.tv_item_order_topay.setText("评价");
+                    holder.tv_item_order_topay.setText("晒单");
                 } else if (status == 5) {
                     holder.tv_item_order_type.setText("交易关闭");
                     holder.tv_item_order_topay.setVisibility(View.GONE);
@@ -130,7 +136,7 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
                 holder.tv_item_order_extra.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onButtonClickListener.onExtraButtonClick(v,position,status);
+                        onButtonClickListener.onExtraButtonClick(v, position, status);
                     }
                 });
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -159,14 +165,14 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
                                         .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
                                         .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
                                         .into(iv_suning_order_ware);//请求成功后把图片设置到的控件
-                            }else{
+                            } else {
                                 iv_suning_order_ware.setImageResource(R.mipmap.zhanwei_icon);
                             }
                             if (goodListBean.getSpec_text() != null) {
-                                if(goodListBean.getSpec_text().length()>16) {
+                                if (goodListBean.getSpec_text().length() > 16) {
                                     String new_spec = goodListBean.getSpec_text().substring(0, 16) + "...";
                                     tv_suning_order_type.setText(new_spec);
-                                }else{
+                                } else {
                                     tv_suning_order_type.setText(goodListBean.getSpec_text());
                                 }
                             }
@@ -183,7 +189,7 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             LogUtil.e("SuningOrderAdapter error");
             Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
         }
@@ -201,6 +207,7 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
         TextView tv_item_order_type;
         TextView tv_suning_order_warenum;
         TextView tv_item_order_shifukuan;
+        TextView tv_suning_order_free;
         TextView tv_item_order_topay;
         TextView tv_item_order_cancel;
         TextView tv_item_order_extra;
@@ -215,6 +222,7 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
             tv_item_order_type = (TextView) itemView.findViewById(R.id.tv_item_order_type);
             tv_suning_order_warenum = (TextView) itemView.findViewById(R.id.tv_suning_order_warenum);
             tv_item_order_shifukuan = (TextView) itemView.findViewById(R.id.tv_item_order_shifukuan);
+            tv_suning_order_free = (TextView) itemView.findViewById(R.id.tv_suning_order_free);
             tv_item_order_topay = (TextView) itemView.findViewById(R.id.tv_item_order_topay);
             tv_item_order_cancel = (TextView) itemView.findViewById(R.id.tv_item_order_cancel);
             tv_item_order_extra = (TextView) itemView.findViewById(R.id.tv_item_order_extra);

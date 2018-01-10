@@ -7,4 +7,4 @@
         android:gravity="center"
         android:textColor="#555555"
         android:padding="@dimen/x5"
-    android:background="#ffffff"/>
+        android:background="#ffffff"/>

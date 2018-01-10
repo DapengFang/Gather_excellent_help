@@ -12,7 +12,6 @@ import okhttp3.Call;
 /**
  * Created by Dapeng Fang on 2017/12/5.
  */
-
 public class NetCartUtil {
     public static final String add_url = Url.BASE_URL + "suning/MyShoppingCart.ashx?action=cart_goods_add";
     public static final String del_url = Url.BASE_URL + "suning/MyShoppingCart.ashx?action=cart_goods_delete";

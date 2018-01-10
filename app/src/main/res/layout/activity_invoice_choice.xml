@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:text="发票类型"
                 android:textColor="#aaaaaa"
-                android:textSize="14sp" />
+                android:textSize="@dimen/x14" />
 
             <TextView
                 android:id="@+id/tv_invoice_type_o"
@@ -40,7 +40,7 @@
                 android:gravity="center"
                 android:text="纸制发票"
                 android:textColor="@drawable/tv_store_text_selector"
-                android:textSize="14sp" />
+                android:textSize="@dimen/x12" />
 
             <TextView
                 android:id="@+id/tv_invoice_type_t"
@@ -53,7 +53,7 @@
                 android:gravity="center"
                 android:text="不开发票"
                 android:textColor="@drawable/tv_store_text_selector"
-                android:textSize="14sp" />
+                android:textSize="@dimen/x12" />
 
         </RelativeLayout>
 
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:text="发票抬头"
                 android:textColor="#aaaaaa"
-                android:textSize="14sp" />
+                android:textSize="@dimen/x14" />
 
             <TextView
                 android:id="@+id/tv_invoice_edit_o"
@@ -87,7 +87,7 @@
                 android:gravity="center"
                 android:text="个人"
                 android:textColor="@drawable/tv_store_text_selector"
-                android:textSize="14sp" />
+                android:textSize="@dimen/x12" />
 
             <TextView
                 android:id="@+id/tv_invoice_edit_t"
@@ -100,7 +100,7 @@
                 android:gravity="center"
                 android:text="单位"
                 android:textColor="@drawable/tv_store_text_selector"
-                android:textSize="14sp" />
+                android:textSize="@dimen/x12" />
 
             <EditText
                 android:id="@+id/et_invoice_name"
@@ -111,10 +111,11 @@
                 android:background="@drawable/suning_order_confirm_remark_shape"
                 android:cursorVisible="true"
                 android:hint="请输入姓名"
+                android:singleLine="true"
                 android:paddingLeft="@dimen/x6"
                 android:textColor="#99000000"
                 android:textColorHint="#55000000"
-                android:textSize="14sp" />
+                android:textSize="@dimen/x12" />
 
         </RelativeLayout>
 
@@ -140,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:text="纳税人识别号"
                 android:textColor="#aaaaaa"
-                android:textSize="14sp" />
+                android:textSize="@dimen/x14" />
 
             <EditText
                 android:id="@+id/et_invoice_tax_code"
@@ -151,10 +152,11 @@
                 android:background="@drawable/suning_order_confirm_remark_shape"
                 android:cursorVisible="true"
                 android:hint="填写纳税人识别号或社会信用代码"
+                android:singleLine="true"
                 android:paddingLeft="@dimen/x6"
                 android:textColor="#99000000"
                 android:textColorHint="#55000000"
-                android:textSize="14sp" />
+                android:textSize="@dimen/x12" />
 
         </RelativeLayout>
 
@@ -170,6 +172,6 @@
         android:gravity="center"
         android:text="确定"
         android:textColor="#ffffff"
-        android:textSize="14sp" />
+        android:textSize="@dimen/x14" />
 
 </LinearLayout>

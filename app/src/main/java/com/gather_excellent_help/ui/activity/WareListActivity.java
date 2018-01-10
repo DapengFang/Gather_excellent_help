@@ -152,8 +152,15 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
             sousuoStr = "";
         }
         type_id = intent.getStringExtra("type_id");
+        String type_title = intent.getStringExtra("type_title");
         activity_id = intent.getStringExtra("activity_id");
         if (type_id != null && !TextUtils.isEmpty(type_id)) {
+            if (type_title != null && !TextUtils.isEmpty(type_title)) {
+                if (type_title.length() > 2) {
+                    type_title = type_title.substring(0, 2);
+                }
+                tvWareListLeibie.setText(type_title);
+            }
             Type = type_id;
             etWareListContent.setHint("请输入商品名称");
             map = new HashMap<>();
@@ -237,7 +244,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
         etWareListContent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     Toast.makeText(WareListActivity.this, "正在搜索中，请稍后！", Toast.LENGTH_SHORT).show();
                     InputMethodManager imm = (InputMethodManager) getSystemService(
                             Context.INPUT_METHOD_SERVICE);
@@ -255,10 +262,10 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                         brandId = "";
                         capacity = "";
                         type_id = "";
-                        if(tvWareListRongliang!=null) {
+                        if (tvWareListRongliang != null) {
                             tvWareListRongliang.setText("规格");
                         }
-                        if(tvWareListPingpai!=null) {
+                        if (tvWareListPingpai != null) {
                             tvWareListPingpai.setText("品牌");
                         }
                         sousuoStr = "isHomeSou";
@@ -274,7 +281,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     } else {
                         Toast.makeText(WareListActivity.this, "请输入关键字！", Toast.LENGTH_SHORT).show();
                     }
-                   return true;
+                    return true;
                 }
                 return false;
             }
@@ -346,13 +353,13 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 List<SearchWareBean.DataBean> data = searchWareBean.getData();
                 if (isLoadmore != -1) {
                     page++;
-                    isCanLoad =true;
+                    isCanLoad = true;
                     LogUtil.e("page == " + page);
                     newData = searchWareBean.getData();
                     wareData.addAll(newData);
                     wareListAdapter.notifyDataSetChanged();
                 } else {
-                    isCanLoad =true;
+                    isCanLoad = true;
                     wareData = searchWareBean.getData();
                     newData = wareData;
                     wareListAdapter = new WareListAdapter(WareListActivity.this, wareData, sousuoStr);
@@ -377,7 +384,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                         String goods_title = wareData.get(i).getTitle();
                         double sell_price = wareData.get(i).getSell_price();
                         double market_price = wareData.get(i).getMarket_price();
-                        if(site_id == 1) {
+                        if (site_id == 1) {
                             if (sousuoStr.equals("isVip")) {
                                 String link_url = wareData.get(i).getLink_url();
                                 Intent intent = new Intent(WareListActivity.this, WebRecordActivity.class);
@@ -414,15 +421,15 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                                     startActivity(intent);
                                 }
                             }
-                        }else if(site_id == 2) {
+                        } else if (site_id == 2) {
                             //苏宁
                             Intent intent = new Intent(WareListActivity.this, SuningDetailActivity.class);
-                            intent.putExtra("article_id",article_id);
+                            intent.putExtra("article_id", article_id);
                             intent.putExtra("goods_id", goods_id);
                             intent.putExtra("goods_img", goods_img);
                             intent.putExtra("goods_title", goods_title);
-                            intent.putExtra("goods_price", df.format(sell_price)+"");
-                            intent.putExtra("c_price", df.format(market_price)+"");
+                            intent.putExtra("goods_price", df.format(sell_price) + "");
+                            intent.putExtra("c_price", df.format(market_price) + "");
                             startActivity(intent);
                         }
                     }
@@ -434,7 +441,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     @Override
                     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
                         if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                            if(!isCanLoad) {
+                            if (!isCanLoad) {
                                 return;
                             }
                             if (absListView.getLastVisiblePosition() == (absListView.getCount() - 1)) {
@@ -447,7 +454,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                                     } else {
                                         showLoadMore();
                                         searchWareList();
-                                        isCanLoad =false;
+                                        isCanLoad = false;
                                     }
                                 } else {
                                     if (sousuoStr != null && !TextUtils.isEmpty(sousuoStr)) {
@@ -513,6 +520,12 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
             case 1:
                 LogUtil.e(response);
                 conditionData = listBean.getData();
+                ListBean.DataBean dataBean = new ListBean.DataBean();
+                if (crr_click != 0) {
+                    dataBean.setId(-1);
+                    dataBean.setTitle("全部");
+                    conditionData.add(dataBean);
+                }
                 if (conditionData == null) {
                     return;
                 }
@@ -528,25 +541,25 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
     private void showPopMenu(List<ListBean.DataBean> data) {
         if (typeSelectorPopupwindow == null) {
             typeSelectorPopupwindow = new TypeSelectorPopupwindow(WareListActivity.this, data);
-            if(handler!=null) {
+            if (handler != null) {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         showPopupwindow();
                     }
-                },300);
+                }, 300);
             }
         } else if (typeSelectorPopupwindow != null
                 && typeSelectorPopupwindow.isShowing()) {
             typeSelectorPopupwindow.dismiss();
         } else {
-            if(handler!=null) {
+            if (handler != null) {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         typeSelectorPopupwindow.showAsDropDown(llWareListPingpai, 5, 5);
                     }
-                },300);
+                }, 300);
             }
         }
 
@@ -580,17 +593,31 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     title = title.substring(0, 2);
                 }
                 if (crr_click == 0) {
-                    Type = String.valueOf(id);
+                    if (id == -1) {
+                        Type = "";
+                    } else {
+                        Type = String.valueOf(id);
+                    }
                     brandId = "";
                     capacity = "";
                     tvWareListPingpai.setText("品牌");
                     tvWareListRongliang.setText("规格");
                     tvWareListLeibie.setText(title);
                 } else if (crr_click == 1) {
-                    brandId = String.valueOf(id);
+                    if (id == -1) {
+                        brandId = "";
+                    } else {
+                        brandId = String.valueOf(id);
+                    }
+                    capacity = "";
+                    tvWareListRongliang.setText("规格");
                     tvWareListPingpai.setText(title);
                 } else if (crr_click == 2) {
-                    capacity = String.valueOf(id);
+                    if (id == -1) {
+                        capacity = "";
+                    } else {
+                        capacity = String.valueOf(id);
+                    }
                     tvWareListRongliang.setText(title);
                 }
                 ll_ware_list_loadmore.setVisibility(View.VISIBLE);
@@ -633,9 +660,9 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     break;
                 case R.id.ll_ware_list_leibie:
                     isLoadmore = -1;
-                    isCanLoad =true;
+                    isCanLoad = true;
                     crr_click = 0;
-                    if(activity_id != null) {
+                    if (activity_id != null) {
                         activity_id = "0";
                     }
                     map = new HashMap<>();
@@ -684,10 +711,10 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                         capacity = "";
                         type_id = "";
                         sousuoStr = "isHomeSou";
-                        if(tvWareListRongliang!=null) {
+                        if (tvWareListRongliang != null) {
                             tvWareListRongliang.setText("规格");
                         }
-                        if(tvWareListPingpai!=null) {
+                        if (tvWareListPingpai != null) {
                             tvWareListPingpai.setText("品牌");
                         }
                         map = new HashMap<>();
@@ -699,87 +726,6 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                         map.put("brandId", brandId);
                         map.put("capacity", capacity);
                         netUtil2.okHttp2Server2(home_search_url, map);
-//                        if(type_id!=null && !TextUtils.isEmpty(type_id)) {
-//                            tvWareListOld.setVisibility(View.GONE);
-//                            etWareListContent.setHint("请输入商品名称");
-//                            map = new HashMap<>();
-//                            map.put("id",type_id);
-//                            map.put("key_words",keyword);
-//                            map.put("pageSize","10");
-//                            map.put("pageIndex","1");
-//                            map.put("PriceOder",PriceOder);
-//                            map.put("Type",Type);
-//                            map.put("brandId",brandId);
-//                            map.put("capacity",capacity);
-//                            netUtil2.okHttp2Server2(ware_url,map);
-//                        }else{
-//                            tvWareListOld.setVisibility(View.GONE);
-//                            etWareListContent.setHint("请输入商品名称");
-//                            if(sousuoStr.equals("isQiang")) {
-//                                map = new HashMap<>();
-//                                map.put("key_words",keyword);
-//                                map.put("pageSize","10");
-//                                map.put("pageIndex","1");
-//                                map.put("PriceOder",PriceOder);
-//                                map.put("Type",Type);
-//                                map.put("brandId",brandId);
-//                                map.put("capacity",capacity);
-//                                String qiang_url = Url.BASE_URL + "GroupBuyList.aspx";
-//                                netUtil2.okHttp2Server2(qiang_url,map);
-//                            }else if(sousuoStr.equals("isVip")) {
-//                                map = new HashMap<>();
-//                                map.put("key_words",keyword);
-//                                map.put("pageSize","10");
-//                                map.put("pageIndex","1");
-//                                map.put("PriceOder",PriceOder);
-//                                map.put("Type",Type);
-//                                map.put("brandId",brandId);
-//                                map.put("capacity",capacity);
-//                                String vip_url = Url.BASE_URL + "ChannelPriceList.aspx";
-//                                netUtil2.okHttp2Server2(vip_url,map);
-//                            }else if(sousuoStr.equals("activity")) {
-//                                map = new HashMap<>();
-//                                map.put("key_words",keyword);
-//                                map.put("pageSize","10");
-//                                map.put("pageIndex","1");
-//                                map.put("PriceOder",PriceOder);
-//                                map.put("Type",Type);
-//                                map.put("brandId",brandId);
-//                                map.put("capacity",capacity);
-//                                map.put("activity_id",activity_id);
-//                                netUtil2.okHttp2Server2(activity_url,map);
-//                            }else if(sousuoStr.equals("isTypeSou")) {
-//                                map = new HashMap<>();
-//                                map.put("key_words",keyword);
-//                                map.put("pageSize","10");
-//                                map.put("pageIndex","1");
-//                                map.put("PriceOder",PriceOder);
-//                                map.put("Type",Type);
-//                                map.put("brandId",brandId);
-//                                map.put("capacity",capacity);
-//                                netUtil2.okHttp2Server2(sousuo_url,map);
-//                            }else if(sousuoStr.equals("isHomeSou")) {
-//                                map = new HashMap<>();
-//                                map.put("key_words",keyword);
-//                                map.put("pageSize","10");
-//                                map.put("pageIndex","1");
-//                                map.put("PriceOder",PriceOder);
-//                                map.put("Type",Type);
-//                                map.put("brandId",brandId);
-//                                map.put("capacity",capacity);
-//                                netUtil2.okHttp2Server2(home_search_url,map);
-//                            }
-//                            else if(sousuoStr!=null && !TextUtils.isEmpty(sousuoStr)) {
-//                                tvWareListOld.setVisibility(View.VISIBLE);
-//                                tvWareListOld.setText(sousuoStr);
-//                                etWareListContent.setHint("");
-////                                keyword = sousuoStr;
-////                                searchWareList(keyword);
-//                            }else{
-//                                etWareListContent.setHint("请输入商品名称");
-//                                tvWareListOld.setVisibility(View.GONE);
-//                            }
-//                        }
                     } else {
                         Toast.makeText(WareListActivity.this, "请输入关键字！", Toast.LENGTH_SHORT).show();
                     }
@@ -835,7 +781,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 map.put("pageIndex", pageIndex);
                 map.put("PriceOder", PriceOder);
                 map.put("Type", Type);
-                map.put("id",Type);
+                map.put("id", Type);
                 map.put("brandId", brandId);
                 map.put("capacity", capacity);
                 String qiang_url = Url.BASE_URL + "GroupBuyList.aspx";
@@ -847,7 +793,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 map.put("pageIndex", pageIndex);
                 map.put("PriceOder", PriceOder);
                 map.put("Type", Type);
-                map.put("id",Type);
+                map.put("id", Type);
                 map.put("brandId", brandId);
                 map.put("capacity", capacity);
                 String vip_url = Url.BASE_URL + "ChannelPriceList.aspx";
@@ -912,7 +858,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
-        if(typeSelectorPopupwindow!=null && typeSelectorPopupwindow.isShowing()) {
+        if (typeSelectorPopupwindow != null && typeSelectorPopupwindow.isShowing()) {
             typeSelectorPopupwindow.dismiss();
             typeSelectorPopupwindow = null;
         }

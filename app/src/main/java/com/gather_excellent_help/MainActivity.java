@@ -65,8 +65,7 @@ import okhttp3.Call;
 public class MainActivity extends FragmentActivity{
 
     private static final int SHOW_RED_PACKET = 0x123;
-    @Bind(R.id.vp_main)
-    NoScrollViewPager vp_main;
+    private NoScrollViewPager vp_main;
     @Bind(R.id.rg_main)
     RadioGroup rg_main;
     @Bind(R.id.ll_main)
@@ -140,6 +139,7 @@ public class MainActivity extends FragmentActivity{
      * 初始化控件
      */
     private void initView() {
+        vp_main = (NoScrollViewPager)findViewById(R.id.vp_main);
         rl_red_packet = (RelativeLayout) findViewById(R.id.rl_red_packet);
         rl_red_packet_show = (RelativeLayout) findViewById(R.id.rl_red_packet_show);
         iv_red_packet_exit = (ImageView) findViewById(R.id.iv_red_packet_exit);

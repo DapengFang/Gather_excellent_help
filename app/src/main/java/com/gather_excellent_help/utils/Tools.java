@@ -3,6 +3,8 @@ package com.gather_excellent_help.utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageInfo;
@@ -391,5 +393,15 @@ public class Tools {
     public static void edit2Cursible(Context context) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    /**
+     * 复制到剪贴板
+     * @param context  上下文
+     * @param text  要复制的内容
+     */
+    public static void copyToClipboard(Context context, String text){
+        ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        cm.setPrimaryClip(ClipData.newPlainText("text",text));
     }
 }

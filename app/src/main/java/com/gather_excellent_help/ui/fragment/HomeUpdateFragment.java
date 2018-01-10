@@ -94,6 +94,8 @@ public class HomeUpdateFragment extends LazyLoadFragment {
     @Bind(R.id.ll_home_update_scanner)
     LinearLayout ll_home_update_scanner;
 
+    private LinearLayout ll_home_msg;
+
     private boolean mIsRequestDataRefresh = false;
     public static final int TIME_DOWN = 1; //倒计时显示的标识
     public static final int STOP_REFRESH = 2; //加载数据的标识
@@ -117,6 +119,7 @@ public class HomeUpdateFragment extends LazyLoadFragment {
     @Override
     public View initView() {
         View inflate = View.inflate(getContext(), R.layout.home_update_fragment, null);
+        ll_home_msg = (LinearLayout) inflate.findViewById(R.id.ll_home_msg);
         return inflate;
     }
 
@@ -304,6 +307,13 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                     Intent intent = new Intent(getContext(), LoginActivity.class);
                     startActivity(intent);
                 }
+            }
+        });
+
+        ll_home_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "暂无消息通知", Toast.LENGTH_SHORT).show();
             }
         });
 

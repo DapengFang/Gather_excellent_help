@@ -38,7 +38,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/x3"
                     android:layout_marginTop="@dimen/x3"
-                    android:src="@drawable/search_after_exit" />
+                    android:src="@drawable/suning_detail_exit_icon" />
 
                 <RelativeLayout
                     android:layout_width="@dimen/x180"

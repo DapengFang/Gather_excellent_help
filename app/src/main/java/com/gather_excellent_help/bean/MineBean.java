@@ -65,12 +65,14 @@ public class MineBean {
         private double amount;
         private double frostAmount;
         private double user_earn;
+        private double grand_total;
         private String user_get_ratio;
         private int group_type;
         private int apply_status;
         private int pay_status;
         private int apply_type;
         private int pay_type;
+
 
 
         public String getAvatar() {
@@ -199,6 +201,14 @@ public class MineBean {
 
         public void setPay_type(int pay_type) {
             this.pay_type = pay_type;
+        }
+
+        public double getGrand_total() {
+            return grand_total;
+        }
+
+        public void setGrand_total(double grand_total) {
+            this.grand_total = grand_total;
         }
     }
 }

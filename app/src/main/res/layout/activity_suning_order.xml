@@ -66,13 +66,14 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:background="#eeeeee"/>
+        android:background="#eeeeee" />
 
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="#f5f5f5">
 
         <LinearLayout
             android:id="@+id/ll_suning_show"
@@ -84,7 +85,7 @@
                 android:id="@+id/rcv_suning_order_list"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
 
             <LinearLayout
                 android:id="@+id/ll_pb_show"
@@ -112,14 +113,7 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_order_no_zhanwei"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/x60"
-            android:src="@drawable/juyoubang_no_zhanwei"
-            android:visibility="gone" />
+        <include layout="@layout/load_no_zhanwei" />
 
     </FrameLayout>
 

@@ -14,7 +14,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/x48"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/x10">
 
             <TextView
                 android:id="@+id/tv_suning_logistics_orderno"
@@ -24,7 +25,8 @@
                 android:text="1111"
                 android:gravity="center_vertical"
                 android:textSize="@dimen/x14"
-                android:textColor="#333333"/>
+                android:textColor="#333333"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tv_suning_logistics_time"
@@ -34,26 +36,28 @@
                 android:text="11111111"
                 android:gravity="center_vertical"
                 android:textSize="@dimen/x12"
-                android:textColor="#cccccc"/>
+                android:textColor="#aaaaaa"/>
 
         </LinearLayout>
 
         <View
-            android:layout_width="@dimen/x300"
+            android:layout_width="@dimen/x290"
             android:layout_height="2px"
             android:background="#cccccc"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/x10"/>
         
         <LinearLayout
             android:id="@+id/ll_suning_logistics_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/x10"></LinearLayout>
         
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/x10"
-        android:background="#eeeeee" />
+        android:background="#ffffff" />
 </LinearLayout>

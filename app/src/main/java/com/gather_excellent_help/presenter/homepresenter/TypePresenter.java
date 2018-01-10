@@ -48,23 +48,23 @@ public class TypePresenter extends BasePresenter {
 
     @Override
     public void initData() {
-        netUtil.okHttp2Server2(type_url,null);
+        netUtil.okHttp2Server2(type_url, null);
         netUtil.setOnServerResponseListener(new MyOnServerResponseListener());
     }
 
-    public class MyOnServerResponseListener implements NetUtil.OnServerResponseListener{
+    public class MyOnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
-           if(context!=null) {
-               parseData(response);
-           }
+            if (context != null) {
+                parseData(response);
+            }
             onStopRefreshListener.stopSuccessRefresh();
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            LogUtil.e(call.toString()+"----"+e.getMessage());
+            LogUtil.e(call.toString() + "----" + e.getMessage());
             onStopRefreshListener.stopFailRefresh();
         }
     }
@@ -73,21 +73,23 @@ public class TypePresenter extends BasePresenter {
         TyepIndexBean tyepIndexBean = new Gson().fromJson(response, TyepIndexBean.class);
         int statusCode = tyepIndexBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
+            case 1:
                 typeData = tyepIndexBean.getData();
                 ArrayList<HomeTypeBean> lists = new ArrayList<>();
                 for (int i = 0; i < HomeData.titles.length; i++) {
                     HomeTypeBean homeTypeBean = new HomeTypeBean(HomeData.imgs[i], HomeData.titles[i]);
                     lists.add(homeTypeBean);
                 }
-                HomeTypeAdapter homeTypeAdapter = new HomeTypeAdapter(context, lists,typeData);
+                HomeTypeAdapter homeTypeAdapter = new HomeTypeAdapter(context, lists, typeData);
                 gvHomeType.setAdapter(homeTypeAdapter);
                 gvHomeType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         int id = typeData.get(i).getId();
+                        String title = typeData.get(i).getTitle();
                         Intent intent = new Intent(context, WareListActivity.class);
                         intent.putExtra("type_id", String.valueOf(id));
+                        intent.putExtra("type_title", title);
                         context.startActivity(intent);
                     }
                 });
@@ -100,8 +102,9 @@ public class TypePresenter extends BasePresenter {
 
     private OnStopRefreshListener onStopRefreshListener;
 
-    public interface  OnStopRefreshListener{
+    public interface OnStopRefreshListener {
         void stopSuccessRefresh();
+
         void stopFailRefresh();
     }
 

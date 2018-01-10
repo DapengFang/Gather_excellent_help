@@ -42,8 +42,8 @@ public class ExtractDetailActivity extends BaseActivity {
     RelativeLayout rlShare;
     @Bind(R.id.rcv_account_detail)
     RecyclerView rcvAccountDetail;
-    @Bind(R.id.iv_order_no_zhanwei)
-    ImageView ivOrderNoZhanwei;
+
+    private RelativeLayout rl_order_no_zhanwei;
     private NetUtil netUtil;
     private Map<String, String> map;
     private String id;
@@ -62,6 +62,7 @@ public class ExtractDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_extract_detail);
+        rl_order_no_zhanwei = (RelativeLayout)findViewById(R.id.rl_order_no_zhanwei);
         ButterKnife.bind(this);
         initData();
 
@@ -114,9 +115,9 @@ public class ExtractDetailActivity extends BaseActivity {
                     currData = exractDetailBean.getData();
                     if(currData!=null) {
                         if(currData.size() > 0) {
-                            ivOrderNoZhanwei.setVisibility(View.GONE);
+                            rl_order_no_zhanwei.setVisibility(View.GONE);
                         }else{
-                            ivOrderNoZhanwei.setVisibility(View.VISIBLE);
+                            rl_order_no_zhanwei.setVisibility(View.VISIBLE);
                         }
                     }
                     extractData = currData;

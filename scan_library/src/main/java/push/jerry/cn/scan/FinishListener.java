@@ -17,7 +17,10 @@
 package push.jerry.cn.scan;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 
 /**
  * Simple listener used to exit the app in a few cases.
@@ -39,11 +42,24 @@ public final class FinishListener implements DialogInterface.OnClickListener, Di
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
+        toSetAppinfoPage();
         run();
     }
 
     private void run() {
         activityToFinish.finish();
+    }
+
+    /**
+     * 跳转到应用管理界面
+     */
+    private void toSetAppinfoPage() {
+        Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
+        String pkg = "com.android.settings";
+        String cls = "com.android.settings.applications.InstalledAppDetails";
+        intent.setComponent(new ComponentName(pkg, cls));
+        intent.setData(Uri.parse("package:" + activityToFinish.getPackageName()));
+        activityToFinish.startActivity(intent);
     }
 
 }

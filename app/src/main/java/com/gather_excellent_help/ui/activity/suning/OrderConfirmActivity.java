@@ -1,16 +1,20 @@
 package com.gather_excellent_help.ui.activity.suning;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.DynamicDrawableSpan;
-import android.text.style.ImageSpan;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,12 +32,15 @@ import com.gather_excellent_help.bean.suning.SuningWjsonBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.address.PersonAddressActivity;
-import com.gather_excellent_help.ui.adapter.PersonAddressAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.NumberAddSubView;
+import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.ScreenUtil;
 import com.gather_excellent_help.utils.Tools;
+import com.gather_excellent_help.utils.span.ImageSpanUtil;
+import com.gather_excellent_help.utils.span.MyImageSpan;
 import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
@@ -78,12 +85,13 @@ public class OrderConfirmActivity extends BaseActivity {
     private TextView tv_bottom_pop_goodprice;
     private TextView tv_bottom_pop_cprice;
     private TextView tv_bottom_pop_goods_num;
-    private TextView tv_activity_sun_tao_icon;
     private TextView tv_order_confirm_warespec;
 
-    private RelativeLayout rl_net_show;
+    //private RelativeLayout rl_net_show;
 
     private RelativeLayout rl_order_confirm_ware;
+
+    private SwipeRefreshLayout swip_order_confirm_refresh;
 
     private String pushorder_url = Url.BASE_URL + "suning/AddSNOrder.aspx";//提交订单接口
     private String address_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=GetUserAddress";//地址列表接口
@@ -120,6 +128,9 @@ public class OrderConfirmActivity extends BaseActivity {
 
     private boolean isHavaGoods = true;
     private String spec_content = "";//规格内容
+    private boolean mIsRequestDataRefresh;
+    private AlertDialog alertDialog;
+    private double freightFare;
 
 
     @Override
@@ -165,11 +176,12 @@ public class OrderConfirmActivity extends BaseActivity {
         tv_bottom_pop_goodprice = (TextView) findViewById(R.id.tv_bottom_pop_goodprice);
         tv_bottom_pop_cprice = (TextView) findViewById(R.id.tv_bottom_pop_cprice);
         tv_bottom_pop_goods_num = (TextView) findViewById(R.id.tv_bottom_pop_goods_num);
-        tv_activity_sun_tao_icon = (TextView) findViewById(R.id.tv_activity_sun_tao_icon);
         rl_order_confirm_ware = (RelativeLayout) findViewById(R.id.rl_order_confirm_ware);
         tv_order_confirm_warespec = (TextView) findViewById(R.id.tv_order_confirm_warespec);
 
-        rl_net_show = (RelativeLayout) findViewById(R.id.rl_net_show);
+        //rl_net_show = (RelativeLayout) findViewById(R.id.rl_net_show);
+
+        swip_order_confirm_refresh = (SwipeRefreshLayout) findViewById(R.id.swip_order_confirm_refresh);
     }
 
     /**
@@ -212,7 +224,9 @@ public class OrderConfirmActivity extends BaseActivity {
 
         if (goods_title != null) {
             SpannableString span = new SpannableString("\t\t" + goods_title);
-            ImageSpan image = new ImageSpan(OrderConfirmActivity.this, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+            Drawable drawable = getResources().getDrawable(R.drawable.suning_ware_icon);
+            Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(OrderConfirmActivity.this, 16), DensityUtil.dip2px(OrderConfirmActivity.this, 16));
+            MyImageSpan image = new MyImageSpan(OrderConfirmActivity.this, bitmap, -1);
             span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             tv_bottom_pop_name.setText(span);
         }
@@ -237,7 +251,7 @@ public class OrderConfirmActivity extends BaseActivity {
         }
         tv_bottom_pop_goods_num.setText("x" + goods_num);
         nas_order_confirm_num.setValue(goods_num);
-        showTotalprice();
+        //showTotalprice();
         tv_top_title_name.setText("确认订单");
         tv_suning_order_invoice_title.setText("不开发票");
         //网络连接初始化
@@ -268,6 +282,80 @@ public class OrderConfirmActivity extends BaseActivity {
                 checkIsHave("2", area_id, product_id, String.valueOf(value));
             }
         });
+        setupSwipeRefresh(swip_order_confirm_refresh);
+    }
+
+    /**
+     * 显示CatView
+     */
+    private void showCatView() {
+        View inflate = View.inflate(this, R.layout.loading_dialog_view, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(inflate);
+        alertDialog = builder.create();
+        if (OrderConfirmActivity.this != null && !OrderConfirmActivity.this.isFinishing()) {
+            alertDialog.show();
+            alertDialog.getWindow().setLayout(ScreenUtil.getScreenWidth(this) / 2, LinearLayout.LayoutParams.WRAP_CONTENT);
+        }
+    }
+
+    /**
+     * 隐藏CatView
+     */
+    private void hindCatView() {
+        if (OrderConfirmActivity.this != null && !OrderConfirmActivity.this.isFinishing()) {
+            if (alertDialog != null && alertDialog.isShowing()) {
+                alertDialog.dismiss();
+            }
+        }
+    }
+
+
+    /**
+     * 设置刷新
+     *
+     * @param view
+     */
+    private void setupSwipeRefresh(View view) {
+        if (swip_order_confirm_refresh != null) {
+            swip_order_confirm_refresh.setColorSchemeResources(R.color.colorFirst,
+                    R.color.colorSecond, R.color.colorThird);
+            swip_order_confirm_refresh.setProgressViewOffset(true, 0, (int) TypedValue
+                    .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
+            swip_order_confirm_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    mIsRequestDataRefresh = true;
+                    setRefresh(mIsRequestDataRefresh);
+                    getAddressDefault();
+                }
+            });
+        }
+    }
+
+    /**
+     * 设置刷新的方法
+     *
+     * @param requestDataRefresh 是否需要刷新
+     */
+    public void setRefresh(boolean requestDataRefresh) {
+        if (!requestDataRefresh) {
+            mIsRequestDataRefresh = false;
+            if (swip_order_confirm_refresh != null) {
+                swip_order_confirm_refresh.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swip_order_confirm_refresh != null) {
+                            swip_order_confirm_refresh.setRefreshing(false);
+                        }
+                    }
+                }, 1000);
+            }
+        } else {
+            if (swip_order_confirm_refresh != null) {
+                swip_order_confirm_refresh.setRefreshing(true);
+            }
+        }
     }
 
     /**
@@ -281,6 +369,20 @@ public class OrderConfirmActivity extends BaseActivity {
         netUtil.okHttp2Server2(specsid_url, map);
     }
 
+    /**
+     * 获取运费
+     */
+    private void getFree() {
+        whick = "free";
+        map = new HashMap<>();
+        map.put("user_id", userLogin);
+        map.put("area_id", area_id);
+        map.put("address", address);
+        map.put("ProductId", product_id);
+        map.put("num", ware_num);
+        netUtil.okHttp2Server2(free_url, map);
+    }
+
 
     public class MyonclickListener implements View.OnClickListener {
 
@@ -291,7 +393,7 @@ public class OrderConfirmActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.tv_order_create_confirm:
-                    rl_net_show.setVisibility(View.VISIBLE);
+                    showCatView();
                     tv_order_create_confirm.setClickable(false);
                     tv_order_create_confirm.postDelayed(new Runnable() {
                         @Override
@@ -380,11 +482,14 @@ public class OrderConfirmActivity extends BaseActivity {
         getSpecId();
     }
 
+    /**
+     * 联网请求回调的监听
+     */
     public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
-            rl_net_show.setVisibility(View.GONE);
+            hindCatView();
             if (whick.equals("pushorder")) {
                 tv_order_create_confirm.setClickable(true);
                 parseOrderData(response);
@@ -395,15 +500,48 @@ public class OrderConfirmActivity extends BaseActivity {
                 parseSpecidData(response);
             } else if (whick.equals("checkIsHave")) {
                 parseCheckIshavaData(response);
+            } else if (whick.equals("free")) {
+                parseFreeData(response);
             }
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e("网络连接出现问题~" + call.toString() + "-" + e.getMessage());
-            rl_net_show.setVisibility(View.GONE);
+            hindCatView();
             tv_order_create_confirm.setClickable(true);
             isHavaGoods = false;
+        }
+    }
+
+    /**
+     * 解析运费数据
+     */
+    private void parseFreeData(String response) {
+        LogUtil.e("free = " + response);
+        try {
+            SuningFreeBean suningFreeBean = new Gson().fromJson(response, SuningFreeBean.class);
+            int statusCode = suningFreeBean.getStatusCode();
+            switch (statusCode) {
+                case 1:
+                    List<SuningFreeBean.DataBean> data = suningFreeBean.getData();
+                    if (data != null && data.size() > 0) {
+                        SuningFreeBean.DataBean dataBean = data.get(0);
+                        if (dataBean != null) {
+                            freightFare = dataBean.getFreightFare();
+                            showTotalprice(freightFare);
+                            mIsRequestDataRefresh = false;
+                            setRefresh(mIsRequestDataRefresh);
+                        }
+                    }
+                    break;
+                case 0:
+                    Toast.makeText(OrderConfirmActivity.this, "请选择收货地址", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        } catch (Exception e) {
+            LogUtil.e("OrderConfirmActivity parseFreeData error");
+            Toast.makeText(OrderConfirmActivity.this, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -422,13 +560,13 @@ public class OrderConfirmActivity extends BaseActivity {
                 goods_num = goods_num + 1;
                 ware_num = String.valueOf(goods_num);
                 nas_order_confirm_num.setValue(goods_num);
-                showTotalprice();
+                getFree();
                 break;
             case 0:
                 Toast.makeText(OrderConfirmActivity.this, "当前购买数量库存不足！！！", Toast.LENGTH_SHORT).show();
                 nas_order_confirm_num.setValue(goods_num);
                 ware_num = String.valueOf(goods_num);
-                showTotalprice();
+                getFree();
                 break;
         }
     }
@@ -456,6 +594,7 @@ public class OrderConfirmActivity extends BaseActivity {
                             remark = et_suning_order_mark.getText().toString().trim();
                             if (TextUtils.isEmpty(addr_id)) {
                                 Toast.makeText(OrderConfirmActivity.this, "请选择收货地址！！！", Toast.LENGTH_SHORT).show();
+                                tv_order_create_confirm.setClickable(true);
                                 return;
                             }
                             ArrayList<SuningWjsonBean> suningWjsonLists = new ArrayList<>();
@@ -477,6 +616,7 @@ public class OrderConfirmActivity extends BaseActivity {
                             map.put("invoiceState", invoiceState);
                             map.put("invoiceTitle", invoiceTitle);
                             map.put("taxNo", taxNo);
+                            map.put("sn_freight", String.valueOf(freightFare));
                             netUtil.okHttp2Server2(pushorder_url, map);
                         }
                     } else {
@@ -494,11 +634,22 @@ public class OrderConfirmActivity extends BaseActivity {
     }
 
 
-    private void showTotalprice() {
+    /**
+     * 显示总价格以及邮费是多少
+     *
+     * @param freightFare
+     */
+    private void showTotalprice(double freightFare) {
         DecimalFormat df = new DecimalFormat("#0.00");
-        tv_confirm_postage.setText("免邮费");
-        tv_confirm_goods_price.setText("￥" + df.format(goods_price));
-        double totalprice = goods_price * goods_num;
+        String free = df.format(freightFare);
+        double total = goods_price * goods_num;
+        if (freightFare == 0) {
+            tv_confirm_postage.setText("免运费");
+        } else {
+            tv_confirm_postage.setText("￥" + free);
+        }
+        tv_confirm_goods_price.setText("￥" + df.format(total));
+        double totalprice = total + freightFare;
         tv_confirm_order_totalprice.setText("￥" + df.format(totalprice));
         tv_bottom_pop_goods_num.setText("x" + goods_num);
     }
@@ -572,7 +723,10 @@ public class OrderConfirmActivity extends BaseActivity {
                 } else {
                     tv_sunng_add_newaddress.setVisibility(View.VISIBLE);
                     rl_suning_default_address.setVisibility(View.GONE);
+                    mIsRequestDataRefresh = false;
+                    setRefresh(mIsRequestDataRefresh);
                 }
+                getFree();
                 break;
             case 0:
                 Toast.makeText(OrderConfirmActivity.this, addressDetailBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -613,6 +767,12 @@ public class OrderConfirmActivity extends BaseActivity {
             LogUtil.e(msg);
             initData();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        hindCatView();
     }
 
     @Override

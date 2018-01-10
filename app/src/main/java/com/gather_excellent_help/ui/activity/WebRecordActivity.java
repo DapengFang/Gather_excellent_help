@@ -129,7 +129,7 @@ public class WebRecordActivity extends BaseActivity {
     private AlertDialog dialog;
 
 
-    private ImageView iv_order_no_zhanwei;
+    private RelativeLayout rl_order_no_zhanwei;
     private AlertDialog alertDialog;
 
     @Override
@@ -145,7 +145,7 @@ public class WebRecordActivity extends BaseActivity {
      * 初始化控件
      */
     private void initView() {
-        iv_order_no_zhanwei = (ImageView) findViewById(R.id.iv_order_no_zhanwei);
+        rl_order_no_zhanwei = (RelativeLayout) findViewById(R.id.rl_order_no_zhanwei);
     }
 
     /**
@@ -225,8 +225,8 @@ public class WebRecordActivity extends BaseActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-                LogUtil.e(call.toString() + "--" + e.getMessage());
                 hindCatView(1);
+                rl_order_no_zhanwei.setVisibility(View.VISIBLE);
             }
         });
 
@@ -263,13 +263,7 @@ public class WebRecordActivity extends BaseActivity {
     private void hindCatView(final int w) {
         if (WebRecordActivity.this != null && !WebRecordActivity.this.isFinishing()) {
             if (alertDialog != null && alertDialog.isShowing()) {
-                View view = new View(WebRecordActivity.this);
-                view.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        alertDialog.dismiss();
-                    }
-                }, 1000);
+                alertDialog.dismiss();
             }
         }
     }
@@ -329,6 +323,7 @@ public class WebRecordActivity extends BaseActivity {
             case 0:
                 Toast.makeText(WebRecordActivity.this, changeUrlBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 hindCatView(1);
+                rl_order_no_zhanwei.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -480,17 +475,26 @@ public class WebRecordActivity extends BaseActivity {
      */
     private void shareDiffSolfplam(SHARE_MEDIA platform) {
         LogUtil.e(goods_img);
+//        UMImage image = new UMImage(WebRecordActivity.this, goods_img);//网络图片
+//        UMImage thumb = new UMImage(this, R.mipmap.juyoubang_logo);
+//        image.setThumb(thumb);
+//        UMWeb web = new UMWeb(click_url);
+//        web.setTitle(goods_title);//标题
+//        web.setThumb(image);  //缩略图
+//        web.setDescription("我在聚优帮看到了一件不错的商品,你也看看吧");//描述
+//        new ShareAction(this)
+//                .setPlatform(platform)//传入平台
+//                .withMedia(web)//分享内容
+//                .setCallback(shareListener)//回调监听器
+//                .share();
         UMImage image = new UMImage(WebRecordActivity.this, goods_img);//网络图片
         UMImage thumb = new UMImage(this, R.mipmap.juyoubang_logo);
         image.setThumb(thumb);
-        UMWeb web = new UMWeb(click_url);
-        web.setTitle(goods_title);//标题
-        web.setThumb(image);  //缩略图
-        web.setDescription("我在聚优帮看到了一件不错的商品,你也看看吧");//描述
         new ShareAction(this)
-                .setPlatform(platform)//传入平台
-                .withMedia(web)//分享内容
-                .setCallback(shareListener)//回调监听器
+                .setPlatform(platform)
+                .withText(goods_title)
+                .withMedia(image)
+                .setCallback(shareListener)
                 .share();
     }
 

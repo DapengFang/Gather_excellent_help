@@ -1,12 +1,12 @@
 package com.gather_excellent_help.update;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.DynamicDrawableSpan;
-import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,8 +17,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.HomeWareBean;
+import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.Tools;
-import com.gather_excellent_help.utils.imageutils.ImageLoader;
+import com.gather_excellent_help.utils.span.ImageSpanUtil;
+import com.gather_excellent_help.utils.span.MyImageSpan;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -34,7 +36,6 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
 
     private Context context;
     private List<HomeWareBean.DataBean.ItemBean> itemData;
-    //private ImageLoader mImageLoader;
     private double user_rate;
     private int shopType;
     private boolean isToggle;
@@ -42,7 +43,6 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
     public HomeActivityWareAdapter(Context context, List<HomeWareBean.DataBean.ItemBean> itemData) {
         this.context = context;
         this.itemData = itemData;
-        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         shopType = Tools.getShopType(context);
         String userRate = Tools.getUserRate(context);
         if (!TextUtils.isEmpty(userRate)) {
@@ -73,7 +73,7 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
         double coast = sell_price - couponsPrice - zhuan;
 
         double suning_rate = itemBean.getSuning_rate();
-        double s_zhuan = sell_price * suning_rate * user_rate;
+        double s_zhuan = sell_price * tkRate * user_rate;
         double s_coast = sell_price - s_zhuan;
 
 //        if (holder.tvActivityWareTitle != null && title != null) {
@@ -84,8 +84,9 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
 
             if (holder.tvActivityWareTitle != null && title != null) {
                 SpannableString span = new SpannableString("\t\t" + title);
-                ImageSpan image = new ImageSpan(context, R.drawable.taobao_order_icon, DynamicDrawableSpan.ALIGN_BASELINE);
-
+                Drawable drawable = context.getResources().getDrawable(R.drawable.taobao_order_icon);
+                Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+                MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 holder.tvActivityWareTitle.setText(span);
             }
@@ -120,15 +121,13 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
 
             if (holder.tvActivityWareTitle != null && title != null) {
                 SpannableString span = new SpannableString("\t\t" + title);
-                ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+                Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+                Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+                MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 holder.tvActivityWareTitle.setText(span);
             }
 
-//            if (holder.tv_activity_sun_tao_icon != null) {
-//                holder.tv_activity_sun_tao_icon.setSelected(true);
-//                holder.tv_activity_sun_tao_icon.setText("苏宁");
-//            }
             if (holder.ivActivityWareImg != null && img_url != null) {
                 Glide.with(context).load(img_url.replace("800x800", "400x400"))
                         .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存

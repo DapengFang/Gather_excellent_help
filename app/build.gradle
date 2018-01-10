@@ -9,8 +9,8 @@ android {
         applicationId "com.gather_excellent_help"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 8
-        versionName "1.0.7"
+        versionCode 9
+        versionName "1.0.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
         ndk {
@@ -125,4 +125,6 @@ dependencies {
     compile project(':photo_library')
     compile files('libs/BaiduLBS_Android.jar')
     compile project(':pullToRefresh_library')
+    compile 'com.wang.avi:library:1.0.0'
+    compile 'com.nineoldandroids:library:2.4.0'
 }

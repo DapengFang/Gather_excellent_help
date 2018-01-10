@@ -80,8 +80,6 @@ public class SuningSpecAdapter extends RecyclerView.Adapter<SuningSpecAdapter.Su
                         tv.setText(title);
                         return tv;
                     }
-
-
                 };
                 mAdapter.setSelectedList(0);
                 holder.tag_flowlayout.setAdapter(mAdapter);
@@ -103,6 +101,7 @@ public class SuningSpecAdapter extends RecyclerView.Adapter<SuningSpecAdapter.Su
                             com.zhy.view.flowlayout.TagView tv = (TagView) view;
                             tv.setChecked(true);
                         }
+                        onSpecTagclickListener.onTagClick();
                         return true;
                     }
                 });
@@ -129,5 +128,18 @@ public class SuningSpecAdapter extends RecyclerView.Adapter<SuningSpecAdapter.Su
             tv_spec_title = (TextView) itemView.findViewById(R.id.tv_spec_title);
             tag_flowlayout = (TagFlowLayout) itemView.findViewById(R.id.tag_flowlayout);
         }
+    }
+
+    /**
+     * 点击规格Tag标签的监听
+     */
+    private OnSpecTagclickListener onSpecTagclickListener;
+
+    public interface OnSpecTagclickListener {
+        void onTagClick();
+    }
+
+    public void setOnSpecTagclickListener(OnSpecTagclickListener onSpecTagclickListener) {
+        this.onSpecTagclickListener = onSpecTagclickListener;
     }
 }

@@ -71,7 +71,8 @@ public class WebActivity extends BaseActivity {
     @Bind(R.id.v_shadow)
     View vShadow;
 
-    private ImageView iv_order_no_zhanwei;
+    private RelativeLayout rl_order_no_zhanwei;
+
     private String type = "";
     private SharePopupwindow sharePopupwindow;
     private String url;
@@ -135,7 +136,7 @@ public class WebActivity extends BaseActivity {
      * 初始化控件
      */
     private void initView() {
-        iv_order_no_zhanwei = (ImageView) findViewById(R.id.iv_order_no_zhanwei);
+        rl_order_no_zhanwei = (RelativeLayout)findViewById(R.id.rl_order_no_zhanwei);
     }
 
     /**
@@ -274,6 +275,7 @@ public class WebActivity extends BaseActivity {
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "--" + e.getMessage());
                 hindCatView(1);
+                rl_order_no_zhanwei.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -323,13 +325,7 @@ public class WebActivity extends BaseActivity {
     private void hindCatView(final int w) {
         if (WebActivity.this != null && !WebActivity.this.isFinishing()) {
             if (alertDialog != null && alertDialog.isShowing()) {
-                View view = new View(WebActivity.this);
-                view.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        alertDialog.dismiss();
-                    }
-                }, 1000);
+                alertDialog.dismiss();
             }
         }
     }
@@ -383,6 +379,7 @@ public class WebActivity extends BaseActivity {
                 List<ChangeUrlBean.DataBean> data = changeUrlBean.getData();
                 if (data != null && data.size() > 0) {
                     click_url = changeUrlBean.getData().get(0).getClick_url();
+                    LogUtil.e("click_url = " + click_url);
                     //加载需要显示的网页
                     wvBanner.loadUrl(click_url);
                     if (handler != null) {
@@ -394,7 +391,7 @@ public class WebActivity extends BaseActivity {
             case 0:
                 Toast.makeText(WebActivity.this, changeUrlBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 hindCatView(1);
-                iv_order_no_zhanwei.setVisibility(View.VISIBLE);
+                rl_order_no_zhanwei.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -444,7 +441,6 @@ public class WebActivity extends BaseActivity {
      * @param s
      */
     public void uploadUserInfo(String s) {
-
         if (!TextUtils.isEmpty(s)) {
             map = new HashMap<>();
             map.put("Id", s);
@@ -452,7 +448,6 @@ public class WebActivity extends BaseActivity {
             map.put("portrait", avatarUrl);
             map.put("nickname", nick);
         }
-
     }
 
 
@@ -587,17 +582,26 @@ public class WebActivity extends BaseActivity {
      * @param platform
      */
     private void shareDiffSolfplam(SHARE_MEDIA platform) {
+//        UMImage image = new UMImage(WebActivity.this, goods_img);//网络图片
+//        UMImage thumb = new UMImage(this, R.mipmap.juyoubang_logo);
+//        image.setThumb(thumb);
+//        UMWeb web = new UMWeb(click_url);
+//        web.setTitle(goods_title);//标题
+//        web.setThumb(image);  //缩略图
+//        web.setDescription("我在聚优帮看到了一件不错的商品,你也看看吧");//描述
+//        new ShareAction(this)
+//                .setPlatform(platform)//传入平台
+//                .withMedia(web)//分享内容
+//                .setCallback(shareListener)//回调监听器
+//                .share();
         UMImage image = new UMImage(WebActivity.this, goods_img);//网络图片
         UMImage thumb = new UMImage(this, R.mipmap.juyoubang_logo);
         image.setThumb(thumb);
-        UMWeb web = new UMWeb(click_url);
-        web.setTitle(goods_title);//标题
-        web.setThumb(image);  //缩略图
-        web.setDescription("我在聚优帮看到了一件不错的商品,你也看看吧");//描述
         new ShareAction(this)
-                .setPlatform(platform)//传入平台
-                .withMedia(web)//分享内容
-                .setCallback(shareListener)//回调监听器
+                .setPlatform(platform)
+                .withText(goods_title)
+                .withMedia(image)
+                .setCallback(shareListener)
                 .share();
     }
 

@@ -44,7 +44,6 @@ public class BannerPresenter extends BasePresenter {
 
     @Override
     public View initView() {
-
         return civHomeGanner;
     }
 
@@ -123,26 +122,28 @@ public class BannerPresenter extends BasePresenter {
                     intent.putExtra("goods_title", goods_title);
                     context.startActivity(intent);
                 }
-
             }
 
             @Override
             public void displayImage(String imageURL, ImageView imageView) {
-                if(context!=null && !context.isFinishing() && imageURL!=null) {
+                if (context != null && !context.isFinishing() && imageURL != null) {
                     Glide.with(context).load(imageURL)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                             .into(imageView);//请求成功后把图片设置到的控件
                 }
-
             }
         };
         civHomeGanner.setImageResources(data, mAdCycleViewListener);
         civHomeGanner.startImageCycle();
     }
 
+    /**
+     * 停止刷新的监听
+     */
     private OnStopRefreshListener onStopRefreshListener;
 
     public interface OnStopRefreshListener {
+
         void stopSuccessRefresh();
 
         void stopFailRefresh();

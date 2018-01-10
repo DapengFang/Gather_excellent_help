@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,7 @@ import com.gather_excellent_help.ui.activity.credits.LowerMemberStaticsActivity;
 import com.gather_excellent_help.ui.activity.credits.ShopDetailActivity;
 import com.gather_excellent_help.ui.activity.shop.WhichJoinActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningOrderActivity;
+import com.gather_excellent_help.ui.activity.test.TestActivity_l01;
 import com.gather_excellent_help.ui.base.LazyLoadFragment;
 import com.gather_excellent_help.ui.widget.CircularImage;
 import com.gather_excellent_help.ui.widget.MyToggleButton;
@@ -150,10 +153,6 @@ public class MineFragment extends LazyLoadFragment {
     TextView tvMineCompontL06;
     @Bind(R.id.rl_mine_toggle)
     RelativeLayout rlMineToggle;
-    @Bind(R.id.v_mine)
-    View vMine;
-    @Bind(R.id.ll_mine_back_show)
-    LinearLayout llMineBackShow;
     @Bind(R.id.v_lower_member_up)
     View vLowerMemberUp;
     @Bind(R.id.ll_lower_member_statics)
@@ -165,10 +164,13 @@ public class MineFragment extends LazyLoadFragment {
     @Bind(R.id.v_toggle_line)
     View vToggleLine;
 
+    private LinearLayout ll_mine_shiti_show;
+    private LinearLayout ll_mine_salery_show;
 
     private LinearLayout ll_mine_u_like;
     private LinearLayout ll_mine_suning_order;
     private String mseg = "";
+    private SwipeRefreshLayout swip_fresh;
 
     private NetUtil netUtils;
     private NetUtil netUtils2;
@@ -203,12 +205,16 @@ public class MineFragment extends LazyLoadFragment {
     private Handler handler;
     private int apply_type = -1;
     private int pay_type;
+    private boolean mIsRequestDataRefresh;
 
     @Override
     public View initView() {
         View inflate = View.inflate(getContext(), R.layout.mine_fragment, null);
         ll_mine_u_like = (LinearLayout) inflate.findViewById(R.id.ll_mine_u_like);
         ll_mine_suning_order = (LinearLayout) inflate.findViewById(R.id.ll_mine_suning_order);
+        ll_mine_shiti_show = (LinearLayout) inflate.findViewById(R.id.ll_mine_shiti_show);
+        ll_mine_salery_show = (LinearLayout) inflate.findViewById(R.id.ll_mine_salery_show);
+        swip_fresh = (SwipeRefreshLayout) inflate.findViewById(R.id.swip_fresh);
         return inflate;
     }
 
@@ -263,6 +269,56 @@ public class MineFragment extends LazyLoadFragment {
         }
     }
 
+    private void setupSwipeRefresh() {
+        if (swip_fresh != null) {
+            swip_fresh.setColorSchemeResources(R.color.colorFirst,
+                    R.color.colorSecond, R.color.colorThird);
+            swip_fresh.setProgressViewOffset(true, 0, (int) TypedValue
+                    .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
+            swip_fresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    requestDataRefresh();
+                    setRefresh(mIsRequestDataRefresh);
+                    initData();
+                }
+            });
+        }
+    }
+
+    /**
+     * 设置刷新的方法
+     *
+     * @param requestDataRefresh 是否需要刷新
+     */
+    public void setRefresh(boolean requestDataRefresh) {
+        if (!requestDataRefresh) {
+            mIsRequestDataRefresh = false;
+            if (swip_fresh != null) {
+                swip_fresh.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swip_fresh != null) {
+                            swip_fresh.setRefreshing(false);
+                        }
+                    }
+                }, 1000);
+            }
+        } else {
+            if (swip_fresh != null) {
+                swip_fresh.setRefreshing(true);
+            }
+        }
+    }
+
+    public void requestDataRefresh() {
+        mIsRequestDataRefresh = true;
+    }
+
+    public void stopDataRefresh() {
+        mIsRequestDataRefresh = false;
+    }
+
     /**
      * 导入我的界面信息
      */
@@ -270,11 +326,13 @@ public class MineFragment extends LazyLoadFragment {
         if (shopType == 1) {
             loadGroupuserDefault();
             tvAccountMoneyTitle1.setText("余额/提现中");
-            tvAccountMoneyTitle2.setText("赚(冻结期)");
+            tvAccountMoneyTitle2.setText("赚（冻结期）");
             tvAccountMoney2.setVisibility(View.VISIBLE);
-            llMineZhuanOrder.setVisibility(View.VISIBLE);
             tvAccountMoney.setVisibility(View.VISIBLE);
+            llMineZhuanOrder.setVisibility(View.VISIBLE);
             vTuiZhuanLine.setVisibility(View.VISIBLE);
+            ll_mine_shiti_show.setVisibility(View.VISIBLE);
+            ll_mine_salery_show.setVisibility(View.GONE);
         } else {
             loadCuserDefault();
             tvAccountMoneyTitle1.setText("余额");
@@ -283,6 +341,8 @@ public class MineFragment extends LazyLoadFragment {
             tvAccountMoney2.setVisibility(View.GONE);
             llMineZhuanOrder.setVisibility(View.GONE);
             vTuiZhuanLine.setVisibility(View.GONE);
+            ll_mine_shiti_show.setVisibility(View.GONE);
+            ll_mine_salery_show.setVisibility(View.VISIBLE);
         }
         if (groupId == 5) {
             loadLowerMermberShow();
@@ -304,25 +364,27 @@ public class MineFragment extends LazyLoadFragment {
             map.put("Id", userLogin);
             netUtils.okHttp2Server2(url, map);
         }
-        rlMineSet.setOnClickListener(new MyOnClickListener());
-        llMineExtractCredits.setOnClickListener(new MyOnClickListener());
-        llMineFindFriends.setOnClickListener(new MyOnClickListener());
-        llMineAccountDetails.setOnClickListener(new MyOnClickListener());
-        llMineShopDetails.setOnClickListener(new MyOnClickListener());
-        llMineHuiyuanStatis.setOnClickListener(new MyOnClickListener());
-        llMineFanyongRule.setOnClickListener(new MyOnClickListener());
+        MyOnClickListener myOnClickListener = new MyOnClickListener();
+        rlMineSet.setOnClickListener(myOnClickListener);
+        llMineExtractCredits.setOnClickListener(myOnClickListener);
+        llMineFindFriends.setOnClickListener(myOnClickListener);
+        llMineAccountDetails.setOnClickListener(myOnClickListener);
+        llMineShopDetails.setOnClickListener(myOnClickListener);
+        llMineHuiyuanStatis.setOnClickListener(myOnClickListener);
+        llMineFanyongRule.setOnClickListener(myOnClickListener);
 
-        llMineTaobaoOrder.setOnClickListener(new MyOnClickListener());
-        llMineJuyoubangOrder.setOnClickListener(new MyOnClickListener());
-        llMineZhuanOrder.setOnClickListener(new MyOnClickListener());
-        llMineUserSalery.setOnClickListener(new MyOnClickListener());
-        llMineUserBack.setOnClickListener(new MyOnClickListener());
-        civMeHeadIcon.setOnClickListener(new MyOnClickListener());
-        llLowerMemberStatics.setOnClickListener(new MyOnClickListener());
-        ivMePersonLingdang.setOnClickListener(new MyOnClickListener());
+        llMineTaobaoOrder.setOnClickListener(myOnClickListener);
+        llMineJuyoubangOrder.setOnClickListener(myOnClickListener);
+        llMineZhuanOrder.setOnClickListener(myOnClickListener);
+        llMineUserSalery.setOnClickListener(myOnClickListener);
+        llMineUserBack.setOnClickListener(myOnClickListener);
+        civMeHeadIcon.setOnClickListener(myOnClickListener);
+        llLowerMemberStatics.setOnClickListener(myOnClickListener);
+        ivMePersonLingdang.setOnClickListener(myOnClickListener);
 
-        ll_mine_u_like.setOnClickListener(new MyOnClickListener());
-        ll_mine_suning_order.setOnClickListener(new MyOnClickListener());
+        ll_mine_u_like.setOnClickListener(myOnClickListener);
+        ll_mine_suning_order.setOnClickListener(myOnClickListener);
+        setupSwipeRefresh();
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -404,7 +466,7 @@ public class MineFragment extends LazyLoadFragment {
     private void loadCuserDefault() {
         llMineCompontFirst.setVisibility(View.VISIBLE);
         llMineCompontSecond.setVisibility(View.GONE);
-        tvMineCompontL01.setText("申请加盟一起赚钱");
+        tvMineCompontL01.setText("申请赚钱");
         tvMineCompontL03.setText("帮助");
         llMineUserBack.setVisibility(View.INVISIBLE);
         llMineZhuanOrder.setVisibility(View.GONE);
@@ -476,6 +538,7 @@ public class MineFragment extends LazyLoadFragment {
         apply_type = dataBean.getApply_type();
         pay_type = dataBean.getPay_type();
         shopType = dataBean.getGroup_type();
+        groupId = group_id;
         String user_get_ratio = dataBean.getUser_get_ratio();
         if (user_get_ratio != null) {
             CacheUtils.putString(getContext(), CacheUtils.USER_RATE, user_get_ratio);
@@ -518,15 +581,24 @@ public class MineFragment extends LazyLoadFragment {
             Tools.setPartTextColor2(tvAccountMoney, df.format(amount) + "/" + df.format(frostAmount), "/");
             tvAccountMoneyTitle2.setText("赚(冻结期)");
             tvAccountMoney2.setVisibility(View.VISIBLE);
+            ll_mine_shiti_show.setVisibility(View.VISIBLE);
+            ll_mine_salery_show.setVisibility(View.GONE);
         } else {
             tvAccountMoneyTitle1.setText("余额");
             tvAccountMoneyTitle2.setText("充值");
             tvAccountMoney2.setVisibility(View.GONE);
+            ll_mine_shiti_show.setVisibility(View.GONE);
+            ll_mine_salery_show.setVisibility(View.VISIBLE);
         }
         if (shopType == 1) {
             loadGroupuserDefault();
         } else {
             loadCuserDefault();
+        }
+        if (groupId == 5) {
+            loadLowerMermberShow();
+        } else {
+            loadLowerMermberhind();
         }
     }
 
@@ -587,26 +659,28 @@ public class MineFragment extends LazyLoadFragment {
                         toLogin();
                         return;
                     }
+                    LogUtil.e("shopType = " + shopType + ",applyState = " + applyState + ",apply_type = "
+                            + apply_type + ",pay_type = " + pay_type + ",payState = " + payState);
                     if (shopType == 1) {
                         toExtraCredits();
                     } else {
                         if (applyState == 1) {
-                            Toast.makeText(getContext(), "你已经申请成功", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "您已经申请成功", Toast.LENGTH_SHORT).show();
                         } else if (applyState == 2) {
-                            Toast.makeText(getContext(), "你的申请被驳回，请核对后重新申请！", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "您的申请被驳回，请核对后重新申请！", Toast.LENGTH_SHORT).show();
                         } else if (applyState == 3) {
                             if (apply_type == 6) {
-                                Toast.makeText(getContext(), "你的申请已提交，请等待工作人员处理！", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "您的申请已提交，请等待工作人员处理！", Toast.LENGTH_SHORT).show();
                             } else if (apply_type == 5) {
                                 if (pay_type == 1) {
                                     if (payState == 1) {
-                                        Toast.makeText(getContext(), "你的申请已提交，请等待工作人员处理！", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "您的申请已提交，请等待工作人员处理！", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(getContext(), "请你支付加盟费用！", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "请您支付加盟费用！", Toast.LENGTH_SHORT).show();
                                         toAlipay();
                                     }
                                 } else if (pay_type == 2) {
-                                    Toast.makeText(getContext(), "你的申请已提交，请等待工作人员处理！", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "您的申请已提交，请等待工作人员处理！", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         } else if (applyState == 0) {

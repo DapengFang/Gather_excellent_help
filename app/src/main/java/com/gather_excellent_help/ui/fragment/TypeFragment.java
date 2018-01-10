@@ -31,10 +31,13 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.aliapi.DemoTradeCallback;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.ActivityListBean;
+import com.gather_excellent_help.bean.ChangeUrlBean;
 import com.gather_excellent_help.bean.TypeNavigatorBean;
 import com.gather_excellent_help.bean.TypeWareBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
+import com.gather_excellent_help.ui.activity.LoginActivity;
+import com.gather_excellent_help.ui.activity.ScannerWebActivity;
 import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
@@ -52,6 +55,8 @@ import com.gather_excellent_help.update.HomeActivityListAdapter;
 import com.gather_excellent_help.update.TypeActivityListAdapter;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
+import com.gather_excellent_help.utils.changeutils.ChangeUrlUtil;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
 
@@ -65,6 +70,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 import okhttp3.Call;
+import push.jerry.cn.scan.CaptureActivity;
 
 
 /**
@@ -87,10 +93,13 @@ public class TypeFragment extends LazyLoadFragment {
     TextView tvTypeSearch;
     @Bind(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefresh;
-    @Bind(R.id.rl_type_sousuo)
-    RelativeLayout rl_type_sousuo;
+
     @Bind(R.id.ll_type_loadmore)
     LinearLayout ll_type_loadmore;
+
+    private LinearLayout ll_type_sousuo;
+    private LinearLayout ll_type_scanner;
+    private LinearLayout ll_type_msg;
     private String type_id = "";
 
     private boolean isAll = false;
@@ -123,6 +132,9 @@ public class TypeFragment extends LazyLoadFragment {
     @Override
     public View initView() {
         View inflate = View.inflate(getContext(), R.layout.type_fragment, null);
+        ll_type_sousuo = (LinearLayout) inflate.findViewById(R.id.ll_type_sousuo);
+        ll_type_scanner = (LinearLayout) inflate.findViewById(R.id.ll_type_scanner);
+        ll_type_msg = (LinearLayout) inflate.findViewById(R.id.ll_type_msg);
         return inflate;
     }
 
@@ -156,7 +168,7 @@ public class TypeFragment extends LazyLoadFragment {
             }
         };
         if (handler != null) {
-            handler.sendEmptyMessageDelayed(CHECK_NULL,600);
+            handler.sendEmptyMessageDelayed(CHECK_NULL, 600);
         }
     }
 
@@ -182,15 +194,21 @@ public class TypeFragment extends LazyLoadFragment {
                 if (getContext() == null) {
                     return;
                 }
+                if (swipeRefresh != null && swipeRefresh.isRefreshing()) {
+                    if (mIsRequestDataRefresh == true) {
+                        stopDataRefresh();
+                        setRefresh(mIsRequestDataRefresh);
+                    }
+                }
                 parseData2(response);
             }
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-                if (swipeRefresh != null) {
+                if (swipeRefresh != null && swipeRefresh.isRefreshing()) {
                     stopDataRefresh();
                     swipeRefresh.setRefreshing(mIsRequestDataRefresh);
-                    Toast.makeText(getContext(), "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "网络连接出现问题~", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -212,7 +230,7 @@ public class TypeFragment extends LazyLoadFragment {
                 }
             }
         });
-        rl_type_sousuo.setOnClickListener(new View.OnClickListener() {
+        ll_type_sousuo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (getContext() == null) {
@@ -222,6 +240,74 @@ public class TypeFragment extends LazyLoadFragment {
                 intent.putExtra("content", "isTypeSou");
                 intent.putExtra("sousuo", "");
                 startActivity(intent);
+            }
+        });
+        ll_type_scanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getContext() == null) {
+                    return;
+                }
+                boolean isLogin = Tools.isLogin(getContext());
+                if(isLogin) {
+                    CaptureActivity.open(getContext(), new CaptureActivity.OnScanResultListener() {
+                        @Override
+                        public void onResult(String result) {
+                            LogUtil.e(result);
+                            if(result.startsWith("http")) {
+                                boolean b = ChangeUrlUtil.checkContainWareId(result);
+                                if(b) {
+                                    String wareId = ChangeUrlUtil.getWareId(result);
+                                    String adverId = Tools.getAdverId(getContext());
+                                    LogUtil.e(wareId);
+                                    ChangeUrlUtil.getChangeUrl(getContext(), result, wareId, adverId, new ChangeUrlUtil.OnChangeUrlListener() {
+                                        @Override
+                                        public void onResultUrl(String result) {
+                                            LogUtil.e("click_url = " + result);
+                                            ChangeUrlBean changeUrlBean = new Gson().fromJson(result, ChangeUrlBean.class);
+                                            int statusCode = changeUrlBean.getStatusCode();
+                                            switch (statusCode) {
+                                                case 1:
+                                                    List<ChangeUrlBean.DataBean> data = changeUrlBean.getData();
+                                                    if (data != null && data.size() > 0) {
+                                                        String click_url = changeUrlBean.getData().get(0).getClick_url();
+                                                        LogUtil.e("click_url = " + click_url);
+                                                        Intent intent = new Intent(getContext(), ScannerWebActivity.class);
+                                                        intent.putExtra("scaner_url", click_url);
+                                                        intent.putExtra("url_type",1);
+                                                        startActivity(intent);
+                                                    } else {
+                                                        Toast.makeText(getContext(), "转链出现问题，没有拿到转链的链接~", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    break;
+                                                case 0:
+                                                    Toast.makeText(getContext(), changeUrlBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                                                    break;
+                                            }
+                                        }
+                                    });
+                                }else{
+                                    Intent intent = new Intent(getContext(), ScannerWebActivity.class);
+                                    intent.putExtra("scaner_url", result);
+                                    intent.putExtra("url_type",2);
+                                    startActivity(intent);
+                                }
+                            }else{
+                                Toast.makeText(getContext(), result , Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }else{
+                    Intent intent = new Intent(getContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        ll_type_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "暂无消息通知", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -246,7 +332,7 @@ public class TypeFragment extends LazyLoadFragment {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if(currData  == null) {
+                                if (currData == null) {
                                     return;
                                 }
                                 if (currData.size() < Integer.parseInt(pageSize)) {
@@ -299,10 +385,6 @@ public class TypeFragment extends LazyLoadFragment {
         int statusCode = activityListBean.getStatusCode();
         switch (statusCode) {
             case 1:
-                if (mIsRequestDataRefresh == true) {
-                    stopDataRefresh();
-                    setRefresh(mIsRequestDataRefresh);
-                }
                 if (rcvTypeShow == null) {
                     return;
                 }
@@ -310,13 +392,13 @@ public class TypeFragment extends LazyLoadFragment {
                     page++;
                     LogUtil.e("page == " + page);
                     currData = activityListBean.getData();
-                    if(activityData!=null && currData!=null) {
+                    if (activityData != null && currData != null) {
                         activityData.addAll(currData);
                     }
                     typeActivityListAdapter.notifyDataSetChanged();
                 } else {
                     currData = activityListBean.getData();
-                    if(currData!=null) {
+                    if (currData != null) {
                         activityData = currData;
                         typeActivityListAdapter = new TypeActivityListAdapter(getContext(), activityData);
                         rcvTypeShow.setAdapter(typeActivityListAdapter);
@@ -342,7 +424,7 @@ public class TypeFragment extends LazyLoadFragment {
                         double sell_price = dataBean.getSell_price();
                         double market_price = dataBean.getMarket_price();
                         int couponsPrice = dataBean.getCouponsPrice();
-                        if(site_id == 1) {
+                        if (site_id == 1) {
                             if (couponsPrice > 0) {
                                 if (couponsUrl != null && !TextUtils.isEmpty(couponsUrl)) {
                                     Intent intent = new Intent(getContext(), WebActivity.class);
@@ -365,15 +447,15 @@ public class TypeFragment extends LazyLoadFragment {
                                 intent.putExtra("goods_price", df.format(sell_price) + "");
                                 getContext().startActivity(intent);
                             }
-                        }else if(site_id ==2) {
+                        } else if (site_id == 2) {
                             //苏宁
                             Intent intent = new Intent(getContext(), SuningDetailActivity.class);
-                            intent.putExtra("article_id",article_id);
+                            intent.putExtra("article_id", article_id);
                             intent.putExtra("goods_id", goods_id);
                             intent.putExtra("goods_img", goods_img);
                             intent.putExtra("goods_title", goods_title);
-                            intent.putExtra("goods_price", df.format(sell_price)+"");
-                            intent.putExtra("c_price", df.format(market_price)+"");
+                            intent.putExtra("goods_price", df.format(sell_price) + "");
+                            intent.putExtra("c_price", df.format(market_price) + "");
                             getContext().startActivity(intent);
                         }
                     }
@@ -421,14 +503,32 @@ public class TypeFragment extends LazyLoadFragment {
                     // 设置适配器
                     cusListNavigator.setAdapter(adapter);
                     cusListNavigator.setGroupIndicator(null);
-
                     cusListNavigator.setOnScrollListener(new MyOnScrollListener());
                     cusListNavigator.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
                         @Override
                         public void onGroupExpand(int i) {
+                            for (int c = 0; c < adapter.getGroupCount(); c++) {
+                                if (c != i) {
+                                    cusListNavigator.collapseGroup(c);
+                                }
+                            }
+                            for (int l = 0; l < data.size(); l++) {
+                                List<TypeNavigatorBean.DataBean.SubListBean> subList = data.get(l).getSubList();
+                                for (int m = 0; m < subList.size(); m++) {
+                                    TypeNavigatorBean.DataBean.SubListBean subListBean = subList.get(m);
+                                    subListBean.setCheck(false);
+                                    List<TypeNavigatorBean.DataBean.SubListBean.ThirdListBean> threeList = subListBean.getThreeList();
+                                    for (int n = 0; n < threeList.size(); n++) {
+                                        TypeNavigatorBean.DataBean.SubListBean.ThirdListBean thirdListBean = threeList.get(n);
+                                        thirdListBean.setCheck(false);
+                                    }
+                                }
+                            }
                             TypeNavigatorBean.DataBean dataBean = data.get(i);
                             int id = dataBean.getId();
                             type_id = String.valueOf(id);
+                            requestDataRefresh();
+                            swipeRefresh.setRefreshing(mIsRequestDataRefresh);
                             isLoadMore = false;
                             isAll = true;
                             page = 1;
@@ -444,11 +544,26 @@ public class TypeFragment extends LazyLoadFragment {
                     adapter.setOnExpandableClickListener(new SimpleExpandableListViewAdapter.OnExpandableClickListener() {
                         @Override
                         public void onSecondItemClick(int position, int groupPisition) {
+                            for (int l = 0; l < data.size(); l++) {
+                                List<TypeNavigatorBean.DataBean.SubListBean> subList = data.get(l).getSubList();
+                                for (int m = 0; m < subList.size(); m++) {
+                                    TypeNavigatorBean.DataBean.SubListBean subListBean = subList.get(m);
+                                    subListBean.setCheck(false);
+                                    List<TypeNavigatorBean.DataBean.SubListBean.ThirdListBean> threeList = subListBean.getThreeList();
+                                    for (int n = 0; n < threeList.size(); n++) {
+                                        TypeNavigatorBean.DataBean.SubListBean.ThirdListBean thirdListBean = threeList.get(n);
+                                        thirdListBean.setCheck(false);
+                                    }
+                                }
+                            }
                             subListBean = data.get(position).getSubList().get(groupPisition);
                             int id = subListBean.getId();
                             type_id = String.valueOf(id);
+                            subListBean.setCheck(true);
                             isLoadMore = false;
                             isAll = true;
+                            requestDataRefresh();
+                            swipeRefresh.setRefreshing(mIsRequestDataRefresh);
                             page = 1;
                             pageIndex = String.valueOf(page);
                             Map<String, String> map = new HashMap<>();
@@ -459,12 +574,27 @@ public class TypeFragment extends LazyLoadFragment {
                         }
 
                         @Override
-                        public void onThirdItemClick(int position, int groupPisition, int childPosition) {
+                        public void onThirdItemClick(int position, int groupPisition, int childPosition, TextView tv) {
+                            for (int l = 0; l < data.size(); l++) {
+                                List<TypeNavigatorBean.DataBean.SubListBean> subList = data.get(l).getSubList();
+                                for (int m = 0; m < subList.size(); m++) {
+                                    TypeNavigatorBean.DataBean.SubListBean subListBean = subList.get(m);
+                                    subListBean.setCheck(false);
+                                    List<TypeNavigatorBean.DataBean.SubListBean.ThirdListBean> threeList = subListBean.getThreeList();
+                                    for (int n = 0; n < threeList.size(); n++) {
+                                        TypeNavigatorBean.DataBean.SubListBean.ThirdListBean thirdListBean = threeList.get(n);
+                                        thirdListBean.setCheck(false);
+                                    }
+                                }
+                            }
                             thirdListBean = data.get(position).getSubList().get(groupPisition).getThreeList().get(childPosition);
                             int id = thirdListBean.getId();
                             type_id = String.valueOf(id);
+                            thirdListBean.setCheck(true);
                             isLoadMore = false;
                             isAll = true;
+                            requestDataRefresh();
+                            swipeRefresh.setRefreshing(mIsRequestDataRefresh);
                             page = 1;
                             pageIndex = String.valueOf(page);
                             Map<String, String> map = new HashMap<>();
@@ -531,7 +661,7 @@ public class TypeFragment extends LazyLoadFragment {
     public void setRefresh(boolean requestDataRefresh) {
         if (!requestDataRefresh) {
             mIsRequestDataRefresh = false;
-            if(swipeRefresh!=null) {
+            if (swipeRefresh != null) {
                 swipeRefresh.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -542,7 +672,7 @@ public class TypeFragment extends LazyLoadFragment {
                 }, 1000);
             }
         } else {
-            if(swipeRefresh!=null) {
+            if (swipeRefresh != null) {
                 swipeRefresh.setRefreshing(true);
             }
         }

@@ -22,15 +22,18 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.WardStaticsBean;
 import com.gather_excellent_help.ui.activity.credits.AccountDetailAvtivity;
+import com.gather_excellent_help.ui.activity.credits.LowerMemberStaticsActivity;
 import com.gather_excellent_help.ui.adapter.AcccountDetailAdapter;
 import com.gather_excellent_help.ui.adapter.WardStaticsAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.MyNestedScrollView;
+import com.gather_excellent_help.ui.widget.WanRecycleView;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -44,9 +47,6 @@ import okhttp3.Call;
 
 public class WardsStatisticsUpdateActivity extends BaseActivity {
 
-    RecyclerView rcvWardsStatisticsS;
-    @Bind(R.id.iv_order_no_zhanwei)
-    ImageView ivOrderNoZhanwei;
     @Bind(R.id.rl_exit)
     RelativeLayout rlExit;
     @Bind(R.id.tv_top_title_name)
@@ -66,7 +66,16 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
     @Bind(R.id.ll_wards_statics_show)
     LinearLayout llWardsStaticsShow;
 
-    private MyNestedScrollView mynested_scrollview;
+    private RecyclerView rcvWardsStatisticsS;
+    private WanRecycleView wav_lower_wards_statistics;
+
+
+    private RelativeLayout rl_wards_statistics_coallaspe;
+    private TextView tv_wards_statistics_collaspe;
+    private ImageView iv_wards_statistics_arraw;
+
+    private RelativeLayout rl_order_no_zhanwei;
+    private TextView tv_order_no_zhanwei;
 
     private String startTime = "";
     private String endTime = "";
@@ -93,6 +102,8 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
     private double lastVisibleItem;
     private String whicks = "";
 
+    private boolean isCoallaspe = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,8 +117,13 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
      * 初始化控件
      */
     private void initView() {
-        mynested_scrollview = (MyNestedScrollView) findViewById(R.id.mynested_scrollview);
-        rcvWardsStatisticsS = (RecyclerView) findViewById(R.id.rcv_wards_statistics_s);
+        wav_lower_wards_statistics = (WanRecycleView) findViewById(R.id.wav_lower_wards_statistics);
+
+        rl_wards_statistics_coallaspe = (RelativeLayout) findViewById(R.id.rl_wards_statistics_coallaspe);
+        tv_wards_statistics_collaspe = (TextView) findViewById(R.id.tv_wards_statistics_collaspe);
+        iv_wards_statistics_arraw = (ImageView) findViewById(R.id.iv_wards_statistics_arraw);
+        rl_order_no_zhanwei = (RelativeLayout)findViewById(R.id.rl_order_no_zhanwei);
+        tv_order_no_zhanwei = (TextView)findViewById(R.id.tv_order_no_zhanwei);
     }
 
     /**
@@ -119,15 +135,80 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
         Id = Tools.getUserLogin(this);
         pageNos = "1";
         loadNetData();
-        ivOrderNoZhanwei.setVisibility(View.VISIBLE);
+        rcvWardsStatisticsS = wav_lower_wards_statistics.getRefreshableView();
         layoutManager = new FullyLinearLayoutManager(this);
         rcvWardsStatisticsS.setLayoutManager(layoutManager);
-        //netUtil.setOnServerResponseListener(new OnServerResponseListener());
+
+        //设置刷新相关
+        wav_lower_wards_statistics.setScrollingWhileRefreshingEnabled(true);
+        wav_lower_wards_statistics.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        wav_lower_wards_statistics.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+                isLoadMore = false;
+                isCanLoad = true;
+                page = 1;
+                pageNos = "1";
+                loadNetData();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+
+            }
+
+        });
         rlExit.setOnClickListener(new MyOnclikListener());
         rlWardTimeStart.setOnClickListener(new MyOnclikListener());
         rlWardTimeEnd.setOnClickListener(new MyOnclikListener());
         tvWardStaticsConfirm.setOnClickListener(new MyOnclikListener());
-        mynested_scrollview.setOnTouchListener(new MyOnTouchClickListener());
+        rl_wards_statistics_coallaspe.setOnClickListener(new MyOnclikListener());
+        rcvWardsStatisticsS.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (isCanLoad) {
+                        lastVisibleItem = layoutManager
+                                .findLastVisibleItemPosition();
+                        if (lastVisibleItem + 1 == layoutManager
+                                .getItemCount()) {
+                            isLoadMore = true;
+                            if (currData != null) {
+                                if (currData.size() < 10) {
+                                    Toast.makeText(WardsStatisticsUpdateActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            isCanLoad = false;
+                            pageNos = String.valueOf(page);
+                            loadNetData();
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+            }
+        });
+    }
+
+    /**
+     * 控制搜索展开和收起
+     */
+    private void coalapseSearch() {
+        if (isCoallaspe) {
+            tv_wards_statistics_collaspe.setText("展开搜索");
+            iv_wards_statistics_arraw.setImageResource(R.drawable.down_lower_expand_icon);
+            llWardsStaticsShow.setVisibility(View.GONE);
+        } else {
+            tv_wards_statistics_collaspe.setText("收起搜索");
+            iv_wards_statistics_arraw.setImageResource(R.drawable.up_lower_collaspe_icon);
+            llWardsStaticsShow.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -176,6 +257,10 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
                 case R.id.tv_ward_statics_confirm:
                     toQuery();
                     break;
+                case R.id.rl_wards_statistics_coallaspe:
+                    isCoallaspe = !isCoallaspe;
+                    coalapseSearch();
+                    break;
             }
         }
     }
@@ -209,90 +294,59 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
         loadNetData();
     }
 
-    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
-
-        @Override
-        public void getSuccessResponse(String response) {
-            LogUtil.e(response);
-            tvWardStaticsConfirm.setClickable(true);
-            WardStaticsBean wardStaticsBean = new Gson().fromJson(response, WardStaticsBean.class);
-            int statusCode = wardStaticsBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    if (whicks.equals("query") && page == 1) {
-                        Toast.makeText(WardsStatisticsUpdateActivity.this, "查询完成！", Toast.LENGTH_SHORT).show();
-                    }
-                    currData = wardStaticsBean.getData();
-                    if (isLoadMore) {
-                        page++;
-                        if (currData.size() == 0) {
-                            Toast.makeText(WardsStatisticsUpdateActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
-                        } else {
-                            wardsData.addAll(currData);
-                            wardStaticsAdapter.notifyDataSetChanged();
-                            isCanLoad = true;
-                        }
-                    } else {
-                        if (currData != null) {
-                            if (currData.size() > 0) {
-                                ivOrderNoZhanwei.setVisibility(View.GONE);
-                            } else {
-                                ivOrderNoZhanwei.setVisibility(View.VISIBLE);
-                            }
-                        }
-                        isCanLoad = true;
-                        page = 2;
-                        wardsData = currData;
-                        wardStaticsAdapter = new WardStaticsAdapter(WardsStatisticsUpdateActivity.this, wardsData);
-                        rcvWardsStatisticsS.setAdapter(wardStaticsAdapter);
-                    }
-                    break;
-                case 0:
-                    Toast.makeText(WardsStatisticsUpdateActivity.this, wardStaticsBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        }
-
-        @Override
-        public void getFailResponse(Call call, Exception e) {
-            tvWardStaticsConfirm.setClickable(true);
-            LogUtil.e(call.toString() + "--" + e.getMessage());
-        }
-    }
-
-    public class MyOnTouchClickListener implements View.OnTouchListener {
-
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            int scrollY = view.getScrollY();
-            int height = view.getHeight();
-            int scrollViewMeasuredHeight = mynested_scrollview.getChildAt(0).getMeasuredHeight();
-            switch (motionEvent.getAction()) {
-                case MotionEvent.ACTION_UP:
-                    if ((scrollY + height) == scrollViewMeasuredHeight) {
-                        if (isCanLoad) {
-                            isLoadMore = true;
-                            isCanLoad = false;
-                            pageNos = String.valueOf(page);
-                            loadNetData();
-                        }
-                    }
-                    break;
-            }
-            return false;
-
-        }
-    }
+//    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
+//
+//        @Override
+//        public void getSuccessResponse(String response) {
+//            LogUtil.e(response);
+//            tvWardStaticsConfirm.setClickable(true);
+//            WardStaticsBean wardStaticsBean = new Gson().fromJson(response, WardStaticsBean.class);
+//            int statusCode = wardStaticsBean.getStatusCode();
+//            switch (statusCode) {
+//                case 1:
+//                    if (whicks.equals("query") && page == 1) {
+//                        Toast.makeText(WardsStatisticsUpdateActivity.this, "查询完成！", Toast.LENGTH_SHORT).show();
+//                    }
+//                    currData = wardStaticsBean.getData();
+//                    if (isLoadMore) {
+//                        page++;
+//                        if (currData.size() == 0) {
+//                            Toast.makeText(WardsStatisticsUpdateActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            wardsData.addAll(currData);
+//                            wardStaticsAdapter.notifyDataSetChanged();
+//                            isCanLoad = true;
+//                        }
+//                    } else {
+//                        if (currData != null) {
+//                            if (currData.size() > 0) {
+//                                rl_order_no_zhanwei.setVisibility(View.GONE);
+//                            } else {
+//                                rl_order_no_zhanwei.setVisibility(View.VISIBLE);
+//                            }
+//                        }
+//                        tv_order_no_zhanwei.setVisibility(View.GONE);
+//                        isCanLoad = true;
+//                        page = 2;
+//                        wardsData = currData;
+//                        wardStaticsAdapter = new WardStaticsAdapter(WardsStatisticsUpdateActivity.this, wardsData);
+//                        rcvWardsStatisticsS.setAdapter(wardStaticsAdapter);
+//                    }
+//                    break;
+//                case 0:
+//                    Toast.makeText(WardsStatisticsUpdateActivity.this, wardStaticsBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+//                    break;
+//            }
+//        }
+//
+//        @Override
+//        public void getFailResponse(Call call, Exception e) {
+//            tvWardStaticsConfirm.setClickable(true);
+//            LogUtil.e(call.toString() + "--" + e.getMessage());
+//        }
+//    }
 
     private void loadNetData() {
-//        map = new HashMap<>();
-//        map.put("Id", Id);
-//        map.put("pageSize", pageSize);
-//        map.put("pageIndex", pageNos);
-//        map.put("start_time", start_time);
-//        map.put("end_time", end_time);
-//        map.put("user_name", user_name);
-//        //netUtil.okHttp2Server2(url, map);
         OkHttpUtils
                 .post()
                 .url(url)
@@ -313,6 +367,9 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
                     @Override
                     public void onResponse(String response, int id) {
                         LogUtil.e(response);
+                        if(wav_lower_wards_statistics!=null && wav_lower_wards_statistics.isRefreshing()) {
+                            wav_lower_wards_statistics.onRefreshComplete();
+                        }
                         tvWardStaticsConfirm.setClickable(true);
                         WardStaticsBean wardStaticsBean = new Gson().fromJson(response, WardStaticsBean.class);
                         int statusCode = wardStaticsBean.getStatusCode();
@@ -334,11 +391,12 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
                                 } else {
                                     if (currData != null) {
                                         if (currData.size() > 0) {
-                                            ivOrderNoZhanwei.setVisibility(View.GONE);
+                                            rl_order_no_zhanwei.setVisibility(View.GONE);
                                         } else {
-                                            ivOrderNoZhanwei.setVisibility(View.VISIBLE);
+                                            rl_order_no_zhanwei.setVisibility(View.VISIBLE);
                                         }
                                     }
+                                    tv_order_no_zhanwei.setVisibility(View.GONE);
                                     isCanLoad = true;
                                     page = 2;
                                     wardsData = currData;

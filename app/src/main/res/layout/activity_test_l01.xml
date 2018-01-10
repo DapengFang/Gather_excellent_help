@@ -10,4 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.gather_excellent_help.ui.activity.test.TestActivity_l01">
 
+    <include layout="@layout/item_all_order_update"/>
+
 </RelativeLayout>

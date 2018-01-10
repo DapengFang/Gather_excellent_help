@@ -1,16 +1,15 @@
 package com.gather_excellent_help.ui.widget;
 
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.DynamicDrawableSpan;
-import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,15 +21,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
-import com.gather_excellent_help.bean.PcsBean;
 import com.gather_excellent_help.bean.suning.SuningSpecBean;
-import com.gather_excellent_help.ui.activity.suning.OrderConfirmActivity;
 import com.gather_excellent_help.ui.adapter.SuningSpecAdapter;
 import com.gather_excellent_help.utils.DensityUtil;
-import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
-import com.gather_excellent_help.utils.pcsutils.PcsQueryUtil;
-import com.google.gson.Gson;
+import com.gather_excellent_help.utils.span.ImageSpanUtil;
+import com.gather_excellent_help.utils.span.MyImageSpan;
 
 import java.util.List;
 
@@ -119,12 +115,18 @@ public class SuningStandardPopupwindow extends PopupWindow {
         }
         SuningSpecAdapter suningSpecAdapter = new SuningSpecAdapter(context, data);
         rcv_bottom_spec.setAdapter(suningSpecAdapter);
+        suningSpecAdapter.setOnSpecTagclickListener(new SuningSpecAdapter.OnSpecTagclickListener() {
+            @Override
+            public void onTagClick() {
+                onItemClickListenr.onPopupBuy(data, nav_bottom_pop_num.getValue(), 0);
+            }
+        });
         number = nav_bottom_pop_num.getValue();
         tv_bottom_pop_buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 v.setSelected(true);
-                onItemClickListenr.onPopupBuy(data, nav_bottom_pop_num.getValue());
+                onItemClickListenr.onPopupBuy(data, nav_bottom_pop_num.getValue(), 1);
             }
         });
         setOnDismissListener(new OnDismissListener() {
@@ -149,7 +151,7 @@ public class SuningStandardPopupwindow extends PopupWindow {
     private OnItemClickListenr onItemClickListenr;
 
     public interface OnItemClickListenr {
-        void onPopupBuy(List<SuningSpecBean.DataBean> data, int num);
+        void onPopupBuy(List<SuningSpecBean.DataBean> data, int num, int submit);
     }
 
     public void setOnItemClickListenr(OnItemClickListenr onItemClickListenr) {
@@ -179,6 +181,21 @@ public class SuningStandardPopupwindow extends PopupWindow {
                 if (limitNumber != 100000) {
                     tv_bottom_pop_limit.setText("限购" + limitNumber + "件");
                 }
+                nav_bottom_pop_num.setOnButtonClickListener(new NumberAddSubView.OnButtonClickListener() {
+                    @Override
+                    public void onSubButton(View view, int value) {
+                        if (value == limitNumber) {
+                            Toast.makeText(context, "限购" + limitNumber + "件", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onAddButton(View view, int value) {
+                        if (value == limitNumber) {
+                            Toast.makeText(context, "限购" + limitNumber + "件", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         }
     }
@@ -261,7 +278,9 @@ public class SuningStandardPopupwindow extends PopupWindow {
 
         if (tv_bottom_pop_name != null && goods_title != null) {
             SpannableString span = new SpannableString("\t\t" + goods_title);
-            ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+            Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+            Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+            MyImageSpan image = new MyImageSpan(context, bitmap, -1);
             span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             tv_bottom_pop_name.setText(span);
         }

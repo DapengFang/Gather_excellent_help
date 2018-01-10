@@ -48,8 +48,8 @@ public class BackRebateActivity extends BaseActivity {
     TextView tvTopTitleName;
     @Bind(R.id.tab_back_rebate)
     TabLayout tabBackRebate;
-    @Bind(R.id.iv_order_no_zhanwei)
-    ImageView ivOrderNoZhanwei;
+
+    private RelativeLayout rl_order_no_zhanwei;
 
     private WanRecycleView wan_back_rebate;
     private RecyclerView rcvBackRebate;
@@ -86,6 +86,7 @@ public class BackRebateActivity extends BaseActivity {
      */
     private void initView() {
         wan_back_rebate = (WanRecycleView) findViewById(R.id.wan_back_rebate);
+        rl_order_no_zhanwei = (RelativeLayout)findViewById(R.id.rl_order_no_zhanwei);
     }
 
     /**
@@ -195,9 +196,9 @@ public class BackRebateActivity extends BaseActivity {
                         } else {
                             if (currData != null) {
                                 if (currData.size() > 0) {
-                                    ivOrderNoZhanwei.setVisibility(View.GONE);
+                                    rl_order_no_zhanwei.setVisibility(View.GONE);
                                 } else {
-                                    ivOrderNoZhanwei.setVisibility(View.VISIBLE);
+                                    rl_order_no_zhanwei.setVisibility(View.VISIBLE);
                                 }
                             }
                             page = 2;
@@ -272,13 +273,7 @@ public class BackRebateActivity extends BaseActivity {
     private void hindCatView() {
         if (BackRebateActivity.this != null && !BackRebateActivity.this.isFinishing()) {
             if (alertDialog != null && alertDialog.isShowing()) {
-                View view = new View(BackRebateActivity.this);
-                view.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        alertDialog.dismiss();
-                    }
-                }, 1000);
+                alertDialog.dismiss();
             }
         }
     }

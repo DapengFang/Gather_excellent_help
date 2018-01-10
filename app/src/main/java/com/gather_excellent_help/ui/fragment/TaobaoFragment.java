@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,6 +102,8 @@ public class TaobaoFragment extends LazyLoadFragment {
     @Bind(R.id.progress)
     ProgressBar progress;
 
+    private SwipeRefreshLayout swip_taobao_refresh;
+
     private boolean price_sort;
 
     private NetUtil netUtil;
@@ -124,35 +128,80 @@ public class TaobaoFragment extends LazyLoadFragment {
     public static final int CHECK_NULL = 4; //加载数据的标识
 
     private Handler handler;
+    private boolean mIsRequestDataRefresh;
 
     @Override
     public View initView() {
         View inflate = View.inflate(getContext(), R.layout.taobao_fragment, null);
+        swip_taobao_refresh = (SwipeRefreshLayout) inflate.findViewById(R.id.swip_taobao_refresh);
         return inflate;
     }
 
     @Override
     public void initData() {
-        handler = new Handler(){
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case CHECK_NULL:
-                        if(rlNewsSearchBefore!=null && llNewsSearchAfter!=null
-                                && rlEditTextExit!=null && llTaobaoLoadmore != null
-                                && gvTaobaoList!=null) {
+                        if (rlNewsSearchBefore != null && llNewsSearchAfter != null
+                                && rlEditTextExit != null && llTaobaoLoadmore != null
+                                && gvTaobaoList != null) {
                             loadTaobaoData();
                             handler.removeMessages(CHECK_NULL);
-                        }else{
-                            handler.sendEmptyMessageDelayed(CHECK_NULL,500);
+                        } else {
+                            handler.sendEmptyMessageDelayed(CHECK_NULL, 500);
                         }
                         break;
                 }
             }
         };
-        if(handler!=null) {
-            handler.sendEmptyMessageDelayed(CHECK_NULL,600);
+        if (handler != null) {
+            handler.sendEmptyMessageDelayed(CHECK_NULL, 600);
+        }
+        setupSwipeRefresh(swip_taobao_refresh);
+    }
+
+    private void setupSwipeRefresh(View view) {
+        if (swip_taobao_refresh != null) {
+            swip_taobao_refresh.setColorSchemeResources(R.color.colorFirst,
+                    R.color.colorSecond, R.color.colorThird);
+            swip_taobao_refresh.setProgressViewOffset(true, 0, (int) TypedValue
+                    .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
+            swip_taobao_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    mIsRequestDataRefresh = true;
+                    setRefresh(mIsRequestDataRefresh);
+                    loadTaobaoData();
+                }
+            });
+        }
+    }
+
+    /**
+     * 设置刷新的方法
+     *
+     * @param requestDataRefresh 是否需要刷新
+     */
+    public void setRefresh(boolean requestDataRefresh) {
+        if (!requestDataRefresh) {
+            mIsRequestDataRefresh = false;
+            if (swip_taobao_refresh != null) {
+                swip_taobao_refresh.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swip_taobao_refresh != null) {
+                            swip_taobao_refresh.setRefreshing(false);
+                        }
+                    }
+                }, 1000);
+            }
+        } else {
+            if (swip_taobao_refresh != null) {
+                swip_taobao_refresh.setRefreshing(true);
+            }
         }
     }
 
@@ -278,6 +327,8 @@ public class TaobaoFragment extends LazyLoadFragment {
                             }
                         });
                         llTaobaoLoadmore.setVisibility(View.GONE);
+                        mIsRequestDataRefresh = false;
+                        setRefresh(mIsRequestDataRefresh);
                         break;
                     case 0:
                         if (getContext() == null) {
@@ -291,8 +342,12 @@ public class TaobaoFragment extends LazyLoadFragment {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "--" + e.getMessage());
-                if(llTaobaoLoadmore!=null) {
+                Toast.makeText(getContext(), "网络连接出现问题~", Toast.LENGTH_SHORT).show();
+                if (llTaobaoLoadmore != null) {
                     llTaobaoLoadmore.setVisibility(View.GONE);
+                }
+                if (swip_taobao_refresh != null && swip_taobao_refresh.isRefreshing()) {
+                    swip_taobao_refresh.setRefreshing(false);
                 }
             }
 
@@ -308,7 +363,7 @@ public class TaobaoFragment extends LazyLoadFragment {
         etTaobaoSearchContent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     String sousuoStr = etTaobaoSearchContent.getText().toString().trim();
                     if (TextUtils.isEmpty(sousuoStr)) {
                         rlNewsSearchBefore.setVisibility(View.VISIBLE);
@@ -329,7 +384,7 @@ public class TaobaoFragment extends LazyLoadFragment {
                     is_tmall = "";//是否是天猫
                     start_price = "";//范围下限
                     end_price = "";//范围上限
-                    if(taobaoShaixuanPopupwindow!=null) {
+                    if (taobaoShaixuanPopupwindow != null) {
                         taobaoShaixuanPopupwindow.setNoChecked();
                     }
                     searchTaobaoWare(keyword, city, type, is_tmall, start_price, end_price, page_no);
@@ -344,13 +399,13 @@ public class TaobaoFragment extends LazyLoadFragment {
      * 初始化搜索控件
      */
     private void initSearch() {
-        if(rlNewsSearchBefore!=null) {
+        if (rlNewsSearchBefore != null) {
             rlNewsSearchBefore.setVisibility(View.VISIBLE);
         }
-        if(llNewsSearchAfter!=null) {
+        if (llNewsSearchAfter != null) {
             llNewsSearchAfter.setVisibility(View.GONE);
         }
-        if(rlEditTextExit!=null) {
+        if (rlEditTextExit != null) {
             rlEditTextExit.setVisibility(View.GONE);
         }
     }
@@ -406,21 +461,20 @@ public class TaobaoFragment extends LazyLoadFragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
-        if(taobaoShaixuanPopupwindow!=null && taobaoShaixuanPopupwindow.isShowing()) {
+        if (taobaoShaixuanPopupwindow != null && taobaoShaixuanPopupwindow.isShowing()) {
             taobaoShaixuanPopupwindow.dismiss();
         }
-        if(taobaoZonghePopupwindow!=null && taobaoZonghePopupwindow.isShowing()) {
+        if (taobaoZonghePopupwindow != null && taobaoZonghePopupwindow.isShowing()) {
             taobaoZonghePopupwindow.dismiss();
         }
     }
 
 
-
-    private void initChoice(){
+    private void initChoice() {
         ivUpPrice.setImageResource(R.drawable.up_gray_arraw);
         ivDownPrice.setImageResource(R.drawable.down_gray_arraw);
         ivTaobaoShaixuanSort.setSelected(false);
@@ -510,7 +564,7 @@ public class TaobaoFragment extends LazyLoadFragment {
                     is_tmall = "";//是否是天猫
                     start_price = "";//范围下限
                     end_price = "";//范围上限
-                    if(taobaoShaixuanPopupwindow!=null) {
+                    if (taobaoShaixuanPopupwindow != null) {
                         taobaoShaixuanPopupwindow.setNoChecked();
                     }
                     searchTaobaoWare(keyword, city, type, is_tmall, start_price, end_price, page_no);
@@ -670,14 +724,14 @@ public class TaobaoFragment extends LazyLoadFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
-        if(taobaoShaixuanPopupwindow!=null && taobaoShaixuanPopupwindow.isShowing()) {
+        if (taobaoShaixuanPopupwindow != null && taobaoShaixuanPopupwindow.isShowing()) {
             taobaoShaixuanPopupwindow.dismiss();
         }
-        if(taobaoZonghePopupwindow!=null && taobaoZonghePopupwindow.isShowing()) {
+        if (taobaoZonghePopupwindow != null && taobaoZonghePopupwindow.isShowing()) {
             taobaoZonghePopupwindow.dismiss();
         }
     }
@@ -722,14 +776,14 @@ public class TaobaoFragment extends LazyLoadFragment {
 
     @Override
     protected void stopLoad() {
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
-        if(taobaoShaixuanPopupwindow!=null && taobaoShaixuanPopupwindow.isShowing()) {
+        if (taobaoShaixuanPopupwindow != null && taobaoShaixuanPopupwindow.isShowing()) {
             taobaoShaixuanPopupwindow.dismiss();
         }
-        if(taobaoZonghePopupwindow!=null && taobaoZonghePopupwindow.isShowing()) {
+        if (taobaoZonghePopupwindow != null && taobaoZonghePopupwindow.isShowing()) {
             taobaoZonghePopupwindow.dismiss();
         }
     }

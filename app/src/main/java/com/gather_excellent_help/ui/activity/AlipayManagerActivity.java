@@ -55,15 +55,15 @@ public class AlipayManagerActivity extends BaseActivity {
     TextView tvTopTitleName;
     @Bind(R.id.wv_banner)
     WebView wvBanner;
-    private String url = "http://juyoubang.com.h001.webe7.com/api/share/paycost.html";
+    private String url = "http://47.92.118.0/api/share/paycost.html";
     private String key;
-    private String succ_url = "http://juyoubang.com.h001.webe7.com/api/share/success.html";
-    private String fail_url = "http://juyoubang.com.h001.webe7.com/api/share/failure.html";
+    private String succ_url = "http://47.92.118.0/api/share/success.html";
+    private String fail_url = "http://47.92.118.0/api/share/failure.html";
     private String money_url = Url.BASE_URL + "AppSystem.aspx";
     private NetUtil netUtil;
     private double enterAmount;
     private String extract_url = Url.BASE_URL + "PayStatus.aspx";
-    private Map<String,String> map;
+    private Map<String, String> map;
     private String pay_status = "";
     private String which = "";
     private String user_login;
@@ -108,22 +108,23 @@ public class AlipayManagerActivity extends BaseActivity {
             @Override
             public void getSuccessResponse(String response) {
                 LogUtil.e(response);
-                if(which.equals("money")) {
+                if (which.equals("money")) {
                     parseMoneyData(response);
-                }else if(which.equals("extract")) {
-                   parseExtractData(response);
+                } else if (which.equals("extract")) {
+                    parseExtractData(response);
                 }
             }
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-            Toast.makeText(AlipayManagerActivity.this, "网络请求出错！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlipayManagerActivity.this, "网络请求出错！", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     /**
      * 解析支付入驻数据
+     *
      * @param response
      */
     private void parseExtractData(String response) {
@@ -134,6 +135,7 @@ public class AlipayManagerActivity extends BaseActivity {
 
     /**
      * 解析支付金额的数据
+     *
      * @param response
      */
     private void parseMoneyData(String response) {
@@ -191,7 +193,6 @@ public class AlipayManagerActivity extends BaseActivity {
                                 mHandler.sendMessage(msg);
                             }
                         };
-
                         // 必须异步调用
                         Thread payThread = new Thread(payRunnable);
                         payThread.start();
@@ -288,8 +289,8 @@ public class AlipayManagerActivity extends BaseActivity {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(AlipayManagerActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
                         wvBanner.loadUrl(succ_url);
-                        EventBus.getDefault().post(new AnyEvent(EventType.STORE_EXIT,"退出商家付款界面"));
-                        EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"刷新"));
+                        EventBus.getDefault().post(new AnyEvent(EventType.STORE_EXIT, "退出商家付款界面"));
+                        EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "刷新"));
                         pay_status = "1";
                         MobclickAgent.onEvent(AlipayManagerActivity.this, "a_pay");
                     } else {
@@ -306,14 +307,13 @@ public class AlipayManagerActivity extends BaseActivity {
                             wvBanner.loadUrl(fail_url);
                         }
                     }
-                    if(pay_status!=null && !TextUtils.isEmpty(pay_status)) {
+                    if (pay_status != null && !TextUtils.isEmpty(pay_status)) {
                         map = new HashMap<>();
-                        map.put("user_id",user_login);
-                        map.put("pay_status",pay_status);
+                        map.put("user_id", user_login);
+                        map.put("pay_status", pay_status);
                         which = "extract";
-                        netUtil.okHttp2Server2(extract_url,map);
+                        netUtil.okHttp2Server2(extract_url, map);
                     }
-                    
                     break;
                 }
 
@@ -350,7 +350,7 @@ public class AlipayManagerActivity extends BaseActivity {
         orderInfo += "&total_fee=" + "\"" + price + "\"";
 
         // 服务器异步通知页面路径
-        orderInfo += "&notify_url=" + "\"" + "http://api.myausplus.com/alipay/andriod_back" + "\"";
+        orderInfo += "&notify_url=" + "\"" + "http://app.juyob.com/api/juyoubang/" + "\"";
 
         // 服务接口名称， 固定值
         orderInfo += "&service=\"mobile.securitypay.pay\"";

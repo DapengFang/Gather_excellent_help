@@ -3,87 +3,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     android:orientation="vertical"
-    android:background="#11000000"
     tools:context="com.gather_excellent_help.ui.activity.credits.ExtractCreditsActivity">
 
-    <include layout="@layout/top_zhuangai_bar"/>
+    <include layout="@layout/top_zhuangai_bar" />
 
-    <TextView
-        android:id="@+id/tv_exteact_account"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/x45"
-        android:textSize="14sp"
-        android:textColor="#999999"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/x10"
-        android:background="#ffffff"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#eeeeee"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x45"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/x10"
+        android:layout_marginTop="@dimen/x10"
+        android:orientation="vertical"
+        android:padding="@dimen/x10">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="可提取现金（元）"
+            android:textColor="#808080"
+            android:textSize="@dimen/x12" />
+
+        <TextView
+            android:id="@+id/tv_exteact_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x3"
+            android:text="0.00"
+            android:textColor="#ff0101"
+            android:textSize="@dimen/x24"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x36"
+        android:layout_marginLeft="@dimen/x10"
+        android:layout_marginRight="@dimen/x10"
+        android:background="#eeeeee"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:background="#ffffff"
         android:paddingLeft="@dimen/x10">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="提取数量："
-            android:textSize="14sp"
-            android:textColor="#999999"/>
+            android:textColor="#999999"
+            android:textSize="@dimen/x12" />
+
         <EditText
             android:id="@+id/et_extract_cash"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="请输入提取数量"
-            android:textSize="14sp"
-            android:inputType="number"
-            android:textColor="#999999"
-            android:textColorHint="#999999"
             android:background="@null"
-            android:paddingLeft="@dimen/x3"/>
+            android:hint="请输入提取数量"
+            android:inputType="number"
+            android:paddingLeft="@dimen/x3"
+            android:textColor="#333333"
+            android:textColorHint="#999999"
+            android:textSize="14sp" />
 
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#eeeeee"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/x45"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
         android:background="#ffffff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingLeft="@dimen/x10">
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="注:最小额度为：10"
-            android:textSize="12sp"
-            android:textColor="#fb8c1d"/>
+            android:text="注意:最小额度为：2元"
+            android:textColor="#b3b3b3"
+            android:textSize="@dimen/x10" />
 
         <LinearLayout
             android:id="@+id/ll_extract_rule"
             android:layout_width="@dimen/x80"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="提取明细 >"
-                android:textSize="12sp"
-                android:textColor="#ce2934"
-                android:gravity="center"/>
+                android:textColor="#fa2a3b"
+                android:textSize="@dimen/x10" />
+
             <ImageView
                 android:layout_width="@dimen/x60"
                 android:layout_height="@dimen/x1"
-                android:background="@drawable/extract_detail_shape"/>
+                android:background="@drawable/extract_detail_shape"
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>
@@ -92,15 +111,31 @@
         android:id="@+id/tv_extract_credits_commit"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x40"
-        android:text="立即提取"
-        android:textSize="16sp"
-        android:textColor="@color/white"
-        android:gravity="center"
+        android:layout_gravity="center_horizontal"
         android:layout_marginLeft="@dimen/x10"
         android:layout_marginRight="@dimen/x10"
+        android:layout_marginTop="@dimen/x80"
         android:background="@drawable/register_confirm_selector"
-        android:layout_marginTop="@dimen/x100"
-        android:layout_gravity="center_horizontal"/>
+        android:gravity="center"
+        android:text="立即提取"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x14" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+
+    <TextView
+        android:id="@+id/tv_order_no_zhanwei"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/x30"
+        android:text="@string/juyoub_text"
+        android:textColor="#b8b8b8"
+        android:textSize="@dimen/x10" />
 
 
 </LinearLayout>

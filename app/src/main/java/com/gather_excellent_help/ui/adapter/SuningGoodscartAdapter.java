@@ -3,7 +3,6 @@ package com.gather_excellent_help.ui.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -21,12 +20,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
-import com.gather_excellent_help.bean.suning.SuningGoodscartBean;
 import com.gather_excellent_help.bean.suning.netcart.NetGoodsDeleteBean;
 import com.gather_excellent_help.bean.suning.netcart.NetGoodscartBean;
 import com.gather_excellent_help.bean.suning.netcart.NetGoodscartCheckBean;
-import com.gather_excellent_help.db.suning.SqliteServiceManager;
-import com.gather_excellent_help.ui.activity.AlipayInfoActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningGoodscartActivity;
 import com.gather_excellent_help.ui.widget.NumberAddSubView;
 import com.gather_excellent_help.utils.LogUtil;
@@ -97,7 +93,7 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
                 }
                 if (goods_title != null) {
                     SpannableString span = new SpannableString("\t\t" + goods_title);
-                    ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+                    ImageSpan image = new ImageSpan(context, R.drawable.suning_ware_icon, DynamicDrawableSpan.ALIGN_BASELINE);
                     span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     holder.tv_suning_goodscart_title.setText(span);
                 }
@@ -295,7 +291,7 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
     }
 
     /**
-     * 解除支付宝绑定的dialog
+     * 删除当前该商品
      */
     private void showDeleteDialog(final NetGoodscartBean.DataBean dataBean, final NetGoodscartCheckBean.DataBean checkBean, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

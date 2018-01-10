@@ -1,31 +1,30 @@
 package com.gather_excellent_help.ui.widget;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.DynamicDrawableSpan;
-import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
-import com.gather_excellent_help.bean.suning.SuningSpecBean;
-import com.gather_excellent_help.ui.adapter.SuningSpecAdapter;
 import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
-
-import java.util.List;
+import com.gather_excellent_help.utils.span.ImageSpanUtil;
+import com.gather_excellent_help.utils.span.MyImageSpan;
 
 
 /**
@@ -169,6 +168,21 @@ public class SuningWarenumPopupwindow extends PopupWindow {
                 if(limitNumber!=100000) {
                     tv_bottom_pop_limit.setText("限购" + limitNumber + "件");
                 }
+                nav_bottom_pop_num.setOnButtonClickListener(new NumberAddSubView.OnButtonClickListener() {
+                    @Override
+                    public void onSubButton(View view, int value) {
+                        if (value == limitNumber) {
+                            Toast.makeText(context, "限购" + limitNumber + "件", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onAddButton(View view, int value) {
+                        if (value == limitNumber) {
+                            Toast.makeText(context, "限购" + limitNumber + "件", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         }
     }
@@ -212,7 +226,9 @@ public class SuningWarenumPopupwindow extends PopupWindow {
 
         if (tv_bottom_pop_name != null && goods_title != null) {
             SpannableString span = new SpannableString("\t\t" + goods_title);
-            ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+            Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+            Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+            MyImageSpan image = new MyImageSpan(context, bitmap, -1);
             span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             tv_bottom_pop_name.setText(span);
         }

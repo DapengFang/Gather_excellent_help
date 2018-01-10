@@ -32,6 +32,7 @@ public class SuningLogisticsInfoAdapter extends RecyclerView.Adapter<SuningLogis
     private Context context;
     private List<SuningLogisticsBean.DataBean> data;
     private List<SuningLogisticsBean.DataBean.OrderItemIdsBean> orderItemIds;
+    private int count;
 
     public SuningLogisticsInfoAdapter(Context context, List<SuningLogisticsBean.DataBean> data
             , List<SuningLogisticsBean.DataBean.OrderItemIdsBean> orderItemIds) {
@@ -52,12 +53,21 @@ public class SuningLogisticsInfoAdapter extends RecyclerView.Adapter<SuningLogis
             SuningLogisticsBean.DataBean dataBean = data.get(position);
             SuningLogisticsBean.DataBean.OrderItemIdsBean orderItemIdsBean = orderItemIds.get(position);
             String orderItemId = orderItemIdsBean.getOrderItemId();
-            holder.tv_suning_logistics_orderno.setText("子订单号：" + orderItemId);
+            holder.tv_suning_logistics_orderno.setText("订单编号：" + orderItemId);
             SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
             SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             List<SuningLogisticsBean.DataBean.LogisticsDetailBean> logisticsDetail = dataBean.getLogisticsDetail();
             if (logisticsDetail != null && logisticsDetail.size() > 0) {
                 holder.ll_suning_logistics_container.removeAllViews();
+                for (int i = 0; i < logisticsDetail.size(); i++) {
+                    SuningLogisticsBean.DataBean.LogisticsDetailBean logisticsDetailBean = logisticsDetail.get(i);
+                    if (logisticsDetailBean != null) {
+                        String operateState = logisticsDetailBean.getOperateState();
+                        if (operateState != null && !TextUtils.isEmpty(operateState)) {
+                            count++;
+                        }
+                    }
+                }
                 for (int i = logisticsDetail.size() - 1; i >= 0; i--) {
                     View inflate = View.inflate(context, R.layout.suning_logitics_part_one, null);
                     LinearLayout ll_logistics_part_one = (LinearLayout) inflate.findViewById(R.id.ll_logistics_part_one);
@@ -84,14 +94,12 @@ public class SuningLogisticsInfoAdapter extends RecyclerView.Adapter<SuningLogis
                         if (i == 0) {
                             holder.tv_suning_logistics_time.setText("创建时间：" + curr_time);
                         }
-
                         if (TextUtils.isEmpty(curr_state)) {
                             ll_logistics_part_one.setVisibility(View.GONE);
                         } else {
                             ll_logistics_part_one.setVisibility(View.VISIBLE);
                             tv_logistics_part_position.setText(curr_state);
                             tv_logistics_part_time.setText(curr_time);
-
                         }
 
                         if (position == 0) {
@@ -108,17 +116,18 @@ public class SuningLogisticsInfoAdapter extends RecyclerView.Adapter<SuningLogis
                                 v_one.setVisibility(View.GONE);
                                 v_two.setVisibility(View.GONE);
                             } else {
-                                v_zero.setVisibility(View.GONE);
-                                iv_logistics_part_icon.setVisibility(View.GONE);
+                                v_zero.setVisibility(View.VISIBLE);
+                                iv_logistics_part_icon.setVisibility(View.VISIBLE);
+                                iv_logistics_part_icon.setImageResource(R.drawable.gray_point_circle_icon);
                                 v_one.setVisibility(View.VISIBLE);
                                 v_two.setVisibility(View.VISIBLE);
                             }
-                            if (logisticsDetail.size() == 1) {
+                            if (count == 1) {
                                 v_zero.setVisibility(View.INVISIBLE);
                                 iv_logistics_part_icon.setVisibility(View.VISIBLE);
                                 iv_logistics_part_icon.setImageResource(R.drawable.orange_up_arraw_icon);
-                                v_one.setVisibility(View.INVISIBLE);
-                                v_two.setVisibility(View.INVISIBLE);
+                                v_one.setVisibility(View.GONE);
+                                v_two.setVisibility(View.GONE);
                             }
                         } else {
                             if (i == logisticsDetail.size() - 1) {
@@ -139,12 +148,12 @@ public class SuningLogisticsInfoAdapter extends RecyclerView.Adapter<SuningLogis
                                 v_one.setVisibility(View.VISIBLE);
                                 v_two.setVisibility(View.VISIBLE);
                             }
-                            if (logisticsDetail.size() == 1) {
+                            if (count == 1) {
                                 v_zero.setVisibility(View.INVISIBLE);
                                 iv_logistics_part_icon.setVisibility(View.VISIBLE);
                                 iv_logistics_part_icon.setImageResource(R.drawable.gray_up_arraw_icon);
-                                v_one.setVisibility(View.INVISIBLE);
-                                v_two.setVisibility(View.INVISIBLE);
+                                v_one.setVisibility(View.GONE);
+                                v_two.setVisibility(View.GONE);
                             }
                         }
                     }

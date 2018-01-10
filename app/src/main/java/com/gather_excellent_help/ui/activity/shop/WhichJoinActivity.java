@@ -1,14 +1,8 @@
 package com.gather_excellent_help.ui.activity.shop;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,10 +10,8 @@ import android.widget.Toast;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
-import com.gather_excellent_help.bean.HelpRuleBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
-import com.gather_excellent_help.ui.activity.RuleHelpActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -27,7 +19,6 @@ import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -35,14 +26,12 @@ import okhttp3.Call;
 
 public class WhichJoinActivity extends BaseActivity {
 
-    private ImageView iv_zhuangtai_exit;
+    private RelativeLayout rl_exit;
     private TextView tv_top_title_name;
-    private CheckBox cb_daren_select;
-    private CheckBox cb_shiti_select;
-    private TextView tv_join_submit;
-    private RelativeLayout rl_daren_select;
-    private RelativeLayout rl_shiti_select;
-    private TextView tv_which_join_help;
+
+
+    private RelativeLayout rl_which_join_weidaren;
+    private RelativeLayout rl_which_join_shiti;
 
     private int curr_check = 1;
 
@@ -52,7 +41,6 @@ public class WhichJoinActivity extends BaseActivity {
     private Map<String, String> map;
 
     private String join_url = Url.BASE_URL + "ChooseType.aspx";//加盟保存的接口
-    private String help_url = Url.BASE_URL + "UserHelp.aspx";//帮助
     private String which;
 
     @Override
@@ -67,14 +55,10 @@ public class WhichJoinActivity extends BaseActivity {
      * 初始化控件
      */
     private void initView() {
-        iv_zhuangtai_exit = (ImageView) findViewById(R.id.iv_zhuangtai_exit);
+        rl_exit = (RelativeLayout) findViewById(R.id.rl_exit);
         tv_top_title_name = (TextView) findViewById(R.id.tv_top_title_name);
-        cb_daren_select = (CheckBox) findViewById(R.id.cb_daren_select);
-        cb_shiti_select = (CheckBox) findViewById(R.id.cb_shiti_select);
-        tv_join_submit = (TextView) findViewById(R.id.tv_join_submit);
-        rl_daren_select = (RelativeLayout) findViewById(R.id.rl_daren_select);
-        rl_shiti_select = (RelativeLayout) findViewById(R.id.rl_shiti_select);
-        tv_which_join_help = (TextView) findViewById(R.id.tv_which_join_help);
+        rl_which_join_weidaren = (RelativeLayout) findViewById(R.id.rl_which_join_weidaren);
+        rl_which_join_shiti = (RelativeLayout) findViewById(R.id.rl_which_join_shiti);
     }
 
     /**
@@ -83,21 +67,14 @@ public class WhichJoinActivity extends BaseActivity {
     private void initData() {
         //初始化的相关操作
         netUtil = new NetUtil();
-        tv_top_title_name.setText("申请加盟");
+        tv_top_title_name.setText("申请赚钱");
 
-        String str = "微达人与实体店之间具体区别详见《帮助中心》";
-        int end = str.indexOf("《");
-        SpannableStringBuilder style = new SpannableStringBuilder(str);
-        style.setSpan(new ForegroundColorSpan(Color.parseColor("#888888")), 0, end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        tv_which_join_help.setText(style);
 
         //处理页面上的点击事件
         MyOnClickListener myOnClickListener = new MyOnClickListener();
-        iv_zhuangtai_exit.setOnClickListener(myOnClickListener);
-        rl_daren_select.setOnClickListener(myOnClickListener);
-        rl_shiti_select.setOnClickListener(myOnClickListener);
-        tv_join_submit.setOnClickListener(myOnClickListener);
-        tv_which_join_help.setOnClickListener(myOnClickListener);
+        rl_exit.setOnClickListener(myOnClickListener);
+        rl_which_join_weidaren.setOnClickListener(myOnClickListener);
+        rl_which_join_shiti.setOnClickListener(myOnClickListener);
         //联网请求的回调
         netUtil.setOnServerResponseListener(new OnServerResponseListener());
     }
@@ -110,35 +87,23 @@ public class WhichJoinActivity extends BaseActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.iv_zhuangtai_exit:
+                case R.id.rl_exit:
                     finish();
                     break;
-                case R.id.rl_daren_select:
+                case R.id.rl_which_join_weidaren:
                     curr_check = 1;
-                    checkBox(curr_check);
-                    break;
-                case R.id.rl_shiti_select:
-                    curr_check = 2;
-                    checkBox(curr_check);
-                    break;
-                case R.id.tv_join_submit:
-                    tv_join_submit.setClickable(false);
+                    rl_which_join_weidaren.setClickable(false);
+                    rl_which_join_shiti.setClickable(false);
                     saveDiffWays();
                     break;
-                case R.id.tv_which_join_help:
-                    showHelpInfoDialog();
+                case R.id.rl_which_join_shiti:
+                    curr_check = 2;
+                    rl_which_join_weidaren.setClickable(false);
+                    rl_which_join_shiti.setClickable(false);
+                    saveDiffWays();
                     break;
             }
         }
-    }
-
-    /**
-     * show帮助中心的dialog
-     */
-    private void showHelpInfoDialog() {
-        //条帮助
-        which = "help";
-        netUtil.okHttp2Server2(help_url, null);
     }
 
     /**
@@ -175,60 +140,34 @@ public class WhichJoinActivity extends BaseActivity {
     }
 
     /**
-     * 根据当前选中去处理相关
-     *
-     * @param curr_check
-     */
-    private void checkBox(int curr_check) {
-        if (curr_check == 1) {
-            cb_daren_select.setChecked(true);
-            cb_shiti_select.setChecked(false);
-        } else if (curr_check == 2) {
-            cb_daren_select.setChecked(false);
-            cb_shiti_select.setChecked(true);
-        }
-    }
-
-    /**
-     * 处理联网的监听
+     * 联网返回数据回调的监听
      */
     public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
             LogUtil.e(response);
-            if(which.equals("join")) {
+            if (which.equals("join")) {
                 parseJoinData(response);
-            }else if(which.equals("help")) {
-                parseHelpData(response);
             }
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "-" + e.getMessage());
-            tv_join_submit.setClickable(true);
+            rl_which_join_weidaren.setClickable(true);
+            rl_which_join_shiti.setClickable(true);
         }
     }
 
-    private void parseHelpData(String response) {
-        HelpRuleBean helpRuleBean = new Gson().fromJson(response, HelpRuleBean.class);
-        List<HelpRuleBean.DataBean> data = helpRuleBean.getData();
-        String app_help_url = data.get(0).getApp_help_url();
-        toHelp(app_help_url);
-    }
-
-    private void toHelp(String url) {
-        LogUtil.e("返佣规则 = " + url);
-        Intent intent = new Intent(this, RuleHelpActivity.class);
-        intent.putExtra("web_url", url);
-        intent.putExtra("which", which);
-        startActivity(intent);
-
-    }
-
+    /**
+     * 解析商家入驻的数据
+     *
+     * @param response
+     */
     private void parseJoinData(String response) {
-        tv_join_submit.setClickable(true);
+        rl_which_join_weidaren.setClickable(true);
+        rl_which_join_shiti.setClickable(true);
         CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
         int statusCode = codeStatueBean.getStatusCode();
         switch (statusCode) {

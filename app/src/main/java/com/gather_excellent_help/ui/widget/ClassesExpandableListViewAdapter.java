@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +20,6 @@ import com.gather_excellent_help.utils.DensityUtil;
 import java.util.List;
 
 /**
- *
  * 班级的适配器
  * Created by MH on 2016/6/16.
  */
@@ -43,19 +43,19 @@ public class ClassesExpandableListViewAdapter extends BaseExpandableListAdapter 
     @Override
     public int getGroupCount() {
         // 获取一级条目的数量  就是班级的大小
-        return null == classes? 0 : classes.size();
+        return null == classes ? 0 : classes.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
         // 获取对应一级条目下二级条目的数量，就是各个班学生的数量
-        return null == classes.get(groupPosition).getThreeList() ? 0:classes.get(groupPosition).getThreeList().size();
+        return null == classes.get(groupPosition).getThreeList() ? 0 : classes.get(groupPosition).getThreeList().size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
         // 获取一级条目的对应数据  ，感觉没什么用
-        return null == classes? null:classes.get(groupPosition);
+        return null == classes ? null : classes.get(groupPosition);
     }
 
     @Override
@@ -87,14 +87,14 @@ public class ClassesExpandableListViewAdapter extends BaseExpandableListAdapter 
 
         // 获取对应一级条目的View  和ListView 的getView相似
 
-        return getGenericView(classes.get(groupPosition).getTitle(),isExpanded,groupPosition);
+        return getGenericView(classes.get(groupPosition), classes.get(groupPosition).getTitle(), isExpanded, groupPosition);
     }
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
         // 获取对应二级条目的View  和ListView 的getView相似
-        return getGenericChildView(classes.get(groupPosition).getThreeList().get(childPosition).getTitle(),groupPosition,childPosition);
+        return getGenericChildView(classes.get(groupPosition).getThreeList().get(childPosition), classes.get(groupPosition).getThreeList().get(childPosition).getTitle(), groupPosition, childPosition);
     }
 
     @Override
@@ -106,14 +106,16 @@ public class ClassesExpandableListViewAdapter extends BaseExpandableListAdapter 
 
     /**
      * 根据字符串生成布局，，因为我没有写layout.xml 所以用java 代码生成
+     * <p>
+     * 实际中可以通过Inflate加载布局文件并返回
      *
-     *      实际中可以通过Inflate加载布局文件并返回
+     * @param subListBean
      * @param string
      * @param isExpanded
      * @param groupPosition
      * @return
      */
-    private View getGenericView(String string, boolean isExpanded, final int groupPosition) {
+    private View getGenericView(TypeNavigatorBean.DataBean.SubListBean subListBean, String string, boolean isExpanded, final int groupPosition) {
 
 //        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(
 //                ViewGroup.LayoutParams.MATCH_PARENT,
@@ -131,16 +133,15 @@ public class ClassesExpandableListViewAdapter extends BaseExpandableListAdapter 
         ImageView arrawNavigator = (ImageView) inflate.findViewById(R.id.iv_first_arraw);
         TextView tvNavigator = (TextView) inflate.findViewById(R.id.tv_first_title);
         int childrenCount = getChildrenCount(groupPosition);
-        if(childrenCount == 0) {
+        boolean check = subListBean.isCheck();
+        if (childrenCount == 0) {
             arrawNavigator.setVisibility(View.GONE);
-//            inflate.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    //二级的点击事件
-//                    onSecondListClickListener.onSecondClick(groupPosition);
-//                }
-//            });
-        }else{
+            if (check) {
+                tvNavigator.setTextColor(Color.parseColor("#ff6600"));
+            } else {
+                tvNavigator.setTextColor(Color.parseColor("#555555"));
+            }
+        } else {
             arrawSetDirection(isExpanded, arrawNavigator);
         }
         tvNavigator.setText(string);
@@ -149,14 +150,14 @@ public class ClassesExpandableListViewAdapter extends BaseExpandableListAdapter 
 
     private void arrawSetDirection(boolean isExpanded, ImageView arrawNavigator) {
         arrawNavigator.setVisibility(View.VISIBLE);
-        if(isExpanded) {
+        if (isExpanded) {
             arrawNavigator.setImageResource(R.drawable.red_down_arraw_s);
-        }else{
+        } else {
             arrawNavigator.setImageResource(R.drawable.gray_right_arraw_s);
         }
     }
 
-    private TextView getGenericChildView(String string, final int groupPosition, final int childPosition) {
+    private TextView getGenericChildView(TypeNavigatorBean.DataBean.SubListBean.ThirdListBean thirdListBean, String string, final int groupPosition, final int childPosition) {
 
 //        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(
 //                ViewGroup.LayoutParams.MATCH_PARENT,
@@ -176,27 +177,34 @@ public class ClassesExpandableListViewAdapter extends BaseExpandableListAdapter 
 //                onThirdListClickListener.onThirdClick(groupPosition,childPosition);
 //            }
 //        });
-        TextView textView = (TextView) View.inflate(activity,R.layout.item_text_type,null);
+        final TextView textView = (TextView) View.inflate(activity, R.layout.item_text_type, null);
+        boolean check = thirdListBean.isCheck();
+        if (check) {
+            textView.setTextColor(Color.parseColor("#ff6600"));
+        } else {
+            textView.setTextColor(Color.parseColor("#555555"));
+        }
         textView.setText(string);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //3级的点击事件
-                onThirdListClickListener.onThirdClick(groupPosition,childPosition);
+                onThirdListClickListener.onThirdClick(groupPosition, childPosition,textView);
+                notifyDataSetChanged();
             }
         });
         return textView;
     }
 
-    public interface OnSecondListClickListener{
+    public interface OnSecondListClickListener {
         void onSecondClick(int groupPosition);
 
     }
 
     private OnThirdListClickListener onThirdListClickListener;
 
-    public interface OnThirdListClickListener{
-        void onThirdClick(int groupPosition,int childPosition);
+    public interface OnThirdListClickListener {
+        void onThirdClick(int groupPosition, int childPosition,TextView tv);
     }
 
     public void setOnSecondListClickListener(OnSecondListClickListener onSecondListClickListener) {

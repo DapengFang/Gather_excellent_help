@@ -19,7 +19,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-
                 <LinearLayout
                     android:id="@+id/ll_root"
                     android:layout_width="match_parent"
@@ -153,7 +152,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/x3"
                             android:layout_toRightOf="@id/tv_vertical_shuilv"
-                            android:text="正在定位中"
+                            android:text="正在获取"
                             android:textColor="#aa000000"
                             android:textSize="@dimen/x12" />
 

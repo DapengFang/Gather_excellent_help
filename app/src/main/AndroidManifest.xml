@@ -179,11 +179,13 @@
             android:name=".SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -322,7 +324,10 @@
         <activity
             android:name=".ui.activity.shop.WhichJoinActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+
+        </activity>
+
         <activity
             android:name=".ui.activity.shop.TalentShowActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -331,6 +336,7 @@
             android:name=".ui.activity.shop.StoreshowActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.activity.shop.StoreSuccActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -353,8 +359,9 @@
         <activity android:name=".ui.activity.address.PersonAddressActivity" />
         <activity android:name=".ui.activity.address.AddNewAddressActivity" />
         <activity android:name=".ui.activity.suning.HackySeeBigimgActivity" />
-        <activity android:name=".ui.activity.suning.SuningDetailActivity"
-            android:launchMode="singleTask"/>
+        <activity
+            android:name=".ui.activity.suning.SuningDetailActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".ui.activity.suning.OrderConfirmActivity" />
         <activity android:name=".ui.activity.suning.OrderCartConfirmActivity" />
         <activity android:name=".ui.activity.suning.InvoiceChoiceActivity" />

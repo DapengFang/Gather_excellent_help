@@ -1,13 +1,12 @@
 package com.gather_excellent_help.presenter.homepresenter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.DynamicDrawableSpan;
-import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,10 +24,12 @@ import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningDetailActivity;
+import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
-import com.gather_excellent_help.utils.imageutils.ImageLoader;
+import com.gather_excellent_help.utils.span.ImageSpanUtil;
+import com.gather_excellent_help.utils.span.MyImageSpan;
 import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
@@ -188,7 +189,7 @@ public class GroupPresenter extends BasePresenter {
                 final String goods_id = String.valueOf(dataBean.getProductId());
 
                 double suning_rate = dataBean.getSuning_rate();
-                double s_zhuan = sell_price * suning_rate * user_rate;
+                double s_zhuan = sell_price * tkRate * user_rate;
                 double s_coast = sell_price - s_zhuan;
 
                 if (tv_group_ware_price != null) {
@@ -202,8 +203,9 @@ public class GroupPresenter extends BasePresenter {
                     if (title != null && tv_group_ware_title != null) {
                         //tv_group_ware_title.setText("\t\t\t\t\t\t" + title);
                         SpannableString span = new SpannableString("\t\t" + title);
-                        ImageSpan image = new ImageSpan(context, R.drawable.taobao_order_icon, DynamicDrawableSpan.ALIGN_BASELINE);
-
+                        Drawable drawable = context.getResources().getDrawable(R.drawable.taobao_order_icon);
+                        Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+                        MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                         span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         tv_group_ware_title.setText(span);
                     }
@@ -275,10 +277,10 @@ public class GroupPresenter extends BasePresenter {
                     }
 
                     if (title != null && tv_group_ware_title != null) {
-                        //tv_group_ware_title.setText("\t\t\t\t\t\t" + title);
                         SpannableString span = new SpannableString("\t\t" + title);
-                        ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
-
+                        Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+                        Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+                        MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                         span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         tv_group_ware_title.setText(span);
                     }
@@ -359,7 +361,7 @@ public class GroupPresenter extends BasePresenter {
         final String goods_id = String.valueOf(dataBean.getProductId());
 
         double suning_rate = dataBean.getSuning_rate();
-        double s_zhuan = sell_price * suning_rate * user_rate;
+        double s_zhuan = sell_price * tkRate * user_rate;
         double s_coast = sell_price - s_zhuan;
 
         if (title != null && tv_group_ware_title != null) {
@@ -375,10 +377,10 @@ public class GroupPresenter extends BasePresenter {
 //            }
 
             if (title != null && tv_group_ware_title != null) {
-                //tv_group_ware_title.setText("\t\t\t\t\t\t" + title);
                 SpannableString span = new SpannableString("\t\t" + title);
-                ImageSpan image = new ImageSpan(context, R.drawable.taobao_order_icon, DynamicDrawableSpan.ALIGN_BASELINE);
-
+                Drawable drawable = context.getResources().getDrawable(R.drawable.taobao_order_icon);
+                Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+                MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tv_group_ware_title.setText(span);
             }
@@ -448,10 +450,10 @@ public class GroupPresenter extends BasePresenter {
             }
 
             if (title != null && tv_group_ware_title != null) {
-                //tv_group_ware_title.setText("\t\t\t\t\t\t" + title);
                 SpannableString span = new SpannableString("\t\t" + title);
-                ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
-
+                Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+                Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+                MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tv_group_ware_title.setText(span);
             }

@@ -51,6 +51,7 @@ public class TypeNavigatorBean {
 
         private int id;
         private String title;
+        private boolean check;
         private List<SubListBean> subList;
 
         public int getId() {
@@ -67,6 +68,14 @@ public class TypeNavigatorBean {
 
         public void setTitle(String title) {
             this.title = title;
+        }
+
+        public boolean isCheck() {
+            return check;
+        }
+
+        public void setCheck(boolean check) {
+            this.check = check;
         }
 
         public List<SubListBean> getSubList() {
@@ -86,6 +95,7 @@ public class TypeNavigatorBean {
 
             private int id;
             private String title;
+            private boolean check;
             private List<ThirdListBean> threeList;
 
             public int getId() {
@@ -104,6 +114,14 @@ public class TypeNavigatorBean {
                 this.title = title;
             }
 
+            public boolean isCheck() {
+                return check;
+            }
+
+            public void setCheck(boolean check) {
+                this.check = check;
+            }
+
             public List<ThirdListBean> getThreeList() {
                 return threeList;
             }
@@ -112,9 +130,10 @@ public class TypeNavigatorBean {
                 this.threeList = threeList;
             }
 
-            public static class ThirdListBean{
+            public static class ThirdListBean {
                 private int id;
                 private String title;
+                private boolean check;
 
                 public String getTitle() {
                     return title;
@@ -130,6 +149,14 @@ public class TypeNavigatorBean {
 
                 public void setId(int id) {
                     this.id = id;
+                }
+
+                public boolean isCheck() {
+                    return check;
+                }
+
+                public void setCheck(boolean check) {
+                    this.check = check;
                 }
             }
         }

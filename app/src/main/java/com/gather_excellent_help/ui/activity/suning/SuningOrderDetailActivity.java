@@ -165,7 +165,6 @@ public class SuningOrderDetailActivity extends BaseActivity {
                 showOrderTime(dataBean, status);
             }
         }
-
     }
 
     /**
@@ -247,7 +246,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
             tv_item_detail_extra.setVisibility(View.GONE);
             tv_item_detail_left.setVisibility(View.GONE);
             tv_item_detail_right.setVisibility(View.VISIBLE);
-            tv_item_detail_right.setText("评价");
+            tv_item_detail_right.setText("晒单");
         }
     }
 
@@ -259,7 +258,12 @@ public class SuningOrderDetailActivity extends BaseActivity {
      */
     private void showFreeAndMoney(SuningOrderBean.DataBean dataBean, DecimalFormat df) {
         double real_amount = dataBean.getReal_amount();
-        tv_suning_detail_free.setText("免邮费");
+        double sn_freight = dataBean.getSn_freight();
+        if (sn_freight == 0) {
+            tv_suning_detail_free.setText("免运费");
+        } else {
+            tv_suning_detail_free.setText("￥" + df.format(sn_freight));
+        }
         tv_suning_detail_money.setText("￥" + df.format(real_amount));
     }
 
@@ -328,10 +332,13 @@ public class SuningOrderDetailActivity extends BaseActivity {
                             rl_suning_detail_back.setVisibility(View.GONE);
                         } else if (status == 2) {
                             rl_suning_detail_back.setVisibility(View.VISIBLE);
+                            tv_item_order_back.setText("退款");
                         } else if (status == 3) {
                             rl_suning_detail_back.setVisibility(View.VISIBLE);
+                            tv_item_order_back.setText("退款");
                         } else if (status == 4) {
                             rl_suning_detail_back.setVisibility(View.VISIBLE);
+                            tv_item_order_back.setText("申请售后");
                         } else {
                             rl_suning_detail_back.setVisibility(View.GONE);
                         }
@@ -499,6 +506,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
             confirmOrder(String.valueOf(order_id));
         } else if (status == 4) {
             //评价
+            Toast.makeText(SuningOrderDetailActivity.this, "该功能正在开发中。", Toast.LENGTH_SHORT).show();
         }
     }
 

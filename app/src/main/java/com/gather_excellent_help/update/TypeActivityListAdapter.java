@@ -2,14 +2,15 @@ package com.gather_excellent_help.update;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.DynamicDrawableSpan;
-import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,9 +20,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.bean.ActivityListBean;
 import com.gather_excellent_help.ui.activity.WebActivity;
+import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.Tools;
-import com.gather_excellent_help.utils.imageutils.ImageLoader;
+import com.gather_excellent_help.utils.span.ImageSpanUtil;
+import com.gather_excellent_help.utils.span.MyImageSpan;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -61,7 +64,7 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
     }
 
     @Override
-    public void onBindViewHolder(HomeActivityListViewHolder holder, final int position) {
+    public void onBindViewHolder(final HomeActivityListViewHolder holder, final int position) {
         ActivityListBean.DataBean dataBean = activityData.get(position);
         final DecimalFormat df = new DecimalFormat("#0.00");
         final int site_id = dataBean.getSite_id();
@@ -79,7 +82,7 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
         final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
 
         double suning_rate = dataBean.getSuning_rate();
-        double s_zhuan = sell_price * suning_rate * user_rate;
+        double s_zhuan = sell_price * tkRate * user_rate;
         double s_coast = sell_price - s_zhuan;
 
         if (holder.tvActivityWarePrice != null) {
@@ -89,20 +92,15 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
         if (site_id == 1) {
 
             if (holder.tvActivityWareTitle != null && title != null) {
-                holder.tvActivityWareTitle.setText("\t\t" + title);
                 SpannableString span = new SpannableString("\t\t" + title);
-                ImageSpan image = new ImageSpan(context, R.drawable.taobao_order_icon, DynamicDrawableSpan.ALIGN_BASELINE);
-
+                Drawable drawable = context.getResources().getDrawable(R.drawable.taobao_order_icon);
+                Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+                MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 holder.tvActivityWareTitle.setText(span);
             }
 
-//            if (holder.tv_activity_sun_tao_icon != null) {
-//                holder.tv_activity_sun_tao_icon.setSelected(false);
-//                holder.tv_activity_sun_tao_icon.setText("淘宝");
-//            }
             if (holder.ivActivityListWareImg != null && img_url != null) {
-                //mImageLoader.loadImage(img_url+"_320x320q90.jpg",holder.ivActivityListWareImg,true);
                 Glide.with(context).load(img_url + "_320x320q90.jpg")
                         .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                         .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
@@ -168,6 +166,14 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
 
             if (holder.tvActivityWareZhuan != null) {
                 holder.tvActivityWareZhuan.setText("￥" + df.format(s_zhuan));
+                holder.tvActivityWareZhuan.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        int width = holder.tvActivityWareZhuan.getWidth();
+                        int height = holder.tvActivityWareZhuan.getHeight();
+                        LogUtil.e(" zhuan height = " + height );
+                    }
+                });
             }
             if (holder.tvActivityWareCoast != null) {
                 holder.tvActivityWareCoast.setText("￥" + df.format(s_coast));
@@ -189,21 +195,15 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
             }
 
             if (holder.tvActivityWareTitle != null && title != null) {
-                holder.tvActivityWareTitle.setText("\t\t" + title);
                 SpannableString span = new SpannableString("\t\t" + title);
-                ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
-
+                Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+                Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+                MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 holder.tvActivityWareTitle.setText(span);
             }
 
-//            if (holder.tv_activity_sun_tao_icon != null) {
-//                holder.tv_activity_sun_tao_icon.setSelected(true);
-//                holder.tv_activity_sun_tao_icon.setText("苏宁");
-//            }
-
             if (holder.ivActivityListWareImg != null && img_url != null) {
-                //mImageLoader.loadImage(img_url+"_320x320q90.jpg",holder.ivActivityListWareImg,true);
                 Glide.with(context).load(img_url.replace("800x800", "400x400"))
                         .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                         .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片

@@ -97,6 +97,7 @@ public class ActivityListPresenter extends BasePresenter {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
+            LogUtil.e(call.toString() + "-" + e.getMessage());
             if (context != null) {
                 Toast.makeText(context, "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
             }
@@ -140,6 +141,7 @@ public class ActivityListPresenter extends BasePresenter {
                         double sell_price = dataBean.getSell_price();
                         double market_price = dataBean.getMarket_price();
                         int couponsPrice = dataBean.getCouponsPrice();
+
                         if (site_id == 1) {
                             //淘宝
                             if (couponsPrice > 0) {

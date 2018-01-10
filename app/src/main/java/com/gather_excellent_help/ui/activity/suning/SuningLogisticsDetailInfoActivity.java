@@ -35,6 +35,7 @@ public class SuningLogisticsDetailInfoActivity extends BaseActivity {
 
     private WanRecycleView wan_suning_logistics;
     private RecyclerView recyclerView;
+    private RelativeLayout rl_order_no_zhanwei;
 
     private NetUtil netUtil;
     private Map<String, String> map;
@@ -60,6 +61,7 @@ public class SuningLogisticsDetailInfoActivity extends BaseActivity {
         rl_exit = (RelativeLayout) findViewById(R.id.rl_exit);
         tv_top_title_name = (TextView) findViewById(R.id.tv_top_title_name);
         wan_suning_logistics = (WanRecycleView) findViewById(R.id.wan_suning_logistics);
+        rl_order_no_zhanwei = (RelativeLayout)findViewById(R.id.rl_order_no_zhanwei);
     }
 
     /**
@@ -139,21 +141,27 @@ public class SuningLogisticsDetailInfoActivity extends BaseActivity {
             switch (statusCode) {
                 case 1:
                     List<SuningLogisticsBean.DataBean> data = suningLogisticsBean.getData();
-                    SuningLogisticsBean.DataBean dataBean = data.get(0);
-                    List<SuningLogisticsBean.DataBean.OrderItemIdsBean> orderItemIds = dataBean.getOrderItemIds();
-                    suningLogisticsInfoAdapter = new SuningLogisticsInfoAdapter(SuningLogisticsDetailInfoActivity.this, data, orderItemIds);
-                    recyclerView.setAdapter(suningLogisticsInfoAdapter);
+                    if(data!=null && data.size()>0) {
+                        rl_order_no_zhanwei.setVisibility(View.GONE);
+                        SuningLogisticsBean.DataBean dataBean = data.get(0);
+                        List<SuningLogisticsBean.DataBean.OrderItemIdsBean> orderItemIds = dataBean.getOrderItemIds();
+                        suningLogisticsInfoAdapter = new SuningLogisticsInfoAdapter(SuningLogisticsDetailInfoActivity.this, data, orderItemIds);
+                        recyclerView.setAdapter(suningLogisticsInfoAdapter);
+                    }else{
+                        rl_order_no_zhanwei.setVisibility(View.VISIBLE);
+                    }
                     break;
                 case 0:
                     Toast.makeText(SuningLogisticsDetailInfoActivity.this, suningLogisticsBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                    rl_order_no_zhanwei.setVisibility(View.VISIBLE);
                     break;
             }
-
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "-" + e.getMessage());
+            rl_order_no_zhanwei.setVisibility(View.VISIBLE);
         }
     }
 }

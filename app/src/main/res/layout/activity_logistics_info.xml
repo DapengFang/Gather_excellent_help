@@ -10,10 +10,23 @@
     <include
         layout="@layout/top_zhuangai_bar" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x9"
+        android:background="#eeeeee" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <com.gather_excellent_help.ui.widget.WanRecycleView
         android:id="@+id/wan_suning_logistics"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#eeeeee"/>
+        android:background="#ffffff" />
+
+        <include layout="@layout/load_no_zhanwei"/>
+
+    </FrameLayout>
 
 </LinearLayout>

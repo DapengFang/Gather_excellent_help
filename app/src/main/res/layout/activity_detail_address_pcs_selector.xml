@@ -16,12 +16,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:background="#ffffff"></com.gather_excellent_help.ui.widget.AddressSelector>
+        android:background="#ffffff"/>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x4"
-        android:background="#f2f2f2"/>
+        android:layout_height="@dimen/x1"
+        android:background="#eeeeee"/>
 
     <TextView
         android:id="@+id/tv_pcs_choice_cancel"
@@ -32,6 +32,11 @@
         android:textSize="@dimen/x14"
         android:gravity="center"
         android:background="#ffffff"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x2"
+        android:background="#eeeeee"/>
 
 </LinearLayout>
 

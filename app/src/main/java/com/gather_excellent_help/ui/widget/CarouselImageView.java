@@ -134,8 +134,10 @@ public class CarouselImageView extends LinearLayout {
         mImageViews = new ImageView[imageCount];
         for (int i = 0; i < imageCount; i++) {
             mImageView = new ImageView(mContext);
-            int imageParams = (int) (mScale * 5 + 0.5f);// XP与DP转换，适应应不同分辨率
-            int imagePadding = (int) (mScale * 5 + 0.5f);
+//            int imageParams = (int) (mScale * 5 + 0.5f);// XP与DP转换，适应应不同分辨率
+//            int imagePadding = (int) (mScale * 5 + 0.5f);
+            int imageParams = ViewPager.LayoutParams.WRAP_CONTENT;// XP与DP转换，适应应不同分辨率
+            int imagePadding =ViewPager.LayoutParams.WRAP_CONTENT;
             LayoutParams params = new LayoutParams(imageParams, imageParams);
             params.leftMargin = 10;
             mImageView.setScaleType(ScaleType.FIT_XY);
@@ -144,9 +146,9 @@ public class CarouselImageView extends LinearLayout {
 
             mImageViews[i] = mImageView;
             if (i == 0) {
-                mImageViews[i].setBackgroundResource(R.drawable.banner_point_s);
+                mImageViews[i].setBackgroundResource(R.drawable.banner_point_ellipse);
             } else {
-                mImageViews[i].setBackgroundResource(R.drawable.banner_point_n);
+                mImageViews[i].setBackgroundResource(R.drawable.banner_point_circle);
             }
             mGroup.addView(mImageViews[i]);
         }
@@ -226,10 +228,10 @@ public class CarouselImageView extends LinearLayout {
             // 设置当前显示的图片
             mImageIndex = index;
             // 设置图片滚动指示器背
-            mImageViews[index].setBackgroundResource(R.drawable.banner_point_s);
+            mImageViews[index].setBackgroundResource(R.drawable.banner_point_ellipse);
             for (int i = 0; i < mImageViews.length; i++) {
                 if (index != i) {
-                    mImageViews[i].setBackgroundResource(R.drawable.banner_point_n);
+                    mImageViews[i].setBackgroundResource(R.drawable.banner_point_circle);
                 }
             }
         }

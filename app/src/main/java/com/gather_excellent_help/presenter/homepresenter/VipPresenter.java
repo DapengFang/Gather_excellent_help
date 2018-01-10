@@ -1,13 +1,12 @@
 package com.gather_excellent_help.presenter.homepresenter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.DynamicDrawableSpan;
-import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,14 +23,14 @@ import com.gather_excellent_help.presenter.BasePresenter;
 import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningDetailActivity;
-import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
-import com.gather_excellent_help.utils.imageutils.ImageLoader;
+import com.gather_excellent_help.utils.span.ImageSpanUtil;
+import com.gather_excellent_help.utils.span.MyImageSpan;
 import com.google.gson.Gson;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -113,6 +112,7 @@ public class VipPresenter extends BasePresenter {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
+            LogUtil.e(call.toString() + "-" + e.getMessage());
             if (context != null) {
                 Toast.makeText(context, "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
             }
@@ -154,9 +154,9 @@ public class VipPresenter extends BasePresenter {
                     LinearLayout ll_vip_zera_ware = (LinearLayout) childAt.findViewById(R.id.ll_vip_zera_ware);
                     ImageView iv_vip_ware_img = (ImageView) childAt.findViewById(R.id.iv_vip_ware_img);
                     TextView tv_vip_ware_coupon = (TextView) childAt.findViewById(R.id.tv_vip_ware_coupon);
-                    TextView tv_vip_ware_title = (TextView) childAt.findViewById(R.id.tv_vip_ware_title);
+                    final TextView tv_vip_ware_title = (TextView) childAt.findViewById(R.id.tv_vip_ware_title);
                     TextView tv_vip_ware_person = (TextView) childAt.findViewById(R.id.tv_vip_ware_person);
-                    TextView tv_vip_ware_price = (TextView) childAt.findViewById(R.id.tv_vip_ware_price);
+                    final TextView tv_vip_ware_price = (TextView) childAt.findViewById(R.id.tv_vip_ware_price);
                     TextView tv_vip_ware_zhuan = (TextView) childAt.findViewById(R.id.tv_vip_ware_zhuan);
                     TextView tv_vip_ware_coast = (TextView) childAt.findViewById(R.id.tv_vip_ware_coast);
                     TextView tv_activity_sun_tao_icon = (TextView) childAt.findViewById(R.id.tv_activity_sun_tao_icon);
@@ -166,7 +166,7 @@ public class VipPresenter extends BasePresenter {
                     String img_url = dataBean.getImg_url();
                     int couponsPrice = dataBean.getCouponsPrice();
                     String couponsUrl = dataBean.getCouponsUrl();
-                    String title = dataBean.getTitle();
+                    final String title = dataBean.getTitle();
                     double sell_price = dataBean.getSell_price();
                     final String link_url = dataBean.getLink_url();
                     double tkRate = dataBean.getTkRate() / 100;
@@ -174,7 +174,7 @@ public class VipPresenter extends BasePresenter {
                     double coast = sell_price - couponsPrice - zhuan;
 
                     double suning_rate = dataBean.getSuning_rate();
-                    double s_zhuan = sell_price * suning_rate * user_rate;
+                    double s_zhuan = sell_price * tkRate * user_rate;
                     double s_coast = sell_price - s_zhuan;
 
                     tv_vip_ware_person.setVisibility(View.GONE);
@@ -183,20 +183,14 @@ public class VipPresenter extends BasePresenter {
                         tv_vip_ware_price.setText("￥" + df.format(sell_price));
                     }
                     if (site_id == 1) {
-//
-//                        if (title != null && tv_vip_ware_title != null) {
-//                            tv_vip_ware_title.setText("\t\t\t\t\t\t" + title);
-//                        }
 
                         SpannableString span = new SpannableString("\t\t" + title);
-                        ImageSpan image = new ImageSpan(context, R.drawable.taobao_order_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+                        Drawable drawable = context.getResources().getDrawable(R.drawable.taobao_order_icon);
+                        Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context,16), DensityUtil.dip2px(context,16));
+                        MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                         span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         tv_vip_ware_title.setText(span);
-
-//                        if (tv_activity_sun_tao_icon != null) {
-//                            tv_activity_sun_tao_icon.setSelected(false);
-//                            tv_activity_sun_tao_icon.setText("淘宝");
-//                        }
+//
                         if (img_url != null && iv_vip_ware_img != null) {
                             if (context != null && !context.isFinishing()) {
                                 Glide.with(context).load(img_url + "_320x320q90.jpg")
@@ -258,14 +252,11 @@ public class VipPresenter extends BasePresenter {
                         }
 
                         SpannableString span = new SpannableString("\t\t" + title);
-                        ImageSpan image = new ImageSpan(context, R.drawable.suning_ziying_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+                        Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+                        Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context,16), DensityUtil.dip2px(context,16));
+                        MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                         span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         tv_vip_ware_title.setText(span);
-
-//                        if (tv_activity_sun_tao_icon != null) {
-//                            tv_activity_sun_tao_icon.setSelected(true);
-//                            tv_activity_sun_tao_icon.setText("苏宁");
-//                        }
 
                         if (img_url != null && iv_vip_ware_img != null) {
                             if (context != null && !context.isFinishing()) {

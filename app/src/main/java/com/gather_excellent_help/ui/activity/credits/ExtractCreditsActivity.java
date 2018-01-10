@@ -144,12 +144,12 @@ public class ExtractCreditsActivity extends BaseActivity {
                         List<MineBean.DataBean> data = mineBean.getData();
                         if (data.size() > 0) {
                             amount = mineBean.getData().get(0).getAmount();
-                            DecimalFormat df = new DecimalFormat("0.00");
+                            DecimalFormat df = new DecimalFormat("#0.00");
                             df.setRoundingMode(RoundingMode.DOWN);
                             if (amount == 0) {
-                                tvExteactAccount.setText("可提取现金: 0");
+                                tvExteactAccount.setText("0.00");
                             } else {
-                                tvExteactAccount.setText("可提取现金: " +amount);
+                                tvExteactAccount.setText("" + amount);
                             }
                         }
                         break;
@@ -215,7 +215,7 @@ public class ExtractCreditsActivity extends BaseActivity {
             tvExtractCreditsCommit.setClickable(true);
         } else {
             Integer cret = Integer.valueOf(etCredits);
-            if (cret >= 10 && cret <= amount) {
+            if (cret >= 2 && cret <= amount) {
                 String userLogin = Tools.getUserLogin(this);
                 boolean bindAlipay = Tools.isBindAlipay(this);
                 map = new HashMap<>();
@@ -228,7 +228,7 @@ public class ExtractCreditsActivity extends BaseActivity {
                     toBindAlipay();
                 }
             } else {
-                Toast.makeText(ExtractCreditsActivity.this, "输入数量不正确，提现金额需要不低于最小额度并且不能高于可提取现金数量！！！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ExtractCreditsActivity.this, "提现金额需要不低于最小额度并且不能高于可提取现金数量！！！", Toast.LENGTH_SHORT).show();
                 tvExtractCreditsCommit.setClickable(true);
             }
         }
@@ -254,7 +254,7 @@ public class ExtractCreditsActivity extends BaseActivity {
             public void onClick(View view) {
                 String user_account = etAccount.getText().toString().trim();
                 String userPhone = Tools.getUserPhone(ExtractCreditsActivity.this);
-                if(TextUtils.isEmpty(userPhone)) {
+                if (TextUtils.isEmpty(userPhone)) {
                     Toast.makeText(ExtractCreditsActivity.this, "检测到登录出现故障，请退出当前账号后重新登录！！！", Toast.LENGTH_SHORT).show();
                 }
                 LogUtil.e("userPhone = " + userPhone);
