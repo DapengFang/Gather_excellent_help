@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_sou_taobao_ask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x10">
+
+        <TextView
+            android:id="@+id/tv_taobao_help_ask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="title"
+            android:layout_centerVertical="true"
+            android:textColor="#4d4d4d"
+            android:textSize="@dimen/x12" />
+
+        <ImageView
+            android:id="@+id/iv_taobao_help_arraw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/up_lower_collaspe_icon" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_taobao_help_answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fafafa"
+        android:padding="@dimen/x10"
+        android:text="title2"
+        android:textColor="#999999"
+        android:textSize="@dimen/x10" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="#f2f2f2"
+        android:layout_marginLeft="@dimen/x10"
+        android:layout_marginRight="@dimen/x10"/>
+</LinearLayout>

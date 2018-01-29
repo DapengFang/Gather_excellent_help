@@ -49,10 +49,10 @@ public class LowerMemberAdapter extends RecyclerView.Adapter<LowerMemberAdapter.
            holder.tvTongjiNumber.setText(dataBean.getCount()+"");
        }
         if(holder.tvWardCredits!=null) {
-            holder.tvWardCredits.setText("￥"+df.format(dataBean.getDeal_total()));
+            holder.tvWardCredits.setText(" ¥"+df.format(dataBean.getDeal_total()));
         }
         if(holder.tvLowerMoney!=null) {
-            holder.tvLowerMoney.setText("￥"+df.format(dataBean.getTotal()));
+            holder.tvLowerMoney.setText(" ¥"+df.format(dataBean.getTotal()));
         }
     }
 

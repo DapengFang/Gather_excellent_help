@@ -60,7 +60,7 @@ public class BackRebateAdapter extends RecyclerView.Adapter<BackRebateAdapter.Ac
             holder.tvAccountDetailMoney.setText("已完成" );
         }
 
-        holder.tvAccountDetailSalery.setText("赚:￥"+dataBean.getValue()+"现金");
+        holder.tvAccountDetailSalery.setText("赚: ¥"+dataBean.getValue()+"现金");
         if(dataBean.getRemark()!=null) {
             String remark = dataBean.getRemark();
             if(TextUtils.isEmpty(remark)) {

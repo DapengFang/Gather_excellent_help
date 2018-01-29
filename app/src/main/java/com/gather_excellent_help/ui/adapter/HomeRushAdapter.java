@@ -101,8 +101,8 @@ public class HomeRushAdapter extends BaseAdapter {
         double coast = sell_price - zhuan -couponsPrice;
         final String couponsUrl = itemBean.getCouponsUrl();
         final String secondCouponsUrl = itemBean.getSecondCouponsUrl();
-        holder.home_rush_sale.setText("赚:￥"+df.format(zhuan));
-        holder.home_rush_coast.setText("成本:￥"+df.format(coast));
+        holder.home_rush_sale.setText("赚: ¥"+df.format(zhuan));
+        holder.home_rush_coast.setText("成本: ¥"+df.format(coast));
         if(couponsPrice>0) {
             holder.home_rush_coupons.setVisibility(View.VISIBLE);
             holder.home_rush_coupons.setText("领券立减"+couponsPrice);
@@ -132,7 +132,7 @@ public class HomeRushAdapter extends BaseAdapter {
         }else{
             holder.home_rush_second_coupons.setVisibility(View.GONE);
         }
-        Tools.setPartTextColor(holder.home_rush_aprice,"活动价:￥"+df.format(sell_price),":");
+        Tools.setPartTextColor(holder.home_rush_aprice,"活动价: ¥"+df.format(sell_price),":");
         //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
         if(shopType==1){
             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);

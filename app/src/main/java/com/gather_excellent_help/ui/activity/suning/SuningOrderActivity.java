@@ -64,12 +64,10 @@ public class SuningOrderActivity extends BaseActivity {
     private NetUtil netUtil;
     private Map<String, String> map;
 
-    private String[] tabs = {"待付款", "待发货", "待收货", "待评价", "全部"};
-
     private String userLogin;
     private String pagesize = "10";//每页显示多少条数据
     private String pageindex = "1";//页数
-    private String order_status = "1";//订单状态
+    private String order_status = "0";//订单状态
     private int tab_p = 0;//当前的订单位置
     private int page = 1;//当前页数
     private boolean isLoaderMore;//是否加载更多
@@ -125,11 +123,15 @@ public class SuningOrderActivity extends BaseActivity {
             if (pay_status.equals("2")) {
                 isCanLoad = true;
                 order_status = "2";
-                defaultViewIndicator(childCount, 1);
+                defaultViewIndicator(childCount, 2);
             } else if (pay_status.equals("1")) {
                 isCanLoad = true;
                 order_status = "1";
-                defaultViewIndicator(childCount, 0);
+                defaultViewIndicator(childCount, 1);
+            } else if (pay_status.equals("3")) {
+                isCanLoad = true;
+                order_status = "4";
+                defaultViewIndicator(childCount, 4);
             }
         }
         getSuningOrderData();
@@ -303,23 +305,23 @@ public class SuningOrderActivity extends BaseActivity {
                         switch (tab_p) {
                             case 0:
                                 isCanLoad = true;
-                                order_status = "1";
+                                order_status = "0";
                                 break;
                             case 1:
                                 isCanLoad = true;
-                                order_status = "2";
+                                order_status = "1";
                                 break;
                             case 2:
                                 isCanLoad = true;
-                                order_status = "3";
+                                order_status = "2";
                                 break;
                             case 3:
                                 isCanLoad = true;
-                                order_status = "4";
+                                order_status = "3";
                                 break;
                             case 4:
                                 isCanLoad = true;
-                                order_status = "0";
+                                order_status = "4";
                                 break;
                         }
                         getSuningOrderData();
@@ -392,6 +394,8 @@ public class SuningOrderActivity extends BaseActivity {
                 page = 1;
                 isLoaderMore = false;
                 isCanLoad = true;
+                order_status = "4";
+                defaultViewIndicator(5, 4);
                 getSuningOrderData();
                 break;
             case 0:
@@ -688,6 +692,7 @@ public class SuningOrderActivity extends BaseActivity {
             String msg = "onEventMainThread收到了消息：" + event.getMessage();
             LogUtil.e(msg);
             isShowCat = true;
+            pay_status = "3";
             initData();
         }
     }

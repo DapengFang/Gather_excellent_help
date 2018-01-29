@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:background="#fa2a3b"
+        android:gravity="center"
+        android:text="具体账户明细"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/x14" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_account_list_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x10"
+            android:text="操作项目"
+            android:textColor="#666666"
+            android:textSize="@dimen/x10" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="#f5f5f5" />
+
+        <TextView
+            android:id="@+id/tv_account_list_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x10"
+            android:text="相应金额"
+            android:textColor="#666666"
+            android:textSize="@dimen/x10" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="#f5f5f5" />
+
+        <TextView
+            android:id="@+id/tv_account_list_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x10"
+            android:text="具体时间"
+            android:textColor="#666666"
+            android:textSize="@dimen/x10" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="#f5f5f5" />
+
+        <TextView
+            android:id="@+id/tv_account_list_remark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x10"
+            android:text="备注"
+            android:textColor="#666666"
+            android:textSize="@dimen/x10" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btn_account_lsit_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x40"
+        android:background="#fafafa"
+        android:text="确定"
+        android:textColor="#fa2a3b" />
+</LinearLayout>

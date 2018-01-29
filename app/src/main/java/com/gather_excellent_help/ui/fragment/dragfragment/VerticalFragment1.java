@@ -183,7 +183,7 @@ public class VerticalFragment1 extends Fragment {
             super.handleMessage(msg);
             long end_time = System.currentTimeMillis();
             long time = end_time - start_time;
-            if (time > 5000) {
+            if (time > 4000) {
                 if (msg.what == 1) {
                     myhandler.removeMessages(1);
                     Toast.makeText(context, "获取商品信息失败！！！", Toast.LENGTH_SHORT).show();
@@ -1453,7 +1453,7 @@ public class VerticalFragment1 extends Fragment {
                             double market_price = dataBean.getMarket_price();
                             if (title != null) {
                                 SpannableString span = new SpannableString("\t\t" + title);
-                                Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+                                Drawable drawable = context.getResources().getDrawable(R.drawable.s_suning_ware_icon);
                                 Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
                                 MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

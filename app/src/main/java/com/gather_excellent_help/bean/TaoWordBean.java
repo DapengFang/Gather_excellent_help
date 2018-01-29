@@ -9,12 +9,13 @@ public class TaoWordBean {
     /**
      * statusCode : 1
      * statusMessage : 生成成功！！！！
-     * data : ￥r6bM01f6svw￥
+     * data :  ¥r6bM01f6svw ¥
      */
 
     private int statusCode;
     private String statusMessage;
     private String data;
+
 
     public int getStatusCode() {
         return statusCode;

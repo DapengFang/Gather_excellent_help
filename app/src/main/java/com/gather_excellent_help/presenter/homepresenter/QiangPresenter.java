@@ -346,10 +346,10 @@ public class QiangPresenter extends BasePresenter {
                 tv_qiang_ware_price.setText(sell_price);
             }
             if (tv_qiang_ware_zhuan != null) {
-                tv_qiang_ware_zhuan.setText("￥" + df.format(zhuan));
+                tv_qiang_ware_zhuan.setText(" ¥" + df.format(zhuan));
             }
             if (tv_qiang_ware_coast != null) {
-                tv_qiang_ware_coast.setText("￥" + df.format(coast));
+                tv_qiang_ware_coast.setText(" ¥" + df.format(coast));
             }
             if (coupon_p > 0) {
                 tv_qiang_ware_coupon.setVisibility(View.VISIBLE);

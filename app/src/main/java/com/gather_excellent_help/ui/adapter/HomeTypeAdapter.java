@@ -29,13 +29,11 @@ public class HomeTypeAdapter extends BaseAdapter {
     private List<HomeTypeBean> datas;
     private LayoutInflater inflater;    //布局填充器
     private List<TyepIndexBean.DataBean> typeData;
-    //private ImageLoader mImageLoader;
 
     public HomeTypeAdapter(Context context, List<HomeTypeBean> datas, List<TyepIndexBean.DataBean> typeData) {
         this.context = context;
         this.datas = datas;
         this.typeData = typeData;
-        //mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         inflater = LayoutInflater.from(context);
     }
 

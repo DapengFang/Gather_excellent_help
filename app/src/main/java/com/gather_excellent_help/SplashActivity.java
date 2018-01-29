@@ -55,7 +55,7 @@ public class SplashActivity extends BaseFullScreenActivity {
 
 
     @Bind(R.id.iv_splash)
-    ImageView  ivSplash;
+    ImageView ivSplash;
     @Bind(R.id.rl_splash)
     RelativeLayout rlSplash;
 
@@ -69,16 +69,16 @@ public class SplashActivity extends BaseFullScreenActivity {
     private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
     private static final int REQUEST_CODE_ASK_CALL_PHONE = 0x05;
 
-    private int time=2;
+    private int time = 2;
 
     private NetUtil netUtil;
 
-    private  Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case REQUEST_TIME :
+                case REQUEST_TIME:
                     goToMain();
                     break;
                 case REQUEST_DOWNLOAD_ERROR:
@@ -100,13 +100,13 @@ public class SplashActivity extends BaseFullScreenActivity {
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
         if (Build.VERSION.SDK_INT >= 23) {
-            int checkCallPhonePermission = ContextCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE);
-            if(checkCallPhonePermission != PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_PHONE_STATE},REQUEST_CODE_ASK_CALL_PHONE);
-            }else{
+            int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+            if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_CODE_ASK_CALL_PHONE);
+            } else {
                 startLoadingData();
             }
-        }else{
+        } else {
             startLoadingData();
         }
     }
@@ -114,28 +114,29 @@ public class SplashActivity extends BaseFullScreenActivity {
     /**
      * start splash animation
      */
-    private void startLoadingData(){
+    private void startLoadingData() {
         bitmap = BitmapUtil.readBitMap(this, R.drawable.splash_img);
-        if(bitmap!=null) {
+        if (bitmap != null) {
             ivSplash.setImageBitmap(bitmap);
+            ivSplash.setScaleType(ImageView.ScaleType.FIT_XY);
         }
         netUtil = new NetUtil();
         checkUpdate();
     }
 
-    private void checkUpdate(){
-        netUtil.okHttp2Server2(check_url,null);
+    private void checkUpdate() {
+        netUtil.okHttp2Server2(check_url, null);
         netUtil.setOnServerResponseListener(new OnServerResponseListener());
     }
 
     public void goToMain() {
         finish();
         boolean isFirst = CacheUtils.getBoolean(this, CacheUtils.FIRST_STATE, false);
-        if(!isFirst) {
+        if (!isFirst) {
             Intent intent = new Intent(SplashActivity.this, GuideActivity.class);
             startActivity(intent);
-            CacheUtils.putBoolean(this,CacheUtils.FIRST_STATE,true);
-        }else{
+            CacheUtils.putBoolean(this, CacheUtils.FIRST_STATE, true);
+        } else {
             startActivity(new Intent(SplashActivity.this, MainActivity.class));
         }
     }
@@ -143,15 +144,15 @@ public class SplashActivity extends BaseFullScreenActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(bitmap!=null && !bitmap.isRecycled()) {
-           bitmap.recycle();
+        if (bitmap != null && !bitmap.isRecycled()) {
+            bitmap.recycle();
         }
-        if(pd!=null) {
-            if(pd.isShowing()) {
+        if (pd != null) {
+            if (pd.isShowing()) {
                 pd.dismiss();
             }
         }
-        if(alertDialog!=null && alertDialog.isShowing()) {
+        if (alertDialog != null && alertDialog.isShowing()) {
             alertDialog.dismiss();
             alertDialog = null;
         }
@@ -185,7 +186,7 @@ public class SplashActivity extends BaseFullScreenActivity {
             case REQUEST_CODE_ASK_CALL_PHONE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     startLoadingData();
-                }else{
+                } else {
                     Toast.makeText(SplashActivity.this, "请允许打开读取手机的权限！！", Toast.LENGTH_SHORT)
                             .show();
                 }
@@ -207,7 +208,7 @@ public class SplashActivity extends BaseFullScreenActivity {
                         showloadApkDialog();
                     }
                 }).create();
-        if(SplashActivity.this!=null && !isFinishing()) {
+        if (SplashActivity.this != null && !isFinishing()) {
             alertDialog.show();
         }
     }
@@ -258,7 +259,7 @@ public class SplashActivity extends BaseFullScreenActivity {
      * 对话框进度条的初始化展示
      */
     private void showDownloadDialog() {
-        pd =  new ProgressDialog(this);
+        pd = new ProgressDialog(this);
         pd.setTitle("提示");
         pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         pd.setCancelable(false);
@@ -272,13 +273,13 @@ public class SplashActivity extends BaseFullScreenActivity {
     private void installApk() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         Uri data;
-        if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.N) {
-            data = FileProvider.getUriForFile(this,"com.gather_excellent_help.fileprovider",apkFile);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            data = FileProvider.getUriForFile(this, "com.gather_excellent_help.fileprovider", apkFile);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        }else {
+        } else {
             data = Uri.fromFile(apkFile);
         }
-        intent.setDataAndType(data,"application/vnd.android.package-archive");
+        intent.setDataAndType(data, "application/vnd.android.package-archive");
         startActivity(intent);
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
@@ -287,7 +288,7 @@ public class SplashActivity extends BaseFullScreenActivity {
     /**
      * 联网回调的接口
      */
-    public class OnServerResponseListener implements NetUtil.OnServerResponseListener{
+    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
@@ -297,35 +298,36 @@ public class SplashActivity extends BaseFullScreenActivity {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            LogUtil.e(call.toString()+"--"+e.getMessage());
+            LogUtil.e(call.toString() + "--" + e.getMessage());
             Toast.makeText(SplashActivity.this, "请检查你的网络连接情况！", Toast.LENGTH_SHORT).show();
         }
     }
 
     /**
      * 解析数据
+     *
      * @param response
      */
     private void parseData(String response) {
         VersionBean versionBean = new Gson().fromJson(response, VersionBean.class);
         int statusCode = versionBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
+            case 1:
                 List<VersionBean.DataBean> data = versionBean.getData();
-                if(data!=null && data.size()>0) {
+                if (data != null && data.size() > 0) {
                     VersionBean.DataBean dataBean = data.get(0);
                     int isHb = dataBean.getIsHb();
                     LogUtil.e("是否开启 = " + isHb);
-                    CacheUtils.putInteger(SplashActivity.this,CacheUtils.IS_OPEN_RED,isHb);
-                    if(dataBean!=null) {
+                    CacheUtils.putInteger(SplashActivity.this, CacheUtils.IS_OPEN_RED, isHb);
+                    if (dataBean != null) {
                         String appVersion = dataBean.getAppVersion();
                         String version = Tools.getVersion(this);
-                        if(appVersion!=null) {
-                           if(appVersion.equals(Tools.getVersion(this))) {
-                               mHandler.sendEmptyMessageDelayed(REQUEST_TIME,1000);
-                           }else{
-                               showUpdateDialog();
-                           }
+                        if (appVersion != null) {
+                            if (appVersion.equals(Tools.getVersion(this))) {
+                                mHandler.sendEmptyMessageDelayed(REQUEST_TIME, 1000);
+                            } else {
+                                showUpdateDialog();
+                            }
                         }
                     }
                 }

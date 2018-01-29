@@ -66,35 +66,35 @@ public class MyApplication extends Application {
                         // 补丁加载回调通知
                         if (code == PatchStatus.CODE_LOAD_SUCCESS) {
                             // 表明补丁加载成功
-                            Log.e("TGA","PatchStatus.CODE_LOAD_SUCCESS = 补丁加载成功");
+                            Log.e("TGA", "PatchStatus.CODE_LOAD_SUCCESS = 补丁加载成功");
                             try {
                                 int count = Tools.getFirstHotfixToast(application);
-                                if(count == 1) {
+                                if (count == 1) {
                                     Toast.makeText(application, "更新补丁成功！", Toast.LENGTH_SHORT).show();
-                                    Tools.saveFirstHotfixToast(application,2);
-                                }else if(count ==2) {
+                                    Tools.saveFirstHotfixToast(application, 2);
+                                } else if (count == 2) {
                                     Toast.makeText(application, "更新补丁成功！", Toast.LENGTH_SHORT).show();
-                                    Tools.saveFirstHotfixToast(application,0);
+                                    Tools.saveFirstHotfixToast(application, 0);
                                 }
-                            }catch (Error e){
-                               LogUtil.e(e.getMessage());
+                            } catch (Error e) {
+                                LogUtil.e(e.getMessage());
                             }
                         } else if (code == PatchStatus.CODE_LOAD_RELAUNCH) {
                             // 表明新补丁生效需要重启. 开发者可提示用户或者强制重启;
                             // 建议: 用户可以监听进入后台事件, 然后调用killProcessSafely自杀，以此加快应用补丁，详见1.3.2.3
-                            try{
-                                Tools.saveHotfixStute(application,true);
-                            }catch(Error e){
-                               LogUtil.e("程序发生未知错误！！！");
+                            try {
+                                Tools.saveHotfixStute(application, true);
+                            } catch (Error e) {
+                                LogUtil.e("程序发生未知错误！！！");
                             }
-                            Log.e("TGA","PatchStatus.CODE_LOAD_RELAUNCH = 补丁加载需要冷启动" );
-                        } else if(code == PatchStatus.CODE_LOAD_FAIL) {
+                            Log.e("TGA", "PatchStatus.CODE_LOAD_RELAUNCH = 补丁加载需要冷启动");
+                        } else if (code == PatchStatus.CODE_LOAD_FAIL) {
                             // 内部引擎异常, 推荐此时清空本地补丁, 防止失败补丁重复加载
-                            Log.e("TGA","PatchStatus.CODE_LOAD_FAIL = 内存引擎异常" );
+                            Log.e("TGA", "PatchStatus.CODE_LOAD_FAIL = 内存引擎异常");
                             //SophixManager.getInstance().cleanPatches();
-                        } else{
+                        } else {
                             // 其它错误信息, 查看PatchStatus类说明
-                            Log.e("TGA","其它错误信息, 查看PatchStatus类说明" );
+                            Log.e("TGA", "其它错误信息, 查看PatchStatus类说明");
                         }
                     }
                 }).initialize();
@@ -115,8 +115,8 @@ public class MyApplication extends Application {
                 map.put("id", userLogin);
                 netUtil.okHttp2Server2(url, map);
             }
-        }catch (Error e){
-           LogUtil.e("程序发生未知错误！");
+        } catch (Error e) {
+            LogUtil.e("程序发生未知错误！");
         }
         netUtil.setOnServerResponseListener(new MyOnsetServerLisetener());
         new Thread() {
@@ -160,7 +160,7 @@ public class MyApplication extends Application {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-           LogUtil.e(e.getMessage());
+            LogUtil.e(e.getMessage());
         }
     }
 

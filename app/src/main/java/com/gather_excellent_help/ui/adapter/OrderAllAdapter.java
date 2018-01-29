@@ -76,12 +76,12 @@ public class OrderAllAdapter extends RecyclerView.Adapter<OrderAllAdapter.OrderM
         df.setRoundingMode(RoundingMode.DOWN);
         final String show_time = create_time.replace("T", "");
         holder.tvOrderAllTime.setText("下单时间:" + show_time);
-        holder.tvOrderAllPrice.setText("￥" + dataBean.getPrice());
+        holder.tvOrderAllPrice.setText(" ¥" + dataBean.getPrice());
         if (order_type == -1) {
             holder.tv_order_zhuan.setVisibility(View.GONE);
         } else if (order_type == -2) {
             holder.tv_order_zhuan.setVisibility(View.VISIBLE);
-            holder.tv_order_zhuan.setText("￥" + df.format(dataBean.getAmount()));
+            holder.tv_order_zhuan.setText(" ¥" + df.format(dataBean.getAmount()));
         } else {
             holder.tv_order_zhuan.setVisibility(View.GONE);
         }

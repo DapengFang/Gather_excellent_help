@@ -59,11 +59,11 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:hint="请输入提取数量"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:paddingLeft="@dimen/x3"
             android:textColor="#333333"
             android:textColorHint="#999999"
-            android:textSize="14sp" />
+            android:textSize="@dimen/x12" />
 
     </LinearLayout>
 

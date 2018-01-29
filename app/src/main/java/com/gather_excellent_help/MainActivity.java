@@ -1,21 +1,22 @@
 package com.gather_excellent_help;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,27 +26,27 @@ import android.support.v4.app.FragmentManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
-import com.alibaba.baichuan.trade.biz.login.AlibcLoginCallback;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.packet.RedpacketBean;
 import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.activity.RedpacketShowActivity;
-import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.adapter.CustomPagerAdapter;
-import com.gather_excellent_help.ui.base.BaseFragmentActivity;
 import com.gather_excellent_help.ui.base.LazyLoadFragment;
 import com.gather_excellent_help.ui.fragment.GoodscartFragment;
-import com.gather_excellent_help.ui.fragment.HomeFragment;
 import com.gather_excellent_help.ui.fragment.HomeUpdateFragment;
 import com.gather_excellent_help.ui.fragment.MineFragment;
 import com.gather_excellent_help.ui.fragment.TaobaoFragment;
+import com.gather_excellent_help.ui.fragment.TaobaoUpdateFragment;
 import com.gather_excellent_help.ui.fragment.TypeFragment;
 import com.gather_excellent_help.ui.widget.NoScrollViewPager;
+import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.ScreenUtil;
 import com.gather_excellent_help.utils.Tools;
+import com.gather_excellent_help.utils.enctry.DES;
+import com.gather_excellent_help.utils.enctry.Des2;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -58,18 +59,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import okhttp3.Call;
 
-public class MainActivity extends FragmentActivity{
+public class MainActivity extends FragmentActivity {
 
     private static final int SHOW_RED_PACKET = 0x123;
+    private static final int LOAD_MAIN = 0x134;
     private NoScrollViewPager vp_main;
-    @Bind(R.id.rg_main)
-    RadioGroup rg_main;
-    @Bind(R.id.ll_main)
-    LinearLayout ll_main;
+    private RadioGroup rg_main;
 
     private RelativeLayout rl_red_packet;
     private RelativeLayout rl_red_packet_show;
@@ -78,7 +75,7 @@ public class MainActivity extends FragmentActivity{
 
 
     private NetUtil netUtil;
-    private Map<String,String> map;
+    private Map<String, String> map;
 
 
     private String url = Url.BASE_URL + "GetLinkOfAdzone.aspx";
@@ -112,6 +109,19 @@ public class MainActivity extends FragmentActivity{
                     anim.setInterpolator(new OvershootInterpolator());
                     rl_red_packet_show.startAnimation(anim);
                     break;
+                case LOAD_MAIN:
+                    //初始化
+                    netUtil = new NetUtil();
+                    rg_main.check(R.id.rb_home);
+                    loadViewPager();
+                    rg_main.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
+                    MyOnclickListener myOnclickListener = new MyOnclickListener();
+                    rl_red_packet.setOnClickListener(myOnclickListener);
+                    iv_red_packet_exit.setOnClickListener(myOnclickListener);
+                    iv_red_packet_get.setOnClickListener(myOnclickListener);
+                    rl_red_packet_show.setOnClickListener(myOnclickListener);
+                    netUtil.setOnServerResponseListener(new OnServerResponseListener());
+                    break;
             }
         }
     };
@@ -124,47 +134,85 @@ public class MainActivity extends FragmentActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initWindow();
         setContentView(R.layout.activity_main);
         initView();
-        ButterKnife.bind(this);
         initData();
-        String md5Value = EncryptUtil.getMd5Value("123456@@11fe468");
-        LogUtil.e(md5Value);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+
+    }
+
+    private void initWindow() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int flagTranslucentStatus = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+            int flagTranslucentNavigation = WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getWindow();
+                WindowManager.LayoutParams attributes = window.getAttributes();
+                attributes.flags |= flagTranslucentNavigation;
+                window.setAttributes(attributes);
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
+            } else {
+                Window window = getWindow();
+                WindowManager.LayoutParams attributes = window.getAttributes();
+                attributes.flags |= flagTranslucentStatus | flagTranslucentNavigation;
+                window.setAttributes(attributes);
+            }
+        }
+
     }
 
     /**
      * 初始化控件
      */
     private void initView() {
-        vp_main = (NoScrollViewPager)findViewById(R.id.vp_main);
+        vp_main = (NoScrollViewPager) findViewById(R.id.vp_main);
         rl_red_packet = (RelativeLayout) findViewById(R.id.rl_red_packet);
         rl_red_packet_show = (RelativeLayout) findViewById(R.id.rl_red_packet_show);
         iv_red_packet_exit = (ImageView) findViewById(R.id.iv_red_packet_exit);
-        iv_red_packet_get = (ImageView)findViewById(R.id.iv_red_packet_get);
+        iv_red_packet_get = (ImageView) findViewById(R.id.iv_red_packet_get);
+        rg_main = (RadioGroup) findViewById(R.id.rg_main);
     }
 
     /**
      * 加载数据
      */
     private void initData() {
-        //初始化
-        netUtil = new NetUtil();
-        loadViewPager();
-        rg_main.check(R.id.rb_home);
-        rg_main.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
-        MyOnclickListener myOnclickListener = new MyOnclickListener();
-        rl_red_packet.setOnClickListener(myOnclickListener);
-        iv_red_packet_exit.setOnClickListener(myOnclickListener);
-        iv_red_packet_get.setOnClickListener(myOnclickListener);
-        rl_red_packet_show.setOnClickListener(myOnclickListener);
-        netUtil.setOnServerResponseListener(new OnServerResponseListener());
         int openRedStute = Tools.getOpenRedStute(this);
-        if(openRedStute == 1) {
+        if (openRedStute == 1) {
             handler.sendEmptyMessageDelayed(SHOW_RED_PACKET, 3000);
         }
+        if (handler != null) {
+            handler.sendEmptyMessageDelayed(LOAD_MAIN, 200);
+        }
+        LogUtil.e(ScreenUtil.getScreenWidth(this ) + "--" + ScreenUtil.getScreenHeight(this));
+    }
+
+    public static void test() throws Exception {
+        String key = "12378945";
+        String message = "{\"statusCode\":1,\"statusMessage\":\"查询成功\",\"data\":[{\"avatar\":\"https://wwc.alicdn.com/avatar/getAvatar.do?userId=2638987498&width=160&height=160&type=sns \n" +
+                "\n" +
+                "\",\"nick_name\":\"呆萌小方\",\"sex\":\"保密\",\"group_id\":5,\"advertising\":\"130642937\",\"user_get_ratio\":\"95\",\"user_earn\":0.0,\"grand_total\":5.52,\"group\":\"推广商家\",\"group_type\":1,\"mobile\":\"18514792343\",\"amount\":140.86,\"frostAmount\":125.66,\"apply_type\":0,\"pay_type\":0,\"apply_status\":0,\"pay_status\":0}]}";
+        String jiami = Des2.EncryptAsDoNet(message, key);
+        jiami = "ftGTerDpDUtPjiHSgztTkO3wYIYm+S5T6/oJ5TqmqPpL6ikVAj6tngBgtscGnfHDUpC2LdyKDObme3At4BW1nvEE2agR6Np8MMZk1uBaAmFZ+ADZMHK7+n6uYcGTOiFAO5x0xI9TlNzimR8dxkd0/I+hYcpBmnhFhF4Ng1ElKmOSjFKX3Z6VhylxHQPU2Ikv4BNyL5TOmuotX6HR2LGUVs+qn0uh9ULADwV6NTchTdsS/hG4QOSg2gcE/v94M6kpVFK1OXhkvhhyKvDDXT31tGrSn71xGaz8L55UmryQFVN4I5CjWlRIRW5sbymq5JNoF6znkrUSKmxRCAp6TZEldPkrB+QVRe7uIAUvJnuKxPTi9icg0ez6fwK8t3J0YVadYV/42Cw40wSIUgIoSCSH/7d/ji6hL6sc4gdXbXRs6AxTo9MjKyflqZZBRFY9cp7wm3NI668SI/t2kGj/uLcywMwgGsMntrnlxiauCb3teoAOF7g4oKBTpnR3Lv8auqCfgzG59n2XzQ1joG47dDHIP0Mq6ydLazxh7rs2JX2t+huvr56pgO36yMdsWnilGIWCK56me1tHfBIOdLhr/qEh51QmuXOe/5NzoY/2cGr9XEw=";
+        LogUtil.e("加密后的数据为:" + jiami);
+        String b = Des2.DecryptDoNet(jiami, key);
+        LogUtil.e("解密后的数据:" + b);
     }
 
     /**
@@ -173,14 +221,16 @@ public class MainActivity extends FragmentActivity{
     private void loadViewPager() {
         fragments = new ArrayList<>();
         fragments.add(new HomeUpdateFragment());
-        //fragments.add(new HomeFragment());
         fragments.add(new TypeFragment());
-        fragments.add(new TaobaoFragment());
+        fragments.add(new TaobaoUpdateFragment());
         fragments.add(new GoodscartFragment());
         fragments.add(new MineFragment());
         FragmentManager fm = getSupportFragmentManager();
+        LogUtil.e("fragments.size() = " + fragments.size());
         CustomPagerAdapter customPagerAdapter = new CustomPagerAdapter(fm, fragments);
-        vp_main.setAdapter(customPagerAdapter);
+        if (vp_main != null && customPagerAdapter != null) {
+            vp_main.setAdapter(customPagerAdapter);
+        }
     }
 
     /**
@@ -210,7 +260,7 @@ public class MainActivity extends FragmentActivity{
     }
 
     /**
-     *
+     * 底部RadioGroup的点击监听
      */
     class MyOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
 
@@ -262,7 +312,7 @@ public class MainActivity extends FragmentActivity{
     @Override
     protected void onStop() {
         super.onStop();// ATTENTION: This was auto-generated to implement the App Indexing API.
-         // See https://g.co/AppIndexing/AndroidStudio for more information.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         boolean hotfixStute = Tools.getHotfixStute(this);
         if (!isAppOnForeground()) {
@@ -270,7 +320,7 @@ public class MainActivity extends FragmentActivity{
             if (hotfixStute) {
                 Toast.makeText(MainActivity.this, "发现聚优帮有更新，需要重新启动App更新补丁", Toast.LENGTH_SHORT).show();
                 Tools.saveHotfixStute(this, false);
-                Tools.saveFirstHotfixToast(this,1);
+                Tools.saveFirstHotfixToast(this, 1);
                 SophixManager.getInstance().killProcessSafely();
             }
         }
@@ -304,32 +354,32 @@ public class MainActivity extends FragmentActivity{
 
         @Override
         public void onClick(View view) {
-             switch (view.getId()) {
-                 case R.id.rl_red_packet :
-                     //用来覆盖底下布局的点击事件
-                     break;
-                 case R.id.iv_red_packet_exit:
-                     rl_red_packet.setVisibility(View.GONE);
-                     break;
-                 case R.id.iv_red_packet_get:
-                     boolean login = Tools.isLogin(MainActivity.this);
-                     if(login) {
-                         String userLogin = Tools.getUserLogin(MainActivity.this);
-                         getRedPacketUrl(userLogin);
-                     }else{
-                         toLogin();
-                     }
-                     break;
-                 case R.id.rl_red_packet_show:
-                     boolean clogin = Tools.isLogin(MainActivity.this);
-                     if(clogin) {
-                         String userLogin = Tools.getUserLogin(MainActivity.this);
-                         getRedPacketUrl(userLogin);
-                     }else{
-                         toLogin();
-                     }
-                     break;
-             }
+            switch (view.getId()) {
+                case R.id.rl_red_packet:
+                    //用来覆盖底下布局的点击事件
+                    break;
+                case R.id.iv_red_packet_exit:
+                    rl_red_packet.setVisibility(View.GONE);
+                    break;
+                case R.id.iv_red_packet_get:
+                    boolean login = Tools.isLogin(MainActivity.this);
+                    if (login) {
+                        String userLogin = Tools.getUserLogin(MainActivity.this);
+                        getRedPacketUrl(userLogin);
+                    } else {
+                        toLogin();
+                    }
+                    break;
+                case R.id.rl_red_packet_show:
+                    boolean clogin = Tools.isLogin(MainActivity.this);
+                    if (clogin) {
+                        String userLogin = Tools.getUserLogin(MainActivity.this);
+                        getRedPacketUrl(userLogin);
+                    } else {
+                        toLogin();
+                    }
+                    break;
+            }
         }
     }
 
@@ -342,26 +392,26 @@ public class MainActivity extends FragmentActivity{
     /**
      * 获取红包链接
      */
-    private void getRedPacketUrl(String userLogin){
+    private void getRedPacketUrl(String userLogin) {
         map = new HashMap<>();
-        map.put("user_id",userLogin);
-        netUtil.okHttp2Server2(url,map);
+        map.put("user_id", userLogin);
+        netUtil.okHttp2Server2(url, map);
     }
 
     /**
      * 领取红包
      */
-    private void getRedPacket(String redpacket_url){
-         Intent intent = new Intent(this, RedpacketShowActivity.class);
-         intent.putExtra("redpacket_url",redpacket_url);
-         startActivity(intent);
-         rl_red_packet.setVisibility(View.GONE);
+    private void getRedPacket(String redpacket_url) {
+        Intent intent = new Intent(this, RedpacketShowActivity.class);
+        intent.putExtra("redpacket_url", redpacket_url);
+        startActivity(intent);
+        rl_red_packet.setVisibility(View.GONE);
     }
 
     /**
      * 监听页面上的点击事件
      */
-    public class OnServerResponseListener implements NetUtil.OnServerResponseListener{
+    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
@@ -369,9 +419,9 @@ public class MainActivity extends FragmentActivity{
             RedpacketBean redpacketBean = new Gson().fromJson(response, RedpacketBean.class);
             int statusCode = redpacketBean.getStatusCode();
             switch (statusCode) {
-                case 1 :
+                case 1:
                     List<RedpacketBean.DataBean> data = redpacketBean.getData();
-                    if(data!=null && data.size()>0) {
+                    if (data != null && data.size() > 0) {
                         String newHblink = data.get(0).getNewHblink();
                         getRedPacket(newHblink);
                     }
@@ -384,7 +434,7 @@ public class MainActivity extends FragmentActivity{
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            LogUtil.e(call.toString() + "-" +e.getMessage());
+            LogUtil.e(call.toString() + "-" + e.getMessage());
         }
     }
 }

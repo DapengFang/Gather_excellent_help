@@ -84,23 +84,23 @@
 
             <ImageView
                 android:id="@+id/iv_red_packet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/x280"
+                android:layout_height="@dimen/x272"
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/r_red_packet_icon" />
 
             <ImageView
                 android:id="@+id/iv_red_packet_get"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/x160"
+                android:layout_height="@dimen/x42"
                 android:layout_below="@id/iv_red_packet"
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/r_red_get_icon" />
 
             <ImageView
                 android:id="@+id/iv_red_packet_exit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/x20"
+                android:layout_height="@dimen/x20"
                 android:layout_below="@id/iv_red_packet_get"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/x10"

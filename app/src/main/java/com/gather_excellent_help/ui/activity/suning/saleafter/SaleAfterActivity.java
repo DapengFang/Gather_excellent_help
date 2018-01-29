@@ -109,10 +109,10 @@ public class SaleAfterActivity extends BaseActivity {
         if (ware_title != null) {
             tv_suning_order_title.setText(ware_title);
         }
-        tv_suning_order_realprice.setText("￥" + real_price);
+        tv_suning_order_realprice.setText(" ¥" + real_price);
         tv_suning_order_oldprice.getPaint().setAntiAlias(true);
         tv_suning_order_oldprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-        tv_suning_order_oldprice.setText("￥" + goods_price);
+        tv_suning_order_oldprice.setText(" ¥" + goods_price);
         tv_suning_order_number.setText("x" + quantity);
     }
 

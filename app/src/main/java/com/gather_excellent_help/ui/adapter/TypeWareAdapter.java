@@ -77,9 +77,9 @@ public class TypeWareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         double coast = sell_price - zhuan -couponsPrice;
         final String couponsUrl = dataBean.getCouponsUrl();
         final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
-        typeWareViewHolder.tvTypeWareSale.setText("赚:￥"+df.format(zhuan));
-        typeWareViewHolder.tvTypeWareCoast.setText("成本:￥"+df.format(coast));
-        Tools.setPartTextColor(typeWareViewHolder.tvTypeWareAprice,"活动价:￥"+df.format(sell_price),":");
+        typeWareViewHolder.tvTypeWareSale.setText("赚: ¥"+df.format(zhuan));
+        typeWareViewHolder.tvTypeWareCoast.setText("成本: ¥"+df.format(coast));
+        Tools.setPartTextColor(typeWareViewHolder.tvTypeWareAprice,"活动价: ¥"+df.format(sell_price),":");
         if(couponsPrice>0) {
             typeWareViewHolder.tvTypeWareCoupons.setVisibility(View.VISIBLE);
             typeWareViewHolder.tvTypeWareCoupons.setText("领券立减"+couponsPrice);

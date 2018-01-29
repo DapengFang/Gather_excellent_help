@@ -80,6 +80,7 @@ public class SearchWareBean {
         private double tkRate;
         private double commission_rate;
         private double suning_rate;
+        private int exclusive;
 
         public int getSite_id() {
             return site_id;
@@ -231,6 +232,14 @@ public class SearchWareBean {
 
         public void setSuning_rate(double suning_rate) {
             this.suning_rate = suning_rate;
+        }
+
+        public int getExclusive() {
+            return exclusive;
+        }
+
+        public void setExclusive(int exclusive) {
+            this.exclusive = exclusive;
         }
     }
 }

@@ -43,12 +43,10 @@ public class NewsFirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public static final int LOAD_END = 3;
     private static final int TYPE_FOOTER = -2;
     private int extra = 1;
-    //private ImageLoader mIageLoader;
 
     public NewsFirstAdapter(Context context,List<NewsListBean.DataBean> newsData) {
         this.context = context;
         this.newsData = newsData;
-        //mIageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
     }
 
     @Override

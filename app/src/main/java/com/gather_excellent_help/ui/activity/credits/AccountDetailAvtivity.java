@@ -48,8 +48,6 @@ public class AccountDetailAvtivity extends BaseActivity {
     TextView tvAccountQueryTime;
     @Bind(R.id.tv_account_query_project)
     TextView tvAccountQueryProject;
-//    @Bind(R.id.iv_order_no_zhanwei)
-//    ImageView ivOrderNoZhanwei;
 
     private RelativeLayout rl_order_no_zhanwei;
 

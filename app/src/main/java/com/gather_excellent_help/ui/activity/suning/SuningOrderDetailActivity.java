@@ -3,9 +3,14 @@ package com.gather_excellent_help.ui.activity.suning;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -61,6 +66,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
     private TextView tv_item_detail_right;
     private TextView tv_item_detail_left;
     private TextView tv_item_detail_extra;
+    private RelativeLayout rl_suning_order_number;
 
     private String orderInfo;
     private int status;//当前订单状态
@@ -91,6 +97,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
     private String productId = "";
     private int count;
     private boolean isContinue;
+    private String content;
 
 
     @Override
@@ -124,6 +131,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
         tv_item_detail_right = (TextView) findViewById(R.id.tv_item_detail_right);
         tv_item_detail_left = (TextView) findViewById(R.id.tv_item_detail_left);
         tv_item_detail_extra = (TextView) findViewById(R.id.tv_item_detail_extra);
+        rl_suning_order_number = (RelativeLayout) findViewById(R.id.rl_suning_order_number);
     }
 
     /**
@@ -142,6 +150,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
         rl_exit.setOnClickListener(myonclickListener);
         tv_item_detail_left.setOnClickListener(myonclickListener);
         tv_item_detail_right.setOnClickListener(myonclickListener);
+        rl_suning_order_number.setOnClickListener(myonclickListener);
     }
 
     /**
@@ -179,14 +188,17 @@ public class SuningOrderDetailActivity extends BaseActivity {
         String payment_time = dataBean.getPayment_time();
         String express_time = dataBean.getExpress_time();
         String complete_time = dataBean.getComplete_time();
-        tv_suning_detail_orderno.setText("订单号：" + order_no);
+        content = "订单号：" + order_no;
+        setTextPartColor(tv_suning_detail_orderno, 4, content);
+
         if (status == 1) {
             tv_suning_detail_createtime.setVisibility(View.VISIBLE);
             tv_suning_detail_paytime.setVisibility(View.GONE);
             tv_suning_detail_sendtime.setVisibility(View.GONE);
             tv_suning_detail_accepttime.setVisibility(View.GONE);
             if (add_time != null) {
-                tv_suning_detail_createtime.setText("创建时间：" + add_time);
+                content = "创建时间：" + add_time;
+                setTextPartColor(tv_suning_detail_createtime, 5, content);
             }
             tv_item_detail_extra.setVisibility(View.GONE);
             tv_item_detail_left.setVisibility(View.VISIBLE);
@@ -199,10 +211,12 @@ public class SuningOrderDetailActivity extends BaseActivity {
             tv_suning_detail_sendtime.setVisibility(View.GONE);
             tv_suning_detail_accepttime.setVisibility(View.GONE);
             if (add_time != null) {
-                tv_suning_detail_createtime.setText("创建时间：" + add_time);
+                content = "创建时间：" + add_time;
+                setTextPartColor(tv_suning_detail_createtime, 5, content);
             }
             if (payment_time != null) {
-                tv_suning_detail_paytime.setText("付款时间：" + payment_time);
+                content = "付款时间：" + payment_time;
+                setTextPartColor(tv_suning_detail_paytime, 5, content);
             }
             tv_item_detail_extra.setVisibility(View.GONE);
             tv_item_detail_left.setVisibility(View.GONE);
@@ -211,16 +225,19 @@ public class SuningOrderDetailActivity extends BaseActivity {
         } else if (status == 3) {
             tv_suning_detail_createtime.setVisibility(View.VISIBLE);
             tv_suning_detail_paytime.setVisibility(View.VISIBLE);
-            tv_suning_detail_sendtime.setVisibility(View.VISIBLE);
+            tv_suning_detail_sendtime.setVisibility(View.GONE);
             tv_suning_detail_accepttime.setVisibility(View.GONE);
             if (add_time != null) {
-                tv_suning_detail_createtime.setText("创建时间：" + add_time);
+                content = "创建时间：" + add_time;
+                setTextPartColor(tv_suning_detail_createtime, 5, content);
             }
             if (payment_time != null) {
-                tv_suning_detail_paytime.setText("付款时间：" + payment_time);
+                content = "付款时间：" + payment_time;
+                setTextPartColor(tv_suning_detail_paytime, 5, content);
             }
             if (express_time != null) {
-                tv_suning_detail_sendtime.setText("发货时间：" + express_time);
+                content = "发货时间：" + express_time;
+                setTextPartColor(tv_suning_detail_sendtime, 5, content);
             }
             tv_item_detail_extra.setVisibility(View.GONE);
             tv_item_detail_left.setVisibility(View.GONE);
@@ -229,25 +246,45 @@ public class SuningOrderDetailActivity extends BaseActivity {
         } else if (status == 4) {
             tv_suning_detail_createtime.setVisibility(View.VISIBLE);
             tv_suning_detail_paytime.setVisibility(View.VISIBLE);
-            tv_suning_detail_sendtime.setVisibility(View.VISIBLE);
+            tv_suning_detail_sendtime.setVisibility(View.GONE);
             tv_suning_detail_accepttime.setVisibility(View.VISIBLE);
             if (add_time != null) {
-                tv_suning_detail_createtime.setText("创建时间：" + add_time);
+                content = "创建时间：" + add_time;
+                setTextPartColor(tv_suning_detail_createtime, 5, content);
             }
             if (payment_time != null) {
-                tv_suning_detail_paytime.setText("付款时间：" + payment_time);
+                content = "付款时间：" + payment_time;
+                setTextPartColor(tv_suning_detail_paytime, 5, content);
             }
             if (express_time != null) {
-                tv_suning_detail_sendtime.setText("发货时间：" + express_time);
+                content = "发货时间：" + express_time;
+                setTextPartColor(tv_suning_detail_sendtime, 5, content);
             }
             if (complete_time != null) {
-                tv_suning_detail_accepttime.setText("完成时间：" + complete_time);
+                content = "完成时间：" + complete_time;
+                setTextPartColor(tv_suning_detail_accepttime, 5, content);
             }
             tv_item_detail_extra.setVisibility(View.GONE);
             tv_item_detail_left.setVisibility(View.GONE);
             tv_item_detail_right.setVisibility(View.VISIBLE);
             tv_item_detail_right.setText("晒单");
         }
+    }
+
+    /**
+     * 设置控件上面部分字体颜色
+     *
+     * @param tv
+     * @param end
+     * @param content
+     */
+    private void setTextPartColor(TextView tv, int end, String content) {
+        SpannableString spannableString = new SpannableString(content);
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#808080"));
+        RelativeSizeSpan sizeSpan01 = new RelativeSizeSpan(1.2f);
+        spannableString.setSpan(colorSpan, 0, end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(sizeSpan01, end, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        tv.setText(spannableString);
     }
 
     /**
@@ -262,9 +299,9 @@ public class SuningOrderDetailActivity extends BaseActivity {
         if (sn_freight == 0) {
             tv_suning_detail_free.setText("免运费");
         } else {
-            tv_suning_detail_free.setText("￥" + df.format(sn_freight));
+            tv_suning_detail_free.setText(" ¥" + df.format(sn_freight));
         }
-        tv_suning_detail_money.setText("￥" + df.format(real_amount));
+        tv_suning_detail_money.setText(" ¥" + df.format(real_amount));
     }
 
     /**
@@ -323,10 +360,10 @@ public class SuningOrderDetailActivity extends BaseActivity {
                         if (goods_title != null) {
                             tv_suning_order_title.setText(goods_title);
                         }
-                        tv_suning_order_realprice.setText("￥" + String.valueOf(df.format(real_price)));
+                        tv_suning_order_realprice.setText(" ¥" + String.valueOf(df.format(real_price)));
                         tv_suning_order_oldprice.getPaint().setAntiAlias(true);
                         tv_suning_order_oldprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-                        tv_suning_order_oldprice.setText("￥" + String.valueOf(df.format(goods_price)));
+                        tv_suning_order_oldprice.setText(" ¥" + String.valueOf(df.format(goods_price)));
                         tv_suning_order_number.setText("x" + quantity);
                         if (status == 1) {
                             rl_suning_detail_back.setVisibility(View.GONE);
@@ -453,7 +490,11 @@ public class SuningOrderDetailActivity extends BaseActivity {
         String address = dataBean.getAddress();
         tv_suning_detail_accept.setText(accept_name);
         tv_suning_detail_phone.setText(mobile);
-        tv_suning_detail_address.setText(area + " " + address);
+        String address_detail = "收货地址: " + area + " " + address;
+        SpannableString spannableString = new SpannableString(address_detail);
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#808080"));
+        spannableString.setSpan(colorSpan, 0, 5, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        tv_suning_detail_address.setText(spannableString);
     }
 
     /**
@@ -490,8 +531,19 @@ public class SuningOrderDetailActivity extends BaseActivity {
                 case R.id.tv_item_detail_right:
                     rightButtonHandler();
                     break;
+                case R.id.rl_suning_order_number:
+                    copeOrdernoToPanel();
+                    break;
             }
         }
+    }
+
+    /**
+     * 复制订单号到剪切板
+     */
+    private void copeOrdernoToPanel() {
+        Toast.makeText(this, "此订单号已经复制到剪切板~", Toast.LENGTH_SHORT).show();
+        Tools.copyToClipboard(this, order_no);
     }
 
     /**

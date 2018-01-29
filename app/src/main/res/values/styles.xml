@@ -18,9 +18,26 @@
 
         <item name="android:gravity">center</item>
         <item name="android:textColor">@drawable/bottom_tag_textcolor_selector</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:layout_weight">1</item>
     </style>
+
+    <style name="top_account_tag_style">
+        <!-- Customize your theme here. -->
+        <item name="android:layout_width">@dimen/x48</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">@drawable/top_account_bgcolor_selector</item>
+        <item name="android:button">@android:color/transparent</item>
+        <item name="android:layout_marginLeft">@dimen/x8</item>
+        <item name="android:layout_marginRight">@dimen/x8</item>
+
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/x2</item>
+        <item name="android:textColor">@drawable/top_account_textcolor_selector</item>
+        <item name="android:textSize">@dimen/x10</item>
+    </style>
+
     <style name="AnimBottom">
         <item name="android:windowEnterAnimation">@anim/popshow_anim</item>
         <!-- 指定显示的动画xml -->

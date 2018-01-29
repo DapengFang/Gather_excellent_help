@@ -7,7 +7,7 @@ package com.gather_excellent_help.bean.packet;
 public class NewtkBean {
 
     /**
-     * wireless_share_tpwd_create_response : {"model":"￥JwzH05mV6mM￥","request_id":"z2bt5wnyli2q"}
+     * wireless_share_tpwd_create_response : {"model":" ¥JwzH05mV6mM ¥","request_id":"z2bt5wnyli2q"}
      */
 
     private WirelessShareTpwdCreateResponseBean wireless_share_tpwd_create_response;
@@ -22,7 +22,7 @@ public class NewtkBean {
 
     public static class WirelessShareTpwdCreateResponseBean {
         /**
-         * model : ￥JwzH05mV6mM￥
+         * model :  ¥JwzH05mV6mM ¥
          * request_id : z2bt5wnyli2q
          */
 

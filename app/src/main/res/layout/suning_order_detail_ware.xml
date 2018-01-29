@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="￥28.90"
+                android:text=" ¥28.90"
                 android:textColor="#333333"
                 android:textSize="12sp" />
 
@@ -72,7 +72,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/tv_suning_order_realprice"
                 android:layout_marginTop="@dimen/x3"
-                android:text="￥66.99"
+                android:text=" ¥66.99"
                 android:textColor="#aaaaaa"
                 android:textSize="12sp" />
 

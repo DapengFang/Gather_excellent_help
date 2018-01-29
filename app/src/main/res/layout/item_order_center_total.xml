@@ -11,7 +11,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/x8"
-        android:text="共计1件商品 合计：￥8399.00(含运费 ￥0.00)"
+        android:text="共计1件商品 合计： ¥8399.00(含运费  ¥0.00)"
         android:textSize="12sp"
         android:textColor="#55000000"/>
 

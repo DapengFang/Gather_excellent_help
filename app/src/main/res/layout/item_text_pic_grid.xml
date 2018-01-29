@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="10sp"
-        android:text="到手价：￥5623.00"
+        android:text="到手价： ¥5623.00"
         android:textColor="#99ff0000"
         android:layout_marginTop="@dimen/x2"
         android:paddingLeft="@dimen/x10"/>
@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="10sp"
-        android:text="到手价：￥5623.00"
+        android:text="到手价： ¥5623.00"
         android:textColor="#99ff0000"
         android:paddingLeft="@dimen/x10"/>
     <TextView
@@ -61,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="10sp"
-        android:text="到手价：￥5623.00"
+        android:text="到手价： ¥5623.00"
         android:textColor="#99000000"
         android:paddingLeft="@dimen/x10"/>
     <TextView

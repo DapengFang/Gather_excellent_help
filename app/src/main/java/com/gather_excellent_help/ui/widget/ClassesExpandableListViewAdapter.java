@@ -137,7 +137,7 @@ public class ClassesExpandableListViewAdapter extends BaseExpandableListAdapter 
         if (childrenCount == 0) {
             arrawNavigator.setVisibility(View.GONE);
             if (check) {
-                tvNavigator.setTextColor(Color.parseColor("#ff6600"));
+                tvNavigator.setTextColor(Color.parseColor("#fa2a3b"));
             } else {
                 tvNavigator.setTextColor(Color.parseColor("#555555"));
             }
@@ -158,29 +158,10 @@ public class ClassesExpandableListViewAdapter extends BaseExpandableListAdapter 
     }
 
     private TextView getGenericChildView(TypeNavigatorBean.DataBean.SubListBean.ThirdListBean thirdListBean, String string, final int groupPosition, final int childPosition) {
-
-//        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(
-//                ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT);
-//
-//        TextView textView = new TextView(activity);
-//        textView.setLayoutParams(layoutParams);
-//        textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-//        textView.setPadding(100, 30, 0, 30);
-//        textView.setText(string);
-//        textView.setTextSize(DensityUtil.dip2px(activity,4));
-//        textView.setTextColor(Color.parseColor("#99000000"));
-//        textView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //3级的点击事件
-//                onThirdListClickListener.onThirdClick(groupPosition,childPosition);
-//            }
-//        });
         final TextView textView = (TextView) View.inflate(activity, R.layout.item_text_type, null);
         boolean check = thirdListBean.isCheck();
         if (check) {
-            textView.setTextColor(Color.parseColor("#ff6600"));
+            textView.setTextColor(Color.parseColor("#fa2a3b"));
         } else {
             textView.setTextColor(Color.parseColor("#555555"));
         }

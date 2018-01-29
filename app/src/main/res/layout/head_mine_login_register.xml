@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_mine_head_login"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/x108"
+    android:background="@drawable/mine_head_user_bg"
+    android:visibility="gone"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="@dimen/x100"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <Button
+            android:id="@+id/btn_mine_head_login"
+            android:layout_width="@dimen/x46"
+            android:layout_height="@dimen/x20"
+            android:background="@drawable/head_login_white_shape"
+            android:gravity="center"
+            android:text="登录"
+            android:textColor="#ff6600"
+            android:textSize="@dimen/x10" />
+
+        <Button
+            android:id="@+id/btn_mine_head_register"
+            android:layout_width="@dimen/x46"
+            android:layout_height="@dimen/x20"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/head_register_gray_shape"
+            android:gravity="center"
+            android:text="注册"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/x10" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,15 +1,22 @@
 package com.gather_excellent_help.ui.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -21,15 +28,20 @@ import com.alibaba.baichuan.android.trade.model.AlibcShowParams;
 import com.alibaba.baichuan.android.trade.model.OpenType;
 import com.alibaba.baichuan.android.trade.page.AlibcMyOrdersPage;
 import com.alibaba.baichuan.trade.biz.core.taoke.AlibcTaokeParams;
+import com.alibaba.baichuan.trade.biz.login.AlibcLogin;
+import com.alibaba.baichuan.trade.biz.login.AlibcLoginCallback;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.gather_excellent_help.MainActivity;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.aliapi.DemoTradeCallback;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.HelpRuleBean;
 import com.gather_excellent_help.bean.MineBean;
+import com.gather_excellent_help.bean.SmsCodeBean;
 import com.gather_excellent_help.ui.activity.BindPhoneActivity;
+import com.gather_excellent_help.ui.activity.RegisterActivity;
 import com.gather_excellent_help.ui.activity.suning.LogisticsInfoActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningOrderLogisticsActivity;
 import com.gather_excellent_help.ui.activity.suning.saleafter.SaleAfterActivity;
@@ -48,11 +60,13 @@ import com.gather_excellent_help.ui.activity.credits.LowerMemberStaticsActivity;
 import com.gather_excellent_help.ui.activity.credits.ShopDetailActivity;
 import com.gather_excellent_help.ui.activity.shop.WhichJoinActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningOrderActivity;
-import com.gather_excellent_help.ui.activity.test.TestActivity_l01;
+import com.gather_excellent_help.ui.activity.taosearch.TaoSearchActivity;
 import com.gather_excellent_help.ui.base.LazyLoadFragment;
+import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
 import com.gather_excellent_help.ui.widget.CircularImage;
 import com.gather_excellent_help.ui.widget.MyToggleButton;
 import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.Check;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -75,24 +89,12 @@ import okhttp3.Call;
 
 public class MineFragment extends LazyLoadFragment {
 
-    @Bind(R.id.civ_me_head_icon)
-    CircularImage civMeHeadIcon;
-    @Bind(R.id.iv_me_person_set)
-    ImageView ivMePersonSet;
     @Bind(R.id.rl_mine_set)
     RelativeLayout rlMineSet;
-    @Bind(R.id.iv_me_person_lingdang)
-    ImageView ivMePersonLingdang;
-    @Bind(R.id.tv_me_nickname)
-    TextView tvMeNickname;
-    @Bind(R.id.rl_me_nickname)
-    RelativeLayout rlMeNickname;
     @Bind(R.id.tv_account_money)
     TextView tvAccountMoney;
     @Bind(R.id.tv_account_money2)
     TextView tvAccountMoney2;
-    @Bind(R.id.tv_mine_mobietype)
-    TextView tvMineMobietype;
     @Bind(R.id.ll_mine_extract_credits)
     LinearLayout llMineExtractCredits;
     @Bind(R.id.ll_mine_find_friends)
@@ -153,30 +155,53 @@ public class MineFragment extends LazyLoadFragment {
     TextView tvMineCompontL06;
     @Bind(R.id.rl_mine_toggle)
     RelativeLayout rlMineToggle;
-    @Bind(R.id.v_lower_member_up)
-    View vLowerMemberUp;
     @Bind(R.id.ll_lower_member_statics)
     LinearLayout llLowerMemberStatics;
-    @Bind(R.id.v_lower_member_down)
-    View vLowerMemberDown;
     @Bind(R.id.v_tui_zhuan_line)
     View vTuiZhuanLine;
     @Bind(R.id.v_toggle_line)
     View vToggleLine;
 
     private LinearLayout ll_mine_shiti_show;
-    private LinearLayout ll_mine_salery_show;
+    //private LinearLayout ll_mine_salery_show;
 
     private LinearLayout ll_mine_u_like;
     private LinearLayout ll_mine_suning_order;
     private String mseg = "";
     private SwipeRefreshLayout swip_fresh;
 
+    private CircularImage civMeHeadIcon;
+
     private NetUtil netUtils;
     private NetUtil netUtils2;
     private Map<String, String> map;
     private String url = Url.BASE_URL + "Mine.aspx";
     private int group_id = -1;
+
+    private ImageView iv_mine_compont_l01;
+    private ImageView iv_mine_compont_l02;
+    private ImageView iv_mine_compont_l03;
+    private ImageView iv_mine_compont_l04;
+    private ImageView iv_mine_compont_l05;
+    private ImageView iv_mine_compont_l06;
+
+    private LinearLayout ll_userinfo_head;
+    private TextView tv_mine_tabao_account;
+    private LinearLayout ll_userinfo_alipay;
+    private TextView tv_userinfo_alipay;
+    private TextView tv_userinfo_level_icon;
+    private TextView tv_userinfo_level_name;
+
+    private RelativeLayout rl_mine_head_login;
+    private RelativeLayout rl_mine_head_userinfo;
+
+    private Button btn_mine_head_login;
+    private Button btn_mine_head_register;
+
+    private TextView tv_grand_total;
+    private ImageView iv_apply_ad_show;
+
+    private LinearLayout ll_mine_content_show;
 
     private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
     private AlibcTaokeParams alibcTaokeParams = null;//淘客参数，包括pid，unionid，subPid
@@ -195,6 +220,9 @@ public class MineFragment extends LazyLoadFragment {
 
     private String help_url = Url.BASE_URL + "UserHelp.aspx";//帮助
     private String rule_url = Url.BASE_URL + "RebateRules.aspx";//返佣
+    private String bind_url = Url.BASE_URL + "bindTaobao.aspx";//绑定淘宝
+    private String pay_url = Url.BASE_URL + "BindAlipay.aspx";//绑定支付宝
+    private String sms_url = Url.BASE_URL + "GetRandom.aspx";//获取短信验证码
     private double user_earn;
     private String which;
 
@@ -206,6 +234,22 @@ public class MineFragment extends LazyLoadFragment {
     private int apply_type = -1;
     private int pay_type;
     private boolean mIsRequestDataRefresh;
+    private boolean bindTao;
+    private boolean bindAlipay;
+    private AlertDialog alertDialog;
+    private AlibcLogin alibcLogin;
+    private String openId;
+    private String avatarUrl;
+    private String nick;
+    private String userLogin;
+    private String account;
+    private String name;
+    private CountDownTimer countDownTimer;
+    private String sms_code_s;
+    private String alipay_account;
+    private String alipay_name;
+    private String taobao_nick;
+    private double grand_total;
 
     @Override
     public View initView() {
@@ -213,14 +257,43 @@ public class MineFragment extends LazyLoadFragment {
         ll_mine_u_like = (LinearLayout) inflate.findViewById(R.id.ll_mine_u_like);
         ll_mine_suning_order = (LinearLayout) inflate.findViewById(R.id.ll_mine_suning_order);
         ll_mine_shiti_show = (LinearLayout) inflate.findViewById(R.id.ll_mine_shiti_show);
-        ll_mine_salery_show = (LinearLayout) inflate.findViewById(R.id.ll_mine_salery_show);
+        //ll_mine_salery_show = (LinearLayout) inflate.findViewById(R.id.ll_mine_salery_show);
         swip_fresh = (SwipeRefreshLayout) inflate.findViewById(R.id.swip_fresh);
+        civMeHeadIcon = (CircularImage) inflate.findViewById(R.id.civ_me_head_icon);
+
+        iv_mine_compont_l01 = (ImageView) inflate.findViewById(R.id.iv_mine_compont_l01);
+        iv_mine_compont_l02 = (ImageView) inflate.findViewById(R.id.iv_mine_compont_l02);
+        iv_mine_compont_l03 = (ImageView) inflate.findViewById(R.id.iv_mine_compont_l03);
+        iv_mine_compont_l04 = (ImageView) inflate.findViewById(R.id.iv_mine_compont_l04);
+        iv_mine_compont_l05 = (ImageView) inflate.findViewById(R.id.iv_mine_compont_l05);
+        iv_mine_compont_l06 = (ImageView) inflate.findViewById(R.id.iv_mine_compont_l06);
+
+        ll_userinfo_head = (LinearLayout) inflate.findViewById(R.id.ll_userinfo_head);
+        tv_mine_tabao_account = (TextView) inflate.findViewById(R.id.tv_mine_tabao_account);
+        ll_userinfo_alipay = (LinearLayout) inflate.findViewById(R.id.ll_userinfo_alipay);
+        tv_userinfo_alipay = (TextView) inflate.findViewById(R.id.tv_userinfo_alipay);
+        tv_userinfo_level_icon = (TextView) inflate.findViewById(R.id.tv_userinfo_level_icon);
+        tv_userinfo_level_name = (TextView) inflate.findViewById(R.id.tv_userinfo_level_name);
+
+        rl_mine_head_login = (RelativeLayout) inflate.findViewById(R.id.rl_mine_head_login);
+        rl_mine_head_userinfo = (RelativeLayout) inflate.findViewById(R.id.rl_mine_head_userinfo);
+
+        btn_mine_head_login = (Button) inflate.findViewById(R.id.btn_mine_head_login);
+        btn_mine_head_register = (Button) inflate.findViewById(R.id.btn_mine_head_register);
+
+        tv_grand_total = (TextView) inflate.findViewById(R.id.tv_grand_total);
+        iv_apply_ad_show = (ImageView) inflate.findViewById(R.id.iv_apply_ad_show);
+
+        ll_mine_content_show = (LinearLayout) inflate.findViewById(R.id.ll_mine_content_show);
+
         return inflate;
     }
 
     @Override
     public void initData() {
         login = Tools.isLogin(getContext());
+        bindTao = Tools.isBindTao(getContext());
+        bindAlipay = Tools.isBindAlipay(getContext());
         groupId = Tools.getGroupId(getContext());
         shopType = Tools.getShopType(getContext());
         LogUtil.e("Mine shopType = " + shopType);
@@ -234,11 +307,18 @@ public class MineFragment extends LazyLoadFragment {
                         llMineCompontFirst.setVisibility(View.VISIBLE);
                         llMineCompontSecond.setVisibility(View.VISIBLE);
                         tvMineCompontL01.setText("提取现金");
-                        tvMineCompontL02.setText("邀请好友赚钱啦");
+                        tvMineCompontL02.setText("邀请好友");
                         tvMineCompontL03.setText("账户明细");
                         tvMineCompontL04.setText("商家信息");
-                        tvMineCompontL05.setText("帮助");
+                        tvMineCompontL05.setText("用户帮助");
                         tvMineCompontL06.setText("返佣规则");
+                        iv_mine_compont_l01.setImageResource(R.drawable.tixian_icon);
+                        iv_mine_compont_l02.setImageResource(R.drawable.friend_icon);
+                        iv_mine_compont_l03.setImageResource(R.drawable.zhanghu_icon);
+                        iv_mine_compont_l04.setImageResource(R.drawable.shopinfo_icon);
+                        iv_mine_compont_l05.setImageResource(R.drawable.help_icon);
+                        iv_mine_compont_l06.setImageResource(R.drawable.fanyong_icon);
+
                         llMineUserBack.setVisibility(View.VISIBLE);
                         rlMineToggle.setVisibility(View.VISIBLE);
                         llMineZhuanOrder.setVisibility(View.VISIBLE);
@@ -249,7 +329,7 @@ public class MineFragment extends LazyLoadFragment {
                                 && tvMineCompontL03 != null && tvMineCompontL04 != null
                                 && tvMineCompontL05 != null && tvMineCompontL06 != null
                                 && llMineUserBack != null && rlMineToggle != null &&
-                                llMineZhuanOrder != null && tvMeNickname != null &&
+                                llMineZhuanOrder != null &&
                                 civMeHeadIcon != null) {
                             loadMineData();
                             if (handler != null) {
@@ -265,7 +345,7 @@ public class MineFragment extends LazyLoadFragment {
             }
         };
         if (handler != null) {
-            handler.sendEmptyMessageDelayed(CHECK_NULL, 500);
+            handler.sendEmptyMessageDelayed(CHECK_NULL, 300);
         }
     }
 
@@ -332,7 +412,7 @@ public class MineFragment extends LazyLoadFragment {
             llMineZhuanOrder.setVisibility(View.VISIBLE);
             vTuiZhuanLine.setVisibility(View.VISIBLE);
             ll_mine_shiti_show.setVisibility(View.VISIBLE);
-            ll_mine_salery_show.setVisibility(View.GONE);
+            //ll_mine_salery_show.setVisibility(View.GONE);
         } else {
             loadCuserDefault();
             tvAccountMoneyTitle1.setText("余额");
@@ -342,7 +422,7 @@ public class MineFragment extends LazyLoadFragment {
             llMineZhuanOrder.setVisibility(View.GONE);
             vTuiZhuanLine.setVisibility(View.GONE);
             ll_mine_shiti_show.setVisibility(View.GONE);
-            ll_mine_salery_show.setVisibility(View.VISIBLE);
+            //ll_mine_salery_show.setVisibility(View.VISIBLE);
         }
         if (groupId == 5) {
             loadLowerMermberShow();
@@ -358,11 +438,18 @@ public class MineFragment extends LazyLoadFragment {
         netUtils = new NetUtil();
         netUtils2 = new NetUtil();
         defaultSet();
+        ll_mine_content_show.setVisibility(View.VISIBLE);
         if (login) {
-            String userLogin = Tools.getUserLogin(getActivity());
+            rl_mine_head_login.setVisibility(View.GONE);
+            rl_mine_head_userinfo.setVisibility(View.VISIBLE);
+            userLogin = Tools.getUserLogin(getActivity());
+            which = "userinfo";
             map = new HashMap<>();
             map.put("Id", userLogin);
             netUtils.okHttp2Server2(url, map);
+        } else {
+            rl_mine_head_login.setVisibility(View.VISIBLE);
+            rl_mine_head_userinfo.setVisibility(View.GONE);
         }
         MyOnClickListener myOnClickListener = new MyOnClickListener();
         rlMineSet.setOnClickListener(myOnClickListener);
@@ -378,18 +465,32 @@ public class MineFragment extends LazyLoadFragment {
         llMineZhuanOrder.setOnClickListener(myOnClickListener);
         llMineUserSalery.setOnClickListener(myOnClickListener);
         llMineUserBack.setOnClickListener(myOnClickListener);
-        civMeHeadIcon.setOnClickListener(myOnClickListener);
+        //civMeHeadIcon.setOnClickListener(myOnClickListener);
         llLowerMemberStatics.setOnClickListener(myOnClickListener);
-        ivMePersonLingdang.setOnClickListener(myOnClickListener);
+        //ivMePersonLingdang.setOnClickListener(myOnClickListener);
 
         ll_mine_u_like.setOnClickListener(myOnClickListener);
         ll_mine_suning_order.setOnClickListener(myOnClickListener);
+
+        ll_userinfo_head.setOnClickListener(myOnClickListener);
+        ll_userinfo_alipay.setOnClickListener(myOnClickListener);
+
+        btn_mine_head_login.setOnClickListener(myOnClickListener);
+        btn_mine_head_register.setOnClickListener(myOnClickListener);
         setupSwipeRefresh();
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
                 LogUtil.e("userinfo = " + response);
-                parseData(response);
+                if (which.equals("userinfo")) {
+                    parseData(response);
+                } else if (which.equals("bind_taobao")) {
+                    parseBindTaobaoData(response);
+                } else if (which.equals("sms")) {
+                    parseSmsData(response);
+                } else if (which.equals("bind_pay")) {
+                    parseBindPayData(response);
+                }
             }
 
             @Override
@@ -403,9 +504,9 @@ public class MineFragment extends LazyLoadFragment {
                 public void isCurrentState(boolean currentState) {
                     CacheUtils.putBoolean(getContext(), CacheUtils.TOGGLE_SHOW, currentState);
                     if (currentState) {
-                        Toast.makeText(getContext(), "推广赚已隐藏！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "隐藏！", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getContext(), "推广赚已显示！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "显示！", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -433,12 +534,29 @@ public class MineFragment extends LazyLoadFragment {
     }
 
     /**
+     * @param response 解析绑定支付宝数据
+     */
+    private void parseBindPayData(String response) {
+        CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
+        int statusCode = codeStatueBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                CacheUtils.putBoolean(getContext(), CacheUtils.PAY_STATE, true);
+                CacheUtils.putString(getContext(), CacheUtils.ALIPAY_ACCOUNT, account);
+                CacheUtils.putString(getContext(), CacheUtils.ALIPAY_USERNAME, name);
+                initData();
+                break;
+            case 0:
+                Toast.makeText(getContext(), codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    /**
      * 隐藏下级会员统计
      */
     private void loadLowerMermberhind() {
         llLowerMemberStatics.setVisibility(View.GONE);
-        vLowerMemberUp.setVisibility(View.GONE);
-        vLowerMemberDown.setVisibility(View.GONE);
     }
 
     /**
@@ -446,8 +564,6 @@ public class MineFragment extends LazyLoadFragment {
      */
     private void loadLowerMermberShow() {
         llLowerMemberStatics.setVisibility(View.VISIBLE);
-        vLowerMemberUp.setVisibility(View.VISIBLE);
-        vLowerMemberDown.setVisibility(View.VISIBLE);
     }
 
 
@@ -466,29 +582,39 @@ public class MineFragment extends LazyLoadFragment {
     private void loadCuserDefault() {
         llMineCompontFirst.setVisibility(View.VISIBLE);
         llMineCompontSecond.setVisibility(View.GONE);
-        tvMineCompontL01.setText("申请赚钱");
-        tvMineCompontL03.setText("帮助");
+        tvMineCompontL01.setText("申请推广赚钱");
+        tvMineCompontL03.setText("用户帮助");
+        iv_mine_compont_l01.setImageResource(R.drawable.ruzhu_icon);
+        iv_mine_compont_l03.setImageResource(R.drawable.help_icon);
         llMineUserBack.setVisibility(View.INVISIBLE);
         llMineZhuanOrder.setVisibility(View.GONE);
         rlMineToggle.setVisibility(View.GONE);
         vTuiZhuanLine.setVisibility(View.GONE);
         vToggleLine.setVisibility(View.GONE);
+        iv_apply_ad_show.setVisibility(View.VISIBLE);
     }
 
     private void loadGroupuserDefault() {
         llMineCompontFirst.setVisibility(View.VISIBLE);
         llMineCompontSecond.setVisibility(View.VISIBLE);
         tvMineCompontL01.setText("提取现金");
-        tvMineCompontL02.setText("邀请好友赚钱啦");
+        tvMineCompontL02.setText("邀请好友");
         tvMineCompontL03.setText("账户明细");
         tvMineCompontL04.setText("商家信息");
-        tvMineCompontL05.setText("帮助");
+        tvMineCompontL05.setText("用户帮助");
         tvMineCompontL06.setText("返佣规则");
+        iv_mine_compont_l01.setImageResource(R.drawable.tixian_icon);
+        iv_mine_compont_l02.setImageResource(R.drawable.friend_icon);
+        iv_mine_compont_l03.setImageResource(R.drawable.zhanghu_icon);
+        iv_mine_compont_l04.setImageResource(R.drawable.shopinfo_icon);
+        iv_mine_compont_l05.setImageResource(R.drawable.help_icon);
+        iv_mine_compont_l06.setImageResource(R.drawable.fanyong_icon);
         llMineUserBack.setVisibility(View.VISIBLE);
         rlMineToggle.setVisibility(View.VISIBLE);
         llMineZhuanOrder.setVisibility(View.VISIBLE);
         vTuiZhuanLine.setVisibility(View.VISIBLE);
         vToggleLine.setVisibility(View.VISIBLE);
+        iv_apply_ad_show.setVisibility(View.GONE);
     }
 
     /**
@@ -538,6 +664,7 @@ public class MineFragment extends LazyLoadFragment {
         apply_type = dataBean.getApply_type();
         pay_type = dataBean.getPay_type();
         shopType = dataBean.getGroup_type();
+        grand_total = dataBean.getGrand_total();
         groupId = group_id;
         String user_get_ratio = dataBean.getUser_get_ratio();
         if (user_get_ratio != null) {
@@ -561,20 +688,11 @@ public class MineFragment extends LazyLoadFragment {
         } else {
             civMeHeadIcon.setImageResource(R.drawable.default_person_icon);
         }
-        if (nick_name != null && !TextUtils.isEmpty(nick_name)) {
-            tvMeNickname.setText(nick_name);
-        } else {
-            tvMeNickname.setText("聚优帮用户");
-        }
-        if (group != null && !TextUtils.isEmpty(group)) {
-            tvMineMobietype.setText(group + "(" + mobile + ")");
-        } else {
-            tvMineMobietype.setText("用户类型 + (" + mobile + ")");
-        }
         if (shopType == 1) {
             tvAccountMoneyTitle1.setText("余额/提现中");
             DecimalFormat df = new DecimalFormat("0.00");
             df.setRoundingMode(RoundingMode.DOWN);
+            tv_grand_total.setText(df.format(grand_total));
             tvAccountMoney.setText(df.format(amount) + "/" + df.format(frostAmount));
             tvAccountMoney.setVisibility(View.VISIBLE);
             tvAccountMoney2.setText(df.format(user_earn));
@@ -582,13 +700,13 @@ public class MineFragment extends LazyLoadFragment {
             tvAccountMoneyTitle2.setText("赚(冻结期)");
             tvAccountMoney2.setVisibility(View.VISIBLE);
             ll_mine_shiti_show.setVisibility(View.VISIBLE);
-            ll_mine_salery_show.setVisibility(View.GONE);
+            //ll_mine_salery_show.setVisibility(View.GONE);
         } else {
             tvAccountMoneyTitle1.setText("余额");
             tvAccountMoneyTitle2.setText("充值");
             tvAccountMoney2.setVisibility(View.GONE);
             ll_mine_shiti_show.setVisibility(View.GONE);
-            ll_mine_salery_show.setVisibility(View.VISIBLE);
+            //ll_mine_salery_show.setVisibility(View.VISIBLE);
         }
         if (shopType == 1) {
             loadGroupuserDefault();
@@ -600,6 +718,43 @@ public class MineFragment extends LazyLoadFragment {
         } else {
             loadLowerMermberhind();
         }
+
+        if (groupId == 5) {
+            tv_userinfo_level_icon.setBackgroundResource(R.drawable.head_daili_level_icon);
+            tv_userinfo_level_icon.setText("VIP4");
+            tv_userinfo_level_name.setText("代理商");
+        } else if (groupId == 4) {
+            tv_userinfo_level_icon.setBackgroundResource(R.drawable.head_shiti_level_icon);
+            tv_userinfo_level_icon.setText("VIP3");
+            tv_userinfo_level_name.setText("实体商家");
+        } else if (groupId == 6) {
+            tv_userinfo_level_icon.setBackgroundResource(R.drawable.head_daren_level_icon);
+            tv_userinfo_level_icon.setText("VIP2");
+            tv_userinfo_level_name.setText("微达人");
+        } else if (groupId == 1) {
+            tv_userinfo_level_icon.setBackgroundResource(R.drawable.head_putong_level_icon);
+            tv_userinfo_level_icon.setText("LV1");
+            tv_userinfo_level_name.setText("普通会员");
+        } else {
+            tv_userinfo_level_icon.setVisibility(View.GONE);
+            tv_userinfo_level_name.setText("其他");
+        }
+
+        LogUtil.e("group_id ==================" + groupId);
+        if (bindTao) {
+            taobao_nick = CacheUtils.getString(getContext(), CacheUtils.TAOBAO_NICK, "");
+            tv_mine_tabao_account.setText(taobao_nick);
+        } else {
+            tv_mine_tabao_account.setText("绑定淘宝>>");
+        }
+        if (bindAlipay) {
+            alipay_account = CacheUtils.getString(getContext(), CacheUtils.ALIPAY_ACCOUNT, "");
+            alipay_name = CacheUtils.getString(getContext(), CacheUtils.ALIPAY_USERNAME, "");
+            tv_userinfo_alipay.setText(alipay_account + "(" + alipay_name + ")");
+        } else {
+            tv_userinfo_alipay.setText("未绑定，马上绑定>>");
+        }
+
     }
 
     /**
@@ -607,8 +762,6 @@ public class MineFragment extends LazyLoadFragment {
      */
     private void defaultSet() {
         civMeHeadIcon.setImageResource(R.drawable.default_person_icon);
-        tvMeNickname.setText("聚优帮用户");
-        tvMineMobietype.setText("用户类型 (手机号)");
     }
 
     @Override
@@ -750,26 +903,56 @@ public class MineFragment extends LazyLoadFragment {
                 case R.id.ll_lower_member_statics:
                     toLowerMemberStatics();
                     break;
-
-                case R.id.iv_me_person_lingdang:
-                    //测试热修复的小铃铛
-                    Toast.makeText(getContext(), "热修复测试成功！！！", Toast.LENGTH_SHORT).show();
-                    break;
                 case R.id.ll_mine_u_like:
                     //toSuningGoodscart();
                     break;
                 case R.id.ll_mine_suning_order:
+                    if (!login) {
+                        toLogin();
+                        return;
+                    }
                     toSuningOrder();
+                    break;
+                case R.id.ll_userinfo_head:
+                    if (!bindTao) {
+                        bindTao();
+                    }
+                    break;
+                case R.id.ll_userinfo_alipay:
+                    if (!bindAlipay) {
+                        bindAlipay();
+                    }
+                    break;
+                case R.id.btn_mine_head_login:
+                    toLogin();
+                    break;
+                case R.id.btn_mine_head_register:
+                    toRegister();
                     break;
             }
         }
+    }
+
+
+    /**
+     * 绑定支付宝
+     */
+    private void bindAlipay() {
+        showAlipayAccount();
+    }
+
+    /**
+     * 绑定淘宝
+     */
+    private void bindTao() {
+        showBindTaobaoDialog(userLogin);
     }
 
     /**
      * 跳转到苏宁购物车
      */
     private void toSuningGoodscart() {
-        Intent intent = new Intent(getContext(), BindPhoneActivity.class);
+        Intent intent = new Intent(getContext(), TaoSearchActivity.class);
         startActivity(intent);
     }
 
@@ -901,6 +1084,14 @@ public class MineFragment extends LazyLoadFragment {
         startActivity(intent);
     }
 
+    /**
+     * 跳转到注册页面
+     */
+    private void toRegister() {
+        Intent intent = new Intent(getActivity(), RegisterActivity.class);
+        startActivity(intent);
+    }
+
     public void onEvent(AnyEvent event) {
         if (event.getType() == EventType.EVENT_LOGIN) {
             String msg = "onEventMainThread收到了消息：" + event.getMessage();
@@ -918,4 +1109,246 @@ public class MineFragment extends LazyLoadFragment {
         startActivity(intent);
     }
 
+    /**
+     * 展示绑定淘宝的dialog
+     */
+    private void showBindTaobaoDialog(final String id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("绑定淘宝账号")
+                .setMessage("为了方便您之后的操作，请您先绑定淘宝账号。若取消绑定将会在您查看商品详情时提示您继续绑定操作")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        bindTaobao(id);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+        alertDialog = builder.create();
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (getContext() != null && !mainActivity.isFinishing()) {
+            alertDialog.show();
+        }
+    }
+
+    /* 绑定淘宝
+     * @param s
+     */
+    public void bindTaobao(final String s) {
+
+        alibcLogin = AlibcLogin.getInstance();
+        alibcLogin.showLogin(new AlibcLoginCallback() {
+            @Override
+            public void onSuccess(int i) {
+                //获取淘宝用户信息
+                LogUtil.e("获取淘宝用户信息: " + AlibcLogin.getInstance().getSession());
+                LogUtil.e("代码:" + i);
+                openId = AlibcLogin.getInstance().getSession().openId;
+                avatarUrl = AlibcLogin.getInstance().getSession().avatarUrl;
+                nick = AlibcLogin.getInstance().getSession().nick;
+                uploadUserInfo(s);
+                which = "bind_taobao";
+                netUtils.okHttp2Server2(bind_url, map);
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+//                Toast.makeText(LoginActivity.this, "绑定失败 ！",
+//                        Toast.LENGTH_LONG).show();
+//                Log.i("GGG", "错误码" + code + "原因" + msg);
+                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "登录成功！"));
+            }
+        });
+    }
+
+    /**
+     * 上传用户信息
+     *
+     * @param s
+     */
+    public void uploadUserInfo(String s) {
+
+        if (!TextUtils.isEmpty(s)) {
+            map = new HashMap<>();
+            map.put("Id", s);
+            map.put("openId", openId);
+            map.put("portrait", avatarUrl);
+            map.put("nickname", nick);
+        }
+    }
+
+    /**
+     * 解析绑定淘宝的数据
+     *
+     * @param response
+     */
+    private void parseBindTaobaoData(String response) {
+        CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
+        int statusCode = codeStatueBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                CacheUtils.putBoolean(getContext(), CacheUtils.BIND_STATE, true);
+                CacheUtils.putString(getContext(), CacheUtils.TAOBAO_NICK, nick);
+                initData();
+                break;
+            case 0:
+                Toast.makeText(getContext(), codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    /**
+     * 设置用户支付宝账号新
+     */
+    private void showAlipayAccount() {
+        View inflate = View.inflate(getContext(), R.layout.bind_alipay_dailog, null);
+        final EditText etAccount = (EditText) inflate.findViewById(R.id.et_pay_account);
+        final EditText etName = (EditText) inflate.findViewById(R.id.et_pay_name);
+        final EditText etSmsCode = (EditText) inflate.findViewById(R.id.et_alipay_smscode);
+        final TextView tvAlipayGetSms = (TextView) inflate.findViewById(R.id.tv_alipay_getSms);
+        TextView tvBindAlipayCancel = (TextView) inflate.findViewById(R.id.tv_bind_alipay_cancel);
+        TextView tvBindAlipayConfirm = (TextView) inflate.findViewById(R.id.tv_bind_alipay_confirm);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        alertDialog = builder.setView(inflate).create();
+        etAccount.addTextChangedListener(new MyTextWatcher());
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity != null && !activity.isFinishing()) {
+            alertDialog.show();
+        }
+        tvAlipayGetSms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String user_account = etAccount.getText().toString().trim();
+                String userPhone = Tools.getUserPhone(getContext());
+                LogUtil.e(userPhone);
+                getSmsCode(userPhone, user_account, tvAlipayGetSms);
+            }
+        });
+
+        tvBindAlipayCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (alertDialog != null && alertDialog.isShowing()) {
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                    }
+                    alertDialog.dismiss();
+                }
+            }
+        });
+        tvBindAlipayConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                account = etAccount.getText().toString().trim();
+                name = etName.getText().toString().trim();
+                String smscode = etSmsCode.getText().toString().trim();
+                if (!Check.isTelPhoneNumber(account) && !Check.isEmail(account)) {
+                    Toast.makeText(getContext(), "输入的支付宝账号不能为空而且只能为正确的手机号码或者邮箱，请您重新输入！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!Check.isLegalName(name)) {
+                    Toast.makeText(getContext(), "输入用户名不能为空而且只能为中文真实姓名，请您重新输入！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(smscode)) {
+                    Toast.makeText(getContext(), "请输入短信验证码!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (smscode.equals(sms_code_s)) {
+                    bindPay(account, name);
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                    }
+                    if (alertDialog != null && alertDialog.isShowing()) {
+                        alertDialog.dismiss();
+                    }
+
+                } else {
+                    Toast.makeText(getContext(), "短信验证码不正确！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+        });
+
+    }
+
+    /**
+     * 获取验证码的方法
+     */
+    private void getSmsCode(String userPhone, String user, final TextView tv) {
+
+        tv.setClickable(false);
+        tv.setTextColor(Color.parseColor("#ffffff"));
+        countDownTimer = new CountDownTimer(60 * 1000, 1000) {
+            @Override
+            public void onTick(long l) {
+                tv.setText(l / 1000 + "s后重新获取");
+            }
+
+            @Override
+            public void onFinish() {
+                tv.setClickable(true);
+                tv.setText("获取验证码");
+                tv.setTextColor(Color.parseColor("#ffffff"));
+            }
+        };
+        which = "sms";
+        map = new HashMap<>();
+        map.put("sms_code", userPhone);
+        map.put("type", "3");
+        netUtils.okHttp2Server2(sms_url, map);
+        if (countDownTimer != null) {
+            countDownTimer.start();
+        }
+    }
+
+    /**
+     * 解析短信验证数据
+     *
+     * @param response
+     */
+    private void parseSmsData(String response) {
+        LogUtil.e(response);
+        SmsCodeBean smsCodeBean = new Gson().fromJson(response, SmsCodeBean.class);
+        int statusCode = smsCodeBean.getStatusCode();
+        switch (statusCode) {
+            case 0:
+                Toast.makeText(getContext(), "获取验证码失败！", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                List<SmsCodeBean.DataBean> data = smsCodeBean.getData();
+                if (data.size() > 0) {
+                    sms_code_s = data.get(0).getSms_code();
+                }
+                Toast.makeText(getContext(), "验证码已发送你的手机，请查收！", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    /**
+     * 绑定支付宝
+     */
+    private void bindPay(String account, String name) {
+        if (TextUtils.isEmpty(account) || TextUtils.isEmpty(name)) {
+            Toast.makeText(getContext(), "支付宝账号和密码不能为空！", Toast.LENGTH_SHORT).show();
+        } else {
+            if (login) {
+                Map map = new HashMap<String, String>();
+                map.put("Id", userLogin);
+                map.put("alipay", account);
+                map.put("alipayName", name);
+                which = "bind_pay";
+                netUtils.okHttp2Server2(pay_url, map);
+            } else {
+                toLogin();
+            }
+        }
+    }
 }

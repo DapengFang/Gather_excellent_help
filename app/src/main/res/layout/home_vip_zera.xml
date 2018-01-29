@@ -3,17 +3,19 @@
     android:id="@+id/ll_home_vip_zera"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <include layout="@layout/gray_line9"/>
-    <include layout="@layout/component_zera_title"/>
+    android:orientation="vertical"
+    android:visibility="gone">
+
+    <include layout="@layout/gray_line9" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#EFEFEF"/>
+        android:background="#EFEFEF" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/x196"
+        android:layout_height="wrap_content"
         android:background="#fff"
         android:orientation="horizontal">
 
@@ -25,44 +27,7 @@
             android:layout_weight="40"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginLeft="@dimen/x10"
-                android:layout_marginTop="@dimen/x13"
-                android:layout_weight="23"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="专享价区"
-                    android:textColor="#FA2D3B"
-                    android:textSize="@dimen/x16"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x2"
-                    android:text="享更多优惠"
-                    android:textColor="#BDBDBD"
-                    android:textSize="@dimen/x12" />
-
-
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="74">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/vip_big_img" />
-            </RelativeLayout>
+            <include layout="@layout/home_left_zera_component" />
         </LinearLayout>
 
         <View
@@ -84,9 +49,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:paddingBottom="@dimen/x4"
+                android:paddingBottom="@dimen/x2"
                 android:paddingLeft="@dimen/x4"
-                android:paddingTop="@dimen/x4">
+                android:paddingTop="@dimen/x2">
 
                 <include layout="@layout/home_vip_zera_ware" />
 
@@ -103,9 +68,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:paddingBottom="@dimen/x4"
+                android:paddingBottom="@dimen/x2"
                 android:paddingLeft="@dimen/x4"
-                android:paddingTop="@dimen/x4">
+                android:paddingTop="@dimen/x2">
 
                 <include layout="@layout/home_vip_zera_ware" />
             </LinearLayout>

@@ -66,31 +66,31 @@ public class GoodscartFragment extends LazyLoadFragment {
 
     @Override
     public void initData() {
-        handler = new Handler(){
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case CHECK_NULL:
-                        if(rlNewsSearchBefore!=null && llNewsSearchAfter!=null
-                                && rlEditTextExit!=null && flNewsFrag != null
-                                && rlTaobaoSousuo!=null && etTaobaoSearchContent!=null
-                                && rcvNewsHorizational!=null) {
+                        if (rlNewsSearchBefore != null && llNewsSearchAfter != null
+                                && rlEditTextExit != null && flNewsFrag != null
+                                && rlTaobaoSousuo != null && etTaobaoSearchContent != null
+                                && rcvNewsHorizational != null) {
                             loadNewsData();
-                            if(handler!=null) {
+                            if (handler != null) {
                                 handler.removeMessages(CHECK_NULL);
                             }
-                        }else{
-                            if(handler!=null) {
-                                handler.sendEmptyMessageDelayed(CHECK_NULL,500);
+                        } else {
+                            if (handler != null) {
+                                handler.sendEmptyMessageDelayed(CHECK_NULL, 500);
                             }
                         }
                         break;
                 }
             }
         };
-        if(handler!=null) {
-            handler.sendEmptyMessageDelayed(CHECK_NULL,600);
+        if (handler != null) {
+            handler.sendEmptyMessageDelayed(CHECK_NULL, 600);
         }
 
     }
@@ -113,7 +113,7 @@ public class GoodscartFragment extends LazyLoadFragment {
         etTaobaoSearchContent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     String keyword = etTaobaoSearchContent.getText().toString().trim();
                     if (TextUtils.isEmpty(keyword)) {
                         rlNewsSearchBefore.setVisibility(View.VISIBLE);
@@ -180,7 +180,7 @@ public class GoodscartFragment extends LazyLoadFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
@@ -188,7 +188,7 @@ public class GoodscartFragment extends LazyLoadFragment {
 
     @Override
     protected void stopLoad() {
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
@@ -201,15 +201,15 @@ public class GoodscartFragment extends LazyLoadFragment {
             switch (view.getId()) {
                 case R.id.rl_taobao_sousuo:
                     String keyword = etTaobaoSearchContent.getText().toString().trim();
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(etTaobaoSearchContent.getWindowToken(), 0);
                     if (TextUtils.isEmpty(keyword)) {
                         rlNewsSearchBefore.setVisibility(View.VISIBLE);
                         llNewsSearchAfter.setVisibility(View.GONE);
                         return;
                     }
                     Toast.makeText(getContext(), "正在搜索中，请稍后！", Toast.LENGTH_SHORT).show();
-                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
-                            Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(etTaobaoSearchContent.getWindowToken(), 0);
                     newsFirstPresenter.searchData(keyword);
                     break;
                 case R.id.rl_news_search_before:

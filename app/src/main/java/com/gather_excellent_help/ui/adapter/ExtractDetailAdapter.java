@@ -47,7 +47,7 @@ public class ExtractDetailAdapter extends RecyclerView.Adapter<ExtractDetailAdap
         if(dataBean.getAudit_time()!=null) {
             holder.tvAccountDetailPro.setText(dataBean.getAudit_time());
         }
-        holder.tvAccountDetailMoney.setText("￥" + dataBean.getValue());
+        holder.tvAccountDetailMoney.setText(" ¥" + dataBean.getValue());
         int status = dataBean.getStatus();
         if(status == 1) {
             holder.tvAccountDetailSalery.setText("状态:已完成");

@@ -17,9 +17,9 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/login_back_icon"
+                android:layout_marginLeft="@dimen/x8"
                 android:layout_marginTop="@dimen/x16"
-                android:layout_marginLeft="@dimen/x8"/>
+                android:src="@drawable/login_back_icon" />
         </RelativeLayout>
 
         <LinearLayout
@@ -41,7 +41,7 @@
                 <ImageView
                     android:layout_width="@dimen/x22"
                     android:layout_height="@dimen/x22"
-                    android:src="@drawable/phone_icon" />
+                    android:src="@drawable/user_icon" />
 
                 <EditText
                     android:id="@+id/et_register_user"

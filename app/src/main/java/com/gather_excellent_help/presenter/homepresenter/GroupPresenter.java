@@ -3,10 +3,14 @@ package com.gather_excellent_help.presenter.homepresenter;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,25 +49,21 @@ public class GroupPresenter extends BasePresenter {
 
     private Activity context;
     private LinearLayout llHomeGroupZera;
-    private LinearLayout ll_group_left_big;
     private String group_url = Url.BASE_URL + "GroupBuy.aspx";
     private NetUtil netUtil;
     private double user_rate;
     private int shopType;
     private boolean isToggle;
-    private RelativeLayout rl_item_laod_more;
-    private TextView tv_item_home_title;
-    private LinearLayout ll_group_right_ware;
-    private TextView tv_group_ware_title;
-    private TextView tv_group_ware_price;
-    private LinearLayout ll_group_ware_zhuan;
-    private TextView tv_group_ware_zhuan;
-    private TextView tv_group_ware_coast;
-    private ImageView iv_group_ware_img;
-    private TextView tv_group_ware_coupon;
     private LinearLayout ll_group_right_zera;
     private List<HomeGroupBean.DataBean> groupData;
-    private TextView tv_activity_sun_tao_icon;
+
+
+    private RelativeLayout rl_left_top_listzera;
+    private LinearLayout ll_left_top_ware;
+    private ImageView iv_left_top_zera;
+    private TextView tv_left_top_waretitle;
+    private TextView tv_left_top_wareprice;
+    private ImageView iv_left_top_warepic;
 
 
     public GroupPresenter(Activity context, LinearLayout llHomeGroupZera) {
@@ -82,43 +82,21 @@ public class GroupPresenter extends BasePresenter {
 
     @Override
     public View initView() {
-        rl_item_laod_more = (RelativeLayout) llHomeGroupZera.findViewById(R.id.rl_item_laod_more);
-        tv_item_home_title = (TextView) llHomeGroupZera.findViewById(R.id.tv_item_home_title);
-        ll_group_left_big = (LinearLayout) llHomeGroupZera.findViewById(R.id.ll_group_left_big);
-        ll_group_right_ware = (LinearLayout) llHomeGroupZera.findViewById(R.id.ll_group_right_ware);
-        tv_group_ware_title = (TextView) llHomeGroupZera.findViewById(R.id.tv_group_ware_title);
-        tv_group_ware_price = (TextView) llHomeGroupZera.findViewById(R.id.tv_group_ware_price);
-        ll_group_ware_zhuan = (LinearLayout) llHomeGroupZera.findViewById(R.id.ll_group_ware_zhuan);
-        tv_group_ware_zhuan = (TextView) llHomeGroupZera.findViewById(R.id.tv_group_ware_zhuan);
-        tv_group_ware_coast = (TextView) llHomeGroupZera.findViewById(R.id.tv_group_ware_coast);
-        iv_group_ware_img = (ImageView) llHomeGroupZera.findViewById(R.id.iv_group_ware_img);
-        tv_group_ware_coupon = (TextView) llHomeGroupZera.findViewById(R.id.tv_group_ware_coupon);
         ll_group_right_zera = (LinearLayout) llHomeGroupZera.findViewById(R.id.ll_group_right_zera);
-        tv_activity_sun_tao_icon = (TextView) llHomeGroupZera.findViewById(R.id.tv_activity_sun_tao_icon);
+
+        rl_left_top_listzera = (RelativeLayout) llHomeGroupZera.findViewById(R.id.rl_left_top_listzera);
+        ll_left_top_ware = (LinearLayout) llHomeGroupZera.findViewById(R.id.ll_left_top_ware);
+        iv_left_top_zera = (ImageView) llHomeGroupZera.findViewById(R.id.iv_left_top_zera);
+        tv_left_top_waretitle = (TextView) llHomeGroupZera.findViewById(R.id.tv_left_top_waretitle);
+        tv_left_top_wareprice = (TextView) llHomeGroupZera.findViewById(R.id.tv_left_top_wareprice);
+        iv_left_top_warepic = (ImageView) llHomeGroupZera.findViewById(R.id.iv_left_top_warepic);
         return llHomeGroupZera;
     }
 
     @Override
     public void initData() {
-        tv_item_home_title.setText("团购区");
         netUtil.okHttp2Server2(group_url, null);
         netUtil.setOnServerResponseListener(new MyOnServerResponseListener());
-        rl_item_laod_more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, WareListActivity.class);
-                intent.putExtra("content", "isQiang");
-                context.startActivity(intent);
-            }
-        });
-        ll_group_left_big.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, WareListActivity.class);
-                intent.putExtra("content", "isQiang");
-                context.startActivity(intent);
-            }
-        });
     }
 
     public class MyOnServerResponseListener implements NetUtil.OnServerResponseListener {
@@ -161,7 +139,7 @@ public class GroupPresenter extends BasePresenter {
         int childCount = ll_group_right_zera.getChildCount();
         LogUtil.e(childCount + "----------------");
         for (int i = 0; i < childCount; i++) {
-            if (i != 1 || i != 3) {
+            if (i != 1) {
                 View childAt = ll_group_right_zera.getChildAt(i);
                 LinearLayout ll_group_right_ware = (LinearLayout) childAt.findViewById(R.id.ll_group_right_ware);
                 TextView tv_group_ware_title = (TextView) childAt.findViewById(R.id.tv_group_ware_title);
@@ -171,7 +149,6 @@ public class GroupPresenter extends BasePresenter {
                 TextView tv_group_ware_coast = (TextView) childAt.findViewById(R.id.tv_group_ware_coast);
                 ImageView iv_group_ware_img = (ImageView) childAt.findViewById(R.id.iv_group_ware_img);
                 TextView tv_group_ware_coupon = (TextView) childAt.findViewById(R.id.tv_group_ware_coupon);
-                TextView tv_activity_sun_tao_icon = (TextView) childAt.findViewById(R.id.tv_activity_sun_tao_icon);
                 HomeGroupBean.DataBean dataBean = groupData.get((i + 2) / 2);
                 final int site_id = dataBean.getSite_id();
                 final int article_id = dataBean.getArticle_id();
@@ -193,17 +170,23 @@ public class GroupPresenter extends BasePresenter {
                 double s_coast = sell_price - s_zhuan;
 
                 if (tv_group_ware_price != null) {
-                    tv_group_ware_price.setText("￥" + df.format(sell_price));
+
+                    String price_content = "¥" + df.format(sell_price);
+                    SpannableString spannableString_l01 = new SpannableString(price_content);
+                    RelativeSizeSpan sizeSpan_01 = new RelativeSizeSpan(0.8f);
+                    ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#fa2a3b"));
+                    spannableString_l01.setSpan(colorSpan, 0, spannableString_l01.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+                    spannableString_l01.setSpan(sizeSpan_01, 0, 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                    tv_group_ware_price.setText(spannableString_l01);
+
                 }
                 if (site_id == 1) {
-//                    if (tv_activity_sun_tao_icon != null) {
-//                        tv_activity_sun_tao_icon.setSelected(false);
-//                        tv_activity_sun_tao_icon.setText("淘宝");
-//                    }
+
                     if (title != null && tv_group_ware_title != null) {
-                        //tv_group_ware_title.setText("\t\t\t\t\t\t" + title);
+
                         SpannableString span = new SpannableString("\t\t" + title);
-                        Drawable drawable = context.getResources().getDrawable(R.drawable.taobao_order_icon);
+                        Drawable drawable = context.getResources().getDrawable(R.drawable.t_taobao_ware_icon);
                         Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
                         MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                         span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -219,13 +202,13 @@ public class GroupPresenter extends BasePresenter {
                         }
                     }
                     if (tv_group_ware_coupon != null) {
-                        tv_group_ware_coupon.setText("领券减" + couponsPrice);
+                        tv_group_ware_coupon.setText("券" + couponsPrice);
                     }
                     if (tv_group_ware_zhuan != null) {
-                        tv_group_ware_zhuan.setText("￥" + df.format(zhuan));
+                        tv_group_ware_zhuan.setText("赚 " + df.format(zhuan));
                     }
                     if (tv_group_ware_coast != null) {
-                        tv_group_ware_coast.setText("￥" + df.format(coast));
+                        tv_group_ware_coast.setText("到手价 " + df.format(coast));
                     }
                     if (tv_group_ware_coupon != null) {
                         if (couponsPrice > 0) {
@@ -251,10 +234,10 @@ public class GroupPresenter extends BasePresenter {
                 } else if (site_id == 2) {
 
                     if (tv_group_ware_zhuan != null) {
-                        tv_group_ware_zhuan.setText("￥" + df.format(s_zhuan));
+                        tv_group_ware_zhuan.setText("赚 " + df.format(s_zhuan));
                     }
                     if (tv_group_ware_coast != null) {
-                        tv_group_ware_coast.setText("￥" + df.format(s_coast));
+                        tv_group_ware_coast.setText("到手价 " + df.format(s_coast));
                     }
 
                     if (ll_group_ware_zhuan != null) {
@@ -278,17 +261,13 @@ public class GroupPresenter extends BasePresenter {
 
                     if (title != null && tv_group_ware_title != null) {
                         SpannableString span = new SpannableString("\t\t" + title);
-                        Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+                        Drawable drawable = context.getResources().getDrawable(R.drawable.s_suning_ware_icon);
                         Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
                         MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                         span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         tv_group_ware_title.setText(span);
                     }
 
-//                    if (tv_activity_sun_tao_icon != null) {
-//                        tv_activity_sun_tao_icon.setSelected(true);
-//                        tv_activity_sun_tao_icon.setText("苏宁");
-//                    }
                     if (img_url != null && iv_group_ware_img != null) {
                         if (context != null && !context.isFinishing()) {
                             Glide.with(context).load(img_url.replace("800x800", "400x400"))
@@ -345,6 +324,7 @@ public class GroupPresenter extends BasePresenter {
     }
 
     private void loadWareData(HomeGroupBean.DataBean dataBean) {
+        llHomeGroupZera.setVisibility(View.VISIBLE);
         final DecimalFormat df = new DecimalFormat("#0.00");
         final int site_id = dataBean.getSite_id();
         final int article_id = dataBean.getArticle_id();
@@ -364,117 +344,52 @@ public class GroupPresenter extends BasePresenter {
         double s_zhuan = sell_price * tkRate * user_rate;
         double s_coast = sell_price - s_zhuan;
 
-        if (title != null && tv_group_ware_title != null) {
-            tv_group_ware_title.setText("\t\t\t\t\t\t" + title);
+
+        if (img_url != null && iv_left_top_warepic != null) {
+            if (context != null && !context.isFinishing()) {
+                Glide.with(context).load(img_url + "_320x320q90.jpg")
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
+                        .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
+                        .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
+                        .into(iv_left_top_warepic);//请求成功后把图片设置到的控件
+            }
         }
-        if (tv_group_ware_price != null) {
-            tv_group_ware_price.setText("￥" + df.format(sell_price));
-        }
+        String price_content = "付款价 ¥" + df.format(sell_price);
+
+        SpannableString spannableString_l01 = new SpannableString(price_content);
+        RelativeSizeSpan sizeSpan_01 = new RelativeSizeSpan(1.3f);
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#fa2a3b"));
+        spannableString_l01.setSpan(colorSpan, 4, spannableString_l01.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        spannableString_l01.setSpan(sizeSpan_01, 5, spannableString_l01.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        tv_left_top_wareprice.setText(spannableString_l01);
+        iv_left_top_zera.setImageResource(R.drawable.home_group_top_icon);
         if (site_id == 1) {
-//            if (tv_activity_sun_tao_icon != null) {
-//                tv_activity_sun_tao_icon.setSelected(false);
-//                tv_activity_sun_tao_icon.setText("淘宝");
-//            }
-
-            if (title != null && tv_group_ware_title != null) {
-                SpannableString span = new SpannableString("\t\t" + title);
-                Drawable drawable = context.getResources().getDrawable(R.drawable.taobao_order_icon);
-                Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
-                MyImageSpan image = new MyImageSpan(context, bitmap, -1);
-                span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                tv_group_ware_title.setText(span);
-            }
-
-            if (img_url != null && iv_group_ware_img != null) {
-                if (context != null && !context.isFinishing()) {
-                    Glide.with(context).load(img_url + "_320x320q90.jpg")
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
-                            .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
-                            .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
-                            .into(iv_group_ware_img);//请求成功后把图片设置到的控件
-                }
-            }
-            if (tv_group_ware_coupon != null) {
-                tv_group_ware_coupon.setText("领券减" + couponsPrice);
-            }
-            if (tv_group_ware_zhuan != null) {
-                tv_group_ware_zhuan.setText("￥" + df.format(zhuan));
-            }
-            if (tv_group_ware_coast != null) {
-                tv_group_ware_coast.setText("￥" + df.format(coast));
-            }
-            if (couponsPrice > 0) {
-                tv_group_ware_coupon.setVisibility(View.VISIBLE);
-            } else {
-                tv_group_ware_coupon.setVisibility(View.GONE);
-            }
-            if (shopType == 1) {
-                if (isToggle) {
-                    ll_group_ware_zhuan.setVisibility(View.GONE);
-                } else {
-                    ll_group_ware_zhuan.setVisibility(View.VISIBLE);
-                }
-            } else {
-                ll_group_ware_zhuan.setVisibility(View.GONE);
-            }
-
-            if (zhuan == 0) {
-                ll_group_ware_zhuan.setVisibility(View.GONE);
-            }
+            SpannableString span = new SpannableString("\t\t" + title);
+            Drawable drawable = context.getResources().getDrawable(R.drawable.t_taobao_ware_icon);
+            Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+            MyImageSpan image = new MyImageSpan(context, bitmap, -1);
+            span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tv_left_top_waretitle.setText(span);
         } else if (site_id == 2) {
-
-            if (tv_group_ware_zhuan != null) {
-                tv_group_ware_zhuan.setText("￥" + df.format(s_zhuan));
-            }
-            if (tv_group_ware_coast != null) {
-                tv_group_ware_coast.setText("￥" + df.format(s_coast));
-            }
-
-            if (ll_group_ware_zhuan != null) {
-                if (shopType == 1) {
-                    if (isToggle) {
-                        ll_group_ware_zhuan.setVisibility(View.GONE);
-                    } else {
-                        ll_group_ware_zhuan.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    ll_group_ware_zhuan.setVisibility(View.GONE);
-                }
-                if (s_zhuan == 0) {
-                    ll_group_ware_zhuan.setVisibility(View.GONE);
-                }
-            }
-
-            if (tv_group_ware_coupon != null) {
-                tv_group_ware_coupon.setVisibility(View.GONE);
-            }
-
-            if (title != null && tv_group_ware_title != null) {
-                SpannableString span = new SpannableString("\t\t" + title);
-                Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
-                Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
-                MyImageSpan image = new MyImageSpan(context, bitmap, -1);
-                span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                tv_group_ware_title.setText(span);
-            }
-
-//            if (tv_activity_sun_tao_icon != null) {
-//                tv_activity_sun_tao_icon.setSelected(true);
-//                tv_activity_sun_tao_icon.setText("苏宁");
-//            }
-            if (img_url != null && iv_group_ware_img != null) {
-                if (context != null && !context.isFinishing()) {
-                    Glide.with(context).load(img_url.replace("800x800", "400x400"))
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
-                            .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
-                            .error(R.mipmap.zhanwei_icon)//加载失败的时候显示的图片
-                            .into(iv_group_ware_img);//请求成功后把图片设置到的控件
-                }
-            }
-
+            SpannableString span = new SpannableString("\t\t" + title);
+            Drawable drawable = context.getResources().getDrawable(R.drawable.s_suning_ware_icon);
+            Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
+            MyImageSpan image = new MyImageSpan(context, bitmap, -1);
+            span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tv_left_top_waretitle.setText(span);
         }
 
-        ll_group_right_ware.setOnClickListener(new View.OnClickListener() {
+        rl_left_top_listzera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, WareListActivity.class);
+                intent.putExtra("content", "isQiang");
+                context.startActivity(intent);
+            }
+        });
+
+        ll_left_top_ware.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (site_id == 1) {

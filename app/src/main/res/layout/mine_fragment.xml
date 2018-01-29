@@ -1,125 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.gather_excellent_help.ui.widget.MyNestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swip_fresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swip_fresh"
+    <com.gather_excellent_help.ui.widget.MyNestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/ll_mine_content_show"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/x190"
-                android:background="@drawable/mine_user_bg">
+            <include layout="@layout/head_mine_login_register" />
 
-                <com.gather_excellent_help.ui.widget.CircularImage
-                    android:id="@+id/civ_me_head_icon"
-                    android:layout_width="@dimen/x60"
-                    android:layout_height="@dimen/x60"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/x60"
-                    android:src="@drawable/default_person_icon" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/x30">
-
-                    <RelativeLayout
-                        android:id="@+id/rl_mine_set"
-                        android:layout_width="@dimen/x45"
-                        android:layout_height="@dimen/x45"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/x20">
-
-                        <ImageView
-                            android:id="@+id/iv_me_person_set"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerHorizontal="true"
-                            android:src="@drawable/icon_set" />
-
-                    </RelativeLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:text="个人中心"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
-
-                    <ImageView
-                        android:id="@+id/iv_me_person_lingdang"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/x20"
-                        android:src="@drawable/white_left_arraw"
-                        android:visibility="gone" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_me_nickname"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/civ_me_head_icon"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/x10">
-
-                    <TextView
-                        android:id="@+id/tv_me_nickname"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="#00000000"
-                        android:gravity="center"
-                        android:text="聚优帮用户"
-                        android:textColor="#ffffff"
-                        android:textSize="12sp" />
-
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/rl_me_nickname"
-                    android:layout_marginTop="@dimen/x3"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="@dimen/x14"
-                        android:layout_height="@dimen/x14"
-                        android:src="@drawable/icon_user_type"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/tv_mine_mobietype"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/x3"
-                        android:text="实体商家(13345235689)"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-            </RelativeLayout>
+            <include layout="@layout/jyb_mine_userinfo_head" />
 
             <include layout="@layout/mine_money_component" />
 
             <include layout="@layout/mine_money_salery_component" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="#eeeeee" />
 
             <LinearLayout
                 android:id="@+id/ll_mine_taobao_order"
@@ -170,7 +72,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/x1"
+                android:layout_height="2px"
                 android:background="#efefef" />
 
             <LinearLayout
@@ -273,7 +175,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/x1"
+                android:layout_height="2px"
                 android:background="#efefef"
                 android:visibility="gone" />
 
@@ -351,7 +253,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/x10"
                     android:layout_toLeftOf="@id/tbn_mine_control"
-                    android:text="佣金显示开关"
+                    android:text="&quot;赚&quot; 显示/隐藏"
                     android:textColor="#99000000"
                     android:textSize="@dimen/x10" />
 
@@ -361,7 +263,7 @@
             <View
                 android:id="@+id/v_lower_member_up"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/x7"
+                android:layout_height="2px"
                 android:background="#efefef" />
 
             <LinearLayout
@@ -380,8 +282,8 @@
                     android:layout_marginLeft="@dimen/x10">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/x16"
+                        android:layout_height="@dimen/x16"
                         android:layout_centerVertical="true"
                         android:src="@drawable/lower_member_icon"
                         android:visibility="visible" />
@@ -413,16 +315,9 @@
                     android:src="@drawable/arraw_right_jiantou" />
             </LinearLayout>
 
-
-            <View
-                android:id="@+id/v_lower_member_down"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/x7"
-                android:background="#efefef" />
-
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/x1"
+                android:layout_height="2px"
                 android:background="#efefef" />
 
             <LinearLayout
@@ -446,7 +341,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:src="@drawable/jifenbao_icon" />
+                        android:src="@drawable/tixian_icon" />
 
                     <TextView
                         android:id="@+id/tv_mine_compont_l01"
@@ -454,7 +349,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/x4"
                         android:layout_marginTop="@dimen/x9"
-                        android:text="提取现金"
+                        android:text=""
                         android:textColor="#333333"
                         android:textSize="@dimen/x10" />
                 </LinearLayout>
@@ -478,7 +373,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:src="@drawable/haoyou_icon" />
+                        android:src="@drawable/friend_icon" />
 
                     <TextView
                         android:id="@+id/tv_mine_compont_l02"
@@ -486,7 +381,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/x4"
                         android:layout_marginTop="@dimen/x9"
-                        android:text="邀请好友赚钱啦"
+                        android:text=""
                         android:textColor="#333333"
                         android:textSize="@dimen/x10" />
                 </LinearLayout>
@@ -518,7 +413,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/x4"
                         android:layout_marginTop="@dimen/x9"
-                        android:text="账号明细"
+                        android:text=""
                         android:textColor="#333333"
                         android:textSize="@dimen/x10" />
                 </LinearLayout>
@@ -529,6 +424,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="#efefef" />
+
 
             <LinearLayout
                 android:id="@+id/ll_mine_compont_second"
@@ -551,7 +447,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:src="@drawable/shangjia_icon" />
+                        android:src="@drawable/shopinfo_icon" />
 
                     <TextView
                         android:id="@+id/tv_mine_compont_l04"
@@ -559,7 +455,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/x4"
                         android:layout_marginTop="@dimen/x9"
-                        android:text="商家信息"
+                        android:text=""
                         android:textColor="#333333"
                         android:textSize="@dimen/x10" />
                 </LinearLayout>
@@ -583,7 +479,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:src="@drawable/huiyuan_icon" />
+                        android:src="@drawable/help_icon" />
 
                     <TextView
                         android:id="@+id/tv_mine_compont_l05"
@@ -591,7 +487,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/x4"
                         android:layout_marginTop="@dimen/x9"
-                        android:text="商家入驻"
+                        android:text=""
                         android:textColor="#333333"
                         android:textSize="@dimen/x10" />
                 </LinearLayout>
@@ -623,47 +519,30 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/x4"
                         android:layout_marginTop="@dimen/x9"
-                        android:text="返佣规则"
+                        android:text=""
                         android:textColor="#333333"
                         android:textSize="@dimen/x10" />
                 </LinearLayout>
 
             </LinearLayout>
 
+            <include layout="@layout/mine_apply_ad_component" />
+
             <LinearLayout
                 android:id="@+id/ll_mine_u_like"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/x45"
-                android:background="#efefef"
+                android:layout_height="@dimen/x40"
+                android:background="#f2f2f2"
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <View
-                    android:layout_width="@dimen/x20"
-                    android:layout_height="@dimen/x1"
-                    android:background="#33000000" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/x3"
-                    android:text="猜你喜欢"
-                    android:textColor="#99000000"
-                    android:textSize="@dimen/x12" />
-
                 <ImageView
-                    android:layout_width="@dimen/x12"
-                    android:layout_height="@dimen/x12"
-                    android:layout_marginLeft="@dimen/x3"
-                    android:src="@drawable/like_icon" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:src="@drawable/mine_u_like_icon" />
 
-                <View
-                    android:layout_width="@dimen/x20"
-                    android:layout_height="@dimen/x1"
-                    android:layout_marginLeft="@dimen/x3"
-                    android:background="#33000000" />
             </LinearLayout>
-
         </LinearLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
-</com.gather_excellent_help.ui.widget.MyNestedScrollView>
+    </com.gather_excellent_help.ui.widget.MyNestedScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

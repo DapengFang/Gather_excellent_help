@@ -7,12 +7,15 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.RelativeSizeSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -86,18 +89,35 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
         double s_coast = sell_price - s_zhuan;
 
         if (holder.tvActivityWarePrice != null) {
-            holder.tvActivityWarePrice.setText("￥" + df.format(sell_price));
+            String ware_price = " ¥" + df.format(sell_price);
+            SpannableString spannableString = new SpannableString(ware_price);
+            RelativeSizeSpan sizeSpan01 = new RelativeSizeSpan(0.8f);
+            spannableString.setSpan(sizeSpan01, 0, 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            holder.tvActivityWarePrice.setText(spannableString);
+        }
+
+        if (holder.rl_activity_rexiao_share != null) {
+            holder.rl_activity_rexiao_share.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onShareClickListener.onShareClick(v, position);
+                }
+            });
         }
 
         if (site_id == 1) {
 
             if (holder.tvActivityWareTitle != null && title != null) {
                 SpannableString span = new SpannableString("\t\t" + title);
-                Drawable drawable = context.getResources().getDrawable(R.drawable.taobao_order_icon);
+                Drawable drawable = context.getResources().getDrawable(R.drawable.t_taobao_ware_icon);
                 Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
                 MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 holder.tvActivityWareTitle.setText(span);
+            }
+
+            if(holder.rl_activity_rexiao_share!=null) {
+                holder.rl_activity_rexiao_share.setVisibility(View.VISIBLE);
             }
 
             if (holder.ivActivityListWareImg != null && img_url != null) {
@@ -108,14 +128,14 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
                         .into(holder.ivActivityListWareImg);//请求成功后把图片设置到的控件
             }
             if (holder.tvActivityWareCoupon != null) {
-                holder.tvActivityWareCoupon.setText("领券减" + couponsPrice);
+                holder.tvActivityWareCoupon.setText("券" + couponsPrice);
             }
 
             if (holder.tvActivityWareZhuan != null) {
-                holder.tvActivityWareZhuan.setText("￥" + df.format(zhuan));
+                holder.tvActivityWareZhuan.setText("赚 " + df.format(zhuan));
             }
             if (holder.tvActivityWareCoast != null) {
-                holder.tvActivityWareCoast.setText("￥" + df.format(coast));
+                holder.tvActivityWareCoast.setText("到手价 " + df.format(coast));
             }
             if (holder.tvActivityWareCoupon != null) {
                 if (couponsPrice > 0) {
@@ -157,6 +177,11 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
                 });
             }
         } else if (site_id == 2) {
+
+            if(holder.rl_activity_rexiao_share!=null) {
+                holder.rl_activity_rexiao_share.setVisibility(View.GONE);
+            }
+
             if (holder.tvActivityWareCoupon != null) {
                 holder.tvActivityWareCoupon.setVisibility(View.GONE);
             }
@@ -165,18 +190,10 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
             }
 
             if (holder.tvActivityWareZhuan != null) {
-                holder.tvActivityWareZhuan.setText("￥" + df.format(s_zhuan));
-                holder.tvActivityWareZhuan.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        int width = holder.tvActivityWareZhuan.getWidth();
-                        int height = holder.tvActivityWareZhuan.getHeight();
-                        LogUtil.e(" zhuan height = " + height );
-                    }
-                });
+                holder.tvActivityWareZhuan.setText("赚 " + df.format(s_zhuan));
             }
             if (holder.tvActivityWareCoast != null) {
-                holder.tvActivityWareCoast.setText("￥" + df.format(s_coast));
+                holder.tvActivityWareCoast.setText("到手价 " + df.format(s_coast));
             }
             if (holder.ll_activity_list_ware_zhuan != null) {
                 if (shopType == 1) {
@@ -196,7 +213,7 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
 
             if (holder.tvActivityWareTitle != null && title != null) {
                 SpannableString span = new SpannableString("\t\t" + title);
-                Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+                Drawable drawable = context.getResources().getDrawable(R.drawable.s_suning_ware_icon);
                 Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
                 MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -237,8 +254,6 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
         TextView tvActivityWareCoupon;
         @Bind(R.id.tv_activity_ware_title)
         TextView tvActivityWareTitle;
-        @Bind(R.id.tv_activity_ware_person)
-        TextView tvActivityWarePerson;
         @Bind(R.id.tv_activity_ware_price)
         TextView tvActivityWarePrice;
         @Bind(R.id.tv_activity_ware_zhuan)
@@ -252,13 +267,23 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
         @Bind(R.id.ll_activity_list_ware_zhuan)
         LinearLayout ll_activity_list_ware_zhuan;
 
-        TextView tv_activity_sun_tao_icon;
+        RelativeLayout rl_activity_rexiao_share;
 
         public HomeActivityListViewHolder(View itemView) {
             super(itemView);
+            rl_activity_rexiao_share = (RelativeLayout) itemView.findViewById(R.id.rl_activity_rexiao_share);
             ButterKnife.bind(this, itemView);
-            tv_activity_sun_tao_icon = (TextView) itemView.findViewById(R.id.tv_activity_sun_tao_icon);
         }
+    }
+
+    private OnShareClickListener onShareClickListener;
+
+    public interface OnShareClickListener {
+        void onShareClick(View v, int position);
+    }
+
+    public void setOnShareClickListener(OnShareClickListener onShareClickListener) {
+        this.onShareClickListener = onShareClickListener;
     }
 
     private OnItemclickListener onItemclickListener;

@@ -34,138 +34,149 @@
             android:paddingRight="@dimen/x6"
             android:paddingTop="@dimen/x6">
 
-           <RelativeLayout
-               android:layout_width="match_parent"
-               android:layout_height="@dimen/x36">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-               <TextView
-                   android:id="@+id/tv_home_type_title"
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent"
-                   android:lineSpacingExtra="@dimen/x2"
-                   android:lines="2"
-                   android:text="正品长虹全自动洗衣机7.5KG家用大容量波正品长虹全自动洗衣机7.5KG家用大容量波"
-                   android:textColor="#333333"
-                   android:textSize="@dimen/x14" />
+                <TextView
+                    android:id="@+id/tv_home_type_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="@dimen/x2"
+                    android:lines="2"
+                    android:text=""
+                    android:textColor="#333333"
+                    android:textSize="@dimen/x14" />
 
-               <TextView
-                   android:id="@+id/tv_activity_sun_tao_icon"
-                   android:layout_width="@dimen/x36"
-                   android:layout_height="@dimen/x14"
-                   android:text=""
-                   android:textStyle="bold"
-                   android:gravity="center"
-                   android:textColor="@drawable/sun_tao_text_selector"
-                   android:textSize="@dimen/x10"
-                   android:layout_marginTop="@dimen/x3"
-                   android:visibility="gone"
-                   android:background="@drawable/sun_tao_icon_selector"/>
+            </RelativeLayout>
 
-           </RelativeLayout>
-
-
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/x4"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:layout_marginTop="@dimen/x4">
 
-                <TextView
-                    android:id="@+id/tv_rush_ware_aprice"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="@dimen/x42"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:textColor="#FA2D3B"
-                    android:textSize="@dimen/x14"
-                    android:textStyle="bold" />
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/x6"
+                    android:gravity="center_horizontal|end"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/rl_activity_rexiao_share"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/x30">
+
+                        <ImageView
+                            android:layout_width="@dimen/x24"
+                            android:layout_height="@dimen/x24"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/home_rexiao_ware_share" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/x6"
+                        android:layout_marginTop="@dimen/x12">
+
+                        <TextView
+                            android:id="@+id/tv_type_second_coupons"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/x18"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/activity_list_red_shape"
+                            android:gravity="center"
+                            android:text="点我还有券"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/x8" />
+
+                        <TextView
+                            android:id="@+id/tv_rush_ware_coupons"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/x18"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/activity_list_red_shape"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/x10" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="@dimen/x5"
-                    android:text="现价"
-                    android:textColor="#55000000"
-                    android:textSize="@dimen/x8" />
-            </LinearLayout>
+                    android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/ll_activity_list_ware_zhuan"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/x18"
-                android:layout_marginTop="@dimen/x3"
-                android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tv_rush_ware_sale"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:textColor="#ff6600"
-                    android:textSize="@dimen/x8" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:text="付款价"
+                            android:textColor="#55000000"
+                            android:textSize="@dimen/x10" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="@dimen/x2"
-                    android:text="赚"
-                    android:textColor="#ff6600"
-                    android:textSize="@dimen/x5" />
+                        <TextView
+                            android:id="@+id/tv_rush_ware_aprice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="@dimen/x1"
+                            android:textColor="#FA2D3B"
+                            android:textSize="@dimen/x14" />
 
-                <TextView
-                    android:id="@+id/tv_rush_ware_coast"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="@dimen/x3"
-                    android:textColor="#ff6600"
-                    android:textSize="@dimen/x8" />
+                        <ImageView
+                            android:id="@+id/iv_activity_list_vip"
+                            android:layout_width="@dimen/x29"
+                            android:layout_height="@dimen/x12"
+                            android:layout_marginBottom="@dimen/x2"
+                            android:layout_marginLeft="@dimen/x6"
+                            android:src="@drawable/home_activity_rexiao_vip" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="@dimen/x2"
-                    android:layout_weight="1"
-                    android:text="成本"
-                    android:textColor="#ff6600"
-                    android:textSize="@dimen/x5" />
+                    </LinearLayout>
 
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/ll_activity_list_ware_zhuan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/x6"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_rush_ware_coast"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:textColor="#474747"
+                            android:textSize="@dimen/x10" />
+
+                        <TextView
+                            android:id="@+id/tv_rush_ware_sale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginTop="@dimen/x6"
+                            android:textColor="#ff6600"
+                            android:textSize="@dimen/x10" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
 
         </LinearLayout>
     </LinearLayout>
-
-
-    <TextView
-        android:id="@+id/tv_type_second_coupons"
-        android:layout_width="@dimen/x48"
-        android:layout_height="@dimen/x15"
-        android:layout_alignBottom="@id/ll_type_grid"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/x3"
-        android:layout_marginBottom="@dimen/x3"
-        android:background="@drawable/activity_list_red_shape"
-        android:gravity="center"
-        android:text="点我还有券"
-        android:textColor="@color/white"
-        android:textSize="@dimen/x8"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/tv_rush_ware_coupons"
-        android:layout_width="@dimen/x48"
-        android:layout_height="@dimen/x15"
-        android:layout_alignBottom="@id/ll_type_grid"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/x3"
-        android:layout_marginBottom="@dimen/x6"
-        android:background="@drawable/activity_list_red_shape"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="@dimen/x8"
-        android:textStyle="bold" />
 
 </RelativeLayout>

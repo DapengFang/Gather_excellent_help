@@ -8,12 +8,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -122,6 +127,7 @@ public class WebActivity extends BaseActivity {
     private AlertDialog dialog;
 
     private AlertDialog alertDialog;
+    private String share_content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +142,7 @@ public class WebActivity extends BaseActivity {
      * 初始化控件
      */
     private void initView() {
-        rl_order_no_zhanwei = (RelativeLayout)findViewById(R.id.rl_order_no_zhanwei);
+        rl_order_no_zhanwei = (RelativeLayout) findViewById(R.id.rl_order_no_zhanwei);
     }
 
     /**
@@ -481,7 +487,15 @@ public class WebActivity extends BaseActivity {
                         String[] mPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP, Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_APN_SETTINGS};
                         ActivityCompat.requestPermissions(WebActivity.this, mPermissionList, STORAGE_PERMISSIONS_REQUEST_CODE);
                     } else {
-                        shareWareUrl();
+                        if (type != null) {
+                            if (type.equals("detail")) {
+                                shareWareUrl();
+                            } else {
+                                showCopyDialog();
+                            }
+                        } else {
+                            showCopyDialog();
+                        }
                     }
                     break;
             }
@@ -494,7 +508,15 @@ public class WebActivity extends BaseActivity {
         switch (requestCode) {
             case STORAGE_PERMISSIONS_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    shareWareUrl();
+                    if (type != null) {
+                        if (type.equals("detail")) {
+                            shareWareUrl();
+                        } else {
+                            showCopyDialog();
+                        }
+                    } else {
+                        showCopyDialog();
+                    }
                 } else {
                     Toast.makeText(WebActivity.this, "请允许打开操作SDCard权限！！", Toast.LENGTH_SHORT).show();
                 }
@@ -513,11 +535,7 @@ public class WebActivity extends BaseActivity {
                 if (type != null) {
                     if (type.equals("detail")) {
                         shareDiffSolfplamNews(SHARE_MEDIA.QQ);
-                    } else {
-                        showCopyDialog(SHARE_MEDIA.QQ);
                     }
-                } else {
-                    showCopyDialog(SHARE_MEDIA.QQ);
                 }
             }
 
@@ -526,11 +544,7 @@ public class WebActivity extends BaseActivity {
                 if (type != null) {
                     if (type.equals("detail")) {
                         shareDiffSolfplamNews(SHARE_MEDIA.WEIXIN);
-                    } else {
-                        showCopyDialog(SHARE_MEDIA.WEIXIN);
                     }
-                } else {
-                    showCopyDialog(SHARE_MEDIA.WEIXIN);
                 }
             }
 
@@ -539,11 +553,7 @@ public class WebActivity extends BaseActivity {
                 if (type != null) {
                     if (type.equals("detail")) {
                         shareDiffSolfplamNews(SHARE_MEDIA.SINA);
-                    } else {
-                        showCopyDialog(SHARE_MEDIA.SINA);
                     }
-                } else {
-                    showCopyDialog(SHARE_MEDIA.SINA);
                 }
             }
 
@@ -552,11 +562,7 @@ public class WebActivity extends BaseActivity {
                 if (type != null) {
                     if (type.equals("detail")) {
                         shareDiffSolfplamNews(SHARE_MEDIA.WEIXIN_CIRCLE);
-                    } else {
-                        showCopyDialog(SHARE_MEDIA.WEIXIN_CIRCLE);
                     }
-                } else {
-                    showCopyDialog(SHARE_MEDIA.WEIXIN_CIRCLE);
                 }
             }
         });
@@ -573,7 +579,6 @@ public class WebActivity extends BaseActivity {
         } else {
             sharePopupwindow.showAtLocation(wvBanner, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         }
-
     }
 
     /**
@@ -582,18 +587,8 @@ public class WebActivity extends BaseActivity {
      * @param platform
      */
     private void shareDiffSolfplam(SHARE_MEDIA platform) {
-//        UMImage image = new UMImage(WebActivity.this, goods_img);//网络图片
-//        UMImage thumb = new UMImage(this, R.mipmap.juyoubang_logo);
-//        image.setThumb(thumb);
-//        UMWeb web = new UMWeb(click_url);
-//        web.setTitle(goods_title);//标题
-//        web.setThumb(image);  //缩略图
-//        web.setDescription("我在聚优帮看到了一件不错的商品,你也看看吧");//描述
-//        new ShareAction(this)
-//                .setPlatform(platform)//传入平台
-//                .withMedia(web)//分享内容
-//                .setCallback(shareListener)//回调监听器
-//                .share();
+        ClipboardManager cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        cmb.setText(share_content);
         UMImage image = new UMImage(WebActivity.this, goods_img);//网络图片
         UMImage thumb = new UMImage(this, R.mipmap.juyoubang_logo);
         image.setThumb(thumb);
@@ -627,19 +622,56 @@ public class WebActivity extends BaseActivity {
 
     /**
      * 剪切板剪切淘口令
-     *
-     * @param paltform
      */
-    private void showCopyDialog(final SHARE_MEDIA paltform) {
+    private void showCopyDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View inflate = View.inflate(this, R.layout.item_copy_taoword_dialog, null);
         TextView tvCopyContent = (TextView) inflate.findViewById(R.id.tv_copy_taoword_content);
         TextView tvCopyDismiss = (TextView) inflate.findViewById(R.id.tv_copy_taoword_dismiss);
         TextView tvCopyShare = (TextView) inflate.findViewById(R.id.tv_copy_taoword_share);
-        final String share_content = "商品名称:" + goods_title + "\n商品价格￥" + goods_price + "\n优惠券" + goods_coupon + "元" + "\n复制这条消息:" + taoWord + "\n去打开手机淘宝";
-        tvCopyContent.setText(share_content);
+
+        LinearLayout ll_share_qq = (LinearLayout) inflate.findViewById(R.id.ll_share_qq);
+        LinearLayout ll_share_weixin = (LinearLayout) inflate.findViewById(R.id.ll_share_weixin);
+        LinearLayout ll_share_sina = (LinearLayout) inflate.findViewById(R.id.ll_share_sina);
+        LinearLayout ll_share_weixin_friend = (LinearLayout) inflate.findViewById(R.id.ll_share_weixin_friend);
+        share_content = "商品名称:" + goods_title + "\n商品价格 ¥" + goods_price + "\n优惠券" + goods_coupon + "元" + "\n复制这条消息:" + taoWord + "\n去打开手机淘宝";
+        int index = share_content.indexOf(goods_price);
+        SpannableString spannableString = new SpannableString(share_content);
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#333333"));
+        spannableString.setSpan(colorSpan, index - 1, index + goods_price.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        RelativeSizeSpan sizeSpan01 = new RelativeSizeSpan(1.2f);
+        spannableString.setSpan(sizeSpan01, index, index + goods_price.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        tvCopyContent.setText(spannableString);
         dialog = builder.setView(inflate)
                 .show();
+
+        ll_share_qq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareDiffSolfplam(SHARE_MEDIA.QQ);
+            }
+        });
+
+        ll_share_weixin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareDiffSolfplam(SHARE_MEDIA.WEIXIN);
+            }
+        });
+
+        ll_share_sina.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareDiffSolfplam(SHARE_MEDIA.SINA);
+            }
+        });
+
+        ll_share_weixin_friend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareDiffSolfplam(SHARE_MEDIA.WEIXIN_CIRCLE);
+            }
+        });
 
         tvCopyDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -654,7 +686,7 @@ public class WebActivity extends BaseActivity {
             public void onClick(View view) {
                 ClipboardManager cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 cmb.setText(share_content);
-                shareDiffSolfplam(paltform);
+                Toast.makeText(WebActivity.this, "淘口令已复制", Toast.LENGTH_SHORT).show();
             }
         });
     }

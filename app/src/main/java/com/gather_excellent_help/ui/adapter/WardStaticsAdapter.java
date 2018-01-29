@@ -48,7 +48,7 @@ public class WardStaticsAdapter extends RecyclerView.Adapter<WardStaticsAdapter.
            holder.tvTongjiNumber.setText(dataBean.getCount()+"");
        }
         if(holder.tvWardCredits!=null) {
-            holder.tvWardCredits.setText("￥"+df.format(dataBean.getTotal()));
+            holder.tvWardCredits.setText(" ¥"+df.format(dataBean.getTotal()));
         }
     }
 

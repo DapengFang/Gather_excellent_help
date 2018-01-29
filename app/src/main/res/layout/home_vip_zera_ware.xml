@@ -8,12 +8,12 @@
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3">
+        android:layout_weight="2">
 
         <ImageView
             android:id="@+id/iv_vip_ware_img"
-            android:layout_width="@dimen/x78"
-            android:layout_height="@dimen/x78"
+            android:layout_width="@dimen/x70"
+            android:layout_height="@dimen/x70"
             android:layout_centerInParent="true" />
 
         <TextView
@@ -37,64 +37,62 @@
         android:orientation="vertical"
         android:paddingLeft="@dimen/x6"
         android:paddingRight="@dimen/x6"
-        android:paddingTop="@dimen/x6">
+        android:gravity="center_vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/x24">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_vip_ware_title"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:singleLine="true"
+                android:layout_height="wrap_content"
+                android:lines="2"
+                android:lineSpacingExtra="@dimen/x3"
                 android:textColor="#333333"
                 android:textSize="@dimen/x12" />
 
         </RelativeLayout>
 
-
-        <TextView
-            android:id="@+id/tv_vip_ware_person"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/x3"
-            android:textColor="#CCCCCC"
-            android:textSize="@dimen/x8"
-            android:visibility="visible" />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/x4"
-            android:layout_weight="1"
             android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="付款价"
+                android:textColor="#808080"
+                android:textSize="@dimen/x10" />
 
             <TextView
                 android:id="@+id/tv_vip_ware_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:textColor="#FA2D3B"
-                android:textSize="@dimen/x14"
-                android:textStyle="bold" />
+                android:textColor="#fa2a3b"
+                android:layout_marginLeft="@dimen/x2"
+                android:textSize="@dimen/x14" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="@dimen/x5"
-                android:text="现价"
-                android:textColor="#55000000"
-                android:textSize="@dimen/x10" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_vip_zera_zhuan"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/x12"
-            android:layout_marginTop="@dimen/x3"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_vip_ware_coast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:textColor="#474747"
+                android:textSize="@dimen/x10"
+                android:layout_marginTop="@dimen/x4"/>
 
             <TextView
                 android:id="@+id/tv_vip_ware_zhuan"
@@ -102,34 +100,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:textColor="#ff6600"
-                android:textSize="@dimen/x8" />
+                android:textSize="@dimen/x10"
+                android:layout_marginTop="@dimen/x4"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="@dimen/x2"
-                android:text="赚"
-                android:textColor="#ff6600"
-                android:textSize="@dimen/x5" />
-
-            <TextView
-                android:id="@+id/tv_vip_ware_coast"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="@dimen/x8"
-                android:textColor="#ff6600"
-                android:textSize="@dimen/x8" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="@dimen/x2"
-                android:text="成本"
-                android:textColor="#ff6600"
-                android:textSize="@dimen/x5" />
         </LinearLayout>
 
     </LinearLayout>

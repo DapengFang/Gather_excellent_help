@@ -114,7 +114,7 @@
             android:id="@+id/tv_order_all_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="￥99.88"
+            android:text=" ¥99.88"
             android:textColor="#3d3d3d"
             android:textSize="@dimen/x12" />
 
@@ -130,7 +130,7 @@
             android:id="@+id/tv_order_zhuan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="￥99.88"
+            android:text=" ¥99.88"
             android:textColor="#3d3d3d"
             android:textSize="@dimen/x12" />
     </LinearLayout>

@@ -47,8 +47,8 @@ public class AcccountDetailAdapter extends RecyclerView.Adapter<AcccountDetailAd
         if(dataBean.getProject()!=null) {
             holder.tvAccountDetailPro.setText(dataBean.getProject());
         }
-        holder.tvAccountDetailMoney.setText("￥" + dataBean.getValue());
-        holder.tvAccountDetailSalery.setText("余额:￥"+dataBean.getAmount());
+        holder.tvAccountDetailMoney.setText(" ¥" + dataBean.getValue());
+        holder.tvAccountDetailSalery.setText("余额: ¥"+dataBean.getAmount());
         if(dataBean.getRemark()!=null) {
             String remark = dataBean.getRemark();
             if(TextUtils.isEmpty(remark)) {

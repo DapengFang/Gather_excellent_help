@@ -3,15 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    >
+    android:background="@color/white">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_welcome_page_top"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-    </android.support.v4.view.ViewPager>
+        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
 
     <LinearLayout
         android:id="@+id/ll_welcome_point_layout"
@@ -20,35 +17,36 @@
         android:layout_gravity="bottom"
         android:layout_marginBottom="30dp"
         android:gravity="center"
-        android:orientation="horizontal" >
-    </LinearLayout>
+        android:orientation="horizontal"></LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_guidance_page"
+    <ImageView
+        android:id="@+id/iv_guidance_page"
         android:layout_width="@dimen/x120"
-        android:layout_height="@dimen/x38"
-        android:gravity="center"
-        android:text="开始体验"
-        android:textSize="16sp"
-        android:textColor="#fa2d3b"
+        android:layout_height="@dimen/x39"
         android:layout_gravity="bottom|center_horizontal"
-        android:background="@drawable/guide_in_shape"
-        android:layout_marginBottom="@dimen/x45"
+        android:layout_marginBottom="@dimen/x68"
+        android:src="@drawable/guide_start_home"
         android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/ll_splash_ship"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
         android:layout_gravity="right"
-        android:paddingTop="@dimen/x30"
-        android:paddingRight="@dimen/x20">
-        <ImageView
-            android:layout_width="@dimen/x70"
-            android:layout_height="@dimen/x25"
-            android:src="@drawable/guide_skip_main" />
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingRight="@dimen/x12"
+        android:paddingTop="@dimen/x20"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="@dimen/x56"
+            android:layout_height="@dimen/x28"
+            android:background="@drawable/guide_start_skip_shape"
+            android:gravity="center"
+            android:text="跳过"
+            android:textColor="#999999"
+            android:textSize="@dimen/x12" />
     </LinearLayout>
 
 </FrameLayout>

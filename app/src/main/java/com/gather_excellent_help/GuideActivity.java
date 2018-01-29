@@ -37,10 +37,10 @@ public class GuideActivity extends BaseFullScreenActivity {
     ViewPager vpWelcomePageTop;
     @Bind(R.id.ll_welcome_point_layout)
     LinearLayout llWelcomePointLayout;
-    @Bind(R.id.tv_guidance_page)
-    TextView tvGuidancePage;
     @Bind(R.id.ll_splash_ship)
     LinearLayout ll_splash_ship;
+
+    private ImageView iv_guidance_page;
 
     private int isUUid = -1;
 
@@ -56,7 +56,7 @@ public class GuideActivity extends BaseFullScreenActivity {
 
     private String advice_url = Url.BASE_URL + "GetDevice.aspx";
     private NetUtil netUtil;
-    private Map<String,String> map;
+    private Map<String, String> map;
     private String deviceId;//设备号
 
     @Override
@@ -64,6 +64,7 @@ public class GuideActivity extends BaseFullScreenActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
         ButterKnife.bind(this);
+        iv_guidance_page = (ImageView) findViewById(R.id.iv_guidance_page);
         initData();
     }
 
@@ -74,23 +75,22 @@ public class GuideActivity extends BaseFullScreenActivity {
         netUtil = new NetUtil();
         deviceId = Tools.getDeviceId(this);
         map = new HashMap<>();
-        map.put("device_number",deviceId);
-        netUtil.okHttp2Server2(advice_url,map);
+        map.put("device_number", deviceId);
+        netUtil.okHttp2Server2(advice_url, map);
         netUtil.setOnServerResponseListener(new OnServerResponseListener());
         arrs = new ArrayList<>();
         arrs.add(R.drawable.welcome1);
         arrs.add(R.drawable.welcome2);
         arrs.add(R.drawable.welcome3);
         arrs.add(R.drawable.welcome4);
-
         initViewpage(arrs);
-        tvGuidancePage.setOnClickListener(new View.OnClickListener() {
+        iv_guidance_page.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isUUid ==0) {
+                if (isUUid == 0) {
                     Intent intent = new Intent(GuideActivity.this, UserPswsetActivity.class);
                     startActivity(intent);
-                }else{
+                } else {
                     Intent intent = new Intent(GuideActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
@@ -102,15 +102,15 @@ public class GuideActivity extends BaseFullScreenActivity {
     /**
      * 联网请求的回调
      */
-    public class OnServerResponseListener implements NetUtil.OnServerResponseListener{
+    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
             CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
             int statusCode = codeStatueBean.getStatusCode();
             switch (statusCode) {
-                case 1 :
-                     isUUid = 1;
+                case 1:
+                    isUUid = 1;
                     break;
                 case 0:
                     isUUid = 0;
@@ -120,7 +120,7 @@ public class GuideActivity extends BaseFullScreenActivity {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            LogUtil.e(call.toString()+"--"+e.getMessage());
+            LogUtil.e(call.toString() + "--" + e.getMessage());
         }
     }
 
@@ -172,10 +172,10 @@ public class GuideActivity extends BaseFullScreenActivity {
         ll_splash_ship.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isUUid ==0) {
+                if (isUUid == 0) {
                     Intent intent = new Intent(GuideActivity.this, UserPswsetActivity.class);
                     startActivity(intent);
-                }else{
+                } else {
                     Intent intent = new Intent(GuideActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
@@ -217,7 +217,7 @@ public class GuideActivity extends BaseFullScreenActivity {
                     .findViewById(R.id.image);
             bitmap = BitmapUtil.readBitMap(GuideActivity.this, images.get(position));
             //imageView.setBackgroundResource(images.get(position));
-            if(bitmap!=null) {
+            if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             }
             view.addView(viewLayout, 0); // 将图片增加到ViewPager
@@ -231,12 +231,12 @@ public class GuideActivity extends BaseFullScreenActivity {
     }
 
     public void showImageButton() {
-        tvGuidancePage.setVisibility(View.VISIBLE);
+        iv_guidance_page.setVisibility(View.VISIBLE);
     }
 
 
     public void goneImageButton() {
-        tvGuidancePage.setVisibility(View.GONE);
+        iv_guidance_page.setVisibility(View.GONE);
     }
 
     private void initPoint() {
@@ -263,7 +263,7 @@ public class GuideActivity extends BaseFullScreenActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(bitmap!=null && !bitmap.isRecycled()) {
+        if (bitmap != null && !bitmap.isRecycled()) {
             bitmap.recycle();
         }
     }

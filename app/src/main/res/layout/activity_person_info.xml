@@ -88,8 +88,8 @@
 
             <com.gather_excellent_help.ui.widget.CircularImage
                 android:id="@+id/civ_person_head"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/x48"
+                android:layout_height="@dimen/x48"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/x3"
                 android:layout_alignParentRight="true"

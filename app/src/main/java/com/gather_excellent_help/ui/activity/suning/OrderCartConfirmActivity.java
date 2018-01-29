@@ -188,19 +188,6 @@ public class OrderCartConfirmActivity extends BaseActivity {
         rl_suning_default_address.setOnClickListener(myonclickListener);
         rl_suning_order_invoice_show.setOnClickListener(myonclickListener);
         et_suning_order_mark.setOnClickListener(myonclickListener);
-//        suningOrdercartAdapter.setOnNumButtonListener(new SuningOrdercartAdapter.OnNumButtonListener() {
-//            @Override
-//            public void onAddClick(View v, int position, String product_id, String num,String price) {
-//                totalprice =price;
-//                showTotalPrice();
-//            }
-//
-//            @Override
-//            public void onSubClick(View v, int position, String product_id, String num,String price) {
-//                totalprice = price;
-//                showTotalPrice();
-//            }
-//        });
         suningOrdercartAdapter.setOnNumAddSubListener(new SuningOrdercartAdapter.OnNumAddSubListener() {
             @Override
             public void onAddClick(View v, int position, int value) {
@@ -257,7 +244,6 @@ public class OrderCartConfirmActivity extends BaseActivity {
             swip_order_cart_refresh.setProgressViewOffset(true, 0, (int) TypedValue
                     .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
             swip_order_cart_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
                 @Override
                 public void onRefresh() {
                     mIsRequestDataRefresh = true;
@@ -429,7 +415,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
         map.put("user_id", userLogin);
         map.put("addr_id", addr_id);
         map.put("remark", remark);
-        map.put("orderType", "1");
+        map.put("orderType", "0");
         map.put("goodsJSON", json);
         map.put("invoiceState", invoiceState);
         map.put("invoiceTitle", invoiceTitle);
@@ -461,7 +447,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            LogUtil.e("网络连接出现问题~" + call.toString() + "-" + e.getMessage());
+            LogUtil.e(call.toString() + "-" + e.getMessage());
             hindCatView();
             tv_order_create_confirm.setClickable(true);
             isHavaGoods = false;
@@ -537,10 +523,10 @@ public class OrderCartConfirmActivity extends BaseActivity {
         if (freightFare == 0) {
             tv_confirm_postage.setText("免运费");
         } else {
-            tv_confirm_postage.setText("￥" + free);
+            tv_confirm_postage.setText(" ¥" + free);
         }
-        tv_confirm_goods_price.setText("￥" + df.format(price));
-        tv_confirm_order_totalprice.setText("￥" + df.format(total_price));
+        tv_confirm_goods_price.setText(" ¥" + df.format(price));
+        tv_confirm_order_totalprice.setText(" ¥" + df.format(total_price));
     }
 
     /**

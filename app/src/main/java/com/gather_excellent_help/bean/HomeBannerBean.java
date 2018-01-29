@@ -11,7 +11,7 @@ public class HomeBannerBean {
     /**
      * statusCode : 1
      * statusMessage : 查询成功
-     * data : [{"activity_id":52,"title":"机单甩 家用大容量不锈钢甩干桶 非小洗衣机脱水机甩干","link_url":"http://item.taobao.com/item.htm?id=553647861393","activity_img":"/upload/201707/21/201707211418067089.jpg","img_url":"http://img02.taobaocdn.com/bao/uploaded/i2/TB1pYVERVXXXXa4aXXXXXXXXXXX_!!0-item_pic.jpg","productId":"553647861393","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":72,"market_price":394,"sell_price":394,"tkRate":20}]
+     * data : [{"site_id":2,"article_id":4136,"banner_activity_id":0,"activity_id":52,"title":"MegCook嵌入式电磁炉 C22MDA02-C01 多功能家用 不产生油烟不糊锅 精准控温 自动烹饪智能灶双灶","link_url":"https://product.suning.com/0000000000/615300868.html","activity_img":"http://image5.suning.cn/uimg/b2c/newcatentries/0000000000-000000000615300868_1_800x800.jpg","img_url":"http://image1.suning.cn/uimg/b2c/newcatentries/0000000000-000000000615300868_1_400x400.jpg","productId":"615300868","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":0,"market_price":3899,"sell_price":3899,"tkRate":2.56,"commission_rate":0,"suning_rate":0.0256},{"site_id":1,"article_id":1632,"banner_activity_id":0,"activity_id":52,"title":"海尔冰箱137升家用小型静音节能双门BCD-137TMPF","link_url":"https://detail.tmall.com/item.htm?id=534901891026&spm=a219t.7664554.1998457203.288.45356133EV01vX","activity_img":"/upload/201801/05/201801051727550318.jpg","img_url":"http://img.alicdn.com/imgextra/i3/2465480399/TB1BqwDlbYI8KJjy0FaXXbAiVXa_!!0-item_pic.jpg","productId":"534901891026","couponsId":"","couponsPrice":0,"couponsCondition":0,"couponsUrl":"","couponsSurplus":0,"couponsGet":0,"stock_quantity":351,"market_price":1049,"sell_price":999,"tkRate":4,"commission_rate":1,"suning_rate":0}]
      */
 
     private int statusCode;
@@ -44,24 +44,31 @@ public class HomeBannerBean {
 
     public static class DataBean {
         /**
+         * site_id : 2
+         * article_id : 4136
+         * banner_activity_id : 0
          * activity_id : 52
-         * title : 机单甩 家用大容量不锈钢甩干桶 非小洗衣机脱水机甩干
-         * link_url : http://item.taobao.com/item.htm?id=553647861393
-         * activity_img : /upload/201707/21/201707211418067089.jpg
-         * img_url : http://img02.taobaocdn.com/bao/uploaded/i2/TB1pYVERVXXXXa4aXXXXXXXXXXX_!!0-item_pic.jpg
-         * productId : 553647861393
+         * title : MegCook嵌入式电磁炉 C22MDA02-C01 多功能家用 不产生油烟不糊锅 精准控温 自动烹饪智能灶双灶
+         * link_url : https://product.suning.com/0000000000/615300868.html
+         * activity_img : http://image5.suning.cn/uimg/b2c/newcatentries/0000000000-000000000615300868_1_800x800.jpg
+         * img_url : http://image1.suning.cn/uimg/b2c/newcatentries/0000000000-000000000615300868_1_400x400.jpg
+         * productId : 615300868
          * couponsId :
-         * couponsPrice : 0
-         * couponsCondition : 0
+         * couponsPrice : 0.0
+         * couponsCondition : 0.0
          * couponsUrl :
          * couponsSurplus : 0
          * couponsGet : 0
-         * stock_quantity : 72
-         * market_price : 394
-         * sell_price : 394
-         * tkRate : 20
+         * stock_quantity : 0
+         * market_price : 3899.0
+         * sell_price : 3899.0
+         * tkRate : 2.56
+         * commission_rate : 0.0
+         * suning_rate : 0.0256
          */
 
+        private int site_id;
+        private int article_id;
         private int banner_activity_id;
         private int activity_id;
         private String title;
@@ -70,8 +77,8 @@ public class HomeBannerBean {
         private String img_url;
         private String productId;
         private String couponsId;
-        private int couponsPrice;
-        private int couponsCondition;
+        private double couponsPrice;
+        private double couponsCondition;
         private String couponsUrl;
         private int couponsSurplus;
         private int couponsGet;
@@ -79,6 +86,32 @@ public class HomeBannerBean {
         private double market_price;
         private double sell_price;
         private double tkRate;
+        private double commission_rate;
+        private double suning_rate;
+
+        public int getSite_id() {
+            return site_id;
+        }
+
+        public void setSite_id(int site_id) {
+            this.site_id = site_id;
+        }
+
+        public int getArticle_id() {
+            return article_id;
+        }
+
+        public void setArticle_id(int article_id) {
+            this.article_id = article_id;
+        }
+
+        public int getBanner_activity_id() {
+            return banner_activity_id;
+        }
+
+        public void setBanner_activity_id(int banner_activity_id) {
+            this.banner_activity_id = banner_activity_id;
+        }
 
         public int getActivity_id() {
             return activity_id;
@@ -136,19 +169,19 @@ public class HomeBannerBean {
             this.couponsId = couponsId;
         }
 
-        public int getCouponsPrice() {
+        public double getCouponsPrice() {
             return couponsPrice;
         }
 
-        public void setCouponsPrice(int couponsPrice) {
+        public void setCouponsPrice(double couponsPrice) {
             this.couponsPrice = couponsPrice;
         }
 
-        public int getCouponsCondition() {
+        public double getCouponsCondition() {
             return couponsCondition;
         }
 
-        public void setCouponsCondition(int couponsCondition) {
+        public void setCouponsCondition(double couponsCondition) {
             this.couponsCondition = couponsCondition;
         }
 
@@ -184,14 +217,6 @@ public class HomeBannerBean {
             this.stock_quantity = stock_quantity;
         }
 
-        public int getBanner_activity_id() {
-            return banner_activity_id;
-        }
-
-        public void setBanner_activity_id(int banner_activity_id) {
-            this.banner_activity_id = banner_activity_id;
-        }
-
         public double getMarket_price() {
             return market_price;
         }
@@ -214,6 +239,22 @@ public class HomeBannerBean {
 
         public void setTkRate(double tkRate) {
             this.tkRate = tkRate;
+        }
+
+        public double getCommission_rate() {
+            return commission_rate;
+        }
+
+        public void setCommission_rate(double commission_rate) {
+            this.commission_rate = commission_rate;
+        }
+
+        public double getSuning_rate() {
+            return suning_rate;
+        }
+
+        public void setSuning_rate(double suning_rate) {
+            this.suning_rate = suning_rate;
         }
     }
 }

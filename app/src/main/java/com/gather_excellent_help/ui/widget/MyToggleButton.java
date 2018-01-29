@@ -93,27 +93,28 @@ public class MyToggleButton extends View {
             slideBtn_left = backgroundBitmap.getWidth()
                     - slideButton.getWidth();
         }
+        int position_init = backgroundBitmap.getHeight() - slideButton.getHeight();
         Paint paint = new Paint();
         // 打开抗锯齿
         paint.setAntiAlias(true);
 
+
         // 画背景
         canvas.drawBitmap(backgroundBitmap, 0, 0, paint);
         // 画滑块
-        canvas.drawBitmap(slideButton, slideBtn_left, 0, paint);
+        canvas.drawBitmap(slideButton, slideBtn_left, position_init/2, paint);
     }
 
     /**
      * 初始化view
      */
     private void initView() {
-
         backgroundBitmap = BitmapFactory.decodeResource(getResources(),
                 R.drawable.switch_background);
-        backgroundBitmap = Tools.zoomBitmap(backgroundBitmap, DensityUtil.dip2px(getContext(),45), DensityUtil.dip2px(getContext(),23));
+        backgroundBitmap = Tools.zoomBitmap(backgroundBitmap, DensityUtil.dip2px(getContext(),33), DensityUtil.dip2px(getContext(),18));
         slideButton = BitmapFactory.decodeResource(getResources(),
                 R.drawable.slide_button);
-        slideButton = Tools.zoomBitmap(slideButton,DensityUtil.dip2px(getContext(),23),DensityUtil.dip2px(getContext(),23));
+        slideButton = Tools.zoomBitmap(slideButton,DensityUtil.dip2px(getContext(),16),DensityUtil.dip2px(getContext(),16));
         /*
          * 点击事件
          */
@@ -121,7 +122,6 @@ public class MyToggleButton extends View {
 
             @Override
             public void onClick(View v) {
-
                 currentState = !currentState;
                 flushState();
                 flushView();
@@ -143,22 +143,22 @@ public class MyToggleButton extends View {
      */
     protected void flushState() {
         if (currentState) {
-            slideBtn_left = 0;
+            slideBtn_left = DensityUtil.dip2px(getContext(),1);
             backgroundBitmap = BitmapFactory.decodeResource(getResources(),
                     R.drawable.switch_background_gray);
-            backgroundBitmap = Tools.zoomBitmap(backgroundBitmap, DensityUtil.dip2px(getContext(),45), DensityUtil.dip2px(getContext(),23));
+            backgroundBitmap = Tools.zoomBitmap(backgroundBitmap, DensityUtil.dip2px(getContext(),33), DensityUtil.dip2px(getContext(),18));
             slideButton = BitmapFactory.decodeResource(getResources(),
                     R.drawable.slide_button);
-            slideButton = Tools.zoomBitmap(slideButton,DensityUtil.dip2px(getContext(),23),DensityUtil.dip2px(getContext(),23));
+            slideButton = Tools.zoomBitmap(slideButton,DensityUtil.dip2px(getContext(),16),DensityUtil.dip2px(getContext(),16));
         } else {
             slideBtn_left = backgroundBitmap.getWidth()
-                    - slideButton.getWidth();
+                    - slideButton.getWidth()-DensityUtil.dip2px(getContext(),1);
             backgroundBitmap = BitmapFactory.decodeResource(getResources(),
                     R.drawable.switch_background);
-            backgroundBitmap = Tools.zoomBitmap(backgroundBitmap, DensityUtil.dip2px(getContext(),45), DensityUtil.dip2px(getContext(),23));
+            backgroundBitmap = Tools.zoomBitmap(backgroundBitmap, DensityUtil.dip2px(getContext(),33), DensityUtil.dip2px(getContext(),18));
             slideButton = BitmapFactory.decodeResource(getResources(),
                     R.drawable.slide_button);
-            slideButton = Tools.zoomBitmap(slideButton,DensityUtil.dip2px(getContext(),23),DensityUtil.dip2px(getContext(),23));
+            slideButton = Tools.zoomBitmap(slideButton,DensityUtil.dip2px(getContext(),16),DensityUtil.dip2px(getContext(),16));
         }
     }
 
@@ -182,8 +182,5 @@ public class MyToggleButton extends View {
     public void setOnStateChangeListener(OnStateChangeListener onStateChangeListener) {
         this.onStateChangeListener = onStateChangeListener;
     }
-
-
-
 
 }

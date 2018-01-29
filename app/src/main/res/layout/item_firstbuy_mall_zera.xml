@@ -76,7 +76,7 @@
                 android:id="@+id/tv_first_small_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="￥3900.00"
+                android:text=" ¥3900.00"
                 android:textSize="12sp"
                 android:textColor="#99ff0000"/>
 
@@ -85,7 +85,7 @@
             android:id="@+id/tv_first_small_zhuan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="赚：￥106.89 成本：￥3092.11"
+            android:text="赚： ¥106.89 成本： ¥3092.11"
             android:textSize="10sp"
             android:textColor="#99ff0000"/>
         <ImageView

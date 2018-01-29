@@ -179,13 +179,11 @@
             android:name=".SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -324,10 +322,7 @@
         <activity
             android:name=".ui.activity.shop.WhichJoinActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" >
-
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.shop.TalentShowActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -336,7 +331,6 @@
             android:name=".ui.activity.shop.StoreshowActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.activity.shop.StoreSuccActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -382,7 +376,8 @@
         <activity android:name=".ui.activity.test.TestActivity_l02" />
         <activity android:name=".ui.activity.test.TestActivity_l03" />
         <activity android:name=".ui.activity.test.TestActivity_l04" />
-        <activity android:name=".ui.activity.test.TestActivity_l05"></activity>
+        <activity android:name=".ui.activity.test.TestActivity_l05" />
+        <activity android:name=".ui.activity.taosearch.TaoSearchActivity"></activity>
     </application>
 
 </manifest>

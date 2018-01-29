@@ -117,14 +117,14 @@
                 android:id="@+id/tv_first_big_zhuan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="赚:￥106.89"
+                android:text="赚: ¥106.89"
                 android:textSize="10sp"
                 android:textColor="#99ff0000" />
             <TextView
                 android:id="@+id/tv_first_big_chengben"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="成本:￥3092.11"
+                android:text="成本: ¥3092.11"
                 android:textSize="10sp"
                 android:textColor="#99ff0000" />
             <ImageView

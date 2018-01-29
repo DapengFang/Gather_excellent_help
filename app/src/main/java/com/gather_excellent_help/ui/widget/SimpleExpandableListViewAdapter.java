@@ -93,20 +93,7 @@ public class SimpleExpandableListViewAdapter extends BaseExpandableListAdapter {
     }
 
     private View getGenericView(TypeNavigatorBean.DataBean dataBean, String string, boolean isExpanded, int groupPosition) {
-//        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(
-//                ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-//        TextView textView = new TextView(activity);
-//        textView.setLayoutParams(layoutParams);
-//        textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
-//
-//        textView.setPadding(40, 30, 0, 30);
-//        textView.setText(string);
-//        textView.setTextColor(Color.BLACK);
-//        inflate.setLayoutParams(layoutParams);
         View inflate = View.inflate(activity, R.layout.item_type_first_arraw, null);
-        LinearLayout ll_type_first_title = (LinearLayout) inflate.findViewById(R.id.ll_type_first_title);
         ImageView arrawNavigator = (ImageView) inflate.findViewById(R.id.iv_first_arraw);
         TextView tvNavigator = (TextView) inflate.findViewById(R.id.tv_first_title);
         arrawSetDirection(isExpanded, arrawNavigator);
@@ -142,7 +129,7 @@ public class SimpleExpandableListViewAdapter extends BaseExpandableListAdapter {
         adapter.setOnThirdListClickListener(new ClassesExpandableListViewAdapter.OnThirdListClickListener() {
             @Override
             public void onThirdClick(int groupPosition, int childPosition, TextView textView) {
-                onExpandableClickListener.onThirdItemClick(position, groupPosition, childPosition,textView);
+                onExpandableClickListener.onThirdItemClick(position, groupPosition, childPosition, textView);
             }
         });
         view.setGroupIndicator(null);
@@ -166,7 +153,7 @@ public class SimpleExpandableListViewAdapter extends BaseExpandableListAdapter {
     public interface OnExpandableClickListener {
         void onSecondItemClick(int position, int groupPisition);
 
-        void onThirdItemClick(int position, int groupPisition, int childPosition,TextView tv);
+        void onThirdItemClick(int position, int groupPisition, int childPosition, TextView tv);
     }
 
     public void setOnExpandableClickListener(OnExpandableClickListener onExpandableClickListener) {

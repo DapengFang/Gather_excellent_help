@@ -15,12 +15,14 @@ import com.gather_excellent_help.bean.HomeBannerBean;
 import com.gather_excellent_help.presenter.BasePresenter;
 import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
+import com.gather_excellent_help.ui.activity.suning.SuningDetailActivity;
 import com.gather_excellent_help.ui.widget.CarouselImageView;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
 import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import okhttp3.Call;
@@ -33,12 +35,14 @@ public class BannerPresenter extends BasePresenter {
 
     private Activity context;
     private CarouselImageView civHomeGanner;
+    private RelativeLayout rl_home_banner;
     private NetUtil netUtils;
     private String banner_url = Url.BASE_URL + "IndexBanner.aspx";
 
-    public BannerPresenter(Activity context, CarouselImageView civHomeGanner) {
+    public BannerPresenter(Activity context, CarouselImageView civHomeGanner, RelativeLayout rl_home_banner) {
         this.context = context;
         this.civHomeGanner = civHomeGanner;
+        this.rl_home_banner = rl_home_banner;
         netUtils = new NetUtil();
     }
 
@@ -103,23 +107,41 @@ public class BannerPresenter extends BasePresenter {
         CarouselImageView.ImageCycleViewListener mAdCycleViewListener = new CarouselImageView.ImageCycleViewListener() {
             @Override
             public void onImageClick(int position, View imageView) {
+                DecimalFormat df = new DecimalFormat("#0.00");
                 int banner_activity_id = data.get(position % data.size()).getBanner_activity_id();
                 String link_url = data.get(position % data.size()).getLink_url();
                 String goods_id = data.get(position % data.size()).getProductId();
                 String goods_img = Url.IMG_URL + data.get(position % data.size()).getImg_url();
                 String goods_title = data.get(position % data.size()).getTitle();
+                int site_id = data.get(position % data.size()).getSite_id();
+                int article_id = data.get(position % data.size()).getArticle_id();
+                double sell_price = data.get(position % data.size()).getSell_price();
+                double market_price = data.get(position % data.size()).getMarket_price();
                 Intent intent = null;
-                if (banner_activity_id > 0) {
-                    intent = new Intent(context, WareListActivity.class);
-                    intent.putExtra("activity_id", String.valueOf(banner_activity_id));
-                    intent.putExtra("content", "activity");
-                    context.startActivity(intent);
-                } else {
-                    intent = new Intent(context, WebRecordActivity.class);
-                    intent.putExtra("url", link_url);
+
+                if (site_id == 1) {
+                    if (banner_activity_id > 0) {
+                        intent = new Intent(context, WareListActivity.class);
+                        intent.putExtra("activity_id", String.valueOf(banner_activity_id));
+                        intent.putExtra("content", "activity");
+                        context.startActivity(intent);
+                    } else {
+                        intent = new Intent(context, WebRecordActivity.class);
+                        intent.putExtra("url", link_url);
+                        intent.putExtra("goods_id", goods_id);
+                        intent.putExtra("goods_img", goods_img);
+                        intent.putExtra("goods_title", goods_title);
+                        context.startActivity(intent);
+                    }
+                } else if (site_id == 2) {
+                    //苏宁
+                    intent = new Intent(context, SuningDetailActivity.class);
+                    intent.putExtra("article_id", article_id);
                     intent.putExtra("goods_id", goods_id);
                     intent.putExtra("goods_img", goods_img);
                     intent.putExtra("goods_title", goods_title);
+                    intent.putExtra("goods_price", df.format(sell_price) + "");
+                    intent.putExtra("c_price", df.format(market_price) + "");
                     context.startActivity(intent);
                 }
             }
@@ -135,6 +157,7 @@ public class BannerPresenter extends BasePresenter {
         };
         civHomeGanner.setImageResources(data, mAdCycleViewListener);
         civHomeGanner.startImageCycle();
+        rl_home_banner.setVisibility(View.VISIBLE);
     }
 
     /**

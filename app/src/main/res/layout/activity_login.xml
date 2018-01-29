@@ -8,8 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="@dimen/x200">
+        android:layout_marginTop="@dimen/x200"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,8 +32,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x10"
                 android:background="@null"
-                android:hint="手机号"
                 android:cursorVisible="true"
+                android:hint="手机号"
                 android:inputType="number"
                 android:textColor="#a9a9a9"
                 android:textColorHint="#a9a9a9"
@@ -51,9 +51,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x10"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:layout_marginTop="@dimen/x10"
             android:paddingBottom="@dimen/x10"
             android:paddingLeft="@dimen/x26"
             android:paddingRight="@dimen/x26"
@@ -69,11 +69,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x10"
-                android:hint="密码"
-                android:cursorVisible="true"
                 android:background="@null"
-                android:maxLength="16"
+                android:cursorVisible="true"
+                android:hint="密码"
                 android:inputType="textPassword"
+                android:maxLength="16"
                 android:textColor="#a9a9a9"
                 android:textColorHint="#a9a9a9"
                 android:textSize="16sp" />
@@ -90,8 +90,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/x10"
-            android:layout_marginRight="@dimen/x16">
+            android:layout_marginRight="@dimen/x16"
+            android:padding="@dimen/x10">
 
             <TextView
                 android:id="@+id/tv_login_lostpsw"
@@ -101,45 +101,47 @@
                 android:text="忘记密码?"
                 android:textColor="#999999"
                 android:textSize="16sp" />
+
             <View
                 android:layout_width="@dimen/x60"
                 android:layout_height="@dimen/x1"
-                android:background="#999999"
                 android:layout_alignLeft="@id/tv_login_lostpsw"
-                android:layout_below="@id/tv_login_lostpsw"/>
+                android:layout_below="@id/tv_login_lostpsw"
+                android:background="#999999" />
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/x10"
             android:layout_marginTop="@dimen/x10"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="@dimen/x10">
 
             <TextView
                 android:id="@+id/tv_login"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="@dimen/x40"
+                android:layout_weight="1"
+                android:background="@drawable/register_confirm_selector"
+                android:gravity="center"
                 android:text="登录"
                 android:textColor="@drawable/register_textcolor_confirm_selector"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:background="@drawable/register_confirm_selector"/>
+                android:textSize="16sp" />
+
             <View
                 android:layout_width="@dimen/x10"
-                android:layout_height="@dimen/x40"/>
+                android:layout_height="@dimen/x40" />
 
             <TextView
                 android:id="@+id/tv_register"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="@dimen/x40"
+                android:layout_weight="1"
+                android:background="@drawable/login_shape_register_selector"
+                android:gravity="center"
                 android:text="注册"
                 android:textColor="#fe1831"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:background="@drawable/login_shape_register_selector"/>
+                android:textSize="16sp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -182,37 +184,37 @@
             android:id="@+id/tv_login_qq"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x30"
+            android:drawablePadding="@dimen/x3"
             android:drawableTop="@drawable/qq_icon"
             android:gravity="center"
             android:text="QQ"
-            android:drawablePadding="@dimen/x3"
-            android:layout_marginLeft="@dimen/x30"
             android:textColor="#000000"
             android:textSize="12sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_login_sina"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:drawablePadding="@dimen/x3"
             android:drawableTop="@drawable/sina_icon"
             android:gravity="center"
             android:text="微博"
-            android:drawablePadding="@dimen/x3"
             android:textColor="#000000"
             android:textSize="12sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_login_wx"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/weixin_icon"
             android:layout_centerInParent="true"
+            android:drawablePadding="@dimen/x3"
+            android:drawableTop="@drawable/weixin_icon"
             android:gravity="center"
             android:text="微信"
-            android:drawablePadding="@dimen/x3"
             android:textColor="#000000"
             android:textSize="14sp" />
 

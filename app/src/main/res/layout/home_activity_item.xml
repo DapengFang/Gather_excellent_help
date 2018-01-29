@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#33000000"
+        android:background="#f5f5f5"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="@dimen/x8">
@@ -53,11 +53,9 @@
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcv_activity_ware_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
-
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

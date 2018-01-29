@@ -1,7 +1,7 @@
 package com.gather_excellent_help;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
+import android.support.testm.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Test;

@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -94,7 +96,6 @@ public class ExtractCreditsActivity extends BaseActivity {
             @Override
             public void getSuccessResponse(String response) {
                 LogUtil.e(response);
-                tvExtractCreditsCommit.setClickable(true);
                 CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
                 int statusCode = codeStatueBean.getStatusCode();
                 switch (statusCode) {
@@ -120,6 +121,51 @@ public class ExtractCreditsActivity extends BaseActivity {
         rlExit.setOnClickListener(new MyOnClickListener());
         tvExtractCreditsCommit.setOnClickListener(new MyOnClickListener());
         llExtractRule.setOnClickListener(new MyOnClickListener());
+        /**
+         * 第一种方法
+         */
+        etExtractCash.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+                if (s.toString().contains(".")) {
+                    if (s.length() - 1 - s.toString().indexOf(".") > 2) {
+                        s = s.toString().subSequence(0,
+                                s.toString().indexOf(".") + 3);
+                        etExtractCash.setText(s);
+                        etExtractCash.setSelection(s.length());
+                    }
+                }
+                if (s.toString().trim().substring(0).equals(".")) {
+                    s = "0" + s;
+                    etExtractCash.setText(s);
+                    etExtractCash.setSelection(2);
+                }
+
+                if (s.toString().startsWith("0")
+                        && s.toString().trim().length() > 1) {
+                    if (!s.toString().substring(1, 2).equals(".")) {
+                        etExtractCash.setText(s.subSequence(0, 1));
+                        etExtractCash.setSelection(1);
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // TODO Auto-generated method stub
+
+            }
+
+        });
     }
 
     private void getExtractCredits() {
@@ -136,6 +182,7 @@ public class ExtractCreditsActivity extends BaseActivity {
             @Override
             public void getSuccessResponse(String response) {
                 LogUtil.e("---" + response + "----");
+                tvExtractCreditsCommit.setClickable(true);
                 CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
                 int statusCode = codeStatueBean.getStatusCode();
                 switch (statusCode) {
@@ -149,7 +196,7 @@ public class ExtractCreditsActivity extends BaseActivity {
                             if (amount == 0) {
                                 tvExteactAccount.setText("0.00");
                             } else {
-                                tvExteactAccount.setText("" + amount);
+                                tvExteactAccount.setText("" + df.format(amount));
                             }
                         }
                         break;
@@ -214,7 +261,7 @@ public class ExtractCreditsActivity extends BaseActivity {
             Toast.makeText(ExtractCreditsActivity.this, "请输入提取数量！", Toast.LENGTH_SHORT).show();
             tvExtractCreditsCommit.setClickable(true);
         } else {
-            Integer cret = Integer.valueOf(etCredits);
+            double cret = Double.valueOf(etCredits);
             if (cret >= 2 && cret <= amount) {
                 String userLogin = Tools.getUserLogin(this);
                 boolean bindAlipay = Tools.isBindAlipay(this);

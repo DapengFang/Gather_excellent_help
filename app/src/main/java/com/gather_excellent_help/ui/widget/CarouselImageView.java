@@ -137,7 +137,7 @@ public class CarouselImageView extends LinearLayout {
 //            int imageParams = (int) (mScale * 5 + 0.5f);// XP与DP转换，适应应不同分辨率
 //            int imagePadding = (int) (mScale * 5 + 0.5f);
             int imageParams = ViewPager.LayoutParams.WRAP_CONTENT;// XP与DP转换，适应应不同分辨率
-            int imagePadding =ViewPager.LayoutParams.WRAP_CONTENT;
+            int imagePadding = ViewPager.LayoutParams.WRAP_CONTENT;
             LayoutParams params = new LayoutParams(imageParams, imageParams);
             params.leftMargin = 10;
             mImageView.setScaleType(ScaleType.FIT_XY);
@@ -256,7 +256,7 @@ public class CarouselImageView extends LinearLayout {
 
         private Context mContext;
 
-        public ImageCycleAdapter(Context context,List<HomeBannerBean.DataBean> adList, ImageCycleViewListener imageCycleViewListener) {
+        public ImageCycleAdapter(Context context, List<HomeBannerBean.DataBean> adList, ImageCycleViewListener imageCycleViewListener) {
             this.mContext = context;
             this.mAdList = adList;
             mImageCycleViewListener = imageCycleViewListener;
@@ -275,8 +275,13 @@ public class CarouselImageView extends LinearLayout {
 
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
-
-            String imageUrl =Url.IMG_URL + mAdList.get(position%mAdList.size()).getActivity_img();
+            int site_id = mAdList.get(position % mAdList.size()).getSite_id();
+            String imageUrl = "";
+            if (site_id == 1) {
+                imageUrl = Url.IMG_URL + mAdList.get(position % mAdList.size()).getActivity_img();
+            } else if (site_id == 2) {
+                imageUrl = mAdList.get(position % mAdList.size()).getActivity_img();
+            }
             LogUtil.e(imageUrl);
             String img_link = mAdList.get(position % mAdList.size()).getImg_url();
             ImageView imageView;
@@ -291,7 +296,7 @@ public class CarouselImageView extends LinearLayout {
             imageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mImageCycleViewListener.onImageClick(position,v);
+                    mImageCycleViewListener.onImageClick(position, v);
                 }
             });
             container.addView(imageView);

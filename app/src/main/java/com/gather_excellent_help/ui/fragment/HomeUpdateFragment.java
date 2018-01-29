@@ -95,6 +95,8 @@ public class HomeUpdateFragment extends LazyLoadFragment {
     LinearLayout ll_home_update_scanner;
 
     private LinearLayout ll_home_msg;
+    private RelativeLayout rl_home_banner;
+    private RelativeLayout rl_item_laod_more;
 
     private boolean mIsRequestDataRefresh = false;
     public static final int TIME_DOWN = 1; //倒计时显示的标识
@@ -120,6 +122,8 @@ public class HomeUpdateFragment extends LazyLoadFragment {
     public View initView() {
         View inflate = View.inflate(getContext(), R.layout.home_update_fragment, null);
         ll_home_msg = (LinearLayout) inflate.findViewById(R.id.ll_home_msg);
+        rl_home_banner = (RelativeLayout) inflate.findViewById(R.id.rl_home_banner);
+        rl_item_laod_more = (RelativeLayout) inflate.findViewById(R.id.rl_item_laod_more);
         return inflate;
     }
 
@@ -138,7 +142,7 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                             handler.removeMessages(TIME_DOWN);
                             return;
                         }
-                        if(handler!=null) {
+                        if (handler != null) {
                             handler.sendEmptyMessageDelayed(TIME_DOWN, 1000);
                         }
                         break;
@@ -148,12 +152,12 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                                 stopDataRefresh();
                                 setRefresh(mIsRequestDataRefresh);
                             }
-                            if(handler!=null) {
+                            if (handler != null) {
                                 handler.removeMessages(STOP_REFRESH);
                             }
                             return;
                         }
-                        if(handler!=null) {
+                        if (handler != null) {
                             handler.sendEmptyMessageDelayed(STOP_REFRESH, 200);
                         }
                         break;
@@ -168,11 +172,11 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                                 && llHomeGroupZera != null && rcvHomeActivity != null
                                 && rcvHomeActivityList != null && mynested_scrollview != null && ll_home_loadmore != null) {
                             loadHomeUpdateData();
-                            if(handler!=null) {
+                            if (handler != null) {
                                 handler.removeMessages(CHECK_NULL);
                             }
                         } else {
-                            if(handler!=null) {
+                            if (handler != null) {
                                 handler.sendEmptyMessageDelayed(CHECK_NULL, 500);
                             }
                         }
@@ -181,10 +185,10 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                 }
             }
         };
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeMessages(TIME_DOWN);
             handler.removeMessages(STOP_REFRESH);
-            handler.sendEmptyMessageDelayed(CHECK_NULL,600);
+            handler.sendEmptyMessageDelayed(CHECK_NULL, 600);
         }
     }
 
@@ -192,7 +196,7 @@ public class HomeUpdateFragment extends LazyLoadFragment {
      * 加载首页数据
      */
     private void loadHomeUpdateData() {
-        bannerPresenter = new BannerPresenter(getActivity(), civHomeGanner);
+        bannerPresenter = new BannerPresenter(getActivity(), civHomeGanner, rl_home_banner);
         bannerPresenter.initData();
 
         typePresenter = new TypePresenter(getActivity(), gvHomeType);
@@ -255,14 +259,14 @@ public class HomeUpdateFragment extends LazyLoadFragment {
             @Override
             public void onClick(View view) {
                 boolean isLogin = Tools.isLogin(getContext());
-                if(isLogin) {
+                if (isLogin) {
                     CaptureActivity.open(getContext(), new CaptureActivity.OnScanResultListener() {
                         @Override
                         public void onResult(String result) {
                             LogUtil.e(result);
-                            if(result.startsWith("http")) {
+                            if (result.startsWith("http")) {
                                 boolean b = ChangeUrlUtil.checkContainWareId(result);
-                                if(b) {
+                                if (b) {
                                     String wareId = ChangeUrlUtil.getWareId(result);
                                     String adverId = Tools.getAdverId(getContext());
                                     LogUtil.e(wareId);
@@ -280,7 +284,7 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                                                         LogUtil.e("click_url = " + click_url);
                                                         Intent intent = new Intent(getContext(), ScannerWebActivity.class);
                                                         intent.putExtra("scaner_url", click_url);
-                                                        intent.putExtra("url_type",1);
+                                                        intent.putExtra("url_type", 1);
                                                         startActivity(intent);
                                                     } else {
                                                         Toast.makeText(getContext(), "转链出现问题，没有拿到转链的链接~", Toast.LENGTH_SHORT).show();
@@ -292,18 +296,18 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                                             }
                                         }
                                     });
-                                }else{
+                                } else {
                                     Intent intent = new Intent(getContext(), ScannerWebActivity.class);
                                     intent.putExtra("scaner_url", result);
-                                    intent.putExtra("url_type",2);
+                                    intent.putExtra("url_type", 2);
                                     startActivity(intent);
                                 }
-                            }else{
-                                Toast.makeText(getContext(), result , Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-                }else{
+                } else {
                     Intent intent = new Intent(getContext(), LoginActivity.class);
                     startActivity(intent);
                 }
@@ -317,7 +321,7 @@ public class HomeUpdateFragment extends LazyLoadFragment {
             }
         });
 
-        if(handler!=null) {
+        if (handler != null) {
             handler.sendEmptyMessageDelayed(TOTOP, 2000);
         }
     }
@@ -331,7 +335,7 @@ public class HomeUpdateFragment extends LazyLoadFragment {
             @Override
             public void stopSuccessRefresh() {
                 bannerRefresh = false;
-                if(handler!=null) {
+                if (handler != null) {
                     handler.sendEmptyMessage(STOP_REFRESH);
                 }
             }
@@ -375,7 +379,7 @@ public class HomeUpdateFragment extends LazyLoadFragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }
@@ -421,7 +425,7 @@ public class HomeUpdateFragment extends LazyLoadFragment {
     public void setRefresh(boolean requestDataRefresh) {
         if (!requestDataRefresh) {
             mIsRequestDataRefresh = false;
-            if(swipeRefresh!=null) {
+            if (swipeRefresh != null) {
                 swipeRefresh.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -432,7 +436,7 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                 }, 1000);
             }
         } else {
-            if(swipeRefresh!=null) {
+            if (swipeRefresh != null) {
                 swipeRefresh.setRefreshing(true);
             }
         }
@@ -450,7 +454,7 @@ public class HomeUpdateFragment extends LazyLoadFragment {
 
     @Override
     protected void stopLoad() {
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
         }

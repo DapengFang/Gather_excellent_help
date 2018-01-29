@@ -93,13 +93,13 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
                 }
                 if (goods_title != null) {
                     SpannableString span = new SpannableString("\t\t" + goods_title);
-                    ImageSpan image = new ImageSpan(context, R.drawable.suning_ware_icon, DynamicDrawableSpan.ALIGN_BASELINE);
+                    ImageSpan image = new ImageSpan(context, R.drawable.s_suning_ware_icon, DynamicDrawableSpan.ALIGN_BASELINE);
                     span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     holder.tv_suning_goodscart_title.setText(span);
                 }
-                holder.tv_suning_order_realprice.setText("￥" + df.format(sell_price));
+                holder.tv_suning_order_realprice.setText(" ¥" + df.format(sell_price));
 
-                holder.tv_suning_order_oldprice.setText("￥" + df.format(market_price));
+                holder.tv_suning_order_oldprice.setText(" ¥" + df.format(market_price));
             }
 
             List<NetGoodscartBean.DataBean.GgListBean> gg_list = dataBean.getGg_list();

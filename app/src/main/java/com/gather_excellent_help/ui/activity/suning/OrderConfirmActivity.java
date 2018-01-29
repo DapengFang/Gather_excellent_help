@@ -200,7 +200,7 @@ public class OrderConfirmActivity extends BaseActivity {
         if (c_price != null) {
             tv_bottom_pop_cprice.getPaint().setAntiAlias(true);
             tv_bottom_pop_cprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG); // 设置中划线并加清晰 
-            tv_bottom_pop_cprice.setText("￥" + c_price);
+            tv_bottom_pop_cprice.setText(" ¥" + c_price);
             m_price = c_price;
         }
         goods_price = Double.parseDouble(ware_price);
@@ -224,14 +224,14 @@ public class OrderConfirmActivity extends BaseActivity {
 
         if (goods_title != null) {
             SpannableString span = new SpannableString("\t\t" + goods_title);
-            Drawable drawable = getResources().getDrawable(R.drawable.suning_ware_icon);
+            Drawable drawable = getResources().getDrawable(R.drawable.s_suning_ware_icon);
             Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(OrderConfirmActivity.this, 16), DensityUtil.dip2px(OrderConfirmActivity.this, 16));
             MyImageSpan image = new MyImageSpan(OrderConfirmActivity.this, bitmap, -1);
             span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             tv_bottom_pop_name.setText(span);
         }
         if (ware_price != null) {
-            tv_bottom_pop_goodprice.setText("￥" + goods_price);
+            tv_bottom_pop_goodprice.setText(" ¥" + goods_price);
         }
         if (ware_json != null) {
             LogUtil.e(ware_json);
@@ -611,7 +611,7 @@ public class OrderConfirmActivity extends BaseActivity {
                             map.put("user_id", userLogin);
                             map.put("addr_id", addr_id);
                             map.put("remark", remark);
-                            map.put("orderType", "1");
+                            map.put("orderType", "0");
                             map.put("goodsJSON", json);
                             map.put("invoiceState", invoiceState);
                             map.put("invoiceTitle", invoiceTitle);
@@ -646,11 +646,11 @@ public class OrderConfirmActivity extends BaseActivity {
         if (freightFare == 0) {
             tv_confirm_postage.setText("免运费");
         } else {
-            tv_confirm_postage.setText("￥" + free);
+            tv_confirm_postage.setText(" ¥" + free);
         }
-        tv_confirm_goods_price.setText("￥" + df.format(total));
+        tv_confirm_goods_price.setText(" ¥" + df.format(total));
         double totalprice = total + freightFare;
-        tv_confirm_order_totalprice.setText("￥" + df.format(totalprice));
+        tv_confirm_order_totalprice.setText(" ¥" + df.format(totalprice));
         tv_bottom_pop_goods_num.setText("x" + goods_num);
     }
 

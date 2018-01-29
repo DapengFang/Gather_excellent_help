@@ -278,7 +278,7 @@ public class SuningStandardPopupwindow extends PopupWindow {
 
         if (tv_bottom_pop_name != null && goods_title != null) {
             SpannableString span = new SpannableString("\t\t" + goods_title);
-            Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+            Drawable drawable = context.getResources().getDrawable(R.drawable.s_suning_ware_icon);
             Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
             MyImageSpan image = new MyImageSpan(context, bitmap, -1);
             span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -286,7 +286,7 @@ public class SuningStandardPopupwindow extends PopupWindow {
         }
 
         if (tv_bottom_pop_goodprice != null && goods_price != null) {
-            tv_bottom_pop_goodprice.setText("￥" + goods_price);
+            tv_bottom_pop_goodprice.setText(" ¥" + goods_price);
         }
 
         if (tv_bottom_pop_ogoodprice != null && c_price != null) {

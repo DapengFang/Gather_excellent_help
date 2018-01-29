@@ -6,7 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.RelativeSizeSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -76,37 +78,42 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
         double s_zhuan = sell_price * tkRate * user_rate;
         double s_coast = sell_price - s_zhuan;
 
-//        if (holder.tvActivityWareTitle != null && title != null) {
-//            holder.tvActivityWareTitle.setText("\t\t\t\t\t\t" + title);
-//        }
+        if (couponsPrice > 0) {
+            holder.tv_activity_home_coupon.setVisibility(View.VISIBLE);
+        } else {
+            holder.tv_activity_home_coupon.setVisibility(View.INVISIBLE);
+        }
 
+        String price_content = "¥" + df.format(sell_price);
+        SpannableString spannableString = new SpannableString(price_content);
+        RelativeSizeSpan sizeSpan01 = new RelativeSizeSpan(1.2f);
+        spannableString.setSpan(sizeSpan01, 1, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        holder.tvActivityWarePrice.setText(spannableString);
         if (site_id == 1) {
 
             if (holder.tvActivityWareTitle != null && title != null) {
                 SpannableString span = new SpannableString("\t\t" + title);
-                Drawable drawable = context.getResources().getDrawable(R.drawable.taobao_order_icon);
+                Drawable drawable = context.getResources().getDrawable(R.drawable.t_taobao_ware_icon);
                 Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
                 MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 holder.tvActivityWareTitle.setText(span);
             }
 
-//            if (holder.tv_activity_sun_tao_icon != null) {
-//                holder.tv_activity_sun_tao_icon.setSelected(false);
-//                holder.tv_activity_sun_tao_icon.setText("淘宝");
-//            }
             if (holder.tvActivityWarePrice != null) {
                 if (shopType == 1) {
                     if (isToggle) {
-                        holder.tvActivityWarePrice.setText("￥" + df.format(sell_price));
-                        holder.tvActivityWareType.setText("页面价");
+                        holder.tv_activity_home_zhuan.setVisibility(View.INVISIBLE);
                     } else {
-                        holder.tvActivityWarePrice.setText("￥" + df.format(coast));
-                        holder.tvActivityWareType.setText("成本");
+                        if(zhuan > 0) {
+                            holder.tv_activity_home_zhuan.setText("赚 " + df.format(zhuan));
+                            holder.tv_activity_home_zhuan.setVisibility(View.VISIBLE);
+                        }else{
+                            holder.tv_activity_home_zhuan.setVisibility(View.INVISIBLE);
+                        }
                     }
                 } else {
-                    holder.tvActivityWarePrice.setText("￥" + df.format(sell_price));
-                    holder.tvActivityWareType.setText("页面价");
+                    holder.tv_activity_home_zhuan.setVisibility(View.INVISIBLE);
                 }
             }
             if (holder.ivActivityWareImg != null && img_url != null) {
@@ -121,7 +128,7 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
 
             if (holder.tvActivityWareTitle != null && title != null) {
                 SpannableString span = new SpannableString("\t\t" + title);
-                Drawable drawable = context.getResources().getDrawable(R.drawable.suning_ware_icon);
+                Drawable drawable = context.getResources().getDrawable(R.drawable.s_suning_ware_icon);
                 Bitmap bitmap = ImageSpanUtil.zoomDrawable(drawable, DensityUtil.dip2px(context, 16), DensityUtil.dip2px(context, 16));
                 MyImageSpan image = new MyImageSpan(context, bitmap, -1);
                 span.setSpan(image, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -139,15 +146,17 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
             if (holder.tvActivityWarePrice != null) {
                 if (shopType == 1) {
                     if (isToggle) {
-                        holder.tvActivityWarePrice.setText("￥" + df.format(sell_price));
-                        holder.tvActivityWareType.setText("页面价");
+                        holder.tv_activity_home_zhuan.setVisibility(View.INVISIBLE);
                     } else {
-                        holder.tvActivityWarePrice.setText("￥" + df.format(s_coast));
-                        holder.tvActivityWareType.setText("成本");
+                        if(s_zhuan > 0) {
+                            holder.tv_activity_home_zhuan.setText("赚 " + df.format(s_zhuan));
+                            holder.tv_activity_home_zhuan.setVisibility(View.VISIBLE);
+                        }else{
+                            holder.tv_activity_home_zhuan.setVisibility(View.INVISIBLE);
+                        }
                     }
                 } else {
-                    holder.tvActivityWarePrice.setText("￥" + df.format(sell_price));
-                    holder.tvActivityWareType.setText("页面价");
+                    holder.tv_activity_home_zhuan.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -174,17 +183,19 @@ public class HomeActivityWareAdapter extends RecyclerView.Adapter<HomeActivityWa
         TextView tvActivityWareTitle;
         @Bind(R.id.tv_activity_ware_price)
         TextView tvActivityWarePrice;
-        @Bind(R.id.tv_activity_ware_type)
-        TextView tvActivityWareType;
         @Bind(R.id.ll_activity_ware)
         LinearLayout llActivityWare;
 
         TextView tv_activity_sun_tao_icon;
+        TextView tv_activity_home_zhuan;
+        TextView tv_activity_home_coupon;
 
         public HomeActivityWareViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             tv_activity_sun_tao_icon = (TextView) itemView.findViewById(R.id.tv_activity_sun_tao_icon);
+            tv_activity_home_zhuan = (TextView) itemView.findViewById(R.id.tv_activity_home_zhuan);
+            tv_activity_home_coupon = (TextView) itemView.findViewById(R.id.tv_activity_home_coupon);
         }
     }
 

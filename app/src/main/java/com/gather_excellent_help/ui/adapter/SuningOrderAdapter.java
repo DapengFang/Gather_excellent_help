@@ -81,9 +81,9 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
                 if (sn_freight == 0) {
                     holder.tv_suning_order_free.setText("免运费");
                 } else {
-                    holder.tv_suning_order_free.setText("运费:￥" + df.format(sn_freight));
+                    holder.tv_suning_order_free.setText("运费: ¥" + df.format(sn_freight));
                 }
-                holder.tv_item_order_shifukuan.setText("￥" + String.valueOf(df.format(real_amount)));
+                holder.tv_item_order_shifukuan.setText(" ¥" + String.valueOf(df.format(real_amount)));
                 if (status == 1) {
                     holder.tv_item_order_type.setText("买家待付款");
                     holder.tv_item_order_topay.setVisibility(View.VISIBLE);
@@ -179,10 +179,10 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
                             if (goodListBean.getGoods_title() != null) {
                                 tv_suning_order_title.setText(goodListBean.getGoods_title());
                             }
-                            tv_suning_order_realprice.setText("￥" + String.valueOf(df.format(goodListBean.getReal_price())));
+                            tv_suning_order_realprice.setText(" ¥" + String.valueOf(df.format(goodListBean.getReal_price())));
                             tv_suning_order_oldprice.getPaint().setAntiAlias(true);
                             tv_suning_order_oldprice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-                            tv_suning_order_oldprice.setText("￥" + String.valueOf(df.format(goodListBean.getGoods_price())));
+                            tv_suning_order_oldprice.setText(" ¥" + String.valueOf(df.format(goodListBean.getGoods_price())));
                             tv_suning_order_number.setText("x" + goodListBean.getQuantity());
                         }
                         holder.ll_order_manager_container.addView(inflate);

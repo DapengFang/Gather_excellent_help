@@ -154,7 +154,7 @@
                     android:id="@+id/tv_goodscart_price_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="总计：￥"
+                    android:text="总计： ¥"
                     android:textColor="#333333"
                     android:textSize="@dimen/x12" />
 

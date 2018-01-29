@@ -29,7 +29,7 @@
                 android:id="@+id/tv_order_all_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="订单金额：￥000"
+                android:text="订单金额： ¥000"
                 android:textSize="12sp"
                 android:textColor="#66000000"
                 android:padding="@dimen/x3"/>
@@ -37,7 +37,7 @@
                 android:id="@+id/tv_order_zhuan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="赚：￥0"
+                android:text="赚： ¥0"
                 android:textSize="12sp"
                 android:textColor="#eeff0000"
                 android:padding="@dimen/x3"/>

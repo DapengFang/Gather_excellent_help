@@ -293,7 +293,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             double coast = sell_price - zhuan -couponsPrice;
             final String couponsUrl = dataBean.getCouponsUrl();
             final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
-            groupViewHolder.tvHomeGroupZhuan.setText("赚:￥" + df.format(zhuan) + " 成本:￥" + df.format(coast));
+            groupViewHolder.tvHomeGroupZhuan.setText("赚: ¥" + df.format(zhuan) + " 成本: ¥" + df.format(coast));
             if (couponsPrice > 0) {
                 groupViewHolder.tvHomeGroupCoupons.setVisibility(View.VISIBLE);
                 groupViewHolder.tvHomeGroupCoupons.setOnClickListener(new View.OnClickListener() {
@@ -333,7 +333,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             } else {
                 groupViewHolder.tvHomeGroupZhuan.setVisibility(View.GONE);
             }
-            groupViewHolder.tv_group_big_price.setText("今日特价：￥" + df.format(sell_price));
+            groupViewHolder.tv_group_big_price.setText("今日特价： ¥" + df.format(sell_price));
             mImageLoader.loadImage(dataBean.getImg_url(), groupViewHolder.iv_group_big_pic, true);
             groupViewHolder.ll_group_big.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -421,9 +421,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             } else {
                 tvSmallSecondCoupons.setVisibility(View.GONE);
             }
-            tvMallPrice.setText("今日特价：￥" + df.format(sell_price1));
-            tvSmallZhuan.setText("赚:￥" + df.format(zhuan1));
-            tvSmallCoast.setText("成本:￥" + df.format(coast1));
+            tvMallPrice.setText("今日特价： ¥" + df.format(sell_price1));
+            tvSmallZhuan.setText("赚: ¥" + df.format(zhuan1));
+            tvSmallCoast.setText("成本: ¥" + df.format(coast1));
             if (shopType == 1) {
                 boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                 if (toggleShow) {
@@ -529,9 +529,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 } else {
                     tvSmallSecondCoupons2.setVisibility(View.GONE);
                 }
-                tvMallPrice2.setText("今日特价：￥" + df.format(sell_price2));
-                tvSmallZhuan2.setText("赚:￥" + df.format(zhuan2));
-                tvSmallCoast2.setText("成本:￥" + df.format(coast2));
+                tvMallPrice2.setText("今日特价： ¥" + df.format(sell_price2));
+                tvSmallZhuan2.setText("赚: ¥" + df.format(zhuan2));
+                tvSmallCoast2.setText("成本: ¥" + df.format(coast2));
                 if (shopType == 1) {
                     boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                     if (toggleShow) {
@@ -627,7 +627,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 String max_commission_rate = coupon_info.getMax_commission_rate();
                 rate = Double.parseDouble(max_commission_rate)/100;
             }
-            firstBuyViewHoldre.tvFirstBigPrice.setText("￥" + df.format(sellPrice));
+            firstBuyViewHoldre.tvFirstBigPrice.setText(" ¥" + df.format(sellPrice));
             //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
             if (shopType == 1) {
                 boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
@@ -639,8 +639,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     double coast = sellPrice - zhuan;
                     firstBuyViewHoldre.tvFirstBigZhuan.setVisibility(View.VISIBLE);
                     firstBuyViewHoldre.tvFirstBigChengben.setVisibility(View.VISIBLE);
-                    firstBuyViewHoldre.tvFirstBigZhuan.setText("赚:￥" + df.format(zhuan));
-                    firstBuyViewHoldre.tvFirstBigChengben.setText("成本:￥" + df.format(coast));
+                    firstBuyViewHoldre.tvFirstBigZhuan.setText("赚: ¥" + df.format(zhuan));
+                    firstBuyViewHoldre.tvFirstBigChengben.setText("成本: ¥" + df.format(coast));
                 }
             } else {
                 firstBuyViewHoldre.tvFirstBigZhuan.setVisibility(View.GONE);
@@ -821,8 +821,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         } else {
                             tvSmallTitle.setText(dataBean1.getTitle());
                         }
-                        tvSmallPrice.setText("￥" + df.format(sell_price_s1));
-                        tvSmallZhuan.setText("赚:￥" + df.format(zhuan_s1) + " 成本:￥" + df.format(coast_s1));
+                        tvSmallPrice.setText(" ¥" + df.format(sell_price_s1));
+                        tvSmallZhuan.setText("赚: ¥" + df.format(zhuan_s1) + " 成本: ¥" + df.format(coast_s1));
                         mImageLoader.loadImage(dataBean1.getImg_url(), ivSmall, true);
                         if (coupon_p1 == 0) {
                             tvSmallCoupons.setVisibility(View.GONE);
@@ -836,8 +836,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         } else {
                             tvSmallTitle.setText(dataBean2.getTitle());
                         }
-                        tvSmallPrice.setText("￥" + df.format(sell_price_s2));
-                        tvSmallZhuan.setText("赚:￥" + df.format(zhuan_s2) + " 成本:￥" + df.format(coast_s2));
+                        tvSmallPrice.setText(" ¥" + df.format(sell_price_s2));
+                        tvSmallZhuan.setText("赚: ¥" + df.format(zhuan_s2) + " 成本: ¥" + df.format(coast_s2));
                         mImageLoader.loadImage(dataBean2.getImg_url(), ivSmall, true);
                         if (coupon_p2 == 0) {
                             tvSmallCoupons.setVisibility(View.GONE);
@@ -906,7 +906,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             LogUtil.e("zhuan tkRate = " + tkRate +",===+user_rate == "+user_rate);
             double zhuan = (sell_price -couponsPrice)*tkRate*0.9f*user_rate;
             double coast = sell_price -couponsPrice-zhuan;
-            homeVipViewHolder.tvHomeVipZhuan.setText("赚:￥"+df.format(zhuan)+" 成本:￥"+df.format(coast));
+            homeVipViewHolder.tvHomeVipZhuan.setText("赚: ¥"+df.format(zhuan)+" 成本: ¥"+df.format(coast));
             homeVipViewHolder.tvVipBigPrice.setText("专享价"+df.format(sell_price));
 
             //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
@@ -1023,7 +1023,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
 
                     if(tv_vip_small_zhuan!=null) {
-                       tv_vip_small_zhuan.setText("赚:￥"+df.format(zhuan1));
+                       tv_vip_small_zhuan.setText("赚: ¥"+df.format(zhuan1));
                         if (shopType == 1) {
                             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                             if (toggleShow) {
@@ -1037,7 +1037,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
 
                     if(tv_vip_small_coast!=null) {
-                        tv_vip_small_coast.setText("成本:￥"+df.format(coast1));
+                        tv_vip_small_coast.setText("成本: ¥"+df.format(coast1));
                         if (shopType == 1) {
                             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                             if (toggleShow) {
@@ -1116,7 +1116,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
 
                     if(tv_vip_small_zhuan!=null) {
-                        tv_vip_small_zhuan.setText("赚:￥"+df.format(zhuan2));
+                        tv_vip_small_zhuan.setText("赚: ¥"+df.format(zhuan2));
                         if (shopType == 1) {
                             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                             if (toggleShow) {
@@ -1130,7 +1130,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
 
                     if(tv_vip_small_coast!=null) {
-                        tv_vip_small_coast.setText("成本:￥"+df.format(coast2));
+                        tv_vip_small_coast.setText("成本: ¥"+df.format(coast2));
                         if (shopType == 1) {
                             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                             if (toggleShow) {

@@ -44,7 +44,7 @@
             android:id="@+id/tv_order_ware_oldprice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="￥9388"
+            android:text=" ¥9388"
             android:textSize="12sp"
             android:textColor="#44000000"
             android:layout_gravity="right"/>
@@ -53,7 +53,7 @@
             android:id="@+id/tv_order_ware_newprice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="￥8399"
+            android:text=" ¥8399"
             android:textSize="14sp"
             android:textColor="#99ff0000"
             android:layout_gravity="right"/>

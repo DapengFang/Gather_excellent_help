@@ -36,13 +36,10 @@ public class ExtractDetailActivity extends BaseActivity {
     RelativeLayout rlExit;
     @Bind(R.id.tv_top_title_name)
     TextView tvTopTitleName;
-    @Bind(R.id.iv_zhuangtai_share)
-    ImageView ivZhuangtaiShare;
     @Bind(R.id.rl_share)
     RelativeLayout rlShare;
     @Bind(R.id.rcv_account_detail)
     RecyclerView rcvAccountDetail;
-
     private RelativeLayout rl_order_no_zhanwei;
     private NetUtil netUtil;
     private Map<String, String> map;

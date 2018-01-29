@@ -51,8 +51,6 @@ public class SetActivity extends BaseActivity {
     RelativeLayout rlExit;
     @Bind(R.id.tv_top_title_name)
     TextView tvTopTitleName;
-    @Bind(R.id.iv_zhuangtai_share)
-    ImageView ivZhuangtaiShare;
     @Bind(R.id.rl_share)
     RelativeLayout rlShare;
     @Bind(R.id.rl_set_payaccount)
@@ -120,6 +118,7 @@ public class SetActivity extends BaseActivity {
         if (isLogin()) {
             user_id = CacheUtils.getString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
         }
+        tvTopTitleName.setText("设置");
         String version = Tools.getVersion(this);
         String show_version = "当前版本号：" + version;
         if (show_version.length() > 6) {

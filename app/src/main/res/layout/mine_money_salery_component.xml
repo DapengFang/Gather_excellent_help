@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_mine_salery_show"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/x45"
+    android:background="#ffffff"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:visibility="gone">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/x10">
+
+        <ImageView
+            android:layout_width="@dimen/x16"
+            android:layout_height="@dimen/x16"
+            android:layout_centerVertical="true"
+            android:src="@drawable/mine_salary_icon" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x6"
+        android:layout_weight="1"
+        android:text="我的余额"
+        android:textColor="#99000000"
+        android:textSize="@dimen/x14" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/x7"
+        android:text=" ¥0.00"
+        android:textColor="#1a1a1a"
+        android:textSize="@dimen/x16" />
+</LinearLayout>

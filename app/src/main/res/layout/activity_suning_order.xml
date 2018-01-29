@@ -21,6 +21,15 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
+            android:text="全部"
+            android:textColor="#333333"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="待付款"
             android:textColor="#333333"
             android:textSize="12sp" />
@@ -52,14 +61,6 @@
             android:textColor="#333333"
             android:textSize="12sp" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="全部"
-            android:textColor="#333333"
-            android:textSize="12sp" />
 
     </com.gather_excellent_help.ui.widget.ViewpagerIndicator>
 

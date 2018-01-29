@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_left_top_listzera"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/iv_left_top_zera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_left_top_ware"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/x3"
+            android:drawablePadding="@dimen/x1"
+            android:drawableRight="@drawable/home_down_arraw_vip"
+            android:gravity="center"
+            android:text="实时成交订单"
+            android:textColor="#0cb5fd"
+            android:textSize="@dimen/x14" />
+
+        <TextView
+            android:id="@+id/tv_left_top_waretitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x3"
+            android:lineSpacingExtra="@dimen/x1"
+            android:lines="2"
+            android:paddingLeft="@dimen/x14"
+            android:paddingRight="@dimen/x3"
+            android:textColor="#333333"
+            android:textSize="@dimen/x11" />
+
+        <TextView
+            android:id="@+id/tv_left_top_wareprice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/x3"
+            android:textColor="#808080"
+            android:textSize="@dimen/x10" />
+
+        <ImageView
+            android:id="@+id/iv_left_top_warepic"
+            android:layout_width="@dimen/x68"
+            android:layout_height="@dimen/x68"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/x3" />
+
+    </LinearLayout>
+
+</LinearLayout>
