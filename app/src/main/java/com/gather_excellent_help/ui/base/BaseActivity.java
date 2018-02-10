@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.utils.AndroidWorkaround;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.StatusBarUtil;
 import com.gather_excellent_help.utils.Tools;

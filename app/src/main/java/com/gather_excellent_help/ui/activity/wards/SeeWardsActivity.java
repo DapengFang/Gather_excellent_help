@@ -18,6 +18,7 @@ import com.gather_excellent_help.ui.adapter.BackRebateAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.ViewpagerIndicator;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -165,6 +166,8 @@ public class SeeWardsActivity extends BaseActivity {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 hindLoadMore();
+                LogUtil.e(call.toString() + "-" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(SeeWardsActivity.this);
             }
         });
         rlExit.setOnClickListener(new MyOnclickListener());
@@ -176,7 +179,7 @@ public class SeeWardsActivity extends BaseActivity {
         map.put("pageSize", pageSize);
         map.put("pageNo", pageNo);
         map.put("Type", type);
-        netUtil.okHttp2Server2(url, map);
+        netUtil.okHttp2Server2(SeeWardsActivity.this,url, map);
     }
 
     public class MyOnclickListener implements View.OnClickListener {

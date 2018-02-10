@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -39,7 +40,9 @@ import com.gather_excellent_help.ui.fragment.TaobaoFragment;
 import com.gather_excellent_help.ui.fragment.TaobaoUpdateFragment;
 import com.gather_excellent_help.ui.fragment.TypeFragment;
 import com.gather_excellent_help.ui.widget.NoScrollViewPager;
+import com.gather_excellent_help.utils.AndroidWorkaround;
 import com.gather_excellent_help.utils.DensityUtil;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -59,6 +62,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
 import okhttp3.Call;
 
 public class MainActivity extends FragmentActivity {
@@ -72,7 +76,6 @@ public class MainActivity extends FragmentActivity {
     private RelativeLayout rl_red_packet_show;
     private ImageView iv_red_packet_exit;
     private ImageView iv_red_packet_get;
-
 
     private NetUtil netUtil;
     private Map<String, String> map;
@@ -135,6 +138,9 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initWindow();
+        if (AndroidWorkaround.checkDeviceHasNavigationBar(this)) {
+            AndroidWorkaround.assistActivity(findViewById(android.R.id.content));
+        }
         setContentView(R.layout.activity_main);
         initView();
         initData();
@@ -200,19 +206,6 @@ public class MainActivity extends FragmentActivity {
         if (handler != null) {
             handler.sendEmptyMessageDelayed(LOAD_MAIN, 200);
         }
-        LogUtil.e(ScreenUtil.getScreenWidth(this ) + "--" + ScreenUtil.getScreenHeight(this));
-    }
-
-    public static void test() throws Exception {
-        String key = "12378945";
-        String message = "{\"statusCode\":1,\"statusMessage\":\"查询成功\",\"data\":[{\"avatar\":\"https://wwc.alicdn.com/avatar/getAvatar.do?userId=2638987498&width=160&height=160&type=sns \n" +
-                "\n" +
-                "\",\"nick_name\":\"呆萌小方\",\"sex\":\"保密\",\"group_id\":5,\"advertising\":\"130642937\",\"user_get_ratio\":\"95\",\"user_earn\":0.0,\"grand_total\":5.52,\"group\":\"推广商家\",\"group_type\":1,\"mobile\":\"18514792343\",\"amount\":140.86,\"frostAmount\":125.66,\"apply_type\":0,\"pay_type\":0,\"apply_status\":0,\"pay_status\":0}]}";
-        String jiami = Des2.EncryptAsDoNet(message, key);
-        jiami = "ftGTerDpDUtPjiHSgztTkO3wYIYm+S5T6/oJ5TqmqPpL6ikVAj6tngBgtscGnfHDUpC2LdyKDObme3At4BW1nvEE2agR6Np8MMZk1uBaAmFZ+ADZMHK7+n6uYcGTOiFAO5x0xI9TlNzimR8dxkd0/I+hYcpBmnhFhF4Ng1ElKmOSjFKX3Z6VhylxHQPU2Ikv4BNyL5TOmuotX6HR2LGUVs+qn0uh9ULADwV6NTchTdsS/hG4QOSg2gcE/v94M6kpVFK1OXhkvhhyKvDDXT31tGrSn71xGaz8L55UmryQFVN4I5CjWlRIRW5sbymq5JNoF6znkrUSKmxRCAp6TZEldPkrB+QVRe7uIAUvJnuKxPTi9icg0ez6fwK8t3J0YVadYV/42Cw40wSIUgIoSCSH/7d/ji6hL6sc4gdXbXRs6AxTo9MjKyflqZZBRFY9cp7wm3NI668SI/t2kGj/uLcywMwgGsMntrnlxiauCb3teoAOF7g4oKBTpnR3Lv8auqCfgzG59n2XzQ1joG47dDHIP0Mq6ydLazxh7rs2JX2t+huvr56pgO36yMdsWnilGIWCK56me1tHfBIOdLhr/qEh51QmuXOe/5NzoY/2cGr9XEw=";
-        LogUtil.e("加密后的数据为:" + jiami);
-        String b = Des2.DecryptDoNet(jiami, key);
-        LogUtil.e("解密后的数据:" + b);
     }
 
     /**
@@ -342,6 +335,7 @@ public class MainActivity extends FragmentActivity {
         return false;
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -395,7 +389,7 @@ public class MainActivity extends FragmentActivity {
     private void getRedPacketUrl(String userLogin) {
         map = new HashMap<>();
         map.put("user_id", userLogin);
-        netUtil.okHttp2Server2(url, map);
+        netUtil.okHttp2Server2(MainActivity.this,url, map);
     }
 
     /**
@@ -434,7 +428,17 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
+            EncryptNetUtil.startNeterrorPage(MainActivity.this);
             LogUtil.e(call.toString() + "-" + e.getMessage());
+        }
+    }
+
+    /**
+     * 跳转到首页
+     */
+    public void refreshMainActivity() {
+        if (handler != null) {
+            handler.sendEmptyMessageDelayed(LOAD_MAIN, 200);
         }
     }
 }

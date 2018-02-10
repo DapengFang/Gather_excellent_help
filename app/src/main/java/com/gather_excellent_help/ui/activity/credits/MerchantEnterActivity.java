@@ -42,6 +42,7 @@ import com.gather_excellent_help.ui.adapter.BrandListAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.MyGridView;
 import com.gather_excellent_help.utils.Base64Coder;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -159,20 +160,22 @@ public class MerchantEnterActivity extends BaseActivity {
         ivMerchantBrandArraw.setImageResource(R.drawable.left_black_arraw);
         netUtil = new NetUtil();
         where = "";
-        netUtil.okHttp2Server2(brand_url, null);
+        netUtil.okHttp2Server2(MerchantEnterActivity.this,brand_url, null);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
                 LogUtil.e(response);
                 if (TextUtils.isEmpty(where)) {
                     parseData(response);
-                }else{
+                } else {
                     pareMerchantData(response);
                 }
             }
+
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "--" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(MerchantEnterActivity.this);
             }
         });
         gvMerchantBrand.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -211,6 +214,7 @@ public class MerchantEnterActivity extends BaseActivity {
 
     /**
      * 解析商家入驻信息
+     *
      * @param response
      */
     private void pareMerchantData(String response) {
@@ -218,7 +222,7 @@ public class MerchantEnterActivity extends BaseActivity {
         CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
         int statusCode = codeStatueBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
+            case 1:
                 toAlipay();
                 break;
             case 0:
@@ -386,7 +390,7 @@ public class MerchantEnterActivity extends BaseActivity {
      */
     private void upLoadMerchantInfo() {
         String userLogin = Tools.getUserLogin(this);
-        if(TextUtils.isEmpty(userLogin)) {
+        if (TextUtils.isEmpty(userLogin)) {
             toLogin();
             return;
         }
@@ -394,19 +398,19 @@ public class MerchantEnterActivity extends BaseActivity {
         telephone = etMerchantPhone.getText().toString().trim();
         address = etMerchantAddress.getText().toString().trim();
         info = etMerchantShopinfo.getText().toString().trim();
-        if(TextUtils.isEmpty(name)) {
+        if (TextUtils.isEmpty(name)) {
             Toast.makeText(MerchantEnterActivity.this, "请输入店名！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(telephone)) {
+        if (TextUtils.isEmpty(telephone)) {
             Toast.makeText(MerchantEnterActivity.this, "请输入电话！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(address)) {
+        if (TextUtils.isEmpty(address)) {
             Toast.makeText(MerchantEnterActivity.this, "请输入地址！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(info)) {
+        if (TextUtils.isEmpty(info)) {
             Toast.makeText(MerchantEnterActivity.this, "请输入店铺简介！", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -414,11 +418,11 @@ public class MerchantEnterActivity extends BaseActivity {
         LogUtil.e(upload2);
         LogUtil.e(upload3);
         LogUtil.e(upload4);
-        if(TextUtils.isEmpty(upload1) || TextUtils.isEmpty(upload2) || TextUtils.isEmpty(upload3) || TextUtils.isEmpty(upload4)) {
+        if (TextUtils.isEmpty(upload1) || TextUtils.isEmpty(upload2) || TextUtils.isEmpty(upload3) || TextUtils.isEmpty(upload4)) {
             Toast.makeText(MerchantEnterActivity.this, "请上传图片！", Toast.LENGTH_SHORT).show();
             return;
         }
-        String pics = upload1.trim()+","+upload2.trim()+","+upload3.trim()+","+upload4.trim();
+        String pics = upload1.trim() + "," + upload2.trim() + "," + upload3.trim() + "," + upload4.trim();
 
         map = new HashMap<>();
         map.put("user_id", userLogin);
@@ -428,10 +432,10 @@ public class MerchantEnterActivity extends BaseActivity {
         map.put("info", info);
         map.put("business_time", business_time);
         map.put("business", brand);
-        map.put("file",upload1.trim());
-        map.put("file2",upload2.trim());
-        map.put("file3",upload3.trim());
-        map.put("file4",upload4.trim());
+        map.put("file", upload1.trim());
+        map.put("file2", upload2.trim());
+        map.put("file3", upload3.trim());
+        map.put("file4", upload4.trim());
 //        if (!TextUtils.isEmpty(picpath1) && !TextUtils.isEmpty(picpath2)
 //                && !TextUtils.isEmpty(picpath3) && !TextUtils.isEmpty(picpath4)) {
 //            File file1 = new File(picpath1);
@@ -444,8 +448,8 @@ public class MerchantEnterActivity extends BaseActivity {
 //        } else {
 //            Toast.makeText(MerchantEnterActivity.this, "请选择图片！", Toast.LENGTH_SHORT).show();
 //        }
-         where = "upload_file";
-         netUtil.okHttp2Server2(merchant_url,map);
+        where = "upload_file";
+        netUtil.okHttp2Server2(MerchantEnterActivity.this,merchant_url, map);
     }
 
     /**
@@ -476,7 +480,7 @@ public class MerchantEnterActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-           //doPhoto(requestCode, data);
+            //doPhoto(requestCode, data);
             switch (requestCode) {
                 // 如果是直接从相册获取
                 case CROP_PIC_BY_PICK_PHOTO:
@@ -497,7 +501,7 @@ public class MerchantEnterActivity extends BaseActivity {
                      * 地方做判断处理类似情况
                      *
                      */
-                    if(data != null){
+                    if (data != null) {
                         setPicToView(data);
                     }
                     break;
@@ -507,8 +511,7 @@ public class MerchantEnterActivity extends BaseActivity {
             }
             super.onActivityResult(requestCode, resultCode, data);
         }
-        }
-
+    }
 
 
     /**
@@ -772,10 +775,11 @@ public class MerchantEnterActivity extends BaseActivity {
 
     /**
      * 裁剪图片方法实现
+     *
      * @param uri
      */
     public void startPhotoZoom(Uri uri) {
-		/*
+        /*
 		 * 至于下面这个Intent的ACTION是怎么知道的，大家可以看下自己路径下的如下网页
 		 * yourself_sdk_path/docs/reference/android/content/Intent.html
 		 * 直接在里面Ctrl+F搜：CROP ，之前小马没仔细看过，其实安卓系统早已经有自带图片裁剪功能,
@@ -795,8 +799,10 @@ public class MerchantEnterActivity extends BaseActivity {
         intent.putExtra("return-data", true);
         startActivityForResult(intent, SELECT_PIC_BY_PICK_PHOTO);
     }
+
     /**
      * 裁剪图片方法实现
+     *
      * @param uri
      */
     public void startPhotoZoom2(Uri uri) {
@@ -823,6 +829,7 @@ public class MerchantEnterActivity extends BaseActivity {
 
     /**
      * 保存裁剪之后的图片数据
+     *
      * @param picdata
      */
     private void setPicToView(Intent picdata) {
@@ -862,7 +869,7 @@ public class MerchantEnterActivity extends BaseActivity {
                 upload3 = sphoto;
             } else if (which.equals("l4")) {
                 ivMerchantPictureL4.setImageBitmap(photo);
-                upload4 =sphoto;
+                upload4 = sphoto;
             }
         }
     }

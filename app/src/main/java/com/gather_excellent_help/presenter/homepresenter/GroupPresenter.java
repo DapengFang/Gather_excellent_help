@@ -29,6 +29,7 @@ import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningDetailActivity;
 import com.gather_excellent_help.utils.DensityUtil;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -95,7 +96,7 @@ public class GroupPresenter extends BasePresenter {
 
     @Override
     public void initData() {
-        netUtil.okHttp2Server2(group_url, null);
+        netUtil.okHttp2Server2(context,group_url, null);
         netUtil.setOnServerResponseListener(new MyOnServerResponseListener());
     }
 
@@ -103,20 +104,21 @@ public class GroupPresenter extends BasePresenter {
 
         @Override
         public void getSuccessResponse(String response) {
-            if (context != null) {
+            try {
                 parseData(response);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            if (context != null) {
-                Toast.makeText(context, "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
-            }
+            EncryptNetUtil.startNeterrorPage(context);
         }
     }
 
-    private void parseData(String response) {
+    private void parseData(String response) throws Exception {
         HomeGroupBean homeGroupBean = new Gson().fromJson(response, HomeGroupBean.class);
         int statusCode = homeGroupBean.getStatusCode();
         switch (statusCode) {
@@ -135,7 +137,7 @@ public class GroupPresenter extends BasePresenter {
         }
     }
 
-    private void loadRightWareData(List<HomeGroupBean.DataBean> groupData) {
+    private void loadRightWareData(List<HomeGroupBean.DataBean> groupData) throws Exception {
         int childCount = ll_group_right_zera.getChildCount();
         LogUtil.e(childCount + "----------------");
         for (int i = 0; i < childCount; i++) {
@@ -149,6 +151,7 @@ public class GroupPresenter extends BasePresenter {
                 TextView tv_group_ware_coast = (TextView) childAt.findViewById(R.id.tv_group_ware_coast);
                 ImageView iv_group_ware_img = (ImageView) childAt.findViewById(R.id.iv_group_ware_img);
                 TextView tv_group_ware_coupon = (TextView) childAt.findViewById(R.id.tv_group_ware_coupon);
+                LinearLayout ll_activity_group_coupon = (LinearLayout) childAt.findViewById(R.id.ll_activity_group_coupon);
                 HomeGroupBean.DataBean dataBean = groupData.get((i + 2) / 2);
                 final int site_id = dataBean.getSite_id();
                 final int article_id = dataBean.getArticle_id();
@@ -202,7 +205,7 @@ public class GroupPresenter extends BasePresenter {
                         }
                     }
                     if (tv_group_ware_coupon != null) {
-                        tv_group_ware_coupon.setText("券" + couponsPrice);
+                        tv_group_ware_coupon.setText("" + couponsPrice);
                     }
                     if (tv_group_ware_zhuan != null) {
                         tv_group_ware_zhuan.setText("赚 " + df.format(zhuan));
@@ -210,11 +213,11 @@ public class GroupPresenter extends BasePresenter {
                     if (tv_group_ware_coast != null) {
                         tv_group_ware_coast.setText("到手价 " + df.format(coast));
                     }
-                    if (tv_group_ware_coupon != null) {
+                    if (ll_activity_group_coupon != null) {
                         if (couponsPrice > 0) {
-                            tv_group_ware_coupon.setVisibility(View.VISIBLE);
+                            ll_activity_group_coupon.setVisibility(View.VISIBLE);
                         } else {
-                            tv_group_ware_coupon.setVisibility(View.GONE);
+                            ll_activity_group_coupon.setVisibility(View.GONE);
                         }
                     }
                     if (ll_group_ware_zhuan != null) {
@@ -255,8 +258,8 @@ public class GroupPresenter extends BasePresenter {
                         }
                     }
 
-                    if (tv_group_ware_coupon != null) {
-                        tv_group_ware_coupon.setVisibility(View.GONE);
+                    if (ll_activity_group_coupon != null) {
+                        ll_activity_group_coupon.setVisibility(View.GONE);
                     }
 
                     if (title != null && tv_group_ware_title != null) {
@@ -323,7 +326,7 @@ public class GroupPresenter extends BasePresenter {
         }
     }
 
-    private void loadWareData(HomeGroupBean.DataBean dataBean) {
+    private void loadWareData(HomeGroupBean.DataBean dataBean) throws Exception {
         llHomeGroupZera.setVisibility(View.VISIBLE);
         final DecimalFormat df = new DecimalFormat("#0.00");
         final int site_id = dataBean.getSite_id();

@@ -15,6 +15,7 @@ import com.gather_excellent_help.presenter.BasePresenter;
 import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.adapter.HomeTypeAdapter;
 import com.gather_excellent_help.ui.widget.MyGridView;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.google.gson.Gson;
@@ -48,7 +49,7 @@ public class TypePresenter extends BasePresenter {
 
     @Override
     public void initData() {
-        netUtil.okHttp2Server2(type_url, null);
+        netUtil.okHttp2Server2(context,type_url, null);
         netUtil.setOnServerResponseListener(new MyOnServerResponseListener());
     }
 
@@ -56,8 +57,11 @@ public class TypePresenter extends BasePresenter {
 
         @Override
         public void getSuccessResponse(String response) {
-            if (context != null) {
+            try {
+                LogUtil.e("type = " + response);
                 parseData(response);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             onStopRefreshListener.stopSuccessRefresh();
         }
@@ -66,10 +70,11 @@ public class TypePresenter extends BasePresenter {
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "----" + e.getMessage());
             onStopRefreshListener.stopFailRefresh();
+            EncryptNetUtil.startNeterrorPage(context);
         }
     }
 
-    private void parseData(String response) {
+    private void parseData(String response) throws Exception {
         TyepIndexBean tyepIndexBean = new Gson().fromJson(response, TyepIndexBean.class);
         int statusCode = tyepIndexBean.getStatusCode();
         switch (statusCode) {

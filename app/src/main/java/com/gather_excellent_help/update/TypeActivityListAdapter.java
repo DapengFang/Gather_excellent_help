@@ -128,7 +128,7 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
                         .into(holder.ivActivityListWareImg);//请求成功后把图片设置到的控件
             }
             if (holder.tvActivityWareCoupon != null) {
-                holder.tvActivityWareCoupon.setText("券" + couponsPrice);
+                holder.tvActivityWareCoupon.setText("" + couponsPrice);
             }
 
             if (holder.tvActivityWareZhuan != null) {
@@ -137,11 +137,11 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
             if (holder.tvActivityWareCoast != null) {
                 holder.tvActivityWareCoast.setText("到手价 " + df.format(coast));
             }
-            if (holder.tvActivityWareCoupon != null) {
+            if (holder.ll_activity_lsit_coupon != null) {
                 if (couponsPrice > 0) {
-                    holder.tvActivityWareCoupon.setVisibility(View.VISIBLE);
+                    holder.ll_activity_lsit_coupon.setVisibility(View.VISIBLE);
                 } else {
-                    holder.tvActivityWareCoupon.setVisibility(View.GONE);
+                    holder.ll_activity_lsit_coupon.setVisibility(View.GONE);
                 }
             }
             if (holder.ll_activity_list_ware_zhuan != null) {
@@ -182,8 +182,8 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
                 holder.rl_activity_rexiao_share.setVisibility(View.GONE);
             }
 
-            if (holder.tvActivityWareCoupon != null) {
-                holder.tvActivityWareCoupon.setVisibility(View.GONE);
+            if (holder.ll_activity_lsit_coupon != null) {
+                holder.ll_activity_lsit_coupon.setVisibility(View.GONE);
             }
             if (holder.tvActivityWareCouponSecond != null) {
                 holder.tvActivityWareCouponSecond.setVisibility(View.GONE);
@@ -268,10 +268,12 @@ public class TypeActivityListAdapter extends RecyclerView.Adapter<TypeActivityLi
         LinearLayout ll_activity_list_ware_zhuan;
 
         RelativeLayout rl_activity_rexiao_share;
+        LinearLayout ll_activity_lsit_coupon;
 
         public HomeActivityListViewHolder(View itemView) {
             super(itemView);
             rl_activity_rexiao_share = (RelativeLayout) itemView.findViewById(R.id.rl_activity_rexiao_share);
+            ll_activity_lsit_coupon = (LinearLayout) itemView.findViewById(R.id.ll_activity_lsit_coupon);
             ButterKnife.bind(this, itemView);
         }
     }

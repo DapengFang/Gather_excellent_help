@@ -21,6 +21,7 @@ import com.gather_excellent_help.bean.NewsTitleBean;
 import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.adapter.NewsFirstAdapter;
 import com.gather_excellent_help.ui.adapter.NewsHorizaionalTitleAdapter;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.google.gson.Gson;
@@ -46,12 +47,12 @@ public class NewsFirstPresenter {
     private String title_url = Url.BASE_URL + "NewsCategoryList.aspx";
     private String sou_url = Url.BASE_URL + "NewsSearch.aspx";
     private String detail_url = Url.BASE_URL + "NewsInfo.aspx";
-    private Map<String,String> map;
+    private Map<String, String> map;
     private NetUtil netUtil;
     private LinearLayoutManager layoutManager;
     private int lastVisibleItem;
     private boolean isLoadMore = false; // 是否加载过更多
-    private int page =1;//加载第一页
+    private int page = 1;//加载第一页
     private String whick;
     private RecyclerView rcvNewsHorizational;
     private String pageSize = "10";
@@ -87,11 +88,12 @@ public class NewsFirstPresenter {
         whick = "news";
         rcv_news_first.setLayoutManager(layoutManager);
         map = new HashMap<>();
-        map.put("pageSize",pageSize);
-        map.put("pageIndex",pageIndex);
-        map.put("channel_category",channel_category);
-        netUtil.okHttp2Server2(news_url,map);
+        map.put("pageSize", pageSize);
+        map.put("pageIndex", pageIndex);
+        map.put("channel_category", channel_category);
+        netUtil.okHttp2Server2(context, news_url, map);
     }
+
     /**
      * 搜索新闻数据
      */
@@ -102,18 +104,18 @@ public class NewsFirstPresenter {
         pageIndex = "1";
         rcv_news_first.setLayoutManager(layoutManager);
         map = new HashMap<>();
-        map.put("pageSize",pageSize);
-        map.put("pageIndex",pageIndex);
-        map.put("keyWords",keyWords);
-        netUtil.okHttp2Server2(sou_url,map);
+        map.put("pageSize", pageSize);
+        map.put("pageIndex", pageIndex);
+        map.put("keyWords", keyWords);
+        netUtil.okHttp2Server2(context, sou_url, map);
     }
 
     private void setupRefresh() {
-        if(swip_news_first!=null) {
+        if (swip_news_first != null) {
             swip_news_first.setColorSchemeResources(R.color.colorFirst,
-                    R.color.colorSecond,R.color.colorThird);
+                    R.color.colorSecond, R.color.colorThird);
             swip_news_first.setProgressViewOffset(true, 0, (int) TypedValue
-                    .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24,context.getResources().getDisplayMetrics()));
+                    .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, context.getResources().getDisplayMetrics()));
         }
     }
 
@@ -123,141 +125,147 @@ public class NewsFirstPresenter {
     }
 
 
-
     /**
-     * @param rcvNewsHorizational
-     * 新闻顶部标题导航栏
+     * @param rcvNewsHorizational 新闻顶部标题导航栏
      */
     public void loadTitleData(RecyclerView rcvNewsHorizational) {
         this.rcvNewsHorizational = rcvNewsHorizational;
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         rcvNewsHorizational.setLayoutManager(layoutManager);
         whick = "title";
-        netUtil.okHttp2Server2(title_url,null);
+        netUtil.okHttp2Server2(context, title_url, null);
     }
 
-    public class MyOnServerResponSetListener implements NetUtil.OnServerResponseListener{
+    public class MyOnServerResponSetListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
-            CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
-            int statusCode = codeStatueBean.getStatusCode();
-            switch (statusCode) {
-                case 1 :
-                     if(whick.equals("title")) {
-                         LogUtil.e("新闻标题="+response);
-                         NewsTitleBean newsTitleBean = new Gson().fromJson(response, NewsTitleBean.class);
-                         final List<NewsTitleBean.DataBean> titleData = newsTitleBean.getData();
-                         if(titleData.size()>0) {
-                             titleData.get(0).setCheck(true);
-                         }
-                         NewsHorizaionalTitleAdapter newsHorizaionalTitleAdapter = new NewsHorizaionalTitleAdapter(context, titleData);
-                         if(rcvNewsHorizational!=null) {
-                             rcvNewsHorizational.setAdapter(newsHorizaionalTitleAdapter);
-                         }
-                         if(titleData.size()>0) {
-                             int id = titleData.get(0).getId();
-                             channel_category = String.valueOf(id);
-                             loadData();
-                         }
-                         newsHorizaionalTitleAdapter.setOnTitleClickListener(new NewsHorizaionalTitleAdapter.OnTitleClickListener() {
-                             @Override
-                             public void onTitleClick(View v, int position) {
-                                 NewsTitleBean.DataBean dataBean = titleData.get(position);
-                                 int id = dataBean.getId();
-                                 channel_category = String.valueOf(id);
-                                 pageIndex = "1";
-                                 isLoadMore =false;
-                                 loadData();
-                             }
-                         });
-                     }else if(whick.equals("news")) {
-                         LogUtil.e("新闻 == "+response);
-                         NewsListBean newsListBean = new Gson().fromJson(response, NewsListBean.class);
-                         currData = newsListBean.getData();
-                         int size = currData.size();
-                         if(isLoadMore) {
-                             page++;
-                             if (size<10) {
-                                 newsFirstAdapter.updateLoadStatus(newsFirstAdapter.LOAD_NONE);
-                                 return;
-                             }
-                             else {
-                                newsData.addAll(currData);
-                             }
-                             newsFirstAdapter.notifyDataSetChanged();
-                         }else{
-                             newsData = currData;
-                             newsFirstAdapter = new NewsFirstAdapter(context, newsData);
-                             rcv_news_first.setAdapter(newsFirstAdapter);
-                             newsFirstAdapter.notifyDataSetChanged();
-                             page = 2;
-                         }
-                         if(size == 0) {
-                             swip_news_first.setRefreshing(false);
-                             Toast.makeText(context, "没有搜索到查询内容！", Toast.LENGTH_SHORT).show();
-                             return;
-                         }
-                         newsFirstAdapter.setOnNewsItemClickListner(new NewsFirstAdapter.OnNewsItemClickListner() {
-                             @Override
-                             public void onItemClick(View v, int position) {
-                                 curr_click = position;
-                                 NewsListBean.DataBean dataBean = newsData.get(position);
-                                 int id = dataBean.getId();
-                                 news_id = String.valueOf(id);
-                                 loadNewsDetail();
-                             }
-                         });
-                         scrollRecycleView();
-                     }else if(whick.equals("detail")) {
-                         LogUtil.e("新闻详情"+response);
-                         NewsDetailBean newsDetailBean = new Gson().fromJson(response, NewsDetailBean.class);
-                         String link_url = "";
-                         List<NewsDetailBean.DataBean> data = newsDetailBean.getData();
-                         if(data!=null) {
-                             if(data.size()>0) {
-                                 link_url = data.get(0).getLink_url();
-                             }
-                         }
-                         String imgurl = "";
-                         String newsTitle = "";
-                         if(newsData!=null) {
-                             if(newsData.size()>0) {
-                                 String img_url = newsData.get(curr_click).getImg_url();
-                                 if(img_url!=null) {
-                                     imgurl = Url.IMG_URL + img_url;
-                                 }
-                                 String title = newsData.get(curr_click).getTitle();
-                                 if(title!=null) {
-                                     newsTitle = title;
-                                 }
-                             }
-                         }
-                         if(link_url!=null && !TextUtils.isEmpty(link_url)) {
-                             Intent intent = new Intent(context, WebActivity.class);
-                             intent.putExtra("web_url",Url.IMG_URL+link_url);
-                             intent.putExtra("type","detail");
-                             intent.putExtra("news_img",imgurl);
-                             intent.putExtra("news_title",newsTitle);
-                             LogUtil.e("--------"+Url.IMG_URL+link_url);
-                             context.startActivity(intent);
-                         }
-                     }
-                    swip_news_first.setRefreshing(false);
-                    break;
-                case 0:
-                    swip_news_first.setRefreshing(false);
-                    if(context!=null) {
-                        Toast.makeText(context,codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                    break;
+            try {
+                parseNewsData(response);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            LogUtil.e(call.toString()+"---"+e.getMessage());
+            LogUtil.e(call.toString() + "---" + e.getMessage());
             swip_news_first.setRefreshing(false);
+            EncryptNetUtil.startNeterrorPage(context);
+        }
+    }
+
+    private void parseNewsData(String response) throws Exception {
+        CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
+        int statusCode = codeStatueBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                if (whick.equals("title")) {
+                    LogUtil.e("新闻标题=" + response);
+                    NewsTitleBean newsTitleBean = new Gson().fromJson(response, NewsTitleBean.class);
+                    final List<NewsTitleBean.DataBean> titleData = newsTitleBean.getData();
+                    if (titleData.size() > 0) {
+                        titleData.get(0).setCheck(true);
+                    }
+                    NewsHorizaionalTitleAdapter newsHorizaionalTitleAdapter = new NewsHorizaionalTitleAdapter(context, titleData);
+                    if (rcvNewsHorizational != null) {
+                        rcvNewsHorizational.setAdapter(newsHorizaionalTitleAdapter);
+                    }
+                    if (titleData.size() > 0) {
+                        int id = titleData.get(0).getId();
+                        channel_category = String.valueOf(id);
+                        loadData();
+                    }
+                    newsHorizaionalTitleAdapter.setOnTitleClickListener(new NewsHorizaionalTitleAdapter.OnTitleClickListener() {
+                        @Override
+                        public void onTitleClick(View v, int position) {
+                            NewsTitleBean.DataBean dataBean = titleData.get(position);
+                            int id = dataBean.getId();
+                            channel_category = String.valueOf(id);
+                            pageIndex = "1";
+                            isLoadMore = false;
+                            loadData();
+                        }
+                    });
+                } else if (whick.equals("news")) {
+                    LogUtil.e("新闻 == " + response);
+                    NewsListBean newsListBean = new Gson().fromJson(response, NewsListBean.class);
+                    currData = newsListBean.getData();
+                    int size = currData.size();
+                    if (isLoadMore) {
+                        page++;
+                        if (size < 10) {
+                            newsFirstAdapter.updateLoadStatus(newsFirstAdapter.LOAD_NONE);
+                            return;
+                        } else {
+                            newsData.addAll(currData);
+                        }
+                        newsFirstAdapter.notifyDataSetChanged();
+                    } else {
+                        newsData = currData;
+                        newsFirstAdapter = new NewsFirstAdapter(context, newsData);
+                        rcv_news_first.setAdapter(newsFirstAdapter);
+                        newsFirstAdapter.notifyDataSetChanged();
+                        page = 2;
+                    }
+                    if (size == 0) {
+                        swip_news_first.setRefreshing(false);
+                        Toast.makeText(context, "没有搜索到查询内容！", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    newsFirstAdapter.setOnNewsItemClickListner(new NewsFirstAdapter.OnNewsItemClickListner() {
+                        @Override
+                        public void onItemClick(View v, int position) {
+                            curr_click = position;
+                            NewsListBean.DataBean dataBean = newsData.get(position);
+                            int id = dataBean.getId();
+                            news_id = String.valueOf(id);
+                            loadNewsDetail();
+                        }
+                    });
+                    scrollRecycleView();
+                } else if (whick.equals("detail")) {
+                    LogUtil.e("新闻详情" + response);
+                    NewsDetailBean newsDetailBean = new Gson().fromJson(response, NewsDetailBean.class);
+                    String link_url = "";
+                    List<NewsDetailBean.DataBean> data = newsDetailBean.getData();
+                    if (data != null) {
+                        if (data.size() > 0) {
+                            link_url = data.get(0).getLink_url();
+                        }
+                    }
+                    String imgurl = "";
+                    String newsTitle = "";
+                    if (newsData != null) {
+                        if (newsData.size() > 0) {
+                            String img_url = newsData.get(curr_click).getImg_url();
+                            if (img_url != null) {
+                                imgurl = Url.IMG_URL + img_url;
+                            }
+                            String title = newsData.get(curr_click).getTitle();
+                            if (title != null) {
+                                newsTitle = title;
+                            }
+                        }
+                    }
+                    if (link_url != null && !TextUtils.isEmpty(link_url)) {
+                        Intent intent = new Intent(context, WebActivity.class);
+                        intent.putExtra("web_url", Url.IMG_URL + link_url);
+                        intent.putExtra("type", "detail");
+                        intent.putExtra("news_img", imgurl);
+                        intent.putExtra("news_title", newsTitle);
+                        LogUtil.e("--------" + Url.IMG_URL + link_url);
+                        context.startActivity(intent);
+                    }
+                }
+                swip_news_first.setRefreshing(false);
+                break;
+            case 0:
+                swip_news_first.setRefreshing(false);
+                if (context != null) {
+                    Toast.makeText(context, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 
@@ -268,12 +276,12 @@ public class NewsFirstPresenter {
         whick = "detail";
         rcv_news_first.setLayoutManager(layoutManager);
         map = new HashMap<>();
-        map.put("news_id",news_id);
-        netUtil.okHttp2Server2(detail_url,map);
+        map.put("news_id", news_id);
+        netUtil.okHttp2Server2(context, detail_url, map);
     }
 
     public void scrollRecycleView() {
-        if(rcv_news_first!=null && newsFirstAdapter!=null) {
+        if (rcv_news_first != null && newsFirstAdapter != null) {
             rcv_news_first.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -293,7 +301,7 @@ public class NewsFirstPresenter {
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                 pageIndex = String.valueOf(page);
+                                    pageIndex = String.valueOf(page);
                                     loadData();
                                 }
                             }, 1000);
@@ -310,7 +318,7 @@ public class NewsFirstPresenter {
         }
     }
 
-    public void refreshSwip(){
+    public void refreshSwip() {
         swip_news_first.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -322,7 +330,7 @@ public class NewsFirstPresenter {
                         pageIndex = String.valueOf(page);
                         loadData();
                     }
-                },1000);
+                }, 1000);
             }
         });
     }

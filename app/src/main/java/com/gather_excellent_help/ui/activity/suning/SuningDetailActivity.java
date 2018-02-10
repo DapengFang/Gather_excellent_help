@@ -38,6 +38,7 @@ import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.fragment.dragfragment.VerticalFragment1;
 import com.gather_excellent_help.ui.fragment.dragfragment.VerticalFragment3;
 import com.gather_excellent_help.ui.widget.DragLayout;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.PhotoUtils;
@@ -85,6 +86,7 @@ public class SuningDetailActivity extends FragmentActivity {
     private int article_id;//数据库自增id
     private String goods_id = "";//产品id
     private String local_position = "39.934,116.329";//当前位置经纬度
+    private String userLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +115,9 @@ public class SuningDetailActivity extends FragmentActivity {
         boolean login = Tools.isLogin(this);
         if (!login) {
             toLogin();
+            return;
         }
+        userLogin = Tools.getUserLogin(this);
         Intent intent = getIntent();
         article_id = intent.getIntExtra("article_id", 0);
         goods_id = intent.getStringExtra("goods_id");
@@ -187,7 +191,7 @@ public class SuningDetailActivity extends FragmentActivity {
         map = new HashMap<>();
         map.put("goods_id", goods_id);
         map.put("Local", local_position);
-        netUtil.okHttp2Server2(ware_url, map);
+        netUtil.okHttp2Server2(SuningDetailActivity.this,ware_url, map);
     }
 
 
@@ -261,7 +265,7 @@ public class SuningDetailActivity extends FragmentActivity {
      * 加载上下两个fragment
      */
     private void showDrglayout() {
-        if(SuningDetailActivity.this!=null && !SuningDetailActivity.this.isFinishing()) {
+        if (SuningDetailActivity.this != null && !SuningDetailActivity.this.isFinishing()) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fl_suning_top, fragment1).add(R.id.fl_suning_bottom, fragment3)
                     .commitAllowingStateLoss();
@@ -346,34 +350,49 @@ public class SuningDetailActivity extends FragmentActivity {
 
         @Override
         public void getSuccessResponse(String response) {
-            if (whick.equals("ware")) {
-                showDrglayout();
-                fragment1.setResponse(response);
-                fragment3.setResponse(response);
-                load_over = "over";
-                fragment1.setOnLoadCompleteListenr(new VerticalFragment1.OnLoadCompleteListenr() {
-                    @Override
-                    public void onLoadComplete() {
-                        tv_suning_detail_buy.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                tv_suning_detail_buy.setClickable(true);
-                            }
-                        }, 500);
-                        tv_suning_detail_cart.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                tv_suning_detail_cart.setClickable(true);
-                            }
-                        }, 500);
-                    }
-                });
+            try {
+                parseSuningData(response);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            LogUtil.e("网络连接出现问题~");
+            e.printStackTrace();
+            LogUtil.e("网络连接出现问题~" + call.toString() + "----" +e.getMessage());
+            EncryptNetUtil.startNeterrorPage(SuningDetailActivity.this);
+        }
+    }
+
+    /**
+     * 解析苏宁详情的数据
+     *
+     * @param response
+     */
+    private void parseSuningData(String response) throws Exception {
+        if (whick.equals("ware")) {
+            showDrglayout();
+            fragment1.setResponse(response);
+            fragment3.setResponse(response);
+            load_over = "over";
+            fragment1.setOnLoadCompleteListenr(new VerticalFragment1.OnLoadCompleteListenr() {
+                @Override
+                public void onLoadComplete() {
+                    tv_suning_detail_buy.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            tv_suning_detail_buy.setClickable(true);
+                        }
+                    }, 500);
+                    tv_suning_detail_cart.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            tv_suning_detail_cart.setClickable(true);
+                        }
+                    }, 500);
+                }
+            });
         }
     }
 
@@ -389,7 +408,7 @@ public class SuningDetailActivity extends FragmentActivity {
             finish();
         } else if (event.getType() == EventType.GOODS_PAY_LIMIT) {
             initData();
-        }else if(event.getType() == EventType.UPDATA_ADDRESS_ORDER) {
+        } else if (event.getType() == EventType.UPDATA_ADDRESS_ORDER) {
             initData();
         }
     }

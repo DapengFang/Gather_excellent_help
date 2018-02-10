@@ -322,7 +322,7 @@
         <activity
             android:name=".ui.activity.shop.WhichJoinActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.shop.TalentShowActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -377,7 +377,13 @@
         <activity android:name=".ui.activity.test.TestActivity_l03" />
         <activity android:name=".ui.activity.test.TestActivity_l04" />
         <activity android:name=".ui.activity.test.TestActivity_l05" />
-        <activity android:name=".ui.activity.taosearch.TaoSearchActivity"></activity>
+        <activity
+            android:name=".ui.activity.taosearch.TaoSearchActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".ui.activity.error.ErrorActivity" />
+        <activity android:name=".ui.activity.error.NetErrorActivity"></activity>
+        <activity android:name=".ui.activity.error.SuccessActivity" />
+        <activity android:name=".ui.activity.suning.SuningPayOrderdetailActivity"></activity>
     </application>
 
 </manifest>

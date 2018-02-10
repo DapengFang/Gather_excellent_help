@@ -33,6 +33,7 @@ import com.gather_excellent_help.ui.base.BaseFullScreenActivity;
 import com.gather_excellent_help.ui.widget.SplashView;
 import com.gather_excellent_help.utils.BitmapUtil;
 import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.PhotoUtils;
@@ -125,7 +126,7 @@ public class SplashActivity extends BaseFullScreenActivity {
     }
 
     private void checkUpdate() {
-        netUtil.okHttp2Server2(check_url, null);
+        netUtil.okHttp2Server2(SplashActivity.this,check_url, null);
         netUtil.setOnServerResponseListener(new OnServerResponseListener());
     }
 
@@ -292,14 +293,18 @@ public class SplashActivity extends BaseFullScreenActivity {
 
         @Override
         public void getSuccessResponse(String response) {
-            LogUtil.e(response);
-            parseData(response);
+            try {
+                LogUtil.e(response);
+                parseData(response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
+            EncryptNetUtil.startNeterrorPage(SplashActivity.this);
             LogUtil.e(call.toString() + "--" + e.getMessage());
-            Toast.makeText(SplashActivity.this, "请检查你的网络连接情况！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -308,7 +313,8 @@ public class SplashActivity extends BaseFullScreenActivity {
      *
      * @param response
      */
-    private void parseData(String response) {
+    private void parseData(String response) throws Exception {
+
         VersionBean versionBean = new Gson().fromJson(response, VersionBean.class);
         int statusCode = versionBean.getStatusCode();
         switch (statusCode) {

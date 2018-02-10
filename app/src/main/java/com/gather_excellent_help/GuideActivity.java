@@ -17,6 +17,7 @@ import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.ui.activity.pswset.UserPswsetActivity;
 import com.gather_excellent_help.ui.base.BaseFullScreenActivity;
 import com.gather_excellent_help.utils.BitmapUtil;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -76,7 +77,7 @@ public class GuideActivity extends BaseFullScreenActivity {
         deviceId = Tools.getDeviceId(this);
         map = new HashMap<>();
         map.put("device_number", deviceId);
-        netUtil.okHttp2Server2(advice_url, map);
+        netUtil.okHttp2Server2(GuideActivity.this,advice_url, map);
         netUtil.setOnServerResponseListener(new OnServerResponseListener());
         arrs = new ArrayList<>();
         arrs.add(R.drawable.welcome1);
@@ -106,21 +107,35 @@ public class GuideActivity extends BaseFullScreenActivity {
 
         @Override
         public void getSuccessResponse(String response) {
-            CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
-            int statusCode = codeStatueBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    isUUid = 1;
-                    break;
-                case 0:
-                    isUUid = 0;
-                    break;
+            try {
+                parseGuideData(response);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "--" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(GuideActivity.this);
+        }
+    }
+
+    /**
+     * 解析引导页面的数据
+     *
+     * @param response
+     */
+    private void parseGuideData(String response) throws Exception {
+        CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
+        int statusCode = codeStatueBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                isUUid = 1;
+                break;
+            case 0:
+                isUUid = 0;
+                break;
         }
     }
 

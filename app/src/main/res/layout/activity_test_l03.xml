@@ -123,18 +123,17 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/sou_taobao_teach_pic" />
+                android:src="@drawable/setup_01" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/sou_taobao_teach_pic" />
+                android:src="@drawable/setup_02" />
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/sou_taobao_teach_pic" />
-
+                android:src="@drawable/setup_03" />
 
             <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"

@@ -25,6 +25,7 @@ import com.gather_excellent_help.bean.suning.netcart.NetGoodscartBean;
 import com.gather_excellent_help.bean.suning.netcart.NetGoodscartCheckBean;
 import com.gather_excellent_help.ui.activity.suning.SuningGoodscartActivity;
 import com.gather_excellent_help.ui.widget.NumberAddSubView;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.gather_excellent_help.utils.cartutils.NetCartUtil;
@@ -53,7 +54,7 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
         this.netData = netData;
         this.checkData = checkData;
         userLogin = Tools.getUserLogin(context);
-        netCartUtil = new NetCartUtil();
+        netCartUtil = new NetCartUtil(context);
         OnCartResponseListener onCartResponseListener = new OnCartResponseListener();
         netCartUtil.setOnCartResponseListener(onCartResponseListener);
     }
@@ -316,7 +317,11 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
         @Override
         public void onCartResponse(String response, String whick) {
             if (whick.equals(NetCartUtil.WHICH_DEL)) {
-                parseDeletData(response);
+                try {
+                    parseDeletData(response);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -329,25 +334,20 @@ public class SuningGoodscartAdapter extends RecyclerView.Adapter<SuningGoodscart
     /**
      * @param response 解析当前删除数据
      */
-    private void parseDeletData(String response) {
-        try {
-            NetGoodsDeleteBean netGoodsDeleteBean = new Gson().fromJson(response, NetGoodsDeleteBean.class);
-            int statusCode = netGoodsDeleteBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    NetGoodscartCheckBean netGoodscartCheckBean = new NetGoodscartCheckBean();
-                    netGoodscartCheckBean.setData(checkData);
-                    String result = new Gson().toJson(netGoodscartCheckBean);
-                    Tools.saveCartCheck(context, result);
-                    break;
-                case 0:
-                    Toast.makeText(context, netGoodsDeleteBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-            onUpdatePriceListener.onUpdateData(1);
-        } catch (Exception e) {
-            LogUtil.e("SuningGoodscartAdapter error" + e.getMessage());
-            Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+    private void parseDeletData(String response) throws Exception {
+        NetGoodsDeleteBean netGoodsDeleteBean = new Gson().fromJson(response, NetGoodsDeleteBean.class);
+        int statusCode = netGoodsDeleteBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                NetGoodscartCheckBean netGoodscartCheckBean = new NetGoodscartCheckBean();
+                netGoodscartCheckBean.setData(checkData);
+                String result = new Gson().toJson(netGoodscartCheckBean);
+                Tools.saveCartCheck(context, result);
+                break;
+            case 0:
+                Toast.makeText(context, netGoodsDeleteBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
         }
+        onUpdatePriceListener.onUpdateData(1);
     }
 }

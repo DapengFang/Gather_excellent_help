@@ -22,6 +22,7 @@ import com.gather_excellent_help.ui.adapter.PersonAddressAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -80,7 +81,7 @@ public class PersonAddressActivity extends BaseActivity {
     private void initData() {
         tv_top_title_name.setText("收货地址管理");
         getAddressList();
-        if (wan_me_address!=null && wan_me_address.isRefreshing()) {
+        if (wan_me_address != null && wan_me_address.isRefreshing()) {
             wan_me_address.onRefreshComplete();
         }
         OnServerResponseListener onServerResponseListener = new OnServerResponseListener();
@@ -122,11 +123,11 @@ public class PersonAddressActivity extends BaseActivity {
                     if (personAddressAdapter != null) {
                         int itemCount = personAddressAdapter.getItemCount();
                         LogUtil.e("itemCount = " + itemCount);
-                        if (itemCount < 5) {
+                        if (itemCount < 10) {
                             Intent intent = new Intent(PersonAddressActivity.this, AddNewAddressActivity.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(PersonAddressActivity.this, "收货地址最多不能超过5个。", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PersonAddressActivity.this, "收货地址最多不能超过10个。", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Intent intent = new Intent(PersonAddressActivity.this, AddNewAddressActivity.class);
@@ -144,8 +145,9 @@ public class PersonAddressActivity extends BaseActivity {
         netUtil = new NetUtil();
         String userLogin = Tools.getUserLogin(this);
         map = new HashMap<>();
+        map.put("Id", userLogin);
         map.put("user_id", userLogin);
-        netUtil.okHttp2Server2(get_url, map);
+        netUtil.okHttp2Server2(PersonAddressActivity.this, get_url, map);
     }
 
     public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
@@ -175,7 +177,8 @@ public class PersonAddressActivity extends BaseActivity {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            LogUtil.e("网络连接出现问题~");
+            LogUtil.e(call.toString() + "-" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(PersonAddressActivity.this);
         }
     }
 

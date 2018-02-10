@@ -39,22 +39,22 @@ public class ShareUtil {
     /**
      * 获取商品的转链链接
      */
-    public static void getWareChangeUrl(NetUtil netUtil, Map<String, String> map) {
-        netUtil.okHttp2Server2(changware_url, map);
+    public static void getWareChangeUrl(Context context,NetUtil netUtil, Map<String, String> map) {
+        netUtil.okHttp2Server2(context,changware_url, map);
     }
 
     /**
      * 获取优惠券的转链链接
      */
-    public static void getCouponChangeUrl(NetUtil netUtil, Map<String, String> map) {
-        netUtil.okHttp2Server2(changcoupon_url, map);
+    public static void getCouponChangeUrl(Context context,NetUtil netUtil, Map<String, String> map) {
+        netUtil.okHttp2Server2(context,changcoupon_url, map);
     }
 
     /**
      * 获取淘口令
      */
-    public static void getChangeWordUrl(NetUtil netUtil, Map<String, String> map) {
-        netUtil.okHttp2Server2(getwords_url, map);
+    public static void getChangeWordUrl(Context context,NetUtil netUtil, Map<String, String> map) {
+        netUtil.okHttp2Server2(context,getwords_url, map);
     }
 
     /**
@@ -65,7 +65,8 @@ public class ShareUtil {
      * @param adzoneId
      * @return
      */
-    public static Map<String, String> getChangeWareParam(Map<String, String> map, String goodsId, String adzoneId) {
+    public static Map<String, String> getChangeWareParam(Map<String, String> map, String goodsId, String adzoneId,String id) {
+        map.put("Id",id);
         map.put("goodsId", goodsId);
         map.put("adzoneId", adzoneId);
         return map;
@@ -82,6 +83,7 @@ public class ShareUtil {
      * @return
      */
     public static Map<String, String> getChangeWordsParam(Map<String, String> map, String user_id, String click_url, String goods_img, String goods_title) {
+        map.put("Id", user_id);
         map.put("user_id", user_id);
         map.put("convert_url", click_url);
         map.put("img_url", goods_img);

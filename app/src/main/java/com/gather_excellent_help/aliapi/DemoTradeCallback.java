@@ -10,6 +10,7 @@ import com.alibaba.baichuan.trade.biz.context.AlibcTradeResult;
 import com.gather_excellent_help.MyApplication;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 
@@ -37,25 +38,25 @@ public class DemoTradeCallback implements AlibcTradeCallback {
     @Override
     public void onTradeSuccess(AlibcTradeResult tradeResult) {
         //当addCartPage加购成功和其他page支付成功的时候会回调
-        if (tradeResult.resultType.equals(AlibcResultType.TYPEPAY)){
+        if (tradeResult.resultType.equals(AlibcResultType.TYPEPAY)) {
             //支付成功
             //Toast.makeText(MyApplication.application, "支付成功,成功订单号为"+tradeResult.payResult.paySuccessOrders, Toast.LENGTH_SHORT).show();
             List<String> paySuccessOrders = tradeResult.payResult.paySuccessOrders;
             String order = "";
-            for (int i=0;i<paySuccessOrders.size();i++){
+            for (int i = 0; i < paySuccessOrders.size(); i++) {
                 String ord = paySuccessOrders.get(i);
-                order += ord +"a";
+                order += ord + "a";
             }
-            if(TextUtils.isEmpty(order)) {
-               return;
+            if (TextUtils.isEmpty(order)) {
+                return;
             }
-            order = order.substring(0,order.length()-1);
+            order = order.substring(0, order.length() - 1);
             netUtils = new NetUtil();
             map = new HashMap<>();
             String loginId = CacheUtils.getString(context, CacheUtils.LOGIN_VALUE, "");
-            map.put("userId",loginId);
-            map.put("OrderId",order);
-            netUtils.okHttp2Server2(bind_order,map);
+            map.put("userId", loginId);
+            map.put("OrderId", order);
+            netUtils.okHttp2Server2(context,bind_order, map);
             netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
                 @Override
                 public void getSuccessResponse(String response) {
@@ -64,7 +65,8 @@ public class DemoTradeCallback implements AlibcTradeCallback {
 
                 @Override
                 public void getFailResponse(Call call, Exception e) {
-                    LogUtil.e(call.toString() + "--" +e.getMessage());
+                    EncryptNetUtil.startNeterrorPage(context);
+                    LogUtil.e(call.toString() + "--" + e.getMessage());
                 }
             });
         }

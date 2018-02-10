@@ -189,7 +189,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                         //Toast.makeText(WXEntryActivity.this, response, Toast.LENGTH_SHORT).show();
                         map = new HashMap<>();
                         map.put("wechat_json",response);
-                        netUtil.okHttp2Server2(wex_url,map);
+                        netUtil.okHttp2Server2(WXEntryActivity.this,wex_url,map);
                     }
                 });
     }

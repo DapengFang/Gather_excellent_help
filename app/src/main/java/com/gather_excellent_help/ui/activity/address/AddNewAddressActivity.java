@@ -19,6 +19,7 @@ import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.PcsChoicePopupwindow;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -43,6 +44,7 @@ public class AddNewAddressActivity extends BaseActivity {
     private LinearLayout llRoot;
 
     private View vShadow;
+    private LinearLayout ll_add_address_detail;
 
     private PcsChoicePopupwindow pcsChoicePopupwindow;
     private String pcs = "";
@@ -52,7 +54,7 @@ public class AddNewAddressActivity extends BaseActivity {
     private String add_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=AddUserAddress";
     private String update_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=EditUserAddress";
     private NetUtil netUtil;
-    private Map<String,String> map;
+    private Map<String, String> map;
     private Bundle extras;
     private int isdefault;
     private int addrId;
@@ -70,25 +72,26 @@ public class AddNewAddressActivity extends BaseActivity {
      * 初始化控件
      */
     private void initView() {
-        rl_exit = (RelativeLayout)findViewById(R.id.rl_exit);
-        tv_top_title_name = (TextView)findViewById(R.id.tv_top_title_name);
-        et_newaddress_name = (EditText)findViewById(R.id.et_newaddress_name);
-        et_newaddress_phone = (EditText)findViewById(R.id.et_newaddress_phone);
-        tv_address_pcs = (TextView)findViewById(R.id.tv_address_pcs);
-        et_newaddress_address = (EditText)findViewById(R.id.et_newaddress_address);
-        et_newaddress_postall = (EditText)findViewById(R.id.et_newaddress_postall);
-        tv_add_newaddress_submit = (TextView)findViewById(R.id.tv_add_newaddress_submit);
+        rl_exit = (RelativeLayout) findViewById(R.id.rl_exit);
+        tv_top_title_name = (TextView) findViewById(R.id.tv_top_title_name);
+        et_newaddress_name = (EditText) findViewById(R.id.et_newaddress_name);
+        et_newaddress_phone = (EditText) findViewById(R.id.et_newaddress_phone);
+        tv_address_pcs = (TextView) findViewById(R.id.tv_address_pcs);
+        et_newaddress_address = (EditText) findViewById(R.id.et_newaddress_address);
+        et_newaddress_postall = (EditText) findViewById(R.id.et_newaddress_postall);
+        tv_add_newaddress_submit = (TextView) findViewById(R.id.tv_add_newaddress_submit);
         vShadow = findViewById(R.id.v_shadow);
         llRoot = (LinearLayout) findViewById(R.id.ll_root);
+        ll_add_address_detail = (LinearLayout) findViewById(R.id.ll_add_address_detail);
     }
 
     /**
      * 初始化数据
      */
-    private void initData(){
+    private void initData() {
         Intent intent = getIntent();
         extras = intent.getExtras();
-        if(extras!=null) {
+        if (extras != null) {
             addrId = extras.getInt("addrId");
             String accept_name = extras.getString("accept_name");
             String mobile = extras.getString("mobile");
@@ -102,7 +105,7 @@ public class AddNewAddressActivity extends BaseActivity {
             area_id = c_area_id;
             et_newaddress_name.setText(accept_name);
             et_newaddress_phone.setText(mobile);
-            tv_address_pcs.setText(c_area.replace(",",""));
+            tv_address_pcs.setText(c_area.replace(",", ""));
             et_newaddress_address.setText(address);
             et_newaddress_postall.setText(postmall);
         }
@@ -116,7 +119,7 @@ public class AddNewAddressActivity extends BaseActivity {
         rl_exit.setOnClickListener(myonclickListener);
         tv_address_pcs.setOnClickListener(myonclickListener);
         tv_add_newaddress_submit.setOnClickListener(myonclickListener);
-
+        ll_add_address_detail.setOnClickListener(myonclickListener);
     }
 
 
@@ -135,13 +138,16 @@ public class AddNewAddressActivity extends BaseActivity {
                     showPopMenu();
                     break;
                 case R.id.tv_add_newaddress_submit:
-                    if(extras!=null) {
+                    if (extras != null) {
                         LogUtil.e("编辑");
                         updateUserAddress();
-                    }else{
+                    } else {
                         LogUtil.e("保存");
                         saveUserAddress();
                     }
+                    break;
+                case R.id.ll_add_address_detail:
+                    Tools.showSoftInputFromWindow(AddNewAddressActivity.this, et_newaddress_address);
                     break;
             }
         }
@@ -151,27 +157,27 @@ public class AddNewAddressActivity extends BaseActivity {
      * 修改用户的收货地址
      */
     private void updateUserAddress() {
-        String name =  et_newaddress_name.getText().toString().trim();
+        String name = et_newaddress_name.getText().toString().trim();
         String phone = et_newaddress_phone.getText().toString().trim();
         String address = et_newaddress_address.getText().toString().trim();
         String postall = et_newaddress_postall.getText().toString().trim();
-        if(TextUtils.isEmpty(name)) {
+        if (TextUtils.isEmpty(name)) {
             Toast.makeText(AddNewAddressActivity.this, "收货人姓名不能为空！！！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(phone)) {
+        if (TextUtils.isEmpty(phone)) {
             Toast.makeText(AddNewAddressActivity.this, "手机号不能为空！！！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(pcs)) {
+        if (TextUtils.isEmpty(pcs)) {
             Toast.makeText(AddNewAddressActivity.this, "请选择省市区！！！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(address)) {
+        if (TextUtils.isEmpty(address)) {
             Toast.makeText(AddNewAddressActivity.this, "详细地址不能为空！！！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(postall.length()!=6 && !TextUtils.isEmpty(postall)) {
+        if (postall.length() != 6 && !TextUtils.isEmpty(postall)) {
             Toast.makeText(AddNewAddressActivity.this, "邮政编码为6位！！！", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -179,60 +185,62 @@ public class AddNewAddressActivity extends BaseActivity {
         tv_add_newaddress_submit.setClickable(false);
         String userLogin = Tools.getUserLogin(this);
         map = new HashMap<>();
-        map.put("user_id",userLogin);
-        map.put("addrId",String.valueOf(addrId));
-        map.put("accept_name",name);
-        map.put("is_default",check_default);
-        map.put("address",address);
-        map.put("zip",postall);
-        map.put("area",area);
-        map.put("area_id",area_id);
-        map.put("mobile",phone);
+        map.put("Id", userLogin);
+        map.put("user_id", userLogin);
+        map.put("addrId", String.valueOf(addrId));
+        map.put("accept_name", name);
+        map.put("is_default", check_default);
+        map.put("address", address);
+        map.put("zip", postall);
+        map.put("area", area);
+        map.put("area_id", area_id);
+        map.put("mobile", phone);
         LogUtil.e(update_url);
-        netUtil.okHttp2Server2(update_url,map);
+        netUtil.okHttp2Server2(AddNewAddressActivity.this, update_url, map);
     }
 
     /**
      * 保存用户的收货地址
      */
     private void saveUserAddress() {
-        String name =  et_newaddress_name.getText().toString().trim();
+        String name = et_newaddress_name.getText().toString().trim();
         String phone = et_newaddress_phone.getText().toString().trim();
         String address = et_newaddress_address.getText().toString().trim();
         String postall = et_newaddress_postall.getText().toString().trim();
-        if(TextUtils.isEmpty(name)) {
+        if (TextUtils.isEmpty(name)) {
             Toast.makeText(AddNewAddressActivity.this, "收货人姓名不能为空！！！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(phone)) {
+        if (TextUtils.isEmpty(phone)) {
             Toast.makeText(AddNewAddressActivity.this, "手机号不能为空！！！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(pcs)) {
+        if (TextUtils.isEmpty(pcs)) {
             Toast.makeText(AddNewAddressActivity.this, "请选择省市区！！!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(address)) {
+        if (TextUtils.isEmpty(address)) {
             Toast.makeText(AddNewAddressActivity.this, "详细地址不能为空！！！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(postall.length()!=6 && !TextUtils.isEmpty(postall)) {
+        if (postall.length() != 6 && !TextUtils.isEmpty(postall)) {
             Toast.makeText(AddNewAddressActivity.this, "邮政编码为6位！！！", Toast.LENGTH_SHORT).show();
             return;
         }
         tv_add_newaddress_submit.setClickable(false);
         String userLogin = Tools.getUserLogin(this);
         map = new HashMap<>();
-        map.put("user_id",userLogin);
-        map.put("accept_name",name);
-        map.put("is_default","1");
-        map.put("address",address);
-        map.put("zip",postall);
-        map.put("area",area);
-        map.put("area_id",area_id);
-        map.put("mobile",phone);
+        map.put("Id", userLogin);
+        map.put("user_id", userLogin);
+        map.put("accept_name", name);
+        map.put("is_default", "1");
+        map.put("address", address);
+        map.put("zip", postall);
+        map.put("area", area);
+        map.put("area_id", area_id);
+        map.put("mobile", phone);
         LogUtil.e(add_url);
-        netUtil.okHttp2Server2(add_url,map);
+        netUtil.okHttp2Server2(AddNewAddressActivity.this, add_url, map);
 
     }
 
@@ -242,7 +250,7 @@ public class AddNewAddressActivity extends BaseActivity {
     private void showPopMenu() {
         vShadow.setVisibility(View.VISIBLE);
         if (pcsChoicePopupwindow == null) {
-            pcsChoicePopupwindow = new PcsChoicePopupwindow(this,vShadow);
+            pcsChoicePopupwindow = new PcsChoicePopupwindow(this, vShadow);
             pcsChoicePopupwindow.showAtLocation(llRoot, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         } else if (pcsChoicePopupwindow != null
                 && pcsChoicePopupwindow.isShowing()) {
@@ -252,7 +260,7 @@ public class AddNewAddressActivity extends BaseActivity {
         }
         pcsChoicePopupwindow.setOnItemClickListenr(new PcsChoicePopupwindow.OnItemClickListenr() {
             @Override
-            public void getFinalAddress(String address,String a,String a_id) {
+            public void getFinalAddress(String address, String a, String a_id) {
                 LogUtil.e(address);
                 pcs = address;
                 area = a;
@@ -269,7 +277,7 @@ public class AddNewAddressActivity extends BaseActivity {
 
     }
 
-    public class OnServerResponseListener implements NetUtil.OnServerResponseListener{
+    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
@@ -279,9 +287,9 @@ public class AddNewAddressActivity extends BaseActivity {
             int statusCode = codeStatueBean.getStatusCode();
             Toast.makeText(AddNewAddressActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
             switch (statusCode) {
-                case 1 :
-                    EventBus.getDefault().post(new AnyEvent(EventType.UPDATA_ADDRESS,"刷新地址界面"));
-                    EventBus.getDefault().post(new AnyEvent(EventType.UPDATA_ADDRESS_ORDER,"更新订单页面的地址信息"));
+                case 1:
+                    EventBus.getDefault().post(new AnyEvent(EventType.UPDATA_ADDRESS, "刷新地址界面"));
+                    EventBus.getDefault().post(new AnyEvent(EventType.UPDATA_ADDRESS_ORDER, "更新订单页面的地址信息"));
                     finish();
                     break;
             }
@@ -289,8 +297,14 @@ public class AddNewAddressActivity extends BaseActivity {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            LogUtil.e("网络连接出现问题~");
+            LogUtil.e(call.toString() + "-" + e.getMessage());
             tv_add_newaddress_submit.setClickable(true);
+            EncryptNetUtil.startNeterrorPage(AddNewAddressActivity.this);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

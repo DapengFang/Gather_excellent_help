@@ -58,6 +58,9 @@ public class CacheUtils {
 	//保存购物车勾选状态
 	public static final String NETCART_CHECK_DATA = "netcart_check_data";
 
+	//保存返回登录状态的Token
+	public static final String LOGIN_TOKEN = "login_token";
+
 	public static SharedPreferences sp;
 
 	public static void putBoolean(Context context,String key,boolean value){

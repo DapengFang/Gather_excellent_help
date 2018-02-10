@@ -29,6 +29,7 @@ import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.Check;
 import com.gather_excellent_help.utils.DataCleanManager;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -38,6 +39,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -116,7 +118,7 @@ public class SetActivity extends BaseActivity {
      */
     private void initData() {
         if (isLogin()) {
-            user_id = CacheUtils.getString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
+            user_id = Tools.getUserLogin(this);
         }
         tvTopTitleName.setText("设置");
         String version = Tools.getVersion(this);
@@ -163,47 +165,58 @@ public class SetActivity extends BaseActivity {
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                LogUtil.e(response);
-                CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
-                int statusCode = codeStatueBean.getStatusCode();
-                switch (statusCode) {
-                    case 1:
-                        if (which.equals("bind")) {
-                            Toast.makeText(SetActivity.this, "绑定成功！", Toast.LENGTH_LONG).show();
-                            tvSetBindTaobao.setText("绑定/解绑淘宝账号(" + nick + ")");
-                            CacheUtils.putBoolean(SetActivity.this, CacheUtils.BIND_STATE, true);
-                            CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK, nick);
-                            EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "绑定成功！"));
-                        } else if (which.equals("unbind")) {
-                            Toast.makeText(SetActivity.this, "解绑成功！", Toast.LENGTH_LONG).show();
-                            tvSetBindTaobao.setText("绑定/解绑淘宝账号");
-                            CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK, "");
-                            CacheUtils.putBoolean(SetActivity.this, CacheUtils.BIND_STATE, false);
-                            EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "解绑成功！"));
-                        } else if (which.equals("pay")) {
-                            tvSetBindAlipay.setText("绑定/解绑支付宝账号(" + account + ")");
-                            CacheUtils.putBoolean(SetActivity.this, CacheUtils.PAY_STATE, true);
-                            CacheUtils.putString(SetActivity.this, CacheUtils.ALIPAY_ACCOUNT, account);
-                            CacheUtils.putString(SetActivity.this, CacheUtils.ALIPAY_USERNAME, name);
-                        } else if (which.equals("unpay")) {
-                            tvSetBindAlipay.setText("绑定/解绑支付宝账号");
-                            CacheUtils.putBoolean(SetActivity.this, CacheUtils.PAY_STATE, false);
-                            CacheUtils.putString(SetActivity.this, CacheUtils.ALIPAY_ACCOUNT, "");
-                        } else if (which.equals("sms")) {
-                            parseSmsData(response);
-                        }
-                        break;
-                    case 0:
-                        Toast.makeText(SetActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                        break;
+                try {
+                    parseSetData(response);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "," + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(SetActivity.this);
             }
         });
+    }
+
+    private void parseSetData(String response) throws Exception {
+        LogUtil.e(response);
+        CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
+        int statusCode = codeStatueBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                if (which.equals("bind")) {
+                    Toast.makeText(SetActivity.this, "绑定成功！", Toast.LENGTH_LONG).show();
+                    tvSetBindTaobao.setText("绑定/解绑淘宝账号(" + nick + ")");
+                    CacheUtils.putBoolean(SetActivity.this, CacheUtils.BIND_STATE, true);
+                    CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK, nick);
+                    EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "绑定成功！"));
+                } else if (which.equals("unbind")) {
+                    Toast.makeText(SetActivity.this, "解绑成功！", Toast.LENGTH_LONG).show();
+                    tvSetBindTaobao.setText("绑定/解绑淘宝账号");
+                    CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK, "");
+                    CacheUtils.putBoolean(SetActivity.this, CacheUtils.BIND_STATE, false);
+                    EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "解绑成功！"));
+                } else if (which.equals("pay")) {
+                    tvSetBindAlipay.setText("绑定/解绑支付宝账号(" + account + ")");
+                    CacheUtils.putBoolean(SetActivity.this, CacheUtils.PAY_STATE, true);
+                    CacheUtils.putString(SetActivity.this, CacheUtils.ALIPAY_ACCOUNT, account);
+                    CacheUtils.putString(SetActivity.this, CacheUtils.ALIPAY_USERNAME, name);
+                    EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "绑定成功！"));
+                } else if (which.equals("unpay")) {
+                    tvSetBindAlipay.setText("绑定/解绑支付宝账号");
+                    CacheUtils.putBoolean(SetActivity.this, CacheUtils.PAY_STATE, false);
+                    CacheUtils.putString(SetActivity.this, CacheUtils.ALIPAY_ACCOUNT, "");
+                    EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "解绑成功！"));
+                } else if (which.equals("sms")) {
+                    parseSmsData(response);
+                }
+                break;
+            case 0:
+                Toast.makeText(SetActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     /**
@@ -283,6 +296,7 @@ public class SetActivity extends BaseActivity {
     private void toAlipayBindInfoPage() {
         Intent intent = new Intent(SetActivity.this, AlipayInfoActivity.class);
         startActivity(intent);
+        finish();
     }
 
     /**
@@ -383,12 +397,12 @@ public class SetActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         try {
-                            if (isBind()) {
-                                unBindTaobao();
-                            } else {
-                                CacheUtils.putBoolean(SetActivity.this, CacheUtils.BIND_STATE, false);
-                                CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK, "");
-                            }
+//                            if (isBind()) {
+//                                unBindTaobao();
+//                            } else {
+//                                CacheUtils.putBoolean(SetActivity.this, CacheUtils.BIND_STATE, false);
+//                                CacheUtils.putString(SetActivity.this, CacheUtils.TAOBAO_NICK, "");
+//                            }
                             CacheUtils.putBoolean(SetActivity.this, CacheUtils.LOGIN_STATE, false);
                             CacheUtils.putString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
                             CacheUtils.putInteger(SetActivity.this, CacheUtils.GROUP_TYPE, -1);
@@ -430,7 +444,7 @@ public class SetActivity extends BaseActivity {
                 nick = AlibcLogin.getInstance().getSession().nick;
                 uploadUserInfo();
                 which = "bind";
-                netUtils.okHttp2Server2(bind_url, map);
+                netUtils.okHttp2Server2(SetActivity.this, bind_url, map);
             }
 
             @Override
@@ -455,7 +469,7 @@ public class SetActivity extends BaseActivity {
             public void onSuccess(int i) {
                 unBindUserInfo();
                 which = "unbind";
-                netUtils.okHttp2Server2(unbind_url, map);
+                netUtils.okHttp2Server2(SetActivity.this, unbind_url, map);
             }
 
             @Override
@@ -486,7 +500,7 @@ public class SetActivity extends BaseActivity {
      * 获取用户的登录标识
      */
     private void getUserLoginId() {
-        user_id = CacheUtils.getString(SetActivity.this, CacheUtils.LOGIN_VALUE, "");
+        user_id = Tools.getUserLogin(this);
     }
 
     /**
@@ -495,7 +509,7 @@ public class SetActivity extends BaseActivity {
     public void unBindUserInfo() {
         if (user_id != null && !TextUtils.isEmpty(user_id)) {
             map = new HashMap<>();
-            map.put("Id", user_id + "");
+            map.put("Id", user_id);
         }
     }
 
@@ -607,12 +621,12 @@ public class SetActivity extends BaseActivity {
         } else {
             if (isLogin()) {
                 getUserLoginId();
-                Map map = new HashMap<String, String>();
+                Map<String, String> map = new HashMap<>();
                 map.put("Id", user_id);
                 map.put("alipay", account);
                 map.put("alipayName", name);
                 which = "pay";
-                netUtils.okHttp2Server2(pay_url, map);
+                netUtils.okHttp2Server2(SetActivity.this, pay_url, map);
             } else {
                 loginUser();
             }
@@ -636,7 +650,7 @@ public class SetActivity extends BaseActivity {
             Map map = new HashMap<String, String>();
             map.put("Id", user_id);
             which = "unpay";
-            netUtils.okHttp2Server2(unpay_url, map);
+            netUtils.okHttp2Server2(SetActivity.this, unpay_url, map);
         } else {
             loginUser();
         }
@@ -664,9 +678,10 @@ public class SetActivity extends BaseActivity {
         };
         which = "sms";
         map = new HashMap<>();
+        map.put("Id", user_id);
         map.put("sms_code", userPhone);
         map.put("type", "3");
-        netUtils.okHttp2Server2(sms_url, map);
+        netUtils.okHttp2Server2(SetActivity.this, sms_url, map);
         if (countDownTimer != null) {
             countDownTimer.start();
         }

@@ -26,6 +26,7 @@ import com.gather_excellent_help.ui.widget.MyNestedScrollView;
 import com.gather_excellent_help.ui.widget.ViewpagerIndicator;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
 import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.PhotoUtils;
@@ -91,7 +92,7 @@ public class OrderActivity extends BaseActivity {
      */
     private void initView() {
         wan_order_manager = (WanRecycleView) findViewById(R.id.wan_order_manager);
-        rl_order_no_zhanwei = (RelativeLayout)findViewById(R.id.rl_order_no_zhanwei);
+        rl_order_no_zhanwei = (RelativeLayout) findViewById(R.id.rl_order_no_zhanwei);
     }
 
     /**
@@ -197,7 +198,8 @@ public class OrderActivity extends BaseActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-                LogUtil.e(call.toString() + "==" + e.getMessage());
+                LogUtil.e(call.toString() + "-" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(OrderActivity.this);
             }
         });
         rcvOrderManager.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -283,7 +285,7 @@ public class OrderActivity extends BaseActivity {
         map.put("Type", String.valueOf(curr_statue));
         map.put("pageSize", pageSize);
         map.put("pageIndex", pageIndex);
-        netUtil.okHttp2Server2(curr_url, map);
+        netUtil.okHttp2Server2(OrderActivity.this,curr_url, map);
     }
 
     /**

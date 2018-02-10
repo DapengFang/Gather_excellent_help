@@ -58,12 +58,31 @@ public class MyNestedScrollView extends NestedScrollView {
     @Override
     protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
         super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
-        if(scrollY>0 && null != onScrollToBottom){
+        if (scrollY > 0 && null != onScrollToBottom) {
             onScrollToBottom.onScrollBottomListener(clampedY);
         }
     }
-    public interface OnScrollToBottomListener{
-       void onScrollBottomListener(boolean isBottom);
+
+    public interface OnScrollToBottomListener {
+        void onScrollBottomListener(boolean isBottom);
+    }
+
+    @Override
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
+        if (mOnObservableScrollViewScrollChanged != null) {
+            mOnObservableScrollViewScrollChanged.onObservableScrollViewScrollChanged(l, t, oldl, oldt);
+        }
+    }
+
+    private OnObservableScrollViewScrollChanged mOnObservableScrollViewScrollChanged;
+
+    public void setOnObservableScrollViewScrollChanged(OnObservableScrollViewScrollChanged mOnObservableScrollViewScrollChanged) {
+        this.mOnObservableScrollViewScrollChanged = mOnObservableScrollViewScrollChanged;
+    }
+
+    public interface OnObservableScrollViewScrollChanged {
+        void onObservableScrollViewScrollChanged(int l, int t, int oldl, int oldt);
     }
 
 }

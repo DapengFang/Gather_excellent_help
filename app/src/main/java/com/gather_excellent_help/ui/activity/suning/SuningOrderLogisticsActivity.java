@@ -17,7 +17,6 @@ public class SuningOrderLogisticsActivity extends BaseActivity {
 
     private RelativeLayout rl_exit;
     private TextView tv_top_title_name;
-    private NetCartUtil netCartUtil;
     private String userlogin;
 
     @Override
@@ -43,10 +42,7 @@ public class SuningOrderLogisticsActivity extends BaseActivity {
         tv_top_title_name.setText("订单信息");
         SuningOrderLogisticsActivity.MyonclickListener myonclickListener = new SuningOrderLogisticsActivity.MyonclickListener();
         rl_exit.setOnClickListener(myonclickListener);
-        netCartUtil = new NetCartUtil();
         userlogin = Tools.getUserLogin(this);
-        OnCartResponseListener onCartResponseListener = new OnCartResponseListener();
-        netCartUtil.setOnCartResponseListener(onCartResponseListener);
     }
 
     /**
@@ -61,47 +57,6 @@ public class SuningOrderLogisticsActivity extends BaseActivity {
                     finish();
                     break;
             }
-        }
-    }
-
-    public void add(View v){
-        Toast.makeText(SuningOrderLogisticsActivity.this, "add", Toast.LENGTH_SHORT).show();
-        netCartUtil.addCart("9368","7","2937","21787","1");
-    }
-    public void del(View v){
-        Toast.makeText(SuningOrderLogisticsActivity.this, "del", Toast.LENGTH_SHORT).show();
-        netCartUtil.deleteCart("1","9368","6");
-    }
-    public void upd(View v){
-
-
-    }
-    public void get(View v){
-        //Toast.makeText(SuningOrderLogisticsActivity.this, "get", Toast.LENGTH_SHORT).show();
-        //netCartUtil.getCartList("9368","10","1");
-        Toast.makeText(SuningOrderLogisticsActivity.this, "upd", Toast.LENGTH_SHORT).show();
-        netCartUtil.updateCart("8","9368","7","2936","35","2");
-    }
-
-    public class OnCartResponseListener implements NetCartUtil.OnCartResponseListener {
-
-        @Override
-        public void onCartResponse(String response, String whick) {
-            LogUtil.e(whick + "=" +response);
-            if (whick.equals(NetCartUtil.WHICH_ADD)) {
-
-            } else if (whick.equals(NetCartUtil.WHICH_DEL)) {
-
-            } else if (whick.equals(NetCartUtil.WHICH_UPD)) {
-
-            } else if (whick.equals(NetCartUtil.WHICH_GET)) {
-
-            }
-        }
-
-        @Override
-        public void onCartFail() {
-
         }
     }
 }

@@ -20,6 +20,7 @@ import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.SmsCodeBean;
 import com.gather_excellent_help.ui.activity.RegisterActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.google.gson.Gson;
@@ -108,6 +109,7 @@ public class UserPswsetActivity extends BaseActivity {
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "," + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(UserPswsetActivity.this);
         }
     }
 
@@ -198,7 +200,7 @@ public class UserPswsetActivity extends BaseActivity {
         hashMap = new HashMap<>();
         hashMap.put("sms_code", phone);
         hashMap.put("type", "5");
-        netUtils.okHttp2Server2(sms_url, hashMap);
+        netUtils.okHttp2Server2(UserPswsetActivity.this,sms_url, hashMap);
         countDownTimer.start();
     }
 }

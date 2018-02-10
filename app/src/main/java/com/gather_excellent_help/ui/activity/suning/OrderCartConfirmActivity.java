@@ -31,6 +31,7 @@ import com.gather_excellent_help.ui.adapter.SuningOrdercartAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
@@ -285,11 +286,12 @@ public class OrderCartConfirmActivity extends BaseActivity {
     public void getFreeData() {
         whick = "free";
         map = new HashMap<>();
+        map.put("Id",userLogin);
         map.put("user_id", userLogin);
         map.put("area_id", area_id);
         map.put("address", address);
         map.put("cart_ids", cart_ids);
-        netUtil.okHttp2Server2(free_url, map);
+        netUtil.okHttp2Server2(OrderCartConfirmActivity.this,free_url, map);
     }
 
     /**
@@ -360,7 +362,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
     /**
      * 跳转到收银台
      */
-    private void toCheckStand(double pay_price, String order_num, int orderId) {
+    private void toCheckStand(double pay_price, String order_num, int orderId) throws Exception{
         EventBus.getDefault().post(new AnyEvent(EventType.GOODS_PAY_LIMIT, "更新限购数量！"));
         LogUtil.e(pay_price + "--" + order_num);
         EventBus.getDefault().post(new AnyEvent(EventType.CLEAR_ALL_GOODSCART, "清空购物车"));
@@ -378,8 +380,9 @@ public class OrderCartConfirmActivity extends BaseActivity {
     private void getAddressDefault() {
         whick = "getaddress";
         map = new HashMap<>();
+        map.put("Id",userLogin);
         map.put("user_id", userLogin);
-        netUtil.okHttp2Server2(address_url, map);
+        netUtil.okHttp2Server2(OrderCartConfirmActivity.this,address_url, map);
     }
 
     /**
@@ -410,8 +413,16 @@ public class OrderCartConfirmActivity extends BaseActivity {
         }
         json = new Gson().toJson(suningWjsonLists);
         LogUtil.e("提交订单 = " + json);
+        pushOrder2Server();
+    }
+
+    /**
+     * 提交订单到服务器
+     */
+    private void pushOrder2Server() {
         whick = "pushorder";
         map = new HashMap<>();
+        map.put("Id",userLogin);
         map.put("user_id", userLogin);
         map.put("addr_id", addr_id);
         map.put("remark", remark);
@@ -421,7 +432,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
         map.put("invoiceTitle", invoiceTitle);
         map.put("taxNo", taxNo);
         map.put("sn_freight", String.valueOf(freightFare));
-        netUtil.okHttp2Server2(pushorder_url, map);
+        netUtil.okHttp2Server2(OrderCartConfirmActivity.this,pushorder_url, map);
     }
 
     /**
@@ -431,17 +442,21 @@ public class OrderCartConfirmActivity extends BaseActivity {
 
         @Override
         public void getSuccessResponse(String response) {
-            hindCatView();
-            if (whick.equals("pushorder")) {
-                tv_order_create_confirm.setClickable(true);
-                parseOrderData(response);
-            } else if (whick.equals("getaddress")) {
-                tv_order_create_confirm.setClickable(true);
-                parseAddressData(response);
-            } else if (whick.equals("checkIsHave")) {
-                parseCheckIshavaData(response);
-            } else if (whick.equals("free")) {
-                parseFreeData(response);
+            try {
+                hindCatView();
+                if (whick.equals("pushorder")) {
+                    tv_order_create_confirm.setClickable(true);
+                    parseOrderData(response);
+                } else if (whick.equals("getaddress")) {
+                    tv_order_create_confirm.setClickable(true);
+                    parseAddressData(response);
+                } else if (whick.equals("checkIsHave")) {
+                    parseCheckIshavaData(response);
+                } else if (whick.equals("free")) {
+                    parseFreeData(response);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -451,6 +466,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
             hindCatView();
             tv_order_create_confirm.setClickable(true);
             isHavaGoods = false;
+            EncryptNetUtil.startNeterrorPage(OrderCartConfirmActivity.this);
         }
     }
 
@@ -459,7 +475,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseFreeData(String response) {
+    private void parseFreeData(String response) throws Exception {
         LogUtil.e("运费信息 = " + response);
         try {
             SuningFreeBean suningFreeBean = new Gson().fromJson(response, SuningFreeBean.class);
@@ -492,7 +508,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseCheckIshavaData(String response) {
+    private void parseCheckIshavaData(String response) throws Exception {
         LogUtil.e(response);
         isHavaGoods = true;
         SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
@@ -534,7 +550,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseOrderData(String response) {
+    private void parseOrderData(String response) throws Exception {
         LogUtil.e(response);
         SuningCreateBean suningCreateBean = new Gson().fromJson(response, SuningCreateBean.class);
         int statusCode = suningCreateBean.getStatusCode();
@@ -562,7 +578,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseAddressData(String response) {
+    private void parseAddressData(String response) throws Exception {
         LogUtil.e(response);
         AddressDetailBean addressDetailBean = new Gson().fromJson(response, AddressDetailBean.class);
         int statusCode = addressDetailBean.getStatusCode();
@@ -599,7 +615,6 @@ public class OrderCartConfirmActivity extends BaseActivity {
                                 double price = suningOrdercartAdapter.getTotalPrice();
                                 DecimalFormat df = new DecimalFormat("#0.00");
                                 this.totalprice = df.format(price);
-                                //showTotalPrice(freightFare);
                                 getFreeData();
                             }
                         }
@@ -670,7 +685,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
         map.put("ProductId", productId);
         map.put("lnglat", "");
         map.put("num", num);
-        netUtil.okHttp2Server2(pcs_url, map);
+        netUtil.okHttp2Server2(OrderCartConfirmActivity.this,pcs_url, map);
     }
 
 

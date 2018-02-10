@@ -115,9 +115,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         shopType = Tools.getShopType(context);
         mImageLoader = ImageLoader.getInstance(3, ImageLoader.Type.LIFO);
         String userRate = Tools.getUserRate(context);
-        if(!TextUtils.isEmpty(userRate)) {
+        if (!TextUtils.isEmpty(userRate)) {
             double v = Double.parseDouble(userRate);
-            user_rate = v/100;
+            user_rate = v / 100;
         }
         if (isFirst) {
             extraCount = 5;
@@ -196,7 +196,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else if (holder instanceof TypeViewHolder) {
             TypeViewHolder typeViewHolder = (TypeViewHolder) holder;
             GridView gvHomeType = typeViewHolder.gvHomeType;
-            loadTypeData(gvHomeType,typeData);
+            loadTypeData(gvHomeType, typeData);
             gvHomeType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -216,7 +216,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             rushWareViewHolder.tvRushMoreTitle.setText(dataBean.getTitle());
             String url = dataBean.getImg_url();
             LogUtil.e(url);
-            if(url!=null) {
+            if (url != null) {
                 mImageLoader.loadImage(Url.IMG_URL + url, rushWareViewHolder.ivRushMoreBig, true);
             }
             rushWareViewHolder.ivRushMoreBig.setOnClickListener(new View.OnClickListener() {
@@ -244,26 +244,26 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         String goods_title = itemData.get(i).getTitle();
                         double sell_price = itemData.get(i).getSell_price();
                         int couponsPrice = itemData.get(i).getCouponsPrice();
-                        if(couponsPrice>0) {
-                                if(couponsUrl!=null && !TextUtils.isEmpty(couponsUrl)) {
-                                    Intent intent = new Intent(context, WebActivity.class);
-                                    intent.putExtra("web_url",couponsUrl);
-                                    intent.putExtra("url", link_url);
-                                    intent.putExtra("goods_id", goods_id);
-                                    intent.putExtra("goods_img", goods_img);
-                                    intent.putExtra("goods_title", goods_title);
-                                    intent.putExtra("goods_price", df.format(sell_price)+"");
-                                    intent.putExtra("goods_coupon", String.valueOf(couponsPrice));
-                                    intent.putExtra("goods_coupon_url", couponsUrl);
-                                    context.startActivity(intent);
+                        if (couponsPrice > 0) {
+                            if (couponsUrl != null && !TextUtils.isEmpty(couponsUrl)) {
+                                Intent intent = new Intent(context, WebActivity.class);
+                                intent.putExtra("web_url", couponsUrl);
+                                intent.putExtra("url", link_url);
+                                intent.putExtra("goods_id", goods_id);
+                                intent.putExtra("goods_img", goods_img);
+                                intent.putExtra("goods_title", goods_title);
+                                intent.putExtra("goods_price", df.format(sell_price) + "");
+                                intent.putExtra("goods_coupon", String.valueOf(couponsPrice));
+                                intent.putExtra("goods_coupon_url", couponsUrl);
+                                context.startActivity(intent);
                             }
-                        } else{
+                        } else {
                             Intent intent = new Intent(context, WebRecordActivity.class);
                             intent.putExtra("url", link_url);
                             intent.putExtra("goods_id", goods_id);
                             intent.putExtra("goods_img", goods_img);
                             intent.putExtra("goods_title", goods_title);
-                            intent.putExtra("goods_price", df.format(sell_price)+"");
+                            intent.putExtra("goods_price", df.format(sell_price) + "");
                             context.startActivity(intent);
                         }
                     }
@@ -290,7 +290,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             double sell_price = dataBean.getSell_price();
             double tkRate = dataBean.getTkRate() / 100;
             double zhuan = (sell_price - couponsPrice) * tkRate * 0.9f * user_rate;
-            double coast = sell_price - zhuan -couponsPrice;
+            double coast = sell_price - zhuan - couponsPrice;
             final String couponsUrl = dataBean.getCouponsUrl();
             final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
             groupViewHolder.tvHomeGroupZhuan.setText("赚: ¥" + df.format(zhuan) + " 成本: ¥" + df.format(coast));
@@ -353,9 +353,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             intent.putExtra("goods_id", goods_id);
                             intent.putExtra("goods_img", goods_img);
                             intent.putExtra("goods_title", goods_title);
-                            intent.putExtra("goods_price", df.format(goods_price)+"");
-                            intent.putExtra("goods_coupon",String.valueOf(goods_coupon));
-                            intent.putExtra("goods_coupon_url",couponsUrl);
+                            intent.putExtra("goods_price", df.format(goods_price) + "");
+                            intent.putExtra("goods_coupon", String.valueOf(goods_coupon));
+                            intent.putExtra("goods_coupon_url", couponsUrl);
                             context.startActivity(intent);
                         }
                     } else {
@@ -364,7 +364,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         intent.putExtra("goods_id", goods_id);
                         intent.putExtra("goods_img", goods_img);
                         intent.putExtra("goods_title", goods_title);
-                        intent.putExtra("goods_price", df.format(goods_price)+"");
+                        intent.putExtra("goods_price", df.format(goods_price) + "");
                         context.startActivity(intent);
                     }
                 }
@@ -456,9 +456,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             intent.putExtra("goods_id", goods_id);
                             intent.putExtra("goods_img", goods_img);
                             intent.putExtra("goods_title", goods_title);
-                            intent.putExtra("goods_price", df.format(goods_price)+"");
-                            intent.putExtra("goods_coupon",String.valueOf(goods_coupons));
-                            intent.putExtra("goods_coupon_url",couponsUrl1);
+                            intent.putExtra("goods_price", df.format(goods_price) + "");
+                            intent.putExtra("goods_coupon", String.valueOf(goods_coupons));
+                            intent.putExtra("goods_coupon_url", couponsUrl1);
                             context.startActivity(intent);
                         }
                     } else {
@@ -467,14 +467,14 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         intent.putExtra("goods_id", goods_id);
                         intent.putExtra("goods_img", goods_img);
                         intent.putExtra("goods_title", goods_title);
-                        intent.putExtra("goods_price", df.format(goods_price)+"");
+                        intent.putExtra("goods_price", df.format(goods_price) + "");
                         context.startActivity(intent);
                     }
                 }
             });
             int j = -1;
             for (int i = 2; i < groupData.size(); i++) {
-                if(i>=5) {
+                if (i >= 5) {
                     return;
                 }
                 LinearLayout childRight = (LinearLayout) groupViewHolder.ll_group_right.getChildAt(i + j - 1);
@@ -564,9 +564,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 intent.putExtra("goods_id", goods_id);
                                 intent.putExtra("goods_img", goods_img);
                                 intent.putExtra("goods_title", goods_title);
-                                intent.putExtra("goods_price", df.format(goods_price)+"");
-                                intent.putExtra("goods_coupon",String.valueOf(goods_coupons));
-                                intent.putExtra("goods_coupon_url",couponsUrl2);
+                                intent.putExtra("goods_price", df.format(goods_price) + "");
+                                intent.putExtra("goods_coupon", String.valueOf(goods_coupons));
+                                intent.putExtra("goods_coupon_url", couponsUrl2);
                                 context.startActivity(intent);
                             }
                         } else {
@@ -575,7 +575,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             intent.putExtra("goods_id", goods_id);
                             intent.putExtra("goods_img", goods_img);
                             intent.putExtra("goods_title", goods_title);
-                            intent.putExtra("goods_price", df.format(goods_price)+"");
+                            intent.putExtra("goods_price", df.format(goods_price) + "");
                             context.startActivity(intent);
                         }
                     }
@@ -592,9 +592,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             firstBuyViewHoldre.rl_item_laod_more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(curr_index>=0 && curr_index<8) {
+                    if (curr_index >= 0 && curr_index < 8) {
                         Toast.makeText(context, "活动在早上8点准时开启，请耐心等待！", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         Intent intent = new Intent(context, QiangTaoActivity.class);
                         context.startActivity(intent);
                     }
@@ -605,9 +605,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             firstBuyViewHoldre.llFirstLeftZero.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(curr_index>=0 && curr_index<8) {
+                    if (curr_index >= 0 && curr_index < 8) {
                         Toast.makeText(context, "活动在早上8点准时开启，请耐心等待！", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         Intent intent = new Intent(context, QiangTaoActivity.class);
                         context.startActivity(intent);
                     }
@@ -623,9 +623,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             double sellPrice = Double.parseDouble(dataBean0.getSell_price());
             final QiangTaoBean.DataBean.CouponInfoBean coupon_info = dataBean0.getCoupon_info();
             double rate = 0;
-            if(coupon_info!=null) {
+            if (coupon_info != null) {
                 String max_commission_rate = coupon_info.getMax_commission_rate();
-                rate = Double.parseDouble(max_commission_rate)/100;
+                rate = Double.parseDouble(max_commission_rate) / 100;
             }
             firstBuyViewHoldre.tvFirstBigPrice.setText(" ¥" + df.format(sellPrice));
             //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
@@ -691,18 +691,18 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     String max_commission_rate2 = null;
                     double rate1 = 0;
                     double rate2 = 0;
-                    if(coupon_info_l1!=null) {
+                    if (coupon_info_l1 != null) {
                         coupon_info_s1 = coupon_info_l1.getCoupon_info();
                         coupon_click_url_s1 = coupon_info_l1.getCoupon_click_url();
                         max_commission_rate1 = coupon_info_l1.getMax_commission_rate();
-                        rate1 = Double.parseDouble(max_commission_rate1)/100;
+                        rate1 = Double.parseDouble(max_commission_rate1) / 100;
                     }
 
-                    if(coupon_info_l2!=null) {
+                    if (coupon_info_l2 != null) {
                         coupon_info_s2 = coupon_info_l2.getCoupon_info();
-                       coupon_click_url_s2 = coupon_info_l2.getCoupon_click_url();
+                        coupon_click_url_s2 = coupon_info_l2.getCoupon_click_url();
                         max_commission_rate2 = coupon_info_l2.getMax_commission_rate();
-                        rate2 = Double.parseDouble(max_commission_rate2)/100;
+                        rate2 = Double.parseDouble(max_commission_rate2) / 100;
                     }
                     int coupon_p1 = 0;
                     int coupon_p2 = 0;
@@ -732,7 +732,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         @Override
                         public void onClick(View view) {
                             if (pos == 0) {
-                                if(curr_index>=0 && curr_index<8) {
+                                if (curr_index >= 0 && curr_index < 8) {
                                     Toast.makeText(context, "活动在早上8点准时开启，请耐心等待！", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -744,9 +744,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 String goods_price = dataBean1.getSell_price();
                                 int goods_coupon = 0;
                                 QiangTaoBean.DataBean.CouponInfoBean coupon_infos = dataBean1.getCoupon_info();
-                                if(coupon_infos!=null) {
+                                if (coupon_infos != null) {
                                     String coupon_info_s = coupon_infos.getCoupon_info();
-                                    if(coupon_info_s!=null && !TextUtils.isEmpty(coupon_info_s)) {
+                                    if (coupon_info_s != null && !TextUtils.isEmpty(coupon_info_s)) {
                                         int index = coupon_info_s.indexOf("减") + 1;
                                         String curr_coupon = coupon_info_s.substring(index, coupon_info_s.length() - 1);
                                         goods_coupon = Integer.parseInt(curr_coupon);
@@ -760,8 +760,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     intent.putExtra("goods_img", goods_img);
                                     intent.putExtra("goods_title", goods_title);
                                     intent.putExtra("goods_price", goods_price);
-                                    intent.putExtra("goods_coupon",String.valueOf(goods_coupon));
-                                    intent.putExtra("goods_coupon_url",finalCoupon_click_url_s);
+                                    intent.putExtra("goods_coupon", String.valueOf(goods_coupon));
+                                    intent.putExtra("goods_coupon_url", finalCoupon_click_url_s);
                                     context.startActivity(intent);
                                 } else {
                                     Intent intent = new Intent(context, WebRecordActivity.class);
@@ -773,7 +773,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     context.startActivity(intent);
                                 }
                             } else if (pos == 2) {
-                                if(curr_index>=0 && curr_index<8) {
+                                if (curr_index >= 0 && curr_index < 8) {
                                     Toast.makeText(context, "活动在早上8点准时开启，请耐心等待！", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -784,9 +784,9 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 String goods_price = dataBean2.getSell_price();
                                 int goods_coupon = 0;
                                 QiangTaoBean.DataBean.CouponInfoBean coupon_infos = dataBean2.getCoupon_info();
-                                if(coupon_infos!=null) {
+                                if (coupon_infos != null) {
                                     String coupon_info_s = coupon_infos.getCoupon_info();
-                                    if(coupon_info_s!=null && !TextUtils.isEmpty(coupon_info_s)) {
+                                    if (coupon_info_s != null && !TextUtils.isEmpty(coupon_info_s)) {
                                         int index = coupon_info_s.indexOf("减") + 1;
                                         String curr_coupon = coupon_info_s.substring(index, coupon_info_s.length() - 1);
                                         goods_coupon = Integer.parseInt(curr_coupon);
@@ -800,8 +800,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     intent.putExtra("goods_img", goods_img);
                                     intent.putExtra("goods_title", goods_title);
                                     intent.putExtra("goods_price", goods_price);
-                                    intent.putExtra("goods_coupon",String.valueOf(goods_coupon));
-                                    intent.putExtra("goods_coupon_url",finalCoupon_click_url_s1);
+                                    intent.putExtra("goods_coupon", String.valueOf(goods_coupon));
+                                    intent.putExtra("goods_coupon_url", finalCoupon_click_url_s1);
                                     context.startActivity(intent);
                                 } else {
                                     Intent intent = new Intent(context, WebRecordActivity.class);
@@ -871,7 +871,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             tvRushHour = firstBuyViewHoldre.tvRushHour;
             tvRushMinute = firstBuyViewHoldre.tvRushMinute;
             tvRushSecond = firstBuyViewHoldre.tvRushSecond;
-        }else if(holder instanceof HomeVipViewHolder) {
+        } else if (holder instanceof HomeVipViewHolder) {
             DecimalFormat df = new DecimalFormat("#0.00");
             final HomeVipBean.DataBean dataBean = vipData.get(0);
             HomeVipViewHolder homeVipViewHolder = (HomeVipViewHolder) holder;
@@ -886,28 +886,28 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             });
             String img_url = dataBean.getImg_url();
-            if(img_url!=null && homeVipViewHolder.ivVipBigPic!=null) {
-                mImageLoader.loadImage(img_url,homeVipViewHolder.ivVipBigPic,true);
+            if (img_url != null && homeVipViewHolder.ivVipBigPic != null) {
+                mImageLoader.loadImage(img_url, homeVipViewHolder.ivVipBigPic, true);
             }
             String title = dataBean.getTitle();
-            if(title!=null) {
-                if(title.length()>12) {
+            if (title != null) {
+                if (title.length() > 12) {
                     String s = title.substring(0, 12) + "...";
                     homeVipViewHolder.tvVipBigTitle.setText(s);
-                }else{
+                } else {
                     homeVipViewHolder.tvVipBigTitle.setText(title);
                 }
             }
-            double tkRate = dataBean.getTkRate()/100;
+            double tkRate = dataBean.getTkRate() / 100;
             final int couponsPrice = dataBean.getCouponsPrice();
             final String couponsUrl = dataBean.getCouponsUrl();
             double sell_price = dataBean.getSell_price();
             final String secondCouponsUrl = dataBean.getSecondCouponsUrl();
-            LogUtil.e("zhuan tkRate = " + tkRate +",===+user_rate == "+user_rate);
-            double zhuan = (sell_price -couponsPrice)*tkRate*0.9f*user_rate;
-            double coast = sell_price -couponsPrice-zhuan;
-            homeVipViewHolder.tvHomeVipZhuan.setText("赚: ¥"+df.format(zhuan)+" 成本: ¥"+df.format(coast));
-            homeVipViewHolder.tvVipBigPrice.setText("专享价"+df.format(sell_price));
+            LogUtil.e("zhuan tkRate = " + tkRate + ",===+user_rate == " + user_rate);
+            double zhuan = (sell_price - couponsPrice) * tkRate * 0.9f * user_rate;
+            double coast = sell_price - couponsPrice - zhuan;
+            homeVipViewHolder.tvHomeVipZhuan.setText("赚: ¥" + df.format(zhuan) + " 成本: ¥" + df.format(coast));
+            homeVipViewHolder.tvVipBigPrice.setText("专享价" + df.format(sell_price));
 
             //int group_id = CacheUtils.getInteger(context, CacheUtils.GROUP_TYPE, -1);
             if (shopType == 1) {
@@ -915,7 +915,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 if (toggleShow) {
                     homeVipViewHolder.tvHomeVipZhuan.setVisibility(View.GONE);
                 } else {
-                   homeVipViewHolder.tvHomeVipZhuan.setVisibility(View.VISIBLE);
+                    homeVipViewHolder.tvHomeVipZhuan.setVisibility(View.VISIBLE);
                 }
             } else {
                 homeVipViewHolder.tvHomeVipZhuan.setVisibility(View.GONE);
@@ -949,53 +949,53 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void onClick(View view) {
                     DecimalFormat df = new DecimalFormat("#0.00");
                     String link_url = dataBean.getLink_url();
-                        String goods_id = String.valueOf(dataBean.getProductId());
-                        String goods_img = dataBean.getImg_url();
-                        String goods_title = dataBean.getTitle();
-                        double goods_price = dataBean.getSell_price();
-                        Intent intent = new Intent(context, WebRecordActivity.class);
-                        intent.putExtra("url", link_url);
-                        intent.putExtra("goods_id", goods_id);
-                        intent.putExtra("goods_img", goods_img);
-                        intent.putExtra("goods_title", goods_title);
-                        intent.putExtra("goods_price", df.format(goods_price)+"");
-                        context.startActivity(intent);
+                    String goods_id = String.valueOf(dataBean.getProductId());
+                    String goods_img = dataBean.getImg_url();
+                    String goods_title = dataBean.getTitle();
+                    double goods_price = dataBean.getSell_price();
+                    Intent intent = new Intent(context, WebRecordActivity.class);
+                    intent.putExtra("url", link_url);
+                    intent.putExtra("goods_id", goods_id);
+                    intent.putExtra("goods_img", goods_img);
+                    intent.putExtra("goods_title", goods_title);
+                    intent.putExtra("goods_price", df.format(goods_price) + "");
+                    context.startActivity(intent);
                 }
             });
 
             final HomeVipBean.DataBean dataBean1 = vipData.get(1);
             String img_url1 = dataBean1.getImg_url();
             double sell_price1 = dataBean1.getSell_price();
-            double tkRate1 = dataBean1.getTkRate()/100;
+            double tkRate1 = dataBean1.getTkRate() / 100;
             final int couponsPrice1 = dataBean1.getCouponsPrice();
             final String couponsUrl1 = dataBean1.getCouponsUrl();
             final String secondCouponsUrl1 = dataBean1.getSecondCouponsUrl();
             String title1 = dataBean1.getTitle();
-            double zhuan1 = (sell_price1- couponsPrice1)*tkRate1*0.9f*user_rate;
-            double coast1 = sell_price1 - zhuan1 -couponsPrice1;
+            double zhuan1 = (sell_price1 - couponsPrice1) * tkRate1 * 0.9f * user_rate;
+            double coast1 = sell_price1 - zhuan1 - couponsPrice1;
 
             final HomeVipBean.DataBean dataBean2 = vipData.get(2);
             String img_url2 = dataBean2.getImg_url();
             double sell_price2 = dataBean2.getSell_price();
-            double tkRate2 = dataBean2.getTkRate()/100;
+            double tkRate2 = dataBean2.getTkRate() / 100;
             int couponsPrice2 = dataBean2.getCouponsPrice();
             final String couponsUrl2 = dataBean2.getCouponsUrl();
             final String secondCouponsUrl2 = dataBean2.getSecondCouponsUrl();
             String title2 = dataBean2.getTitle();
-            double zhuan2 = (sell_price2- couponsPrice2)*tkRate2*0.9f*user_rate;
-            double coast2 = sell_price2 - zhuan2 -couponsPrice2;
+            double zhuan2 = (sell_price2 - couponsPrice2) * tkRate2 * 0.9f * user_rate;
+            double coast2 = sell_price2 - zhuan2 - couponsPrice2;
 
-            TextView tv_vip_mall_title =null;
-            TextView tv_vip_mall_price =null;
-            TextView tv_vip_small_zhuan =null;
-            TextView tv_vip_small_coast =null;
-            TextView tv_vip_small_coupons =null;
-            ImageView iv_vip_mall_pic =null;
-            TextView tv_vip_small_second_coupons =null;
+            TextView tv_vip_mall_title = null;
+            TextView tv_vip_mall_price = null;
+            TextView tv_vip_small_zhuan = null;
+            TextView tv_vip_small_coast = null;
+            TextView tv_vip_small_coupons = null;
+            ImageView iv_vip_mall_pic = null;
+            TextView tv_vip_small_second_coupons = null;
             View childAt = null;
             LinearLayout llFirstVipZera = homeVipViewHolder.llFirstVipZera;
-            for (int i=0;i<llFirstVipZera.getChildCount();i++){
-                if(i!=1) {
+            for (int i = 0; i < llFirstVipZera.getChildCount(); i++) {
+                if (i != 1) {
                     childAt = llFirstVipZera.getChildAt(i);
                     tv_vip_mall_title = (TextView) childAt.findViewById(R.id.tv_vip_mall_title);
                     tv_vip_mall_price = (TextView) childAt.findViewById(R.id.tv_vip_mall_price);
@@ -1006,24 +1006,24 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     tv_vip_small_second_coupons = (TextView) childAt.findViewById(R.id.tv_vip_small_second_coupons);
                 }
 
-                if(i==0) {
-                    if(img_url1!=null && iv_vip_mall_pic!=null) {
-                        mImageLoader.loadImage(img_url1,iv_vip_mall_pic,true);
+                if (i == 0) {
+                    if (img_url1 != null && iv_vip_mall_pic != null) {
+                        mImageLoader.loadImage(img_url1, iv_vip_mall_pic, true);
                     }
-                    if(tv_vip_mall_title!=null && title1!=null) {
-                        if(title1.length()>12) {
+                    if (tv_vip_mall_title != null && title1 != null) {
+                        if (title1.length() > 12) {
                             String s = title1.substring(0, 12) + "...";
                             tv_vip_mall_title.setText(s);
-                        }else{
+                        } else {
                             tv_vip_mall_title.setText(title1);
                         }
                     }
-                    if(tv_vip_mall_price!=null) {
-                        tv_vip_mall_price.setText("专享价"+df.format(sell_price1));
+                    if (tv_vip_mall_price != null) {
+                        tv_vip_mall_price.setText("专享价" + df.format(sell_price1));
                     }
 
-                    if(tv_vip_small_zhuan!=null) {
-                       tv_vip_small_zhuan.setText("赚: ¥"+df.format(zhuan1));
+                    if (tv_vip_small_zhuan != null) {
+                        tv_vip_small_zhuan.setText("赚: ¥" + df.format(zhuan1));
                         if (shopType == 1) {
                             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                             if (toggleShow) {
@@ -1036,8 +1036,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         }
                     }
 
-                    if(tv_vip_small_coast!=null) {
-                        tv_vip_small_coast.setText("成本: ¥"+df.format(coast1));
+                    if (tv_vip_small_coast != null) {
+                        tv_vip_small_coast.setText("成本: ¥" + df.format(coast1));
                         if (shopType == 1) {
                             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                             if (toggleShow) {
@@ -1077,46 +1077,46 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     tv_vip_small_second_coupons.setVisibility(View.GONE);
                     tv_vip_small_coupons.setVisibility(View.GONE);
 
-                    if(childAt!=null) {
+                    if (childAt != null) {
                         childAt.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 DecimalFormat df = new DecimalFormat("#0.00");
                                 String link_url = dataBean1.getLink_url();
-                                    String goods_id = String.valueOf(dataBean1.getProductId());
-                                    String goods_img = dataBean1.getImg_url();
-                                    String goods_title = dataBean1.getTitle();
-                                    double goods_price = dataBean1.getSell_price();
-                                    Intent intent = new Intent(context, WebRecordActivity.class);
-                                    intent.putExtra("url", link_url);
-                                    intent.putExtra("goods_id", goods_id);
-                                    intent.putExtra("goods_img", goods_img);
-                                    intent.putExtra("goods_title", goods_title);
-                                    intent.putExtra("goods_price", df.format(goods_price)+"");
-                                    context.startActivity(intent);
+                                String goods_id = String.valueOf(dataBean1.getProductId());
+                                String goods_img = dataBean1.getImg_url();
+                                String goods_title = dataBean1.getTitle();
+                                double goods_price = dataBean1.getSell_price();
+                                Intent intent = new Intent(context, WebRecordActivity.class);
+                                intent.putExtra("url", link_url);
+                                intent.putExtra("goods_id", goods_id);
+                                intent.putExtra("goods_img", goods_img);
+                                intent.putExtra("goods_title", goods_title);
+                                intent.putExtra("goods_price", df.format(goods_price) + "");
+                                context.startActivity(intent);
                             }
                         });
                     }
                 }
 
-                if(i==2) {
-                    if(img_url2!=null && iv_vip_mall_pic!=null) {
-                        mImageLoader.loadImage(img_url2,iv_vip_mall_pic,true);
+                if (i == 2) {
+                    if (img_url2 != null && iv_vip_mall_pic != null) {
+                        mImageLoader.loadImage(img_url2, iv_vip_mall_pic, true);
                     }
-                    if(tv_vip_mall_title!=null && title2!=null) {
-                        if(title2.length()>12) {
+                    if (tv_vip_mall_title != null && title2 != null) {
+                        if (title2.length() > 12) {
                             String s = title2.substring(0, 12) + "...";
                             tv_vip_mall_title.setText(s);
-                        }else{
+                        } else {
                             tv_vip_mall_title.setText(title2);
                         }
                     }
-                    if(tv_vip_mall_price!=null) {
-                        tv_vip_mall_price.setText("专享价"+df.format(sell_price2));
+                    if (tv_vip_mall_price != null) {
+                        tv_vip_mall_price.setText("专享价" + df.format(sell_price2));
                     }
 
-                    if(tv_vip_small_zhuan!=null) {
-                        tv_vip_small_zhuan.setText("赚: ¥"+df.format(zhuan2));
+                    if (tv_vip_small_zhuan != null) {
+                        tv_vip_small_zhuan.setText("赚: ¥" + df.format(zhuan2));
                         if (shopType == 1) {
                             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                             if (toggleShow) {
@@ -1129,8 +1129,8 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         }
                     }
 
-                    if(tv_vip_small_coast!=null) {
-                        tv_vip_small_coast.setText("成本: ¥"+df.format(coast2));
+                    if (tv_vip_small_coast != null) {
+                        tv_vip_small_coast.setText("成本: ¥" + df.format(coast2));
                         if (shopType == 1) {
                             boolean toggleShow = CacheUtils.getBoolean(context, CacheUtils.TOGGLE_SHOW, false);
                             if (toggleShow) {
@@ -1169,23 +1169,23 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 //                    }
                     tv_vip_small_second_coupons.setVisibility(View.GONE);
                     tv_vip_small_coupons.setVisibility(View.GONE);
-                    if(childAt!=null) {
+                    if (childAt != null) {
                         childAt.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 DecimalFormat df = new DecimalFormat("#0.00");
                                 String link_url = dataBean2.getLink_url();
-                                    String goods_id = String.valueOf(dataBean2.getProductId());
-                                    String goods_img = dataBean2.getImg_url();
-                                    String goods_title = dataBean2.getTitle();
-                                    double goods_price = dataBean2.getSell_price();
-                                    Intent intent = new Intent(context, WebRecordActivity.class);
-                                    intent.putExtra("url", link_url);
-                                    intent.putExtra("goods_id", goods_id);
-                                    intent.putExtra("goods_img", goods_img);
-                                    intent.putExtra("goods_title", goods_title);
-                                    intent.putExtra("goods_price", df.format(goods_price)+"");
-                                    context.startActivity(intent);
+                                String goods_id = String.valueOf(dataBean2.getProductId());
+                                String goods_img = dataBean2.getImg_url();
+                                String goods_title = dataBean2.getTitle();
+                                double goods_price = dataBean2.getSell_price();
+                                Intent intent = new Intent(context, WebRecordActivity.class);
+                                intent.putExtra("url", link_url);
+                                intent.putExtra("goods_id", goods_id);
+                                intent.putExtra("goods_img", goods_img);
+                                intent.putExtra("goods_title", goods_title);
+                                intent.putExtra("goods_price", df.format(goods_price) + "");
+                                context.startActivity(intent);
                             }
                         });
                     }
@@ -1435,7 +1435,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     private void getBannerData(final CarouselImageView civHomeGanner) {
         netUtils = new NetUtil();
-        netUtils.okHttp2Server2(url, null);
+        netUtils.okHttp2Server2(context,url, null);
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -1444,7 +1444,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-
+                LogUtil.e(call.toString() + "-" + e.getMessage());
             }
         });
     }
@@ -1515,7 +1515,7 @@ public class HomeRushAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             HomeTypeBean homeTypeBean = new HomeTypeBean(HomeData.imgs[i], HomeData.titles[i]);
             lists.add(homeTypeBean);
         }
-        HomeTypeAdapter homeTypeAdapter = new HomeTypeAdapter(context, lists,typeData);
+        HomeTypeAdapter homeTypeAdapter = new HomeTypeAdapter(context, lists, typeData);
         gvHomeType.setAdapter(homeTypeAdapter);
     }
 

@@ -15,6 +15,7 @@ import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.AlipayManagerActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -122,7 +123,7 @@ public class StoreshowActivity extends BaseActivity {
         map = new HashMap<>();
         map.put("user_id",userLogin);
         map.put("pay_type",pay_type);
-        netUtil.okHttp2Server2(pay_url,map);
+        netUtil.okHttp2Server2(StoreshowActivity.this,pay_url,map);
     }
 
     /**
@@ -179,6 +180,7 @@ public class StoreshowActivity extends BaseActivity {
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "-" + e.getMessage());
             tv_store_submit.setClickable(true);
+            EncryptNetUtil.startNeterrorPage(StoreshowActivity.this);
         }
     }
 

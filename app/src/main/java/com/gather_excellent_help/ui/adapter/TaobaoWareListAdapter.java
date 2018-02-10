@@ -88,6 +88,7 @@ public class TaobaoWareListAdapter extends BaseAdapter {
             holder.ll_activity_list_ware_zhuan = (LinearLayout) convertView.findViewById(R.id.ll_activity_list_ware_zhuan);
             holder.iv_activity_list_vip = (ImageView) convertView.findViewById(R.id.iv_activity_list_vip);
             holder.rl_activity_rexiao_share = (RelativeLayout) convertView.findViewById(R.id.rl_activity_rexiao_share);
+            holder.ll_activity_lsit_coupon = (LinearLayout) convertView.findViewById(R.id.ll_activity_lsit_coupon);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -136,10 +137,10 @@ public class TaobaoWareListAdapter extends BaseAdapter {
                 int index = coupon_info1.indexOf("减") + 1;
                 String coupon = coupon_info1.substring(index, coupon_info1.length() - 1);
                 coupons = Integer.parseInt(coupon);
-                holder.tv_rush_ware_coupons.setText("券" + coupon);
-                holder.tv_rush_ware_coupons.setVisibility(View.VISIBLE);
+                holder.tv_rush_ware_coupons.setText("" + coupon);
+                holder.ll_activity_lsit_coupon.setVisibility(View.VISIBLE);
             } else {
-                holder.tv_rush_ware_coupons.setVisibility(View.INVISIBLE);
+                holder.ll_activity_lsit_coupon.setVisibility(View.INVISIBLE);
             }
             double maxCommissionRate = Double.parseDouble(coupon_info.getMax_commission_rate());
             double sellPrice = Double.parseDouble(dataBean.getSell_price());
@@ -148,7 +149,7 @@ public class TaobaoWareListAdapter extends BaseAdapter {
             double coast = sellPrice - zhuan - coupons;
             holder.tv_home_type_sale.setText("赚 " + df.format(zhuan));
             holder.tv_home_type_coast.setText("到手价 " + df.format(coast));
-            holder.tv_rush_ware_coupons.setOnClickListener(new View.OnClickListener() {
+            holder.ll_activity_lsit_coupon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                 }
@@ -167,7 +168,7 @@ public class TaobaoWareListAdapter extends BaseAdapter {
                 holder.ll_activity_list_ware_zhuan.setVisibility(View.INVISIBLE);
             }
         } else {
-            holder.tv_rush_ware_coupons.setVisibility(View.INVISIBLE);
+            holder.ll_activity_lsit_coupon.setVisibility(View.INVISIBLE);
         }
         return convertView;
     }
@@ -183,6 +184,7 @@ public class TaobaoWareListAdapter extends BaseAdapter {
         LinearLayout ll_activity_list_ware_zhuan;   //显示隐藏赚
         ImageView iv_activity_list_vip;   //专享价
         RelativeLayout rl_activity_rexiao_share;   //分享
+        LinearLayout ll_activity_lsit_coupon;      //优惠券的container
     }
 
     private OnShareClickListener onShareClickListener;

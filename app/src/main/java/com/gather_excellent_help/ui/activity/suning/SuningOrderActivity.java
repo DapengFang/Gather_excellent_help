@@ -27,6 +27,7 @@ import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.ViewpagerIndicator;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
@@ -237,11 +238,12 @@ public class SuningOrderActivity extends BaseActivity {
         }
         whick = "order_list";
         map = new HashMap<>();
+        map.put("Id", userLogin);
         map.put("user_id", userLogin);
         map.put("pagesize", pagesize);
         map.put("pageindex", pageindex);
         map.put("order_status", order_status);
-        netUtil.okHttp2Server2(order_url, map);
+        netUtil.okHttp2Server2(SuningOrderActivity.this, order_url, map);
     }
 
     /**
@@ -359,23 +361,28 @@ public class SuningOrderActivity extends BaseActivity {
 
         @Override
         public void getSuccessResponse(String response) {
-            LogUtil.e(response);
             if (!isShowCat) {
                 hindCatView();
             }
             isShowCat = false;
-            if (whick.equals("order_list")) {
-                parseOrderListData(response);
-            } else if (whick.equals("cancel_order")) {
-                parseCancelOrderData(response);
-            } else if (whick.equals("confirm_order")) {
-                parderConfirmOrderData(response);
+            try {
+                LogUtil.e(response);
+                if (whick.equals("order_list")) {
+                    parseOrderListData(response);
+                } else if (whick.equals("cancel_order")) {
+                    parseCancelOrderData(response);
+                } else if (whick.equals("confirm_order")) {
+                    parderConfirmOrderData(response);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "-" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(SuningOrderActivity.this);
         }
     }
 
@@ -384,7 +391,7 @@ public class SuningOrderActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parderConfirmOrderData(String response) {
+    private void parderConfirmOrderData(String response) throws Exception {
         SuningOrderConfirmBean suningOrderConfirmBean = new Gson().fromJson(response, SuningOrderConfirmBean.class);
         int statusCode = suningOrderConfirmBean.getStatusCode();
         switch (statusCode) {
@@ -409,7 +416,7 @@ public class SuningOrderActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseCancelOrderData(String response) {
+    private void parseCancelOrderData(String response) throws Exception {
         CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
         int statusCode = codeStatueBean.getStatusCode();
         switch (statusCode) {
@@ -432,79 +439,74 @@ public class SuningOrderActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseOrderListData(String response) {
-        try {
-            wanRecycleView.onRefreshComplete();
-            SuningOrderBean suningOrderBean = new Gson().fromJson(response, SuningOrderBean.class);
-            int statusCode = suningOrderBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    List<SuningOrderBean.DataBean> data = suningOrderBean.getData();
-                    isCanLoad = true;
-                    if (isLoaderMore) {
-                        if (data.size() == 0) {
-                            showLoadMore(2);
-                            return;
-                        } else {
-                            showLoadMore(1);
-                            allData.addAll(data);
-                        }
-                        suningOrderAdapter.notifyDataSetChanged();
+    private void parseOrderListData(String response) throws Exception {
+        wanRecycleView.onRefreshComplete();
+        SuningOrderBean suningOrderBean = new Gson().fromJson(response, SuningOrderBean.class);
+        int statusCode = suningOrderBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                List<SuningOrderBean.DataBean> data = suningOrderBean.getData();
+                isCanLoad = true;
+                if (isLoaderMore) {
+                    if (data.size() == 0) {
+                        showLoadMore(2);
+                        return;
                     } else {
                         showLoadMore(1);
-                        allData = data;
-                        if (allData != null && allData.size() > 0) {
-                            ll_suning_show.setVisibility(View.VISIBLE);
-                            rl_order_no_zhanwei.setVisibility(View.GONE);
-                        } else {
-                            ll_suning_show.setVisibility(View.GONE);
-                            rl_order_no_zhanwei.setVisibility(View.VISIBLE);
-                        }
-                        suningOrderAdapter = new SuningOrderAdapter(SuningOrderActivity.this, data, order_status);
-                        rcv_suning_order_list.setAdapter(suningOrderAdapter);
-                        suningOrderAdapter.notifyDataSetChanged();
+                        allData.addAll(data);
                     }
+                    suningOrderAdapter.notifyDataSetChanged();
+                } else {
+                    showLoadMore(1);
+                    allData = data;
                     if (allData != null && allData.size() > 0) {
-                        remind_counts = new ArrayList<>();
-                        for (int i = 0; i < allData.size(); i++) {
-                            RemindCountBean remindCountBean = new RemindCountBean();
-                            remindCountBean.setCount(0);
-                            remindCountBean.setIs_continue(false);
-                            remind_counts.add(remindCountBean);
+                        ll_suning_show.setVisibility(View.VISIBLE);
+                        rl_order_no_zhanwei.setVisibility(View.GONE);
+                    } else {
+                        ll_suning_show.setVisibility(View.GONE);
+                        rl_order_no_zhanwei.setVisibility(View.VISIBLE);
+                    }
+                    suningOrderAdapter = new SuningOrderAdapter(SuningOrderActivity.this, data, order_status);
+                    rcv_suning_order_list.setAdapter(suningOrderAdapter);
+                    suningOrderAdapter.notifyDataSetChanged();
+                }
+                if (allData != null && allData.size() > 0) {
+                    remind_counts = new ArrayList<>();
+                    for (int i = 0; i < allData.size(); i++) {
+                        RemindCountBean remindCountBean = new RemindCountBean();
+                        remindCountBean.setCount(0);
+                        remindCountBean.setIs_continue(false);
+                        remind_counts.add(remindCountBean);
+                    }
+                }
+                if (suningOrderAdapter != null) {
+                    suningOrderAdapter.setOnButtonClickListener(new SuningOrderAdapter.OnButtonClickListener() {
+                        @Override
+                        public void onItemClickListener(View view, int position, int status) {
+                            onItemclickHandler(view, position, status);
                         }
-                    }
-                    if (suningOrderAdapter != null) {
-                        suningOrderAdapter.setOnButtonClickListener(new SuningOrderAdapter.OnButtonClickListener() {
-                            @Override
-                            public void onItemClickListener(View view, int position, int status) {
-                                onItemclickHandler(view, position, status);
-                            }
 
-                            @Override
-                            public void onLeftButtonClick(View view, int position, int status) {
-                                onLeftButtonHandler(view, position, status);
-                            }
+                        @Override
+                        public void onLeftButtonClick(View view, int position, int status) {
+                            onLeftButtonHandler(view, position, status);
+                        }
 
-                            @Override
-                            public void onRightButtonClick(View view, int position, int status) {
-                                onRightButtonHandler(view, position, status);
-                            }
+                        @Override
+                        public void onRightButtonClick(View view, int position, int status) {
+                            onRightButtonHandler(view, position, status);
+                        }
 
-                            @Override
-                            public void onExtraButtonClick(View view, int position, int status) {
+                        @Override
+                        public void onExtraButtonClick(View view, int position, int status) {
 
-                            }
-                        });
-                    }
-                    break;
-                case 0:
-                    wanRecycleView.onRefreshComplete();
-                    Toast.makeText(SuningOrderActivity.this, suningOrderBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        } catch (Exception e) {
-            LogUtil.e("SuningOrderActivity parseOrderListData error");
-            Toast.makeText(SuningOrderActivity.this, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                break;
+            case 0:
+                wanRecycleView.onRefreshComplete();
+                Toast.makeText(SuningOrderActivity.this, suningOrderBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -626,9 +628,10 @@ public class SuningOrderActivity extends BaseActivity {
     private void cancelOrder(String order_id) {
         whick = "cancel_order";
         map = new HashMap<>();
+        map.put("Id", userLogin);
         map.put("user_id", userLogin);
         map.put("order_id", order_id);
-        netUtil.okHttp2Server2(cancel_url, map);
+        netUtil.okHttp2Server2(SuningOrderActivity.this, cancel_url, map);
     }
 
     /**
@@ -661,10 +664,11 @@ public class SuningOrderActivity extends BaseActivity {
     private void confirmOrder(String order_id) {
         whick = "confirm_order";
         map = new HashMap<>();
+        map.put("Id", userLogin);
         map.put("user_id", userLogin);
         map.put("order_id", order_id);
         map.put("order_status", "2");
-        netUtil.okHttp2Server2(confrim_url, map);
+        netUtil.okHttp2Server2(SuningOrderActivity.this, confrim_url, map);
     }
 
     /**

@@ -20,6 +20,7 @@ import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.Check;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -49,14 +50,14 @@ public class UserPswCompleteActivity extends BaseActivity {
     public static final int LOAD_DATA = 1; //加载数据的标识
     private String url = Url.BASE_URL + "UsersDevicebound.aspx";
     private NetUtil netUtil;
-    private Map<String,String> map;
+    private Map<String, String> map;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case  LOAD_DATA:
+                case LOAD_DATA:
                     initData();
                     break;
             }
@@ -70,14 +71,14 @@ public class UserPswCompleteActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_psw_complete);
         ButterKnife.bind(this);
-        handler.sendEmptyMessageDelayed(LOAD_DATA,500);
+        handler.sendEmptyMessageDelayed(LOAD_DATA, 500);
     }
 
-    private void initData(){
+    private void initData() {
         netUtil = new NetUtil();
         Intent intent = getIntent();
         phone = intent.getStringExtra("phone");
-        if(phone == null) {
+        if (phone == null) {
             phone = "";
         }
         netUtil.setOnServerResponseListener(new OnServerResponseListener());
@@ -85,12 +86,12 @@ public class UserPswCompleteActivity extends BaseActivity {
         tvPswsetComplete.setOnClickListener(new MyOnclickListener());
     }
 
-    public class MyOnclickListener implements View.OnClickListener{
+    public class MyOnclickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.rl_back :
+                case R.id.rl_back:
                     finish();
                     break;
                 case R.id.tv_pswset_complete:
@@ -106,7 +107,7 @@ public class UserPswCompleteActivity extends BaseActivity {
     private void completePswSet() {
         psw = etSetPsw.getText().toString().trim();
         pswAgain = etSetPswAgain.getText().toString().trim();
-        if(TextUtils.isEmpty(psw)) {
+        if (TextUtils.isEmpty(psw)) {
             Toast.makeText(UserPswCompleteActivity.this, "请输入密码！", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -114,25 +115,25 @@ public class UserPswCompleteActivity extends BaseActivity {
             Toast.makeText(UserPswCompleteActivity.this, "输入密码过于简单，为了您的账号安全，请输入6位到12位不同数字或字母和数字的组合！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(pswAgain)) {
+        if (TextUtils.isEmpty(pswAgain)) {
             Toast.makeText(UserPswCompleteActivity.this, "请再次输入密码！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(!psw.equals(pswAgain)) {
+        if (!psw.equals(pswAgain)) {
             Toast.makeText(UserPswCompleteActivity.this, "两次输入密码不一致，请重新输入！", Toast.LENGTH_SHORT).show();
             return;
         }
 
         String deviceId = Tools.getDeviceId(this);
         map = new HashMap<>();
-        map.put("UserName",phone);
-        map.put("Password",psw);
-        map.put("device_number",deviceId);
-        netUtil.okHttp2Server2(url,map);
+        map.put("UserName", phone);
+        map.put("Password", psw);
+        map.put("device_number", deviceId);
+        netUtil.okHttp2Server2(UserPswCompleteActivity.this,url, map);
 
     }
 
-    public class OnServerResponseListener implements NetUtil.OnServerResponseListener{
+    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
@@ -140,19 +141,19 @@ public class UserPswCompleteActivity extends BaseActivity {
             CodeBean codeBean = new Gson().fromJson(response, CodeBean.class);
             int statusCode = codeBean.getStatusCode();
             switch (statusCode) {
-                case 1 :
+                case 1:
                     List<CodeBean.DataBean> data = codeBean.getData();
-                    if(data.size()>0) {
+                    if (data.size() > 0) {
                         Integer id = data.get(0).getId();
                         int group_type = data.get(0).getGroup_type();
                         double user_rate = data.get(0).getUser_get_ratio();
                         String advertising = data.get(0).getAdvertising();
                         int group_id = data.get(0).getGroup_id();
-                        CacheUtils.putBoolean(UserPswCompleteActivity.this,CacheUtils.LOGIN_STATE,true);
-                        CacheUtils.putString(UserPswCompleteActivity.this,CacheUtils.LOGIN_VALUE,id+"");
-                        CacheUtils.putInteger(UserPswCompleteActivity.this,CacheUtils.SHOP_TYPE,group_type);
-                        CacheUtils.putString(UserPswCompleteActivity.this,CacheUtils.LOGIN_PHONE,phone);
-                        CacheUtils.putString(UserPswCompleteActivity.this,CacheUtils.USER_RATE,user_rate+"");
+                        CacheUtils.putBoolean(UserPswCompleteActivity.this, CacheUtils.LOGIN_STATE, true);
+                        CacheUtils.putString(UserPswCompleteActivity.this, CacheUtils.LOGIN_VALUE, id + "");
+                        CacheUtils.putInteger(UserPswCompleteActivity.this, CacheUtils.SHOP_TYPE, group_type);
+                        CacheUtils.putString(UserPswCompleteActivity.this, CacheUtils.LOGIN_PHONE, phone);
+                        CacheUtils.putString(UserPswCompleteActivity.this, CacheUtils.USER_RATE, user_rate + "");
                         CacheUtils.putInteger(UserPswCompleteActivity.this, CacheUtils.GROUP_TYPE, group_id);
 
                         if (advertising != null) {
@@ -172,14 +173,15 @@ public class UserPswCompleteActivity extends BaseActivity {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            Toast.makeText(UserPswCompleteActivity.this, "短信验证码不正确，请从新输入！", Toast.LENGTH_SHORT).show();
+            LogUtil.e(call.toString() + "-" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(UserPswCompleteActivity.this);
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(handler!=null) {
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
         }
     }

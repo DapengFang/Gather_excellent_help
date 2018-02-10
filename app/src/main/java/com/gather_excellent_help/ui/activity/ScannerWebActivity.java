@@ -19,6 +19,7 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.aliapi.DemoTradeCallback;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -55,7 +56,7 @@ public class ScannerWebActivity extends BaseActivity {
     /**
      * 加载数据
      */
-    private void initData(){
+    private void initData() {
         WebSettings webSettings = wvScannerWeb.getSettings();
         //设置此属性，可任意比例缩放
         webSettings.setUseWideViewPort(true);
@@ -83,16 +84,16 @@ public class ScannerWebActivity extends BaseActivity {
         intent = getIntent();
         scaner_url = intent.getStringExtra("scaner_url");
         int url_type = intent.getIntExtra("url_type", -1);
-        if(url_type == 1) {
-            AlibcTrade.show(this, wvScannerWeb, new WebViewClient(), null, new AlibcPage(scaner_url), alibcShowParams, alibcTaokeParams, null,demoTradeCallback);
-        }else if(url_type == 2) {
+        if (url_type == 1) {
+            AlibcTrade.show(this, wvScannerWeb, new WebViewClient(), null, new AlibcPage(scaner_url), alibcShowParams, alibcTaokeParams, null, demoTradeCallback);
+        } else if (url_type == 2) {
             wvScannerWeb.loadUrl(scaner_url);
         }
         netUtil = new NetUtil();
         netUtil.setOnServerResponseListener(new OnServerResponseListener());
     }
 
-    public class MyWebViewClient extends WebViewClient{
+    public class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
             return super.shouldOverrideKeyEvent(view, event);
@@ -109,7 +110,7 @@ public class ScannerWebActivity extends BaseActivity {
         }
     }
 
-    public class OnServerResponseListener implements NetUtil.OnServerResponseListener{
+    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
@@ -119,13 +120,14 @@ public class ScannerWebActivity extends BaseActivity {
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "---" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(ScannerWebActivity.this);
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(intent!=null) {
+        if (intent != null) {
             intent = null;
         }
     }

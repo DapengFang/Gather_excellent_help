@@ -31,12 +31,14 @@ import com.gather_excellent_help.ui.adapter.updatenew.AccountNewDetailAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,6 +138,12 @@ public class TestActivity_l02 extends BaseActivity {
                         AccountDetailBean accountDetailBean = new Gson().fromJson(response, AccountDetailBean.class);
                         currData = accountDetailBean.getData();
                         loadAccountData();
+                        accountNewDetailAdapter.setOnItemClickListener(new AccountNewDetailAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View v, int position) {
+                                showAccountDetailDialog(v, position);
+                            }
+                        });
                         break;
                     case 0:
                         Toast.makeText(TestActivity_l02.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -146,6 +154,7 @@ public class TestActivity_l02 extends BaseActivity {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "---" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(TestActivity_l02.this);
             }
         });
 
@@ -211,7 +220,7 @@ public class TestActivity_l02 extends BaseActivity {
         map.put("pageSize", pageSize);
         map.put("pageIndex", pageIndex);
         map.put("type", type);
-        netUtil.okHttp2Server2(account_url, map);
+        netUtil.okHttp2Server2(TestActivity_l02.this,account_url, map);
     }
 
     /**
@@ -224,14 +233,27 @@ public class TestActivity_l02 extends BaseActivity {
 
     /**
      * 显示账户明细的dialog
+     *
+     * @param v
+     * @param position
      */
-    private void showAccountDetailDialog() {
+    private void showAccountDetailDialog(View v, int position) {
+        DecimalFormat df = new DecimalFormat("#0.00");
+        AccountDetailBean.DataBean dataBean = accountData.get(position);
+        String add_time = dataBean.getAdd_time();
+        double amount = dataBean.getAmount();
+        String project = dataBean.getProject();
+        String remark = dataBean.getRemark();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View inflate = View.inflate(this, R.layout.account_detail_list_dialog, null);
         TextView tv_account_list_title = (TextView) inflate.findViewById(R.id.tv_account_list_title);
         TextView tv_account_list_price = (TextView) inflate.findViewById(R.id.tv_account_list_price);
         TextView tv_account_list_time = (TextView) inflate.findViewById(R.id.tv_account_list_time);
         TextView tv_account_list_remark = (TextView) inflate.findViewById(R.id.tv_account_list_remark);
+        tv_account_list_title.setText("操作项目 " + project);
+        tv_account_list_time.setText("具体时间 " + add_time);
+        tv_account_list_price.setText("相应金额 " + df.format(amount));
+        tv_account_list_remark.setText("备注 " + remark);
         Button btn_account_lsit_cancel = (Button) inflate.findViewById(R.id.btn_account_lsit_cancel);
         dialog = builder.setView(inflate)
                 .show();

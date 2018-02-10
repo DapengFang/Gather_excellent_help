@@ -19,9 +19,11 @@ import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.bean.SmsCodeBean;
 import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
 import com.gather_excellent_help.utils.Check;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -47,6 +49,7 @@ public class FindPswActivity extends Activity {
     @Bind(R.id.rl_back)
     RelativeLayout rlBack;
 
+    private String userLogin;
     private String user;
     private String password;
     private String smscode = "";
@@ -73,6 +76,7 @@ public class FindPswActivity extends Activity {
      * 初始化数据
      */
     private void initData() {
+        userLogin = Tools.getUserLogin(this);
         netUtils = new NetUtil();
         etFindpswNewPsw.addTextChangedListener(new MyTextWatcher());
         tvFindpswGetSms.setOnClickListener(new MyOnClickListener());
@@ -92,6 +96,7 @@ public class FindPswActivity extends Activity {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "," + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(FindPswActivity.this);
             }
         });
     }
@@ -197,10 +202,11 @@ public class FindPswActivity extends Activity {
         };
         whick = "sms";
         map = new HashMap<>();
+        map.put("Id", userLogin);
         map.put("sms_code", user);
         map.put("type", "2");
-        netUtils.okHttp2Server2(sms_url, map);
-        if(countDownTimer!=null) {
+        netUtils.okHttp2Server2(FindPswActivity.this, sms_url, map);
+        if (countDownTimer != null) {
             countDownTimer.start();
         }
 
@@ -217,7 +223,7 @@ public class FindPswActivity extends Activity {
                     getUserInputInfo();
                     if (smscode.equals(sms_code_s)) {
                         whick = "register";
-                        netUtils.okHttp2Server2(url, map);
+                        netUtils.okHttp2Server2(FindPswActivity.this, url, map);
                     } else {
                         Toast.makeText(FindPswActivity.this, "短信验证码不正确，请从新输入！", Toast.LENGTH_SHORT).show();
                     }
@@ -235,7 +241,7 @@ public class FindPswActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(countDownTimer!=null) {
+        if (countDownTimer != null) {
             countDownTimer.cancel();
             countDownTimer = null;
         }

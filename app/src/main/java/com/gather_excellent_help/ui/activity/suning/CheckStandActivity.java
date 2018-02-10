@@ -21,6 +21,7 @@ import com.gather_excellent_help.api.pay.PayResult;
 import com.gather_excellent_help.api.pay.SignUtils;
 import com.gather_excellent_help.bean.suning.SuningPaystateBean;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -30,6 +31,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +50,6 @@ public class CheckStandActivity extends BaseActivity {
     private TextView tv_checkstand_money;//支付金额
 
     private String pstatus_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=is_payment";
-    //private String pstatus_url = "http://192.168.200.125:8022/api/juyoubang/suning/SNbusinessHandler.ashx?action=is_payment";
     private NetUtil netUtil;
     private Map<String, String> map;
 
@@ -141,8 +142,8 @@ public class CheckStandActivity extends BaseActivity {
                     }).show();
             return;
         }
-        //String orderInfo = getOrderInfo("聚优帮购物", "聚优帮-商家-购物", "0.01");
-        String orderInfo = getOrderInfo("聚优帮购物", "聚优帮-商家-购物", String.valueOf(df.format(pay_price)));
+        String orderInfo = getOrderInfo("聚优帮购物", "聚优帮-商家-购物", "0.01");
+        //String orderInfo = getOrderInfo("聚优帮购物", "聚优帮-商家-购物", String.valueOf(df.format(pay_price)));
         LogUtil.e("checkStandActivity = " + orderInfo);
         String sign = sign(orderInfo);
         try {
@@ -209,16 +210,10 @@ public class CheckStandActivity extends BaseActivity {
                     String resultStatus = payResult.getResultStatus();
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
-                        Toast.makeText(CheckStandActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
                         pay_status = "2";
-                        if (pay_status != null && !TextUtils.isEmpty(pay_status)) {
-                            map = new HashMap<>();
-                            map.put("user_id", user_login);
-                            map.put("is_payment", pay_status);
-                            map.put("order_id", String.valueOf(orderId));
-                            netUtil.okHttp2Server2(pstatus_url, map);
-                        }
+                        //pushCheckStandStatus();
                         LogUtil.e("支付成功 = " + resultInfo);
+                        toOrderDetailPage();
                     } else {
                         pay_status = "1";
                         // 判断resultStatus 为非"9000"则代表可能支付失败
@@ -229,13 +224,7 @@ public class CheckStandActivity extends BaseActivity {
                             // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
                             Toast.makeText(CheckStandActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
                         }
-                        if (pay_status != null && !TextUtils.isEmpty(pay_status)) {
-                            map = new HashMap<>();
-                            map.put("user_id", user_login);
-                            map.put("is_payment", pay_status);
-                            map.put("order_id", String.valueOf(orderId));
-                            netUtil.okHttp2Server2(pstatus_url, map);
-                        }
+                        toOrderPage();
                     }
                     break;
                 }
@@ -245,6 +234,20 @@ public class CheckStandActivity extends BaseActivity {
             }
         }
     };
+
+    /**
+     * 提交支付状态到服务器
+     */
+    private void pushCheckStandStatus() {
+        if (pay_status != null && !TextUtils.isEmpty(pay_status)) {
+            map = new HashMap<>();
+            map.put("Id", user_login);
+            map.put("user_id", user_login);
+            map.put("is_payment", pay_status);
+            map.put("order_id", String.valueOf(orderId));
+            netUtil.okHttp2Server2(CheckStandActivity.this, pstatus_url, map);
+        }
+    }
 
 
     /**
@@ -324,31 +327,44 @@ public class CheckStandActivity extends BaseActivity {
 
         @Override
         public void getSuccessResponse(String response) {
-            LogUtil.e(response);
-            SuningPaystateBean suningPaystateBean = new Gson().fromJson(response, SuningPaystateBean.class);
-            int statusCode = suningPaystateBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    List<SuningPaystateBean.DataBean> data = suningPaystateBean.getData();
-                    if (data != null && data.size() > 0) {
-                        SuningPaystateBean.DataBean dataBean = data.get(0);
-                        if (dataBean != null) {
-                            String pay_text = dataBean.getPay_text();
-                            Toast.makeText(CheckStandActivity.this, pay_text, Toast.LENGTH_SHORT).show();
-                            toOrderPage();
-                        }
-                    }
-                    break;
-                case 0:
-                    Toast.makeText(CheckStandActivity.this, suningPaystateBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    break;
+            try {
+                parseCheckData(response);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            //Toast.makeText(CheckStandActivity.this, "支付状态保存出现问题，请及时联系客服处理！！！！", Toast.LENGTH_SHORT).show();
             LogUtil.e(call.toString() + "-" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(CheckStandActivity.this);
+        }
+    }
+
+    /**
+     * 解析收银台的数据
+     *
+     * @param response
+     */
+    private void parseCheckData(String response) throws Exception {
+        LogUtil.e(response);
+        SuningPaystateBean suningPaystateBean = new Gson().fromJson(response, SuningPaystateBean.class);
+        int statusCode = suningPaystateBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                List<SuningPaystateBean.DataBean> data = suningPaystateBean.getData();
+                if (data != null && data.size() > 0) {
+                    SuningPaystateBean.DataBean dataBean = data.get(0);
+                    if (dataBean != null) {
+                        String pay_text = dataBean.getPay_text();
+                        Toast.makeText(CheckStandActivity.this, pay_text, Toast.LENGTH_SHORT).show();
+                        toOrderPage();
+                    }
+                }
+                break;
+            case 0:
+                Toast.makeText(CheckStandActivity.this, suningPaystateBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -358,6 +374,20 @@ public class CheckStandActivity extends BaseActivity {
     private void toOrderPage() {
         Intent intent = new Intent(this, SuningOrderActivity.class);
         intent.putExtra("pay_status", pay_status);
+        startActivity(intent);
+        finish();
+    }
+
+    /**
+     * 跳转到订单详情界面
+     */
+    private void toOrderDetailPage() {
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String order_time = sf.format(System.currentTimeMillis());
+        Intent intent = new Intent(this, SuningPayOrderdetailActivity.class);
+        intent.putExtra("pay_price", this.df.format(pay_price));
+        intent.putExtra("order_num", order_num);
+        intent.putExtra("order_time", order_time);
         startActivity(intent);
         finish();
     }

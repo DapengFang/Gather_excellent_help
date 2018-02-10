@@ -178,8 +178,7 @@ public class SuningLogisticsInfoAdapter extends RecyclerView.Adapter<SuningLogis
                 }
             }
         } catch (Exception e) {
-            LogUtil.e("SuningLogisticsInfoAdapter error");
-            Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 

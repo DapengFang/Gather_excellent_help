@@ -13,7 +13,6 @@ public class CodeBean {
      * statusMessage : 注册成功
      * data : [{"id":7}]
      */
-
     private int statusCode;
     private String statusMessage;
     private List<DataBean> data;
@@ -47,7 +46,6 @@ public class CodeBean {
         /**
          * id : 7
          */
-
         private Integer id;
         private int group_type;
         private double user_get_ratio;
@@ -58,6 +56,7 @@ public class CodeBean {
         private String wechat_id;
         private int is_phone;
         private String use_phone;
+        private String token;
 
         public Integer getId() {
             return id;
@@ -137,6 +136,14 @@ public class CodeBean {
 
         public void setUse_phone(String use_phone) {
             this.use_phone = use_phone;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
         }
     }
 }

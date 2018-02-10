@@ -120,7 +120,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="@dimen/x42"
+                    android:layout_width="@dimen/x48"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
@@ -150,7 +150,7 @@
                         <TextView
                             android:id="@+id/tv_activity_ware_coupon_second"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/x18"
+                            android:layout_height="@dimen/x16"
                             android:layout_alignParentRight="true"
                             android:background="@drawable/activity_list_red_shape"
                             android:gravity="center"
@@ -158,15 +158,33 @@
                             android:textColor="@color/white"
                             android:textSize="@dimen/x8" />
 
-                        <TextView
-                            android:id="@+id/tv_activity_ware_coupon"
+                        <LinearLayout
+                            android:id="@+id/ll_activity_lsit_coupon"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/x18"
+                            android:layout_height="@dimen/x16"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
                             android:layout_alignParentRight="true"
-                            android:background="@drawable/activity_list_red_shape"
-                            android:gravity="center"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/x10" />
+                            android:background="@drawable/activity_list_red_shape">
+
+                            <TextView
+                                android:layout_width="@dimen/x16"
+                                android:layout_height="match_parent"
+                                android:text="券"
+                                android:textColor="@color/white"
+                                android:background="#fa2a3b"
+                                android:textSize="@dimen/x10"
+                                android:gravity="center"/>
+
+                            <TextView
+                                android:id="@+id/tv_activity_ware_coupon"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:textColor="#fa2a3b"
+                                android:textSize="@dimen/x10" />
+
+                        </LinearLayout>
 
                     </RelativeLayout>
 

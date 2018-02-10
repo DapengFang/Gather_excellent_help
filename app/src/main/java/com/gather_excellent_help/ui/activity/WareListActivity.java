@@ -1,7 +1,6 @@
 package com.gather_excellent_help.ui.activity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,6 +38,7 @@ import com.gather_excellent_help.ui.adapter.WareListAdapter;
 import com.gather_excellent_help.ui.adapter.WareSelectorAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.TypeSelectorPopupwindow;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -196,7 +196,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
             map.put("capacity", capacity);
             map.put("pageSize", pageSize);
             map.put("pageIndex", "1");
-            netUtil2.okHttp2Server2(ware_url, map);
+            netUtil2.okHttp2Server2(WareListActivity.this,ware_url, map);
         } else {
             etWareListContent.setHint("请输入商品名称");
             if (sousuoStr.equals("isQiang")) {
@@ -209,7 +209,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 map.put("brandId", brandId);
                 map.put("capacity", capacity);
                 String qiang_url = Url.BASE_URL + "GroupBuyList.aspx";
-                netUtil2.okHttp2Server2(qiang_url, map);
+                netUtil2.okHttp2Server2(WareListActivity.this,qiang_url, map);
             } else if (sousuoStr.equals("isVip")) {
                 map = new HashMap<>();
                 map.put("key_words", keyword);
@@ -220,7 +220,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 map.put("brandId", brandId);
                 map.put("capacity", capacity);
                 String vip_url = Url.BASE_URL + "ChannelPriceList.aspx";
-                netUtil2.okHttp2Server2(vip_url, map);
+                netUtil2.okHttp2Server2(WareListActivity.this,vip_url, map);
             } else if (sousuoStr.equals("activity")) {
                 map = new HashMap<>();
                 map.put("key_words", keyword);
@@ -231,7 +231,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 map.put("Type", Type);
                 map.put("brandId", brandId);
                 map.put("capacity", capacity);
-                netUtil2.okHttp2Server2(activity_url, map);
+                netUtil2.okHttp2Server2(WareListActivity.this,activity_url, map);
             } else if (sousuoStr.equals("isTypeSou")) {
                 map = new HashMap<>();
                 map.put("key_words", keyword);
@@ -241,7 +241,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 map.put("Type", Type);
                 map.put("brandId", brandId);
                 map.put("capacity", capacity);
-                netUtil2.okHttp2Server2(sousuo_url, map);
+                netUtil2.okHttp2Server2(WareListActivity.this,sousuo_url, map);
             } else if (sousuoStr.equals("isHomeSou")) {
                 map = new HashMap<>();
                 map.put("key_words", keyword);
@@ -251,7 +251,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 map.put("Type", Type);
                 map.put("brandId", brandId);
                 map.put("capacity", capacity);
-                netUtil2.okHttp2Server2(home_search_url, map);
+                netUtil2.okHttp2Server2(WareListActivity.this,home_search_url, map);
             }
         }
         rlExit.setOnClickListener(new MyOnClickListener());
@@ -298,7 +298,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                         map.put("Type", Type);
                         map.put("brandId", brandId);
                         map.put("capacity", capacity);
-                        netUtil2.okHttp2Server2(home_search_url, map);
+                        netUtil2.okHttp2Server2(WareListActivity.this,home_search_url, map);
                     } else {
                         Toast.makeText(WareListActivity.this, "请输入关键字！", Toast.LENGTH_SHORT).show();
                     }
@@ -317,6 +317,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "--" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(WareListActivity.this);
             }
         });
         netUtil2.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
@@ -329,6 +330,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "--" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(WareListActivity.this);
             }
         });
         netUtil3.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
@@ -344,6 +346,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "-" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(WareListActivity.this);
             }
         });
     }
@@ -367,7 +370,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                         whick = "getwords";
                         map = new HashMap<>();
                         map = ShareUtil.getChangeWordsParam(map, userLogin, click_url, goods_img, goods_title);
-                        ShareUtil.getChangeWordUrl(netUtil3, map);
+                        ShareUtil.getChangeWordUrl(WareListActivity.this,netUtil3, map);
                     }
                     break;
                 case 0:
@@ -549,13 +552,13 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                             if (couponsPrice > 0) {
                                 whick_share = 1;
                                 map = new HashMap<>();
-                                map = ShareUtil.getChangeWareParam(map, goods_id, adverId);
-                                ShareUtil.getCouponChangeUrl(netUtil3, map);
+                                map = ShareUtil.getChangeWareParam(map, goods_id, adverId,userLogin);
+                                ShareUtil.getCouponChangeUrl(WareListActivity.this,netUtil3, map);
                             } else {
                                 whick_share = 2;
                                 map = new HashMap<>();
-                                map = ShareUtil.getChangeWareParam(map, goods_id, adverId);
-                                ShareUtil.getWareChangeUrl(netUtil3, map);
+                                map = ShareUtil.getChangeWareParam(map, goods_id, adverId,userLogin);
+                                ShareUtil.getWareChangeUrl(WareListActivity.this,netUtil3, map);
                             }
                         }
                     }
@@ -858,7 +861,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                         activity_id = "0";
                     }
                     map = new HashMap<>();
-                    netUtil.okHttp2Server2(leibie_url, null);
+                    netUtil.okHttp2Server2(WareListActivity.this,leibie_url, null);
                     break;
                 case R.id.ll_ware_list_pingpai:
                     isLoadmore = -1;
@@ -867,7 +870,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     map = new HashMap<>();
                     if (Type != null && !TextUtils.isEmpty(Type)) {
                         map.put("id", Type);
-                        netUtil.okHttp2Server2(pingpai_url, map);
+                        netUtil.okHttp2Server2(WareListActivity.this,pingpai_url, map);
                     } else {
                         Toast.makeText(WareListActivity.this, "请选择类别！", Toast.LENGTH_SHORT).show();
                     }
@@ -879,7 +882,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                     if (Type != null && !TextUtils.isEmpty(Type)) {
                         map = new HashMap<>();
                         map.put("sub_id", Type);
-                        netUtil.okHttp2Server2(rongliang_url, map);
+                        netUtil.okHttp2Server2(WareListActivity.this,rongliang_url, map);
                     } else {
                         Toast.makeText(WareListActivity.this, "请选择类别！", Toast.LENGTH_SHORT).show();
                     }
@@ -917,7 +920,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                         map.put("Type", Type);
                         map.put("brandId", brandId);
                         map.put("capacity", capacity);
-                        netUtil2.okHttp2Server2(home_search_url, map);
+                        netUtil2.okHttp2Server2(WareListActivity.this,home_search_url, map);
                     } else {
                         Toast.makeText(WareListActivity.this, "请输入关键字！", Toast.LENGTH_SHORT).show();
                     }
@@ -966,7 +969,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
             map.put("Type", Type);
             map.put("brandId", brandId);
             map.put("capacity", capacity);
-            netUtil2.okHttp2Server2(ware_url, map);
+            netUtil2.okHttp2Server2(WareListActivity.this,ware_url, map);
         } else {
             etWareListContent.setHint("请输入商品名称");
             if (sousuoStr.equals("isQiang")) {
@@ -980,7 +983,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 map.put("brandId", brandId);
                 map.put("capacity", capacity);
                 String qiang_url = Url.BASE_URL + "GroupBuyList.aspx";
-                netUtil2.okHttp2Server2(qiang_url, map);
+                netUtil2.okHttp2Server2(WareListActivity.this,qiang_url, map);
             } else if (sousuoStr.equals("isVip")) {
                 map = new HashMap<>();
                 map.put("key_words", keyword);
@@ -992,7 +995,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 map.put("brandId", brandId);
                 map.put("capacity", capacity);
                 String vip_url = Url.BASE_URL + "ChannelPriceList.aspx";
-                netUtil2.okHttp2Server2(vip_url, map);
+                netUtil2.okHttp2Server2(WareListActivity.this,vip_url, map);
             } else if (sousuoStr.equals("activity")) {
                 map = new HashMap<>();
                 map.put("key_words", keyword);
@@ -1003,7 +1006,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 map.put("Type", Type);
                 map.put("brandId", brandId);
                 map.put("capacity", capacity);
-                netUtil2.okHttp2Server2(activity_url, map);
+                netUtil2.okHttp2Server2(WareListActivity.this,activity_url, map);
             } else if (sousuoStr.equals("isTypeSou")) {
                 map = new HashMap<>();
                 map.put("key_words", keyword);
@@ -1013,7 +1016,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 map.put("Type", Type);
                 map.put("brandId", brandId);
                 map.put("capacity", capacity);
-                netUtil2.okHttp2Server2(sousuo_url, map);
+                netUtil2.okHttp2Server2(WareListActivity.this,sousuo_url, map);
             } else if (sousuoStr.equals("isHomeSou")) {
                 map = new HashMap<>();
                 map.put("key_words", keyword);
@@ -1023,7 +1026,7 @@ public class WareListActivity extends BaseActivity implements Animation.Animatio
                 map.put("Type", Type);
                 map.put("brandId", brandId);
                 map.put("capacity", capacity);
-                netUtil2.okHttp2Server2(home_search_url, map);
+                netUtil2.okHttp2Server2(WareListActivity.this,home_search_url, map);
             }
         }
     }

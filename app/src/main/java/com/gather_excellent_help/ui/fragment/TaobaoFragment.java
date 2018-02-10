@@ -309,13 +309,13 @@ public class TaobaoFragment extends LazyLoadFragment {
                                                 if (couponsPrice > 0) {
                                                     whick_share = 1;
                                                     map = new HashMap<>();
-                                                    map = ShareUtil.getChangeWareParam(map, goods_id, adverId);
-                                                    ShareUtil.getCouponChangeUrl(netUtil2, map);
+                                                    map = ShareUtil.getChangeWareParam(map, goods_id, adverId,userLogin);
+                                                    ShareUtil.getCouponChangeUrl(getContext(),netUtil2, map);
                                                 } else {
                                                     whick_share = 2;
                                                     map = new HashMap<>();
-                                                    map = ShareUtil.getChangeWareParam(map, goods_id, adverId);
-                                                    ShareUtil.getWareChangeUrl(netUtil2, map);
+                                                    map = ShareUtil.getChangeWareParam(map, goods_id, adverId,userLogin);
+                                                    ShareUtil.getWareChangeUrl(getContext(),netUtil2, map);
                                                 }
                                             }
                                         }
@@ -554,7 +554,7 @@ public class TaobaoFragment extends LazyLoadFragment {
                         whick = "getwords";
                         map = new HashMap<>();
                         map = ShareUtil.getChangeWordsParam(map, userLogin, click_url, goods_img, goods_title);
-                        ShareUtil.getChangeWordUrl(netUtil2, map);
+                        ShareUtil.getChangeWordUrl(getContext(),netUtil2, map);
                     }
                     break;
                 case 0:
@@ -853,7 +853,7 @@ public class TaobaoFragment extends LazyLoadFragment {
         map.put("end_price", end_price);
         map.put("page_no", page_no);
         map.put("page_size", page_size);
-        netUtil.okHttp2Server2(search_url, map);
+        netUtil.okHttp2Server2(getContext(),search_url, map);
     }
 
     /**

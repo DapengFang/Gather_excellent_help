@@ -24,6 +24,7 @@ import com.gather_excellent_help.ui.activity.WebActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.widget.RushDownTimer;
 import com.gather_excellent_help.ui.widget.SaleProgressView;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
@@ -156,7 +157,7 @@ public class QiangPresenter extends BasePresenter {
             map.put("pageIndex", "1");
             map.put("start_time", start_time);
             map.put("end_time", end_time);
-            netUtil.okHttp2Server2(qiang_url, map);
+            netUtil.okHttp2Server2(context,qiang_url, map);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -193,26 +194,26 @@ public class QiangPresenter extends BasePresenter {
         @Override
         public void getFailResponse(Call call, Exception e) {
             if (context != null) {
-                Toast.makeText(context, "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
+                EncryptNetUtil.startNeterrorPage(context);
             }
         }
     }
 
     private void parseData(String response) {
-        QiangTaoBean qiangTaoBean = new Gson().fromJson(response, QiangTaoBean.class);
-        int statusCode = qiangTaoBean.getStatusCode();
-        switch (statusCode) {
-            case 1:
-                qiangData = qiangTaoBean.getData();
-                if (qiangData != null) {
-                    loadData(qiangData);
-                }
-                onLoadSuccessListener.onSuccessResponse(endtime - curr_time);
-                break;
-            case 0:
-                onLoadSuccessListener.onResponseNoData();
-                break;
-        }
+//        QiangTaoBean qiangTaoBean = new Gson().fromJson(response, QiangTaoBean.class);
+//        int statusCode = qiangTaoBean.getStatusCode();
+//        switch (statusCode) {
+//            case 1:
+//                qiangData = qiangTaoBean.getData();
+//                if (qiangData != null) {
+//                    loadData(qiangData);
+//                }
+//                onLoadSuccessListener.onSuccessResponse(endtime - curr_time);
+//                break;
+//            case 0:
+//                onLoadSuccessListener.onResponseNoData();
+//                break;
+//        }
     }
 
     /**

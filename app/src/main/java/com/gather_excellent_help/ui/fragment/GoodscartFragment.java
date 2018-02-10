@@ -21,9 +21,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gather_excellent_help.MainActivity;
 import com.gather_excellent_help.R;
 import com.gather_excellent_help.presenter.NewsFirstPresenter;
-import com.gather_excellent_help.ui.base.BaseFragment;
+
 import com.gather_excellent_help.ui.base.LazyLoadFragment;
 
 import butterknife.Bind;
@@ -42,8 +43,6 @@ public class GoodscartFragment extends LazyLoadFragment {
     RecyclerView rcvNewsHorizational;
     @Bind(R.id.fl_news_frag)
     FrameLayout flNewsFrag;
-    @Bind(R.id.rl_news_search_before)
-    RelativeLayout rlNewsSearchBefore;
     @Bind(R.id.tv_news_edit_search)
     TextView tvNewsEditSearch;
     @Bind(R.id.ll_news_search_after)
@@ -53,6 +52,8 @@ public class GoodscartFragment extends LazyLoadFragment {
     private Context context;
     private NewsFirstPresenter newsFirstPresenter;
 
+    private RelativeLayout rl_exit;
+
     public static final int CHECK_NULL = 4; //加载数据的标识
 
     private Handler handler;
@@ -61,6 +62,7 @@ public class GoodscartFragment extends LazyLoadFragment {
     @Override
     public View initView() {
         View inflate = View.inflate(getContext(), R.layout.news_fragment, null);
+        rl_exit = (RelativeLayout) inflate.findViewById(R.id.rl_exit);
         return inflate;
     }
 
@@ -72,7 +74,7 @@ public class GoodscartFragment extends LazyLoadFragment {
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case CHECK_NULL:
-                        if (rlNewsSearchBefore != null && llNewsSearchAfter != null
+                        if (llNewsSearchAfter != null
                                 && rlEditTextExit != null && flNewsFrag != null
                                 && rlTaobaoSousuo != null && etTaobaoSearchContent != null
                                 && rcvNewsHorizational != null) {
@@ -99,24 +101,23 @@ public class GoodscartFragment extends LazyLoadFragment {
      * 导入新闻数据
      */
     private void loadNewsData() {
-        initSearch();
         newsFirstPresenter = new NewsFirstPresenter(context);
         View rootView = newsFirstPresenter.getRootView();
         flNewsFrag.removeAllViews();
         flNewsFrag.addView(rootView);
         newsFirstPresenter.loadTitleData(rcvNewsHorizational);
         newsFirstPresenter.refreshSwip();
-        rlTaobaoSousuo.setOnClickListener(new MyOnclickListener());
-        rlNewsSearchBefore.setOnClickListener(new MyOnclickListener());
+        MyOnclickListener myOnclickListener = new MyOnclickListener();
+        rlTaobaoSousuo.setOnClickListener(myOnclickListener);
+        rlEditTextExit.setOnClickListener(myOnclickListener);
+        rl_exit.setOnClickListener(myOnclickListener);
         etTaobaoSearchContent.addTextChangedListener(watcher);
-        rlEditTextExit.setOnClickListener(new MyOnclickListener());
         etTaobaoSearchContent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     String keyword = etTaobaoSearchContent.getText().toString().trim();
                     if (TextUtils.isEmpty(keyword)) {
-                        rlNewsSearchBefore.setVisibility(View.VISIBLE);
                         llNewsSearchAfter.setVisibility(View.GONE);
                         return true;
                     }
@@ -161,11 +162,6 @@ public class GoodscartFragment extends LazyLoadFragment {
         }
     };
 
-    private void initSearch() {
-        rlNewsSearchBefore.setVisibility(View.VISIBLE);
-        llNewsSearchAfter.setVisibility(View.GONE);
-        rlEditTextExit.setVisibility(View.GONE);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -205,26 +201,20 @@ public class GoodscartFragment extends LazyLoadFragment {
                             Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(etTaobaoSearchContent.getWindowToken(), 0);
                     if (TextUtils.isEmpty(keyword)) {
-                        rlNewsSearchBefore.setVisibility(View.VISIBLE);
-                        llNewsSearchAfter.setVisibility(View.GONE);
                         return;
                     }
                     Toast.makeText(getContext(), "正在搜索中，请稍后！", Toast.LENGTH_SHORT).show();
                     newsFirstPresenter.searchData(keyword);
                     break;
-                case R.id.rl_news_search_before:
-                    rlNewsSearchBefore.setVisibility(View.GONE);
-                    llNewsSearchAfter.setVisibility(View.VISIBLE);
-                    // 获取编辑框焦点
-                    etTaobaoSearchContent.setFocusable(true);
-                    etTaobaoSearchContent.requestFocus();
-                    //打开软键盘
-                    InputMethodManager im = (InputMethodManager) getContext().getSystemService(
-                            Context.INPUT_METHOD_SERVICE);
-                    im.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-                    break;
                 case R.id.rl_edit_text_exit:
                     etTaobaoSearchContent.setText("");
+                    break;
+                case R.id.rl_exit:
+                    InputMethodManager imm2 = (InputMethodManager) getContext().getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm2.hideSoftInputFromWindow(etTaobaoSearchContent.getWindowToken(), 0);
+                    MainActivity activity = (MainActivity) getContext();
+                    activity.refreshMainActivity();
                     break;
             }
         }

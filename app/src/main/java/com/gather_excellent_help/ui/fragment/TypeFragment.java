@@ -53,6 +53,7 @@ import com.gather_excellent_help.ui.widget.TypeSelectorPopupwindow;
 import com.gather_excellent_help.update.TypeActivityListAdapter;
 import com.gather_excellent_help.utils.DensityUtil;
 import com.gather_excellent_help.utils.DividerGridItemDecoration;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
@@ -249,29 +250,26 @@ public class TypeFragment extends LazyLoadFragment {
      *
      * @param response
      */
-    private void parseChangeData(String response) {
-        try {
-            LogUtil.e("click_url = " + response);
-            ChangeUrlBean changeUrlBean = new Gson().fromJson(response, ChangeUrlBean.class);
-            int statusCode = changeUrlBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    List<ChangeUrlBean.DataBean> data = changeUrlBean.getData();
-                    if (data != null && data.size() > 0) {
-                        click_url = changeUrlBean.getData().get(0).getClick_url();
-                        LogUtil.e("click_url = " + click_url);
-                        whick = "getwords";
-                        map = new HashMap<>();
-                        map = ShareUtil.getChangeWordsParam(map, userLogin, click_url, goods_img, goods_title);
-                        ShareUtil.getChangeWordUrl(netUtil2, map);
-                    }
-                    break;
-                case 0:
-                    Toast.makeText(getContext(), changeUrlBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "系统服务出现异常，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+    private void parseChangeData(String response) throws Exception {
+
+        LogUtil.e("click_url = " + response);
+        ChangeUrlBean changeUrlBean = new Gson().fromJson(response, ChangeUrlBean.class);
+        int statusCode = changeUrlBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                List<ChangeUrlBean.DataBean> data = changeUrlBean.getData();
+                if (data != null && data.size() > 0) {
+                    click_url = changeUrlBean.getData().get(0).getClick_url();
+                    LogUtil.e("click_url = " + click_url);
+                    whick = "getwords";
+                    map = new HashMap<>();
+                    map = ShareUtil.getChangeWordsParam(map, userLogin, click_url, goods_img, goods_title);
+                    ShareUtil.getChangeWordUrl(getContext(), netUtil2, map);
+                }
+                break;
+            case 0:
+                Toast.makeText(getContext(), changeUrlBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -280,28 +278,24 @@ public class TypeFragment extends LazyLoadFragment {
      *
      * @param response
      */
-    private void parseChangeWordsData(String response) {
-        try {
-            TaoWordBean taoWordBean = new Gson().fromJson(response, TaoWordBean.class);
-            int statusCode = taoWordBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    taoWord = taoWordBean.getData();
-                    LogUtil.e(taoWord);
-                    if (whick_share == 1) {
-                        share_content = "商品名称:" + goods_title + "\n商品价格 ¥" + goods_price + "\n优惠券" + goods_coupon + "元" + "\n复制这条消息:" + taoWord + "\n去打开手机淘宝";
-                    } else if (whick_share == 2) {
-                        share_content = "商品名称:" + goods_title + "\n商品价格 ¥" + goods_price + "\n复制这条消息:" + taoWord + "\n去打开手机淘宝";
-                    }
-                    ShareUtil.showCopyDialog(getContext(), whick_share, share_content, goods_price, shareListener, goods_img,
-                            goods_title, dialog);
-                    break;
-                case 0:
-                    Toast.makeText(getContext(), taoWordBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "系统服务出现异常，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+    private void parseChangeWordsData(String response) throws Exception {
+        TaoWordBean taoWordBean = new Gson().fromJson(response, TaoWordBean.class);
+        int statusCode = taoWordBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                taoWord = taoWordBean.getData();
+                LogUtil.e(taoWord);
+                if (whick_share == 1) {
+                    share_content = "商品名称:" + goods_title + "\n商品价格 ¥" + goods_price + "\n优惠券" + goods_coupon + "元" + "\n复制这条消息:" + taoWord + "\n去打开手机淘宝";
+                } else if (whick_share == 2) {
+                    share_content = "商品名称:" + goods_title + "\n商品价格 ¥" + goods_price + "\n复制这条消息:" + taoWord + "\n去打开手机淘宝";
+                }
+                ShareUtil.showCopyDialog(getContext(), whick_share, share_content, goods_price, shareListener, goods_img,
+                        goods_title, dialog);
+                break;
+            case 0:
+                Toast.makeText(getContext(), taoWordBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -412,7 +406,7 @@ public class TypeFragment extends LazyLoadFragment {
             cusListNavigator.setVisibility(View.GONE);
             v_line_protocal.setVisibility(View.GONE);
             gridLayoutManager = new GridLayoutManager(getContext(), 2);
-            dividerGridItemDecoration = new DividerGridItemDecoration(getContext(), DensityUtil.px2dip(getContext(),2), "#eeeeee");
+            dividerGridItemDecoration = new DividerGridItemDecoration(getContext(), DensityUtil.px2dip(getContext(), 2), "#eeeeee");
             if (rcvTypeShow != null) {
                 rcvTypeShow.setLayoutManager(gridLayoutManager);
                 rcvTypeShow.addItemDecoration(dividerGridItemDecoration);
@@ -428,7 +422,7 @@ public class TypeFragment extends LazyLoadFragment {
             map = new HashMap<>();
             map.put("pageSize", pageSize);
             map.put("pageIndex", pageIndex);
-            netUtil2.okHttp2Server2(ware_url, map);
+            netUtil2.okHttp2Server2(getContext(), ware_url, map);
         } else if (switch_page == 2) {
             searchWareList();
         }
@@ -473,35 +467,40 @@ public class TypeFragment extends LazyLoadFragment {
         map = new HashMap<>();
         map.put("pageSize", pageSize);
         map.put("pageIndex", pageIndex);
-        netUtil2.okHttp2Server2(ware_url, map);
+        netUtil2.okHttp2Server2(getContext(), ware_url, map);
         netUtil2.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                LogUtil.e("ware list" + response);
-                if (getContext() == null) {
-                    return;
-                }
-                if (whick.equals("ware")) {
-                    if (swipeRefresh != null && swipeRefresh.isRefreshing()) {
-                        if (mIsRequestDataRefresh == true) {
-                            stopDataRefresh();
-                            setRefresh(mIsRequestDataRefresh);
-                        }
+                try {
+                    LogUtil.e("ware list" + response);
+                    if (getContext() == null) {
+                        return;
                     }
-                    parseData2(response);
-                } else if (whick.equals("changeurl")) {
-                    parseChangeData(response);
-                } else if (whick.equals("getwords")) {
-                    parseChangeWordsData(response);
+                    if (whick.equals("ware")) {
+                        if (swipeRefresh != null && swipeRefresh.isRefreshing()) {
+                            if (mIsRequestDataRefresh == true) {
+                                stopDataRefresh();
+                                setRefresh(mIsRequestDataRefresh);
+                            }
+                        }
+                        parseData2(response);
+                    } else if (whick.equals("changeurl")) {
+                        parseChangeData(response);
+                    } else if (whick.equals("getwords")) {
+                        parseChangeWordsData(response);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
             @Override
             public void getFailResponse(Call call, Exception e) {
+                LogUtil.e(call.toString() + "-" + e.getMessage());
                 if (swipeRefresh != null && swipeRefresh.isRefreshing()) {
                     stopDataRefresh();
                     swipeRefresh.setRefreshing(mIsRequestDataRefresh);
-                    Toast.makeText(getContext(), "网络连接出现问题~", Toast.LENGTH_SHORT).show();
+                    EncryptNetUtil.startNeterrorPage(getContext());
                 }
             }
         });
@@ -667,12 +666,12 @@ public class TypeFragment extends LazyLoadFragment {
                                             map.put("id", type_id);
                                             map.put("pageSize", pageSize);
                                             map.put("pageIndex", pageIndex);
-                                            netUtil2.okHttp2Server2(ware_url, map);
+                                            netUtil2.okHttp2Server2(getContext(), ware_url, map);
                                         } else {
                                             Map<String, String> map = new HashMap<>();
                                             map.put("pageSize", pageSize);
                                             map.put("pageIndex", pageIndex);
-                                            netUtil2.okHttp2Server2(ware_url, map);
+                                            netUtil2.okHttp2Server2(getContext(), ware_url, map);
                                         }
                                     } else {
                                         searchWareList();
@@ -717,64 +716,61 @@ public class TypeFragment extends LazyLoadFragment {
         }
     }
 
-    private void parseData2(String response) {
-        try {
-            ActivityListBean activityListBean = new Gson().fromJson(response, ActivityListBean.class);
-            int statusCode = activityListBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    ll_type_switch_list.setClickable(true);
-                    if (rcvTypeShow == null) {
-                        return;
+    private void parseData2(String response) throws Exception {
+
+        ActivityListBean activityListBean = new Gson().fromJson(response, ActivityListBean.class);
+        int statusCode = activityListBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                ll_type_switch_list.setClickable(true);
+                if (rcvTypeShow == null) {
+                    return;
+                }
+                if (isLoadMore) {
+                    page++;
+                    LogUtil.e("page == " + page);
+                    currData = activityListBean.getData();
+                    if (activityData != null && currData != null) {
+                        activityData.addAll(currData);
                     }
-                    if (isLoadMore) {
-                        page++;
-                        LogUtil.e("page == " + page);
-                        currData = activityListBean.getData();
-                        if (activityData != null && currData != null) {
-                            activityData.addAll(currData);
-                        }
-                        if (switch_page == 1) {
-                            if (typeActivityListAdapter != null) {
-                                typeActivityListAdapter.notifyDataSetChanged();
-                            }
-                        } else if (switch_page == 2) {
-                            if (typeWareAdapter2 != null) {
-                                typeWareAdapter2.notifyDataSetChanged();
-                            }
-                        }
-                    } else {
-                        currData = activityListBean.getData();
-                        if (currData != null) {
-                            activityData = currData;
-                            if (switch_page == 1) {
-                                typeActivityListAdapter = new TypeActivityListAdapter(getContext(), activityData);
-                                rcvTypeShow.setAdapter(typeActivityListAdapter);
-                            } else if (switch_page == 2) {
-                                typeWareAdapter2 = new TypeWareAdapter2(getContext(), activityData);
-                                rcvTypeShow.setAdapter(typeWareAdapter2);
-                            }
-                            page = 2;
-                            if (currData.size() == 0) {
-                                Toast.makeText(getContext(), "该条目下没有商品信息。", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                    rcvTypeShow.setVisibility(View.VISIBLE);
-                    hindCatView();
-                    ll_type_loadmore.setVisibility(View.GONE);
                     if (switch_page == 1) {
-                        itemShareAndClick();
+                        if (typeActivityListAdapter != null) {
+                            typeActivityListAdapter.notifyDataSetChanged();
+                        }
                     } else if (switch_page == 2) {
-                        itemShareAndClick2();
+                        if (typeWareAdapter2 != null) {
+                            typeWareAdapter2.notifyDataSetChanged();
+                        }
                     }
-                    break;
-                case 0:
-                    Toast.makeText(getContext(), activityListBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        } catch (Exception e) {
-            LogUtil.e("系统出现故障，请退出后重新尝试！");
+                } else {
+                    currData = activityListBean.getData();
+                    if (currData != null) {
+                        activityData = currData;
+                        if (switch_page == 1) {
+                            typeActivityListAdapter = new TypeActivityListAdapter(getContext(), activityData);
+                            rcvTypeShow.setAdapter(typeActivityListAdapter);
+                        } else if (switch_page == 2) {
+                            typeWareAdapter2 = new TypeWareAdapter2(getContext(), activityData);
+                            rcvTypeShow.setAdapter(typeWareAdapter2);
+                        }
+                        page = 2;
+                        if (currData.size() == 0) {
+                            Toast.makeText(getContext(), "该条目下没有商品信息。", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                rcvTypeShow.setVisibility(View.VISIBLE);
+                hindCatView();
+                ll_type_loadmore.setVisibility(View.GONE);
+                if (switch_page == 1) {
+                    itemShareAndClick();
+                } else if (switch_page == 2) {
+                    itemShareAndClick2();
+                }
+                break;
+            case 0:
+                Toast.makeText(getContext(), activityListBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -811,13 +807,13 @@ public class TypeFragment extends LazyLoadFragment {
                     if (couponsPrice > 0) {
                         whick_share = 1;
                         map = new HashMap<>();
-                        map = ShareUtil.getChangeWareParam(map, goods_id, adverId);
-                        ShareUtil.getCouponChangeUrl(netUtil2, map);
+                        map = ShareUtil.getChangeWareParam(map, goods_id, adverId, userLogin);
+                        ShareUtil.getCouponChangeUrl(getContext(), netUtil2, map);
                     } else {
                         whick_share = 2;
                         map = new HashMap<>();
-                        map = ShareUtil.getChangeWareParam(map, goods_id, adverId);
-                        ShareUtil.getWareChangeUrl(netUtil2, map);
+                        map = ShareUtil.getChangeWareParam(map, goods_id, adverId, userLogin);
+                        ShareUtil.getWareChangeUrl(getContext(), netUtil2, map);
                     }
                 }
             }
@@ -909,13 +905,13 @@ public class TypeFragment extends LazyLoadFragment {
                     if (couponsPrice > 0) {
                         whick_share = 1;
                         map = new HashMap<>();
-                        map = ShareUtil.getChangeWareParam(map, goods_id, adverId);
-                        ShareUtil.getCouponChangeUrl(netUtil2, map);
+                        map = ShareUtil.getChangeWareParam(map, goods_id, adverId, userLogin);
+                        ShareUtil.getCouponChangeUrl(getContext(), netUtil2, map);
                     } else {
                         whick_share = 2;
                         map = new HashMap<>();
-                        map = ShareUtil.getChangeWareParam(map, goods_id, adverId);
-                        ShareUtil.getWareChangeUrl(netUtil2, map);
+                        map = ShareUtil.getChangeWareParam(map, goods_id, adverId, userLogin);
+                        ShareUtil.getWareChangeUrl(getContext(), netUtil2, map);
                     }
                 }
 
@@ -984,7 +980,7 @@ public class TypeFragment extends LazyLoadFragment {
      */
     private void getNavigatorData() {
 
-        netUtil.okHttp2Server2(url, null);
+        netUtil.okHttp2Server2(getContext(), url, null);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -1050,7 +1046,7 @@ public class TypeFragment extends LazyLoadFragment {
                             map.put("id", type_id);
                             map.put("pageSize", pageSize);
                             map.put("pageIndex", pageIndex);
-                            netUtil2.okHttp2Server2(ware_url, map);
+                            netUtil2.okHttp2Server2(getContext(), ware_url, map);
                         }
                     });
 
@@ -1084,7 +1080,7 @@ public class TypeFragment extends LazyLoadFragment {
                             map.put("id", type_id);
                             map.put("pageSize", pageSize);
                             map.put("pageIndex", pageIndex);
-                            netUtil2.okHttp2Server2(ware_url, map);
+                            netUtil2.okHttp2Server2(getContext(), ware_url, map);
                         }
 
                         @Override
@@ -1116,7 +1112,7 @@ public class TypeFragment extends LazyLoadFragment {
                             map.put("id", type_id);
                             map.put("pageSize", pageSize);
                             map.put("pageIndex", pageIndex);
-                            netUtil2.okHttp2Server2(ware_url, map);
+                            netUtil2.okHttp2Server2(getContext(), ware_url, map);
                         }
                     });
 
@@ -1125,7 +1121,7 @@ public class TypeFragment extends LazyLoadFragment {
                         map = new HashMap<>();
                         map.put("pageSize", pageSize);
                         map.put("pageIndex", pageIndex);
-                        netUtil2.okHttp2Server2(ware_url, map);
+                        netUtil2.okHttp2Server2(getContext(), ware_url, map);
                     }
                 }
                 break;
@@ -1156,7 +1152,7 @@ public class TypeFragment extends LazyLoadFragment {
                     page = 1;
                     pageIndex = String.valueOf(page);
                     if (switch_page == 1) {
-                        netUtil.okHttp2Server2(url, null);
+                        netUtil.okHttp2Server2(getContext(), url, null);
                     } else if (switch_page == 2) {
                         crr_click = -1;
                         PriceOder = "2";
@@ -1274,7 +1270,7 @@ public class TypeFragment extends LazyLoadFragment {
         map.put("Type", Type);
         map.put("brandId", brandId);
         map.put("capacity", capacity);
-        netUtil2.okHttp2Server2(home_search_url, map);
+        netUtil2.okHttp2Server2(getContext(), home_search_url, map);
         LogUtil.e(map.toString());
     }
 
@@ -1295,7 +1291,7 @@ public class TypeFragment extends LazyLoadFragment {
                 case R.id.ll_ware_list_leibie:
                     isLoadMore = false;
                     crr_click = 0;
-                    netUtil3.okHttp2Server2(leibie_url, null);
+                    netUtil3.okHttp2Server2(getContext(), leibie_url, null);
                     break;
                 case R.id.ll_ware_list_pingpai:
                     isLoadMore = false;
@@ -1303,7 +1299,7 @@ public class TypeFragment extends LazyLoadFragment {
                     map = new HashMap<>();
                     if (Type != null && !TextUtils.isEmpty(Type)) {
                         map.put("id", Type);
-                        netUtil3.okHttp2Server2(pingpai_url, map);
+                        netUtil3.okHttp2Server2(getContext(), pingpai_url, map);
                     } else {
                         Toast.makeText(getContext(), "请选择类别！", Toast.LENGTH_SHORT).show();
                     }
@@ -1314,7 +1310,7 @@ public class TypeFragment extends LazyLoadFragment {
                     if (Type != null && !TextUtils.isEmpty(Type)) {
                         map = new HashMap<>();
                         map.put("sub_id", Type);
-                        netUtil3.okHttp2Server2(rongliang_url, map);
+                        netUtil3.okHttp2Server2(getContext(), rongliang_url, map);
                     } else {
                         Toast.makeText(getContext(), "请选择类别！", Toast.LENGTH_SHORT).show();
                     }

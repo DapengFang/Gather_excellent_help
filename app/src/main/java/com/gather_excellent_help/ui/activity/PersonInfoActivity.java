@@ -38,6 +38,7 @@ import com.gather_excellent_help.ui.activity.address.PersonAddressActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.CircularImage;
 import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.PhotoUtils;
@@ -128,7 +129,8 @@ public class PersonInfoActivity extends BaseActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-                LogUtil.e(call.toString() + "," + e.getMessage());
+                LogUtil.e(call.toString() + "-" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(PersonInfoActivity.this);
             }
         });
         MyOnclickListener myOnclickListener = new MyOnclickListener();
@@ -327,7 +329,7 @@ public class PersonInfoActivity extends BaseActivity {
                 map.put("id", userLogin);
                 map.put("file", upload);
                 whick = "head";
-                netUtils.okHttp2Server2(head_url, map);
+                netUtils.okHttp2Server2(PersonInfoActivity.this,head_url, map);
             }
         }
     }
@@ -389,7 +391,7 @@ public class PersonInfoActivity extends BaseActivity {
                             map.put("id", userLogin);
                             map.put("file", upload);
                             whick = "head";
-                            netUtils.okHttp2Server2(head_url, map);
+                            netUtils.okHttp2Server2(PersonInfoActivity.this,head_url, map);
                         }
                     }
                 default:
@@ -471,7 +473,7 @@ public class PersonInfoActivity extends BaseActivity {
             map = new HashMap<>();
             map.put("Id", userLogin);
             whick = "info";
-            netUtils.okHttp2Server2(url, map);
+            netUtils.okHttp2Server2(PersonInfoActivity.this,url, map);
         }
     }
 

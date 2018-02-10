@@ -35,6 +35,7 @@ import com.gather_excellent_help.ui.adapter.SuningGoodscartAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
@@ -150,7 +151,7 @@ public class SuningGoodscartActivity extends BaseActivity {
     private void initData() {
         userLogin = Tools.getUserLogin(this);
         netUtil = new NetUtil();
-        netCartUtil = new NetCartUtil();
+        netCartUtil = new NetCartUtil(this);
         OnCartResponseListener onCartResponseListener = new OnCartResponseListener();
         netCartUtil.setOnCartResponseListener(onCartResponseListener);
         tv_top_title_name.setText("购物车");
@@ -189,7 +190,11 @@ public class SuningGoodscartActivity extends BaseActivity {
         });
 
         //获取线上购物车的数据
-        getNetGoodscartData();
+        try {
+            getNetGoodscartData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         OnServerResponseListener onServerResponseListener = new OnServerResponseListener();
         netUtil.setOnServerResponseListener(onServerResponseListener);
         MyonclickListener myonclickListener = new MyonclickListener();
@@ -228,14 +233,14 @@ public class SuningGoodscartActivity extends BaseActivity {
     /**
      * 获取线上服务器上的购物车数据
      */
-    private void getNetGoodscartData() {
+    private void getNetGoodscartData() throws Exception {
         netCartUtil.getCartList(userLogin);
     }
 
     /**
      * 判断库存
      */
-    private void checkIsHave(String addrWay, String addstr, String productId, String num) {
+    private void checkIsHave(String addrWay, String addstr, String productId, String num){
         showCatView();
         whick = "checkIsHave";
         map = new HashMap<>();
@@ -244,7 +249,7 @@ public class SuningGoodscartActivity extends BaseActivity {
         map.put("ProductId", productId);
         map.put("lnglat", lalotitude);
         map.put("num", num);
-        netUtil.okHttp2Server2(pcs_url, map);
+        netUtil.okHttp2Server2(SuningGoodscartActivity.this,pcs_url, map);
     }
 
     /**
@@ -362,55 +367,6 @@ public class SuningGoodscartActivity extends BaseActivity {
     }
 
     /**
-     * 获取总计价格
-     */
-    public void getTotalPrice() {
-        total_price = 0;
-        ArrayList<Integer> check_carts = new ArrayList<>();
-        if (checkData != null && checkData.size() > 0) {
-            for (int i = 0; i < checkData.size(); i++) {
-                NetGoodscartCheckBean.DataBean checkBean = checkData.get(i);
-                boolean bool = Tools.getInt2Boolean(String.valueOf(checkBean.getIs_check()));
-                if (bool) {
-                    int cart_id = checkBean.getCart_id();
-                    check_carts.add(cart_id);
-                }
-            }
-            if (check_carts != null && check_carts.size() > 0) {
-                if (netData != null && netData.size() > 0) {
-                    ArrayList<SuningWjsonBean> suningWjsonLists = new ArrayList<>();
-                    for (int i = 0; i < netData.size(); i++) {
-                        NetGoodscartBean.DataBean dataBean = netData.get(i);
-                        int cart_id = dataBean.getCart_id();
-                        if (check_carts.contains(cart_id)) {
-                            int channel_id = dataBean.getChannel_id();
-                            int goods_id = dataBean.getGoods_id();
-                            int article_id = dataBean.getArticle_id();
-                            int quantity = dataBean.getQuantity();
-                            SuningWjsonBean suningWjsonBean = new SuningWjsonBean();
-                            suningWjsonBean.setArticle_id(String.valueOf(article_id));
-                            suningWjsonBean.setChannel_id(String.valueOf(channel_id));
-                            suningWjsonBean.setGoods_id(String.valueOf(goods_id));
-                            suningWjsonBean.setQuantity(String.valueOf(quantity));
-                            suningWjsonLists.add(suningWjsonBean);
-                        }
-                    }
-                    String json = new Gson().toJson(suningWjsonLists);
-                    LogUtil.e("---total price = " + json);
-                    netCartUtil.getTotalPrice(json);
-                } else {
-                    total_price = 0;
-                }
-            } else {
-                total_price = 0;
-            }
-            LogUtil.e("total_price = " + total_price);
-        } else {
-            total_price = 0;
-        }
-    }
-
-    /**
      * 设置下部状态栏显示
      */
     private void setCheckStatus() {
@@ -472,96 +428,9 @@ public class SuningGoodscartActivity extends BaseActivity {
                     break;
                 case R.id.tv_topay:
                     try {
-                        if (edit_status) {
-                            //提交订单
-                            ArrayList<Integer> check_carts = new ArrayList<>();
-                            if (checkData != null && checkData.size() > 0) {
-                                for (int i = 0; i < checkData.size(); i++) {
-                                    NetGoodscartCheckBean.DataBean checkBean = checkData.get(i);
-                                    boolean bool = Tools.getInt2Boolean(String.valueOf(checkBean.getIs_check()));
-                                    if (bool) {
-                                        int cart_id = checkBean.getCart_id();
-                                        check_carts.add(cart_id);
-                                    }
-                                }
-                                String cart_ids = "";
-                                if (check_carts != null && check_carts.size() > 0) {
-                                    if (netData != null && netData.size() > 0) {
-                                        SuningGoodscartBean suningGoodscartBean = new SuningGoodscartBean();
-                                        List<SuningGoodscartBean.DataBean> suningCartdata = new ArrayList<>();
-                                        for (int i = 0; i < netData.size(); i++) {
-                                            NetGoodscartBean.DataBean dataBean = netData.get(i);
-                                            int cart_id = dataBean.getCart_id();
-                                            if (check_carts.contains(cart_id)) {
-                                                cart_ids += cart_id + ",";
-                                            }
-                                        }
-                                    }
-                                }
-                                cart_ids = cart_ids.substring(0, cart_ids.length() - 1);
-                                LogUtil.e("cart_ids = " + cart_ids);
-                                if (check_carts != null && check_carts.size() > 0) {
-                                    if (netData != null && netData.size() > 0) {
-                                        SuningGoodscartBean suningGoodscartBean = new SuningGoodscartBean();
-                                        List<SuningGoodscartBean.DataBean> suningCartdata = new ArrayList<>();
-                                        for (int i = 0; i < netData.size(); i++) {
-                                            NetGoodscartBean.DataBean dataBean = netData.get(i);
-                                            int cart_id = dataBean.getCart_id();
-                                            if (check_carts.contains(cart_id)) {
-                                                DecimalFormat df = new DecimalFormat("#0.00");
-                                                SuningGoodscartBean.DataBean ndatabean = new SuningGoodscartBean.DataBean();
-                                                int channel_id = dataBean.getChannel_id();
-                                                int goods_id = dataBean.getGoods_id();
-                                                int article_id = dataBean.getArticle_id();
-                                                int quantity = dataBean.getQuantity();
-                                                int purchase_num = dataBean.getPurchase_num();
-                                                goods_list = dataBean.getGoods_list();
-                                                gg_list = dataBean.getGg_list();
-                                                if (goods_list != null && goods_list.size() > 0) {
-                                                    goodsListBean = goods_list.get(0);
-                                                    t_goods_title = goodsListBean.getGoods_title();
-                                                    t_img_url = goodsListBean.getImg_url();
-                                                    t_market_price = goodsListBean.getMarket_price();
-                                                    t_sell_price = goodsListBean.getSell_price();
-                                                    t_productId = goodsListBean.getProductId();
-                                                }
-                                                if (gg_list != null && gg_list.size() > 0) {
-                                                    ggListBean = gg_list.get(0);
-                                                    t_spec_text = ggListBean.getSpec_text();
-                                                }
-                                                ndatabean.setProduct_spec_limit(String.valueOf(purchase_num));
-                                                ndatabean.setProduct_spec(t_spec_text);
-                                                ndatabean.setProduct_sprice(df.format(t_sell_price));
-                                                ndatabean.setProduct_mprice(df.format(t_market_price));
-                                                ndatabean.setProduct_title(t_goods_title);
-                                                ndatabean.setProduct_spec_id(String.valueOf(goods_id));
-                                                ndatabean.setProduct_goodsid(t_productId);
-                                                ndatabean.setProduct_id(String.valueOf(article_id));
-                                                ndatabean.setProduct_num(String.valueOf(quantity));
-                                                ndatabean.setProduct_pic(t_img_url);
-                                                suningCartdata.add(ndatabean);
-                                            }
-                                        }
-                                        suningGoodscartBean.setData(suningCartdata);
-                                        String cart_json = new Gson().toJson(suningGoodscartBean);
-                                        if (isHavaGoods) {
-                                            Intent intent = new Intent(SuningGoodscartActivity.this, OrderCartConfirmActivity.class);
-                                            intent.putExtra("cart_json", cart_json);
-                                            intent.putExtra("cart_ids", cart_ids);
-                                            startActivity(intent);
-                                        } else {
-                                            Toast.makeText(SuningGoodscartActivity.this, "网络连接出现问题，请您重新加入购物车。", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            //删除购物车数据
-                            deletNetGoodscartData();
-                        }
+                        submitOrder2Server();
                     } catch (Exception e) {
-                        LogUtil.e("SuningGoodscartActivity MyonclickListener tv_topay error");
-                        Toast.makeText(SuningGoodscartActivity.this, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                     }
                     break;
                 case R.id.tv_goodscart_clear_toSee:
@@ -572,10 +441,100 @@ public class SuningGoodscartActivity extends BaseActivity {
         }
     }
 
+    private void submitOrder2Server() throws Exception {
+        if (edit_status) {
+            //提交订单
+            ArrayList<Integer> check_carts = new ArrayList<>();
+            if (checkData != null && checkData.size() > 0) {
+                for (int i = 0; i < checkData.size(); i++) {
+                    NetGoodscartCheckBean.DataBean checkBean = checkData.get(i);
+                    boolean bool = Tools.getInt2Boolean(String.valueOf(checkBean.getIs_check()));
+                    if (bool) {
+                        int cart_id = checkBean.getCart_id();
+                        check_carts.add(cart_id);
+                    }
+                }
+                String cart_ids = "";
+                if (check_carts != null && check_carts.size() > 0) {
+                    if (netData != null && netData.size() > 0) {
+                        SuningGoodscartBean suningGoodscartBean = new SuningGoodscartBean();
+                        List<SuningGoodscartBean.DataBean> suningCartdata = new ArrayList<>();
+                        for (int i = 0; i < netData.size(); i++) {
+                            NetGoodscartBean.DataBean dataBean = netData.get(i);
+                            int cart_id = dataBean.getCart_id();
+                            if (check_carts.contains(cart_id)) {
+                                cart_ids += cart_id + ",";
+                            }
+                        }
+                    }
+                }
+                cart_ids = cart_ids.substring(0, cart_ids.length() - 1);
+                LogUtil.e("cart_ids = " + cart_ids);
+                if (check_carts != null && check_carts.size() > 0) {
+                    if (netData != null && netData.size() > 0) {
+                        SuningGoodscartBean suningGoodscartBean = new SuningGoodscartBean();
+                        List<SuningGoodscartBean.DataBean> suningCartdata = new ArrayList<>();
+                        for (int i = 0; i < netData.size(); i++) {
+                            NetGoodscartBean.DataBean dataBean = netData.get(i);
+                            int cart_id = dataBean.getCart_id();
+                            if (check_carts.contains(cart_id)) {
+                                DecimalFormat df = new DecimalFormat("#0.00");
+                                SuningGoodscartBean.DataBean ndatabean = new SuningGoodscartBean.DataBean();
+                                int channel_id = dataBean.getChannel_id();
+                                int goods_id = dataBean.getGoods_id();
+                                int article_id = dataBean.getArticle_id();
+                                int quantity = dataBean.getQuantity();
+                                int purchase_num = dataBean.getPurchase_num();
+                                goods_list = dataBean.getGoods_list();
+                                gg_list = dataBean.getGg_list();
+                                if (goods_list != null && goods_list.size() > 0) {
+                                    goodsListBean = goods_list.get(0);
+                                    t_goods_title = goodsListBean.getGoods_title();
+                                    t_img_url = goodsListBean.getImg_url();
+                                    t_market_price = goodsListBean.getMarket_price();
+                                    t_sell_price = goodsListBean.getSell_price();
+                                    t_productId = goodsListBean.getProductId();
+                                }
+                                if (gg_list != null && gg_list.size() > 0) {
+                                    ggListBean = gg_list.get(0);
+                                    t_spec_text = ggListBean.getSpec_text();
+                                }
+                                ndatabean.setProduct_spec_limit(String.valueOf(purchase_num));
+                                ndatabean.setProduct_spec(t_spec_text);
+                                ndatabean.setProduct_sprice(df.format(t_sell_price));
+                                ndatabean.setProduct_mprice(df.format(t_market_price));
+                                ndatabean.setProduct_title(t_goods_title);
+                                ndatabean.setProduct_spec_id(String.valueOf(goods_id));
+                                ndatabean.setProduct_goodsid(t_productId);
+                                ndatabean.setProduct_id(String.valueOf(article_id));
+                                ndatabean.setProduct_num(String.valueOf(quantity));
+                                ndatabean.setProduct_pic(t_img_url);
+                                suningCartdata.add(ndatabean);
+                            }
+                        }
+                        suningGoodscartBean.setData(suningCartdata);
+                        String cart_json = new Gson().toJson(suningGoodscartBean);
+                        if (isHavaGoods) {
+                            Intent intent = new Intent(SuningGoodscartActivity.this, OrderCartConfirmActivity.class);
+                            intent.putExtra("cart_json", cart_json);
+                            intent.putExtra("cart_ids", cart_ids);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(SuningGoodscartActivity.this, "网络连接出现问题，请您重新加入购物车。", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+        } else {
+            //删除购物车数据
+            deletNetGoodscartData();
+        }
+    }
+
     /**
      * 删除线上购物车数据
      */
-    private void deletNetGoodscartData() {
+    private void deletNetGoodscartData() throws Exception {
         String cartCheck = Tools.getCartCheck(SuningGoodscartActivity.this);
         if (cartCheck != null && !TextUtils.isEmpty(cartCheck)) {
             netGoodscartCheckBean = new Gson().fromJson(cartCheck, NetGoodscartCheckBean.class);
@@ -608,37 +567,36 @@ public class SuningGoodscartActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseCheckIshavaData(String response) {
+    private void parseCheckIshavaData(String response) throws Exception {
         LogUtil.e(response);
-        try {
-            isHavaGoods = true;
-            SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
-            int statusCode = suningStockBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    int cart_id = dataBean.getCart_id();
-                    int article_id = dataBean.getArticle_id();
-                    int goods_id = dataBean.getGoods_id();
-                    netCartUtil.updateCart(String.valueOf(cart_id), userLogin, "7", String.valueOf(article_id), String.valueOf(goods_id),
-                            String.valueOf(num_value));
-                    break;
-                case 0:
-                    Toast.makeText(SuningGoodscartActivity.this, "当前购买数量库存不足！！！", Toast.LENGTH_SHORT).show();
-                    break;
-            }
-            initData();
-        } catch (Exception e) {
-            LogUtil.e("SuningGoodscartActivity parseCheckIshavaData error");
-            Toast.makeText(SuningGoodscartActivity.this, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+        isHavaGoods = true;
+        SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
+        int statusCode = suningStockBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                int cart_id = dataBean.getCart_id();
+                int article_id = dataBean.getArticle_id();
+                int goods_id = dataBean.getGoods_id();
+                netCartUtil.updateCart(String.valueOf(cart_id), userLogin, "7", String.valueOf(article_id), String.valueOf(goods_id),
+                        String.valueOf(num_value));
+                break;
+            case 0:
+                Toast.makeText(SuningGoodscartActivity.this, "当前购买数量库存不足！！！", Toast.LENGTH_SHORT).show();
+                break;
         }
+        initData();
     }
 
     public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
-            if (whick.equals("checkIsHave")) {
-                parseCheckIshavaData(response);
+            try {
+                if (whick.equals("checkIsHave")) {
+                    parseCheckIshavaData(response);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -657,21 +615,25 @@ public class SuningGoodscartActivity extends BaseActivity {
 
         @Override
         public void onCartResponse(String response, String whick) {
-            hindCatView();
-            if (whick.equals(NetCartUtil.WHICH_DEL)) {
-                parseNetGoodsDelData(response);
-            } else if (whick.equals(NetCartUtil.WHICH_UPD)) {
-                parseUpdateCartData(response);
-            } else if (whick.equals(NetCartUtil.WHICH_GET)) {
-                if (!isInitState) {
-                    isInitState = true;
-                    showCatView();
-                    getNetGoodscartData();
-                } else {
-                    parseNetGoodscartData(response);
+            try {
+                hindCatView();
+                if (whick.equals(NetCartUtil.WHICH_DEL)) {
+                    parseNetGoodsDelData(response);
+                } else if (whick.equals(NetCartUtil.WHICH_UPD)) {
+                    parseUpdateCartData(response);
+                } else if (whick.equals(NetCartUtil.WHICH_GET)) {
+                    if (!isInitState) {
+                        isInitState = true;
+                        showCatView();
+                        getNetGoodscartData();
+                    } else {
+                        parseNetGoodscartData(response);
+                    }
+                } else if (whick.equals(NetCartUtil.WHICH_TOTAL)) {
+                    parseTotalPriceData(response);
                 }
-            } else if (whick.equals(NetCartUtil.WHICH_TOTAL)) {
-                parseTotalPriceData(response);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -686,7 +648,7 @@ public class SuningGoodscartActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseNetGoodsDelData(String response) {
+    private void parseNetGoodsDelData(String response) throws Exception {
         NetGoodsDeleteBean netGoodsDeleteBean = new Gson().fromJson(response, NetGoodsDeleteBean.class);
         int statusCode = netGoodsDeleteBean.getStatusCode();
         switch (statusCode) {
@@ -712,23 +674,18 @@ public class SuningGoodscartActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseUpdateCartData(String response) {
-        try {
-            LogUtil.e("SuningGoodscartActivity = " + response);
-            NetGoodsUpdateBean netGoodsUpdateBean = new Gson().fromJson(response, NetGoodsUpdateBean.class);
-            int statusCode = netGoodsUpdateBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    break;
-                case 0:
-                    Toast.makeText(SuningGoodscartActivity.this, netGoodsUpdateBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-            initData();
-        } catch (Exception e) {
-            LogUtil.e("SuningGoodscartActivity parseUpdateCartData error" + e.getMessage());
-            Toast.makeText(SuningGoodscartActivity.this, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+    private void parseUpdateCartData(String response) throws Exception {
+        LogUtil.e("SuningGoodscartActivity = " + response);
+        NetGoodsUpdateBean netGoodsUpdateBean = new Gson().fromJson(response, NetGoodsUpdateBean.class);
+        int statusCode = netGoodsUpdateBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                break;
+            case 0:
+                Toast.makeText(SuningGoodscartActivity.this, netGoodsUpdateBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
         }
+        initData();
     }
 
     /**
@@ -736,7 +693,7 @@ public class SuningGoodscartActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseTotalPriceData(String response) {
+    private void parseTotalPriceData(String response) throws Exception {
         NetGoodscartTotalBean netGoodscartTotalBean = new Gson().fromJson(response, NetGoodscartTotalBean.class);
         int statusCode = netGoodscartTotalBean.getStatusCode();
         switch (statusCode) {
@@ -762,74 +719,69 @@ public class SuningGoodscartActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseNetGoodscartData(String response) {
-        try {
-            NetGoodscartBean netGoodscartBean = new Gson().fromJson(response, NetGoodscartBean.class);
-            int statusCode = netGoodscartBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    netData = netGoodscartBean.getData();
-                    if (!isCheckState) {
-                        Tools.saveCartCheck(SuningGoodscartActivity.this, "");
-                    }
-                    String cartCheck = Tools.getCartCheck(SuningGoodscartActivity.this);
-                    if (cartCheck != null && !TextUtils.isEmpty(cartCheck)) {
-                        netGoodscartCheckBean = new Gson().fromJson(cartCheck, NetGoodscartCheckBean.class);
-                        checkData = netGoodscartCheckBean.getData();
-                    } else {
-                        getCheckData(netData);
-                    }
-                    if (netData != null && netData.size() > 0) {
+    private void parseNetGoodscartData(String response) throws Exception {
+        NetGoodscartBean netGoodscartBean = new Gson().fromJson(response, NetGoodscartBean.class);
+        int statusCode = netGoodscartBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                netData = netGoodscartBean.getData();
+                if (!isCheckState) {
+                    Tools.saveCartCheck(SuningGoodscartActivity.this, "");
+                }
+                String cartCheck = Tools.getCartCheck(SuningGoodscartActivity.this);
+                if (cartCheck != null && !TextUtils.isEmpty(cartCheck)) {
+                    netGoodscartCheckBean = new Gson().fromJson(cartCheck, NetGoodscartCheckBean.class);
+                    checkData = netGoodscartCheckBean.getData();
+                } else {
+                    getCheckData(netData);
+                }
+                if (netData != null && netData.size() > 0) {
+                    suningGoodscartAdapter = new SuningGoodscartAdapter(this, netData, checkData);
+                    recyclerView.setAdapter(suningGoodscartAdapter);
+                    suningGoodscartAdapter.setOnUpdatePriceListener(new SuningGoodscartAdapter.OnUpdatePriceListener() {
+                        @Override
+                        public void onUpdateData(int whick) {
+                            if (whick == 1) {
+                                isCheckState = false;
+                            }
+                            showCatView();
+                            initData();
+                        }
+                    });
+                    ll_goodscast_clear_show.setVisibility(View.GONE);
+                } else {
+                    if (recyclerView != null) {
+                        netData = new ArrayList<>();
+                        checkData = new ArrayList<>();
                         suningGoodscartAdapter = new SuningGoodscartAdapter(this, netData, checkData);
                         recyclerView.setAdapter(suningGoodscartAdapter);
-                        suningGoodscartAdapter.setOnUpdatePriceListener(new SuningGoodscartAdapter.OnUpdatePriceListener() {
-                            @Override
-                            public void onUpdateData(int whick) {
-                                if (whick == 1) {
-                                    isCheckState = false;
-                                }
-                                showCatView();
-                                initData();
-                            }
-                        });
-                        ll_goodscast_clear_show.setVisibility(View.GONE);
-                    } else {
-                        if (recyclerView != null) {
-                            netData = new ArrayList<>();
-                            checkData = new ArrayList<>();
-                            suningGoodscartAdapter = new SuningGoodscartAdapter(this, netData, checkData);
-                            recyclerView.setAdapter(suningGoodscartAdapter);
-                        }
-                        isCheckAll = false;
-                        isTopay = false;
-                        total_price = 0;
-                        setCheckStatus();
-                        showTopay();
-                        ll_goodscast_clear_show.setVisibility(View.VISIBLE);
                     }
-                    checkAll_none();
-                    checkOnly_check();
-                    getLocalTotalPrice();
+                    isCheckAll = false;
+                    isTopay = false;
+                    total_price = 0;
                     setCheckStatus();
-                    numberAddSubComplete();
-                    buyNumChanage();
-                    clickItemComplete();
-                    hindCatView();
-                    break;
-                case 0:
-                    Toast.makeText(SuningGoodscartActivity.this, netGoodscartBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        } catch (Exception e) {
-            LogUtil.e("SuningGoodscartActivity parseNetGoodscartData error");
-            Toast.makeText(SuningGoodscartActivity.this, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+                    showTopay();
+                    ll_goodscast_clear_show.setVisibility(View.VISIBLE);
+                }
+                checkAll_none();
+                checkOnly_check();
+                getLocalTotalPrice();
+                setCheckStatus();
+                numberAddSubComplete();
+                buyNumChanage();
+                clickItemComplete();
+                hindCatView();
+                break;
+            case 0:
+                Toast.makeText(SuningGoodscartActivity.this, netGoodscartBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
     /**
      * 立即购买后购物车的变化
      */
-    private void buyNumChanage() {
+    private void buyNumChanage() throws Exception {
         suningGoodscartAdapter.setOnBuyLimitNumListener(new SuningGoodscartAdapter.OnBuyLimitNumListener() {
             @Override
             public void onChangeNum(int position, int value) {
@@ -851,33 +803,28 @@ public class SuningGoodscartActivity extends BaseActivity {
     /**
      * 点击item的实现
      */
-    private void clickItemComplete() {
+    private void clickItemComplete() throws Exception {
         suningGoodscartAdapter.setOnItemClickListener(new SuningGoodscartAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                try {
-                    NetGoodscartBean.DataBean dataBean = netData.get(position);
-                    DecimalFormat df = new DecimalFormat("#0.00");
-                    int article_id = dataBean.getArticle_id();
-                    List<NetGoodscartBean.DataBean.GoodsListBean> goods_list = dataBean.getGoods_list();
-                    NetGoodscartBean.DataBean.GoodsListBean goodsListBean = goods_list.get(0);
-                    String goods_title = goodsListBean.getGoods_title();
-                    String img_url = goodsListBean.getImg_url();
-                    String productId = goodsListBean.getProductId();
-                    double market_price = goodsListBean.getMarket_price();
-                    double sell_price = goodsListBean.getSell_price();
-                    Intent intent = new Intent(SuningGoodscartActivity.this, SuningDetailActivity.class);
-                    intent.putExtra("article_id", article_id);
-                    intent.putExtra("goods_id", productId);
-                    intent.putExtra("goods_img", img_url);
-                    intent.putExtra("goods_title", goods_title);
-                    intent.putExtra("goods_price", df.format(sell_price) + "");
-                    intent.putExtra("c_price", df.format(market_price) + "");
-                    startActivity(intent);
-                } catch (Exception e) {
-                    LogUtil.e("SuningGoodscartActivity clickItemComplete error");
-                    Toast.makeText(SuningGoodscartActivity.this, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
-                }
+                NetGoodscartBean.DataBean dataBean = netData.get(position);
+                DecimalFormat df = new DecimalFormat("#0.00");
+                int article_id = dataBean.getArticle_id();
+                List<NetGoodscartBean.DataBean.GoodsListBean> goods_list = dataBean.getGoods_list();
+                NetGoodscartBean.DataBean.GoodsListBean goodsListBean = goods_list.get(0);
+                String goods_title = goodsListBean.getGoods_title();
+                String img_url = goodsListBean.getImg_url();
+                String productId = goodsListBean.getProductId();
+                double market_price = goodsListBean.getMarket_price();
+                double sell_price = goodsListBean.getSell_price();
+                Intent intent = new Intent(SuningGoodscartActivity.this, SuningDetailActivity.class);
+                intent.putExtra("article_id", article_id);
+                intent.putExtra("goods_id", productId);
+                intent.putExtra("goods_img", img_url);
+                intent.putExtra("goods_title", goods_title);
+                intent.putExtra("goods_price", df.format(sell_price) + "");
+                intent.putExtra("c_price", df.format(market_price) + "");
+                startActivity(intent);
             }
         });
 
@@ -886,39 +833,16 @@ public class SuningGoodscartActivity extends BaseActivity {
     /**
      * 数字加减器的实现
      */
-    private void numberAddSubComplete() {
+    private void numberAddSubComplete() throws Exception {
         suningGoodscartAdapter.setOnNumberAddSubListener(new SuningGoodscartAdapter.OnNumberAddSubListener() {
             @Override
             public void onAddClick(View v, int position, int value) {
-//                dataBean = netData.get(position);
-//                if (dataBean != null) {
-//                    List<NetGoodscartBean.DataBean.GoodsListBean> goods_list = dataBean.getGoods_list();
-//                    if (goods_list != null && goods_list.size() > 0) {
-//                        NetGoodscartBean.DataBean.GoodsListBean goodsListBean = goods_list.get(0);
-//                        String product_id = goodsListBean.getProductId();
-//                        //num_click = "add";
-//                        num_value = value;
-//                        checkIsHave(addWay, area_id, product_id, String.valueOf(value));
-//                    }
-//                }
                 isTopay = false;
                 showTopay();
             }
 
             @Override
             public void onSubClick(View v, int position, int value) {
-//                LogUtil.e("value --------" + value);
-//                dataBean = netData.get(position);
-//                if (dataBean != null) {
-//                    List<NetGoodscartBean.DataBean.GoodsListBean> goods_list = dataBean.getGoods_list();
-//                    if (goods_list != null && goods_list.size() > 0) {
-//                        NetGoodscartBean.DataBean.GoodsListBean goodsListBean = goods_list.get(0);
-//                        String product_id = goodsListBean.getProductId();
-//                        //num_click = "sub";
-//                        num_value = value;
-//                        checkIsHave(addWay, area_id, product_id, String.valueOf(value));
-//                    }
-//                }
                 isTopay = false;
                 showTopay();
             }
@@ -947,7 +871,7 @@ public class SuningGoodscartActivity extends BaseActivity {
      *
      * @param netData
      */
-    private void getCheckData(List<NetGoodscartBean.DataBean> netData) {
+    private void getCheckData(List<NetGoodscartBean.DataBean> netData) throws Exception {
         isCheckState = true;
         if (netData != null && netData.size() > 0) {
             netGoodscartCheckBean = new NetGoodscartCheckBean();
@@ -975,7 +899,11 @@ public class SuningGoodscartActivity extends BaseActivity {
             String msg = "onEventMainThread收到了消息：" + event.getMessage();
             isEvent = true;
             LogUtil.e(msg);
-            deletNetGoodscartData();
+            try {
+                deletNetGoodscartData();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

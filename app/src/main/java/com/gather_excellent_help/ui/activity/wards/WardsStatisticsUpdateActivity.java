@@ -122,8 +122,8 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
         rl_wards_statistics_coallaspe = (RelativeLayout) findViewById(R.id.rl_wards_statistics_coallaspe);
         tv_wards_statistics_collaspe = (TextView) findViewById(R.id.tv_wards_statistics_collaspe);
         iv_wards_statistics_arraw = (ImageView) findViewById(R.id.iv_wards_statistics_arraw);
-        rl_order_no_zhanwei = (RelativeLayout)findViewById(R.id.rl_order_no_zhanwei);
-        tv_order_no_zhanwei = (TextView)findViewById(R.id.tv_order_no_zhanwei);
+        rl_order_no_zhanwei = (RelativeLayout) findViewById(R.id.rl_order_no_zhanwei);
+        tv_order_no_zhanwei = (TextView) findViewById(R.id.tv_order_no_zhanwei);
     }
 
     /**
@@ -132,6 +132,7 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
     private void initData() {
         tvTopTitleName.setText("奖励统计");
         netUtil = new NetUtil();
+        netUtil.setOnServerResponseListener(new OnServerResponseListener());
         Id = Tools.getUserLogin(this);
         pageNos = "1";
         loadNetData();
@@ -294,122 +295,106 @@ public class WardsStatisticsUpdateActivity extends BaseActivity {
         loadNetData();
     }
 
-//    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
-//
-//        @Override
-//        public void getSuccessResponse(String response) {
-//            LogUtil.e(response);
-//            tvWardStaticsConfirm.setClickable(true);
-//            WardStaticsBean wardStaticsBean = new Gson().fromJson(response, WardStaticsBean.class);
-//            int statusCode = wardStaticsBean.getStatusCode();
-//            switch (statusCode) {
-//                case 1:
-//                    if (whicks.equals("query") && page == 1) {
-//                        Toast.makeText(WardsStatisticsUpdateActivity.this, "查询完成！", Toast.LENGTH_SHORT).show();
-//                    }
-//                    currData = wardStaticsBean.getData();
-//                    if (isLoadMore) {
-//                        page++;
-//                        if (currData.size() == 0) {
-//                            Toast.makeText(WardsStatisticsUpdateActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            wardsData.addAll(currData);
-//                            wardStaticsAdapter.notifyDataSetChanged();
-//                            isCanLoad = true;
-//                        }
-//                    } else {
-//                        if (currData != null) {
-//                            if (currData.size() > 0) {
-//                                rl_order_no_zhanwei.setVisibility(View.GONE);
-//                            } else {
-//                                rl_order_no_zhanwei.setVisibility(View.VISIBLE);
-//                            }
-//                        }
-//                        tv_order_no_zhanwei.setVisibility(View.GONE);
-//                        isCanLoad = true;
-//                        page = 2;
-//                        wardsData = currData;
-//                        wardStaticsAdapter = new WardStaticsAdapter(WardsStatisticsUpdateActivity.this, wardsData);
-//                        rcvWardsStatisticsS.setAdapter(wardStaticsAdapter);
-//                    }
-//                    break;
-//                case 0:
-//                    Toast.makeText(WardsStatisticsUpdateActivity.this, wardStaticsBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-//                    break;
-//            }
-//        }
-//
-//        @Override
-//        public void getFailResponse(Call call, Exception e) {
-//            tvWardStaticsConfirm.setClickable(true);
-//            LogUtil.e(call.toString() + "--" + e.getMessage());
-//        }
-//    }
+    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
+
+        @Override
+        public void getSuccessResponse(String response) {
+            try {
+                parseWardsStaticsData(response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void getFailResponse(Call call, Exception e) {
+            tvWardStaticsConfirm.setClickable(true);
+            LogUtil.e(call.toString() + "--" + e.getMessage());
+        }
+    }
+
+    /**
+     * 解析奖励统计的数据
+     *
+     * @param response
+     * @throws Exception
+     */
+    private void parseWardsStaticsData(String response) throws Exception {
+        LogUtil.e(response);
+        if (wav_lower_wards_statistics != null && wav_lower_wards_statistics.isRefreshing()) {
+            wav_lower_wards_statistics.onRefreshComplete();
+        }
+        tvWardStaticsConfirm.setClickable(true);
+        WardStaticsBean wardStaticsBean = new Gson().fromJson(response, WardStaticsBean.class);
+        int statusCode = wardStaticsBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                if (whicks.equals("query") && page == 1) {
+                    Toast.makeText(WardsStatisticsUpdateActivity.this, "查询完成！", Toast.LENGTH_SHORT).show();
+                }
+                currData = wardStaticsBean.getData();
+                if (isLoadMore) {
+                    page++;
+                    if (currData.size() == 0) {
+                        Toast.makeText(WardsStatisticsUpdateActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
+                    } else {
+                        wardsData.addAll(currData);
+                        wardStaticsAdapter.notifyDataSetChanged();
+                        isCanLoad = true;
+                    }
+                } else {
+                    if (currData != null) {
+                        if (currData.size() > 0) {
+                            rl_order_no_zhanwei.setVisibility(View.GONE);
+                        } else {
+                            rl_order_no_zhanwei.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    tv_order_no_zhanwei.setVisibility(View.GONE);
+                    isCanLoad = true;
+                    page = 2;
+                    wardsData = currData;
+                    wardStaticsAdapter = new WardStaticsAdapter(WardsStatisticsUpdateActivity.this, wardsData);
+                    rcvWardsStatisticsS.setAdapter(wardStaticsAdapter);
+                }
+                break;
+            case 0:
+                Toast.makeText(WardsStatisticsUpdateActivity.this, wardStaticsBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
 
     private void loadNetData() {
-        OkHttpUtils
-                .post()
-                .url(url)
-                .addParams("Id", Id)
-                .addParams("pageSize", pageSize)
-                .addParams("pageIndex", pageNos)
-                .addParams("start_time", start_time)
-                .addParams("end_time", end_time)
-                .addParams("user_name", user_name)
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        tvWardStaticsConfirm.setClickable(true);
-                        LogUtil.e(call.toString() + "--" + e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        LogUtil.e(response);
-                        if(wav_lower_wards_statistics!=null && wav_lower_wards_statistics.isRefreshing()) {
-                            wav_lower_wards_statistics.onRefreshComplete();
-                        }
-                        tvWardStaticsConfirm.setClickable(true);
-                        WardStaticsBean wardStaticsBean = new Gson().fromJson(response, WardStaticsBean.class);
-                        int statusCode = wardStaticsBean.getStatusCode();
-                        switch (statusCode) {
-                            case 1:
-                                if (whicks.equals("query") && page == 1) {
-                                    Toast.makeText(WardsStatisticsUpdateActivity.this, "查询完成！", Toast.LENGTH_SHORT).show();
-                                }
-                                currData = wardStaticsBean.getData();
-                                if (isLoadMore) {
-                                    page++;
-                                    if (currData.size() == 0) {
-                                        Toast.makeText(WardsStatisticsUpdateActivity.this, "没有更多的数据了！", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        wardsData.addAll(currData);
-                                        wardStaticsAdapter.notifyDataSetChanged();
-                                        isCanLoad = true;
-                                    }
-                                } else {
-                                    if (currData != null) {
-                                        if (currData.size() > 0) {
-                                            rl_order_no_zhanwei.setVisibility(View.GONE);
-                                        } else {
-                                            rl_order_no_zhanwei.setVisibility(View.VISIBLE);
-                                        }
-                                    }
-                                    tv_order_no_zhanwei.setVisibility(View.GONE);
-                                    isCanLoad = true;
-                                    page = 2;
-                                    wardsData = currData;
-                                    wardStaticsAdapter = new WardStaticsAdapter(WardsStatisticsUpdateActivity.this, wardsData);
-                                    rcvWardsStatisticsS.setAdapter(wardStaticsAdapter);
-                                }
-                                break;
-                            case 0:
-                                Toast.makeText(WardsStatisticsUpdateActivity.this, wardStaticsBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                                break;
-                        }
-                    }
-                });
+        map = new HashMap<>();
+        map.put("Id", Id);
+        map.put("pageSize", pageSize);
+        map.put("pageIndex", pageNos);
+        map.put("start_time", start_time);
+        map.put("end_time", end_time);
+        map.put("user_name", user_name);
+        netUtil.okHttp2Server2(this, url, map);
+//        OkHttpUtils
+//                .post()
+//                .url(url)
+//                .addParams("Id", Id)
+//                .addParams("pageSize", pageSize)
+//                .addParams("pageIndex", pageNos)
+//                .addParams("start_time", start_time)
+//                .addParams("end_time", end_time)
+//                .addParams("user_name", user_name)
+//                .build()
+//                .execute(new StringCallback() {
+//                    @Override
+//                    public void onError(Call call, Exception e, int id) {
+//                        tvWardStaticsConfirm.setClickable(true);
+//                        LogUtil.e(call.toString() + "--" + e.getMessage());
+//                    }
+//
+//                    @Override
+//                    public void onResponse(String response, int id) {
+//
+//                    }
+//                });
     }
 
 }

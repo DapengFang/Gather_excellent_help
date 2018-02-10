@@ -16,6 +16,7 @@ import com.gather_excellent_help.ui.adapter.SuningLogisticsInfoAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -61,7 +62,7 @@ public class SuningLogisticsDetailInfoActivity extends BaseActivity {
         rl_exit = (RelativeLayout) findViewById(R.id.rl_exit);
         tv_top_title_name = (TextView) findViewById(R.id.tv_top_title_name);
         wan_suning_logistics = (WanRecycleView) findViewById(R.id.wan_suning_logistics);
-        rl_order_no_zhanwei = (RelativeLayout)findViewById(R.id.rl_order_no_zhanwei);
+        rl_order_no_zhanwei = (RelativeLayout) findViewById(R.id.rl_order_no_zhanwei);
     }
 
     /**
@@ -106,10 +107,11 @@ public class SuningLogisticsDetailInfoActivity extends BaseActivity {
      */
     private void getLogisticsInfoData() {
         map = new HashMap<>();
+        map.put("Id", userLogin);
         map.put("user_id", userLogin);
         map.put("order_id", String.valueOf(order_id));
         map.put("article_id", String.valueOf(article_id));
-        netUtil.okHttp2Server2(logistics_url, map);
+        netUtil.okHttp2Server2(SuningLogisticsDetailInfoActivity.this, logistics_url, map);
     }
 
     /**
@@ -134,27 +136,11 @@ public class SuningLogisticsDetailInfoActivity extends BaseActivity {
 
         @Override
         public void getSuccessResponse(String response) {
-            LogUtil.e("物流信息 = " + response);
-            //response = "{\"statusCode\":1,\"statusMessage\":\"获取物流成功！\",\"data\":[{\"orderId\":\"100000555321\",\"isPackage\":\"Y\",\"logisticsDetail\":[{\"operateState\":\"您的订单已生成，请尽快完成支付\",\"operateTime\":\"20171115110157\"},{\"operateState\":\"您的订单已支付完成，等待发货\",\"operateTime\":\"20171116111026\"},{\"operateState\":\"您的发货清单【苏宁南京大件配送中心】已打印，待打印发票\",\"operateTime\":\"20171116145156\"}],\"orderItemIds\":[{\"orderItemId\":\"10000055532101\",\"skuId\":\"121347616\"}]}]}\n";
-            SuningLogisticsBean suningLogisticsBean = new Gson().fromJson(response, SuningLogisticsBean.class);
-            int statusCode = suningLogisticsBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    List<SuningLogisticsBean.DataBean> data = suningLogisticsBean.getData();
-                    if(data!=null && data.size()>0) {
-                        rl_order_no_zhanwei.setVisibility(View.GONE);
-                        SuningLogisticsBean.DataBean dataBean = data.get(0);
-                        List<SuningLogisticsBean.DataBean.OrderItemIdsBean> orderItemIds = dataBean.getOrderItemIds();
-                        suningLogisticsInfoAdapter = new SuningLogisticsInfoAdapter(SuningLogisticsDetailInfoActivity.this, data, orderItemIds);
-                        recyclerView.setAdapter(suningLogisticsInfoAdapter);
-                    }else{
-                        rl_order_no_zhanwei.setVisibility(View.VISIBLE);
-                    }
-                    break;
-                case 0:
-                    Toast.makeText(SuningLogisticsDetailInfoActivity.this, suningLogisticsBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    rl_order_no_zhanwei.setVisibility(View.VISIBLE);
-                    break;
+            try {
+                LogUtil.e("物流信息 = " + response);
+                parseLogisticsData(response);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -162,6 +148,35 @@ public class SuningLogisticsDetailInfoActivity extends BaseActivity {
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "-" + e.getMessage());
             rl_order_no_zhanwei.setVisibility(View.VISIBLE);
+            EncryptNetUtil.startNeterrorPage(SuningLogisticsDetailInfoActivity.this);
+        }
+    }
+
+    /**
+     * 解析物流信息
+     *
+     * @param response
+     */
+    private void parseLogisticsData(String response) throws Exception {
+        SuningLogisticsBean suningLogisticsBean = new Gson().fromJson(response, SuningLogisticsBean.class);
+        int statusCode = suningLogisticsBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                List<SuningLogisticsBean.DataBean> data = suningLogisticsBean.getData();
+                if (data != null && data.size() > 0) {
+                    rl_order_no_zhanwei.setVisibility(View.GONE);
+                    SuningLogisticsBean.DataBean dataBean = data.get(0);
+                    List<SuningLogisticsBean.DataBean.OrderItemIdsBean> orderItemIds = dataBean.getOrderItemIds();
+                    suningLogisticsInfoAdapter = new SuningLogisticsInfoAdapter(SuningLogisticsDetailInfoActivity.this, data, orderItemIds);
+                    recyclerView.setAdapter(suningLogisticsInfoAdapter);
+                } else {
+                    rl_order_no_zhanwei.setVisibility(View.VISIBLE);
+                }
+                break;
+            case 0:
+                Toast.makeText(SuningLogisticsDetailInfoActivity.this, suningLogisticsBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                rl_order_no_zhanwei.setVisibility(View.VISIBLE);
+                break;
         }
     }
 }

@@ -39,6 +39,7 @@ import com.gather_excellent_help.ui.widget.DividerItemDecoration;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.MyNestedScrollView;
 import com.gather_excellent_help.update.HomeActivityListAdapter;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -119,15 +120,14 @@ public class ActivityListPresenter extends BasePresenter {
         map = new HashMap<>();
         map.put("pageSize", pageSize);
         map.put("pageIndex", pageIndex);
-        netUtil.okHttp2Server2(activity_url, map);
+        netUtil.okHttp2Server2(context,activity_url, map);
     }
 
     public class MyOnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
-
-            if (context != null) {
+            try {
                 if (whick.equals("warelist")) {
                     parseData(response);
                 } else if (whick.equals("changeurl")) {
@@ -135,14 +135,17 @@ public class ActivityListPresenter extends BasePresenter {
                 } else if (whick.equals("getwords")) {
                     parseChangeWordsData(response);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "-" + e.getMessage());
             if (context != null) {
-                Toast.makeText(context, "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
+                EncryptNetUtil.startNeterrorPage(context);
             }
         }
     }
@@ -295,7 +298,7 @@ public class ActivityListPresenter extends BasePresenter {
      *
      * @param response
      */
-    private void parseChangeWordsData(String response) {
+    private void parseChangeWordsData(String response) throws Exception {
         TaoWordBean taoWordBean = new Gson().fromJson(response, TaoWordBean.class);
         int statusCode = taoWordBean.getStatusCode();
         switch (statusCode) {
@@ -315,7 +318,7 @@ public class ActivityListPresenter extends BasePresenter {
      *
      * @param response
      */
-    private void parseChangeData(String response) {
+    private void parseChangeData(String response) throws Exception {
         LogUtil.e("click_url = " + response);
         ChangeUrlBean changeUrlBean = new Gson().fromJson(response, ChangeUrlBean.class);
         int statusCode = changeUrlBean.getStatusCode();
@@ -328,7 +331,7 @@ public class ActivityListPresenter extends BasePresenter {
                     whick = "getwords";
                     map = new HashMap<>();
                     map = ShareUtil.getChangeWordsParam(map, userLogin, click_url, goods_img, goods_title);
-                    ShareUtil.getChangeWordUrl(netUtil, map);
+                    ShareUtil.getChangeWordUrl(context,netUtil, map);
                 }
                 break;
             case 0:
@@ -337,7 +340,7 @@ public class ActivityListPresenter extends BasePresenter {
         }
     }
 
-    private void parseData(String response) {
+    private void parseData(String response) throws Exception {
         LogUtil.e("活动列表 === " + response);
         ActivityListBean activityListBean = new Gson().fromJson(response, ActivityListBean.class);
         int statusCode = activityListBean.getStatusCode();
@@ -385,13 +388,13 @@ public class ActivityListPresenter extends BasePresenter {
                                 if (couponsPrice > 0) {
                                     whick_share = 1;
                                     map = new HashMap<>();
-                                    map = ShareUtil.getChangeWareParam(map, goods_id, adverId);
-                                    ShareUtil.getCouponChangeUrl(netUtil, map);
+                                    map = ShareUtil.getChangeWareParam(map, goods_id, adverId,userLogin);
+                                    ShareUtil.getCouponChangeUrl(context,netUtil, map);
                                 } else {
                                     whick_share = 2;
                                     map = new HashMap<>();
-                                    map = ShareUtil.getChangeWareParam(map, goods_id, adverId);
-                                    ShareUtil.getWareChangeUrl(netUtil, map);
+                                    map = ShareUtil.getChangeWareParam(map, goods_id, adverId,userLogin);
+                                    ShareUtil.getWareChangeUrl(context,netUtil, map);
                                 }
                             }
                         } else {

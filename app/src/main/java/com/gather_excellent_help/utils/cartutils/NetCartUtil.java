@@ -1,6 +1,9 @@
 package com.gather_excellent_help.utils.cartutils;
 
+import android.content.Context;
+
 import com.gather_excellent_help.api.Url;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 
@@ -26,10 +29,12 @@ public class NetCartUtil {
     private NetUtil netUtil;
     private Map<String, String> map;
     private String whick;
+    private Context context;
     private final OnServerResponseListener onServerResponseListener;
 
 
-    public NetCartUtil() {
+    public NetCartUtil(Context context) {
+        this.context = context;
         netUtil = new NetUtil();
         whick = "";
         onServerResponseListener = new OnServerResponseListener();
@@ -39,47 +44,53 @@ public class NetCartUtil {
     public void addCart(String user_id, String channel_id, String article_id, String goods_id, String quantity) {
         whick = WHICH_ADD;
         map = new HashMap<>();
+        map.put("Id", user_id);
         map.put("user_id", user_id);
         map.put("channel_id", channel_id);
         map.put("article_id", article_id);
         map.put("goods_id", goods_id);
         map.put("quantity", quantity);
-        netUtil.okHttp2Server2(add_url, map);
+        netUtil.okHttp2Server2(context, add_url, map);
+
     }
 
     public void deleteCart(String clear, String user_id, String cart_id) {
         whick = WHICH_DEL;
         map = new HashMap<>();
         map.put("clear", clear);
+        map.put("Id", user_id);
         map.put("user_id", user_id);
         map.put("cart_id", cart_id);
-        netUtil.okHttp2Server2(del_url, map);
+        netUtil.okHttp2Server2(context, del_url, map);
+
     }
 
     public void updateCart(String cart_id, String user_id, String channel_id, String article_id, String goods_id, String quantity) {
         whick = WHICH_UPD;
         map = new HashMap<>();
+        map.put("Id",user_id);
         map.put("cart_id", cart_id);
         map.put("user_id", user_id);
         map.put("channel_id", channel_id);
         map.put("article_id", article_id);
         map.put("goods_id", goods_id);
         map.put("quantity", quantity);
-        netUtil.okHttp2Server2(upd_url, map);
+        netUtil.okHttp2Server2(context, upd_url, map);
     }
 
     public void getCartList(String user_id) {
         whick = WHICH_GET;
         map = new HashMap<>();
+        map.put("Id",user_id);
         map.put("user_id", user_id);
-        netUtil.okHttp2Server2(get_url, map);
+        netUtil.okHttp2Server2(context, get_url, map);
     }
 
     public void getTotalPrice(String jsonData) {
         whick = WHICH_TOTAL;
         map = new HashMap<>();
         map.put("jsonData", jsonData);
-        netUtil.okHttp2Server2(total_url, map);
+        netUtil.okHttp2Server2(context, total_url, map);
     }
 
     public class OnServerResponseListener implements NetUtil.OnServerResponseListener {

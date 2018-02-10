@@ -135,6 +135,7 @@
                 android:background="#eeeeee" />
 
             <LinearLayout
+                android:id="@+id/ll_add_address_detail"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/x80"
                 android:orientation="horizontal">

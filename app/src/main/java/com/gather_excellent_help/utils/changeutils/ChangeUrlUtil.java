@@ -40,7 +40,7 @@ public class ChangeUrlUtil {
         Map<String,String> map = new HashMap<>();
         map.put("goodsId", wareId);
         map.put("adzoneId", adId);
-        netUtil.okHttp2Server2(changeUrl,map);
+        netUtil.okHttp2Server2(context,changeUrl,map);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {

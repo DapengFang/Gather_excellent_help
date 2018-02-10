@@ -27,6 +27,7 @@ import com.gather_excellent_help.ui.activity.wards.SeeWardsActivity;
 import com.gather_excellent_help.ui.activity.wards.WardsStatisticsActivity;
 import com.gather_excellent_help.ui.activity.wards.WardsStatisticsUpdateActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -93,8 +94,9 @@ public class InviteFriendsActivity extends BaseActivity {
             toLogin();
             return;
         }
-        map.put("id", userLogin);
-        netUtil.okHttp2Server2(invite_url, map);
+        map.put("Id", userLogin);
+        map.put("user_id", userLogin);
+        netUtil.okHttp2Server2(InviteFriendsActivity.this, invite_url, map);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -104,7 +106,8 @@ public class InviteFriendsActivity extends BaseActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-
+                LogUtil.e(call.toString() + "-" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(InviteFriendsActivity.this);
             }
         });
         rlExit.setOnClickListener(new MyOnClickListener());

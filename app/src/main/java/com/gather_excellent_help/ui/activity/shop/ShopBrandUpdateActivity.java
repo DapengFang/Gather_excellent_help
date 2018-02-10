@@ -23,6 +23,7 @@ import com.gather_excellent_help.ui.activity.credits.MerchantEnterActivity;
 import com.gather_excellent_help.ui.adapter.BrandListAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.MyGridView;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.google.gson.Gson;
@@ -83,7 +84,7 @@ public class ShopBrandUpdateActivity extends BaseActivity {
         ivMerchantBrandArraw.setImageResource(R.drawable.left_black_arraw);
         tvTopTitleName.setText("主营品牌");
         netUtil = new NetUtil();
-        netUtil.okHttp2Server2(brand_url, null);
+        netUtil.okHttp2Server2(ShopBrandUpdateActivity.this,brand_url, null);
         netUtil.setOnServerResponseListener(new MyOnServerResponseListener());
         gvMerchantBrand.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -201,6 +202,7 @@ public class ShopBrandUpdateActivity extends BaseActivity {
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "--" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(ShopBrandUpdateActivity.this);
         }
     }
 

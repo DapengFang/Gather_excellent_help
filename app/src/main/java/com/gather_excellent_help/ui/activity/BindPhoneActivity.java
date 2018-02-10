@@ -26,6 +26,7 @@ import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.credits.ExtractCreditsActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -142,14 +143,14 @@ public class BindPhoneActivity extends BaseActivity {
         hashMap = new HashMap<>();
         hashMap.put("phone_number", phone);
         hashMap.put("wechat_json", wechat_json);
-        netUtils.okHttp2Server2(bind_url, hashMap);
+        netUtils.okHttp2Server2(BindPhoneActivity.this,bind_url, hashMap);
     }
 
     /**
      * 获取验证码的方法
      */
     private void getSmsCode() {
-        phone =  et_bind_phone.getText().toString().trim();
+        phone = et_bind_phone.getText().toString().trim();
         if (phone == null || TextUtils.isEmpty(phone)) {
             Toast.makeText(BindPhoneActivity.this, "手机号不能为空！", Toast.LENGTH_SHORT).show();
             return;
@@ -172,7 +173,7 @@ public class BindPhoneActivity extends BaseActivity {
         hashMap = new HashMap<>();
         hashMap.put("sms_code", phone);
         hashMap.put("type", "5");
-        netUtils.okHttp2Server2(sms_url, hashMap);
+        netUtils.okHttp2Server2(BindPhoneActivity.this,sms_url, hashMap);
         if (countDownTimer != null) {
             countDownTimer.start();
         }
@@ -205,9 +206,10 @@ public class BindPhoneActivity extends BaseActivity {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
+            EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "登录成功！"));
             tv_bind_phone_submit.setClickable(true);
-            LogUtil.e("网络连接出现问题~");
+            LogUtil.e(call.toString() + "-" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(BindPhoneActivity.this);
         }
     }
 
@@ -223,7 +225,7 @@ public class BindPhoneActivity extends BaseActivity {
         switch (statusCode) {
             case 1:
                 List<CodeBean.DataBean> data = codeBean.getData();
-                if(data.size()>0) {
+                if (data.size() > 0) {
                     Integer id = data.get(0).getId();
                     int group_type = data.get(0).getGroup_type();
                     double user_rate = data.get(0).getUser_get_ratio();
@@ -249,7 +251,7 @@ public class BindPhoneActivity extends BaseActivity {
                         startActivity(intent);
                     }
                 }
-                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
+                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "登录成功！"));
                 finish();
                 break;
             case 0:

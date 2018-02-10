@@ -23,13 +23,16 @@ import com.gather_excellent_help.bean.CodeBean;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
+import com.gather_excellent_help.ui.activity.suning.LogisticsInfoActivity;
 import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.Check;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
+import com.gather_excellent_help.utils.enctry.Des2;
 import com.google.gson.Gson;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -59,7 +62,7 @@ public class LoginActivity extends Activity {
     private String user;
     private String password;
     private NetUtil netUtils;
-    private Map<String,String> map;
+    private Map<String, String> map;
     private String url = Url.BASE_URL + "login.aspx";
     private String openId;
     private String avatarUrl;
@@ -85,13 +88,13 @@ public class LoginActivity extends Activity {
     /**
      * 初始化控件
      */
-    private void initView(){
+    private void initView() {
         tvLogin = (TextView) findViewById(R.id.tv_login);
         tvRegister = (TextView) findViewById(R.id.tv_register);
         tvLoginLostpsw = (TextView) findViewById(R.id.tv_login_lostpsw);
         etLoginUser = (EditText) findViewById(R.id.et_login_user);
         etLoginPsw = (EditText) findViewById(R.id.et_login_psw);
-        tv_login_wx = (TextView)findViewById(R.id.tv_login_wx);
+        tv_login_wx = (TextView) findViewById(R.id.tv_login_wx);
     }
 
     /**
@@ -112,17 +115,22 @@ public class LoginActivity extends Activity {
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                LogUtil.e(response);
-                if(which.equals("login")) {
-                    parseData(response);
-                }else if(which.equals("bind")) {
-                    parseBindData(response);
+                try {
+                    LogUtil.e(response);
+                    if (which.equals("login")) {
+                        parseData(response);
+                    } else if (which.equals("bind")) {
+                        parseBindData(response);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-               LogUtil.e(call.toString()+","+e.getMessage());
+                LogUtil.e(call.toString() + "," + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(LoginActivity.this);
             }
         });
     }
@@ -163,16 +171,17 @@ public class LoginActivity extends Activity {
 
     /**
      * 解析绑定淘宝的数据
+     *
      * @param response
      */
-    private void parseBindData(String response) {
+    private void parseBindData(String response) throws Exception {
         CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
         int statusCode = codeStatueBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
+            case 1:
                 CacheUtils.putBoolean(LoginActivity.this, CacheUtils.BIND_STATE, true);
-                CacheUtils.putString(LoginActivity.this,CacheUtils.TAOBAO_NICK,nick);
-                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
+                CacheUtils.putString(LoginActivity.this, CacheUtils.TAOBAO_NICK, nick);
+                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "登录成功！"));
                 break;
             case 0:
 
@@ -182,13 +191,14 @@ public class LoginActivity extends Activity {
 
     /**
      * 解析联网返回数据
+     *
      * @param response
      */
     private void parseData(String response) {
         Gson gson = new Gson();
         CodeStatueBean codeStatueBean = gson.fromJson(response, CodeStatueBean.class);
         int statusCode = codeStatueBean.getStatusCode();
-        switch (statusCode){
+        switch (statusCode) {
             case 0:
                 Toast.makeText(LoginActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
@@ -196,23 +206,25 @@ public class LoginActivity extends Activity {
                 Toast.makeText(LoginActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 CodeBean codeBean = new Gson().fromJson(response, CodeBean.class);
                 List<CodeBean.DataBean> data = codeBean.getData();
-                if(data.size()>0) {
+                if (data.size() > 0) {
                     Integer id = data.get(0).getId();
                     int group_type = data.get(0).getGroup_type();
                     double user_rate = data.get(0).getUser_get_ratio();
                     String advertising = data.get(0).getAdvertising();
                     int group_id = data.get(0).getGroup_id();
+                    String token = data.get(0).getToken();
                     LogUtil.e("user = " + user);
-                    CacheUtils.putBoolean(LoginActivity.this,CacheUtils.LOGIN_STATE,true);
-                    CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_VALUE,id+"");
-                    CacheUtils.putInteger(LoginActivity.this,CacheUtils.SHOP_TYPE,group_type);
-                    CacheUtils.putString(LoginActivity.this,CacheUtils.LOGIN_PHONE,user);
-                    CacheUtils.putString(LoginActivity.this,CacheUtils.USER_RATE,user_rate+"");
+                    CacheUtils.putBoolean(LoginActivity.this, CacheUtils.LOGIN_STATE, true);
+                    CacheUtils.putString(LoginActivity.this, CacheUtils.LOGIN_VALUE, id + "");
+                    CacheUtils.putInteger(LoginActivity.this, CacheUtils.SHOP_TYPE, group_type);
+                    CacheUtils.putString(LoginActivity.this, CacheUtils.LOGIN_PHONE, user);
+                    CacheUtils.putString(LoginActivity.this, CacheUtils.USER_RATE, user_rate + "");
                     CacheUtils.putInteger(LoginActivity.this, CacheUtils.GROUP_TYPE, group_id);
+                    CacheUtils.putString(LoginActivity.this, CacheUtils.LOGIN_TOKEN, token);
                     if (advertising != null) {
                         CacheUtils.putString(LoginActivity.this, CacheUtils.ADVER_ID, advertising);
                     }
-                    EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
+                    EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "登录成功！"));
                     showBindTaobaoDialog(id);
                 }
                 break;
@@ -222,14 +234,14 @@ public class LoginActivity extends Activity {
     /**
      * 展示绑定淘宝的dialog
      */
-    private void showBindTaobaoDialog(final int id){
+    private void showBindTaobaoDialog(final int id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("绑定淘宝账号")
                 .setMessage("为了方便您之后的操作，请您先绑定淘宝账号。若取消绑定将会在您查看商品详情时提示您继续绑定操作")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        bindTaobao(id+"");
+                        bindTaobao(id + "");
                         finish();
                     }
                 })
@@ -251,35 +263,33 @@ public class LoginActivity extends Activity {
     private void getUserInputInfo() {
         user = etLoginUser.getText().toString().trim();
         password = etLoginPsw.getText().toString().trim();
-        if(TextUtils.isEmpty(user)) {
+        if (TextUtils.isEmpty(user)) {
             Toast.makeText(LoginActivity.this, "请输入手机号码！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(password)) {
             Toast.makeText(LoginActivity.this, "请输入密码！", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        password = password+"@@11fe468";
-        password = EncryptUtil.getMd5Value(password);
-        map= new HashMap<>();
-        map.put("UserName",user);
-        map.put("Password",password);
         which = "login";
-        netUtils.okHttp2Server2(url,map);
-
+        password = password + "@@11fe468";
+        password = EncryptUtil.getMd5Value(password);
+        map = new HashMap<>();
+        map.put("UserName", user);
+        map.put("Password", password);
+        netUtils.okHttp2Server2(LoginActivity.this, url, map);
     }
 
-    public class MyOnClickListener implements View.OnClickListener{
+    public class MyOnClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
-            Intent intent =null;
+            Intent intent = null;
             switch (view.getId()) {
-                case R.id.tv_login :
+                case R.id.tv_login:
                     getUserInputInfo();
                     break;
-                case R.id.tv_register :
+                case R.id.tv_register:
                     intent = new Intent(LoginActivity.this, RegisterActivity.class);
                     startActivity(intent);
                     break;
@@ -293,6 +303,7 @@ public class LoginActivity extends Activity {
 
     /**
      * 绑定淘宝
+     *
      * @param s
      */
     public void bindTaobao(final String s) {
@@ -309,7 +320,7 @@ public class LoginActivity extends Activity {
                 nick = AlibcLogin.getInstance().getSession().nick;
                 uploadUserInfo(s);
                 which = "bind";
-                netUtils.okHttp2Server2(bind_url, map);
+                netUtils.okHttp2Server2(LoginActivity.this, bind_url, map);
             }
 
             @Override
@@ -317,33 +328,34 @@ public class LoginActivity extends Activity {
 //                Toast.makeText(LoginActivity.this, "绑定失败 ！",
 //                        Toast.LENGTH_LONG).show();
 //                Log.i("GGG", "错误码" + code + "原因" + msg);
-                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN,"登录成功！"));
+                EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "登录成功！"));
             }
         });
     }
 
     /**
      * 上传用户信息
+     *
      * @param s
      */
     public void uploadUserInfo(String s) {
 
-            if (!TextUtils.isEmpty(s)) {
-                map = new HashMap<>();
-                map.put("Id", s);
-                map.put("openId", openId);
-                map.put("portrait", avatarUrl);
-                map.put("nickname", nick);
-            }
+        if (!TextUtils.isEmpty(s)) {
+            map = new HashMap<>();
+            map.put("Id", s);
+            map.put("openId", openId);
+            map.put("portrait", avatarUrl);
+            map.put("nickname", nick);
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         AlibcTradeSDK.destory();
-        if(api!=null) {
+        if (api != null) {
             api.unregisterApp();
-            api=null;
+            api = null;
         }
     }
 }

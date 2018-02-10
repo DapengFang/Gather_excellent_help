@@ -29,7 +29,7 @@ public class PcsQueryUtil {
         String province_url = Url.BASE_URL +"suning/GetAddress.ashx?action=GetProvince";
         NetUtil netUtil = new NetUtil();
         LogUtil.e("province_url = " + province_url);
-        netUtil.okHttp2Server2(province_url, null);
+        netUtil.okHttp2Server2(context,province_url, null);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -54,7 +54,7 @@ public class PcsQueryUtil {
         NetUtil netUtil = new NetUtil();
         Map<String, String> map = new HashMap<>();
         map.put("area_id", pid);
-        netUtil.okHttp2Server2(city_url, map);
+        netUtil.okHttp2Server2(context,city_url, map);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -79,7 +79,7 @@ public class PcsQueryUtil {
         NetUtil netUtil = new NetUtil();
         Map<String, String> map = new HashMap<>();
         map.put("area_id", cid);
-        netUtil.okHttp2Server2(distract_url, map);
+        netUtil.okHttp2Server2(context,distract_url, map);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -106,7 +106,7 @@ public class PcsQueryUtil {
         Map<String, String> map = new HashMap<>();
         map.put("city_id",cid);
         map.put("area_id", did);
-        netUtil.okHttp2Server2(town_url, map);
+        netUtil.okHttp2Server2(context,town_url, map);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {

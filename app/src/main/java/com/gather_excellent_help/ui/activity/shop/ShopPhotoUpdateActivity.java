@@ -32,6 +32,7 @@ import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.AlipayManagerActivity;
 import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.PhotoUtils;
@@ -214,7 +215,7 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
                 map.put("file2", upload2.trim());
                 map.put("file3", upload3.trim());
                 map.put("file4", upload4.trim());
-                netUtil.okHttp2Server2(merchant_url, map);
+                netUtil.okHttp2Server2(ShopPhotoUpdateActivity.this,merchant_url, map);
             }
         }.start();
     }
@@ -361,6 +362,7 @@ public class ShopPhotoUpdateActivity extends BaseActivity {
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "--" + e.getMessage());
             llShopRemind.setVisibility(View.GONE);
+            EncryptNetUtil.startNeterrorPage(ShopPhotoUpdateActivity.this);
         }
     }
 

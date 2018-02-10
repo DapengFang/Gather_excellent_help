@@ -10,6 +10,11 @@
 
     <include layout="@layout/top_new_zhuangai_bar" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="#eeeeee" />
+
     <com.gather_excellent_help.ui.widget.MyNestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -208,12 +213,12 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/x20"
+                        android:background="@drawable/gray_sousuo_stroke_shape"
                         android:gravity="center"
                         android:padding="@dimen/x3"
                         android:text="复制"
                         android:textColor="#666666"
-                        android:textSize="@dimen/x10"
-                        android:background="@drawable/gray_sousuo_stroke_shape"/>
+                        android:textSize="@dimen/x10" />
 
                 </RelativeLayout>
 

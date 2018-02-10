@@ -22,6 +22,7 @@ import com.gather_excellent_help.ui.adapter.AcccountDetailAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
@@ -150,7 +151,8 @@ public class AccountDetailAvtivity extends BaseActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-                LogUtil.e(call.toString() + "---" + e.getMessage());
+                LogUtil.e(call.toString() + "-" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(AccountDetailAvtivity.this);
             }
         });
         rlExit.setOnClickListener(new MyOnclickListener());
@@ -201,7 +203,7 @@ public class AccountDetailAvtivity extends BaseActivity {
         map.put("pageSize", pageSize);
         map.put("pageIndex", pageIndex);
         map.put("type", type);
-        netUtil.okHttp2Server2(account_url, map);
+        netUtil.okHttp2Server2(AccountDetailAvtivity.this,account_url, map);
     }
 
     /**

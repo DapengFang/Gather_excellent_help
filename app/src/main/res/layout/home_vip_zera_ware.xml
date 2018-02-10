@@ -16,17 +16,35 @@
             android:layout_height="@dimen/x70"
             android:layout_centerInParent="true" />
 
-        <TextView
-            android:id="@+id/tv_vip_ware_coupon"
-            android:layout_width="@dimen/x43"
-            android:layout_height="@dimen/x10"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignRight="@+id/iv_vip_ware_img"
             android:layout_alignTop="@id/iv_vip_ware_img"
-            android:background="@drawable/juxing_coupon_shape"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/x6"
-            android:textStyle="bold" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:background="@drawable/juxing_coupon_shape">
+
+            <TextView
+                android:layout_width="@dimen/x10"
+                android:layout_height="@dimen/x10"
+                android:text="券"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x6"
+                android:background="#fa2a3b"/>
+
+            <TextView
+                android:id="@+id/tv_vip_ware_coupon"
+                android:layout_width="@dimen/x43"
+                android:layout_height="@dimen/x10"
+                android:gravity="center"
+                android:textColor="#fa2a3b"
+                android:textSize="@dimen/x6" />
+
+        </LinearLayout>
+
     </RelativeLayout>
 
 
@@ -34,10 +52,10 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="5"
+        android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingLeft="@dimen/x6"
-        android:paddingRight="@dimen/x6"
-        android:gravity="center_vertical">
+        android:paddingRight="@dimen/x6">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -47,8 +65,8 @@
                 android:id="@+id/tv_vip_ware_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:lines="2"
                 android:lineSpacingExtra="@dimen/x3"
+                android:lines="2"
                 android:textColor="#333333"
                 android:textSize="@dimen/x12" />
 
@@ -73,8 +91,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:textColor="#fa2a3b"
                 android:layout_marginLeft="@dimen/x2"
+                android:textColor="#fa2a3b"
                 android:textSize="@dimen/x14" />
 
         </LinearLayout>
@@ -90,18 +108,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:layout_marginTop="@dimen/x4"
                 android:textColor="#474747"
-                android:textSize="@dimen/x10"
-                android:layout_marginTop="@dimen/x4"/>
+                android:textSize="@dimen/x10" />
 
             <TextView
                 android:id="@+id/tv_vip_ware_zhuan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:layout_marginTop="@dimen/x4"
                 android:textColor="#ff6600"
-                android:textSize="@dimen/x10"
-                android:layout_marginTop="@dimen/x4"/>
+                android:textSize="@dimen/x10" />
 
         </LinearLayout>
 

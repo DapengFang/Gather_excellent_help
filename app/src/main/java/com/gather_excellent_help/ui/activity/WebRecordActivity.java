@@ -48,6 +48,7 @@ import com.gather_excellent_help.bean.TaoWordBean;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.SharePopupwindow;
 import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
@@ -97,18 +98,26 @@ public class WebRecordActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case GET_URL:
-                    which = "get_url";
-                    String user_id = Tools.getUserLogin(WebRecordActivity.this);
-                    map = new HashMap<>();
-                    map.put("user_id", user_id);
-                    map.put("convert_url", click_url);
-                    map.put("img_url", goods_img);
-                    map.put("title", goods_title);
-                    netUtil.okHttp2Server2(get_url, map);
+                    getTaoWord();
                     break;
             }
         }
     };
+    private String userLogin;
+
+    /**
+     * 获取淘口令
+     */
+    private void getTaoWord() {
+        which = "get_url";
+        map = new HashMap<>();
+        map.put("Id", userLogin);
+        map.put("user_id", userLogin);
+        map.put("convert_url", click_url);
+        map.put("img_url", goods_img);
+        map.put("title", goods_title);
+        netUtil.okHttp2Server2(WebRecordActivity.this, get_url, map);
+    }
 
     private AlibcShowParams alibcShowParams;//页面打开方式，默认，H5，Native
     private AlibcTaokeParams alibcTaokeParams = null;//淘客参数，包括pid，unionid，subPid
@@ -199,56 +208,67 @@ public class WebRecordActivity extends BaseActivity {
         LogUtil.e("adverId----------------------" + adverId);
         if (login) {
             boolean bindTao = Tools.isBindTao(this);
+            userLogin = Tools.getUserLogin(this);
             if (bindTao) {
                 showCatView();
                 LogUtil.e("adverId = " + adverId);
-                which = "change_url";
-                map = new HashMap<>();
-                map.put("goodsId", goods_id);
-                map.put("adzoneId", adverId);
-                netUtil.okHttp2Server2(chang_url, map);
+                getChangeUrl();
             } else {
-                String userLogin = Tools.getUserLogin(this);
-                showBindTaobaoDialog(userLogin);
+                showBindTaobaoDialog();
             }
         } else {
             toLogin();
-            finish();
         }
 
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                if (which.equals("change_url")) {
-                    parseData(response);
-                } else if (which.equals("get_url")) {
-                    getTaoWord(response);
-                } else if (which.equals("bind")) {
-                    parseBindData(response);
+                try {
+                    if (which.equals("change_url")) {
+                        parseData(response);
+                    } else if (which.equals("get_url")) {
+                        getTaoWord(response);
+                    } else if (which.equals("bind")) {
+                        parseBindData(response);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
             }
 
             @Override
             public void getFailResponse(Call call, Exception e) {
                 hindCatView(1);
                 rl_order_no_zhanwei.setVisibility(View.VISIBLE);
+                EncryptNetUtil.startNeterrorPage(WebRecordActivity.this);
             }
         });
 
     }
 
     /**
+     * 转链
+     */
+    private void getChangeUrl() {
+        which = "change_url";
+        map = new HashMap<>();
+        map.put("Id", userLogin);
+        map.put("goodsId", goods_id);
+        map.put("adzoneId", adverId);
+        netUtil.okHttp2Server2(WebRecordActivity.this, chang_url, map);
+    }
+
+    /**
      * 展示绑定淘宝的dialog
      */
-    private void showBindTaobaoDialog(final String id) {
+    private void showBindTaobaoDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("绑定淘宝账号")
                 .setMessage("您需要绑定淘宝账号，若取消绑定将会在您查看商品详情时提示您继续绑定操作")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        bindTaobao(id);
+                        bindTaobao();
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -293,7 +313,7 @@ public class WebRecordActivity extends BaseActivity {
      *
      * @param response
      */
-    private void getTaoWord(String response) {
+    private void getTaoWord(String response) throws Exception {
         TaoWordBean taoWordBean = new Gson().fromJson(response, TaoWordBean.class);
         int statusCode = taoWordBean.getStatusCode();
         switch (statusCode) {
@@ -306,7 +326,7 @@ public class WebRecordActivity extends BaseActivity {
     /**
      * @param response 解析数据
      */
-    private void parseData(String response) {
+    private void parseData(String response) throws Exception {
         LogUtil.e("click_url = " + response);
         ChangeUrlBean changeUrlBean = new Gson().fromJson(response, ChangeUrlBean.class);
         int statusCode = changeUrlBean.getStatusCode();
@@ -408,6 +428,7 @@ public class WebRecordActivity extends BaseActivity {
         Toast.makeText(WebRecordActivity.this, "请先登录！", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
     /**
@@ -590,10 +611,8 @@ public class WebRecordActivity extends BaseActivity {
 
     /**
      * 绑定淘宝
-     *
-     * @param s
      */
-    public void bindTaobao(final String s) {
+    public void bindTaobao() {
 
         alibcLogin = AlibcLogin.getInstance();
 
@@ -606,9 +625,7 @@ public class WebRecordActivity extends BaseActivity {
                 openId = AlibcLogin.getInstance().getSession().openId;
                 avatarUrl = AlibcLogin.getInstance().getSession().avatarUrl;
                 nick = AlibcLogin.getInstance().getSession().nick;
-                uploadUserInfo(s);
-                which = "bind";
-                netUtil.okHttp2Server2(bind_url, map);
+                uploadUserInfo();
             }
 
             @Override
@@ -620,17 +637,16 @@ public class WebRecordActivity extends BaseActivity {
 
     /**
      * 上传用户信息
-     *
-     * @param s
      */
-    public void uploadUserInfo(String s) {
-
-        if (!TextUtils.isEmpty(s)) {
+    public void uploadUserInfo() {
+        if (!TextUtils.isEmpty(userLogin)) {
+            which = "bind";
             map = new HashMap<>();
-            map.put("Id", s);
+            map.put("Id", userLogin);
             map.put("openId", openId);
             map.put("portrait", avatarUrl);
             map.put("nickname", nick);
+            netUtil.okHttp2Server2(WebRecordActivity.this, bind_url, map);
         }
 
     }
@@ -640,7 +656,7 @@ public class WebRecordActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseBindData(String response) {
+    private void parseBindData(String response) throws Exception {
         CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
         int statusCode = codeStatueBean.getStatusCode();
         switch (statusCode) {

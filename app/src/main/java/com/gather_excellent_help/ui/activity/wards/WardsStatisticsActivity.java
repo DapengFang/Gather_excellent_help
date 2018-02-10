@@ -20,6 +20,7 @@ import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.adapter.WardStaticsAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -101,6 +102,7 @@ public class WardsStatisticsActivity extends BaseActivity {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "--" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(WardsStatisticsActivity.this);
             }
         });
     }
@@ -112,7 +114,7 @@ public class WardsStatisticsActivity extends BaseActivity {
         map.put("start_time", start_time);
         map.put("end_time", end_time);
         map.put("user_name", user_name);
-        netUtil.okHttp2Server2(url, map);
+        netUtil.okHttp2Server2(WardsStatisticsActivity.this,url, map);
     }
 
     public class MyOnclickListener implements View.OnClickListener {
@@ -136,16 +138,16 @@ public class WardsStatisticsActivity extends BaseActivity {
     private void srarhWardsStatistics() {
         start_time = etWardStaticsStarttime.getText().toString().trim();
         end_time = etWardStaticsEndtime.getText().toString().trim();
-        user_name  = etWardStaticsUser.getText().toString().trim();
-        if(TextUtils.isEmpty(start_time)) {
+        user_name = etWardStaticsUser.getText().toString().trim();
+        if (TextUtils.isEmpty(start_time)) {
             Toast.makeText(WardsStatisticsActivity.this, "开始时间为空！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(end_time)) {
+        if (TextUtils.isEmpty(end_time)) {
             Toast.makeText(WardsStatisticsActivity.this, "结束时间为空！", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(user_name)) {
+        if (TextUtils.isEmpty(user_name)) {
             Toast.makeText(WardsStatisticsActivity.this, "用户名为空！", Toast.LENGTH_SHORT).show();
             return;
         }

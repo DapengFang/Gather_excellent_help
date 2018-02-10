@@ -31,6 +31,7 @@ import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.suning.saleafter.SaleAfterActivity;
 import com.gather_excellent_help.ui.adapter.SuningLogisticsInfoAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -613,7 +614,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
         map = new HashMap<>();
         map.put("user_id", userLogin);
         map.put("order_id", order_id);
-        netUtil.okHttp2Server2(cancel_url, map);
+        netUtil.okHttp2Server2(SuningOrderDetailActivity.this,cancel_url, map);
     }
 
 
@@ -650,7 +651,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
         map.put("user_id", userLogin);
         map.put("order_id", order_id);
         map.put("order_status", "3");
-        netUtil.okHttp2Server2(confrim_url, map);
+        netUtil.okHttp2Server2(SuningOrderDetailActivity.this,confrim_url, map);
     }
 
 
@@ -661,18 +662,23 @@ public class SuningOrderDetailActivity extends BaseActivity {
 
         @Override
         public void getSuccessResponse(String response) {
-            if (whick.equals("cancel_order")) {
-                parseCancelOrderData(response);
-            } else if (whick.equals("confirm_order")) {
-                parderConfirmOrderData(response);
-            } else if (whick.equals("apply_state")) {
-                parseApplyState(response);
+            try {
+                if (whick.equals("cancel_order")) {
+                    parseCancelOrderData(response);
+                } else if (whick.equals("confirm_order")) {
+                    parderConfirmOrderData(response);
+                } else if (whick.equals("apply_state")) {
+                    parseApplyState(response);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "-" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(SuningOrderDetailActivity.this);
         }
     }
 
@@ -681,7 +687,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseApplyState(String response) {
+    private void parseApplyState(String response) throws Exception {
         LogUtil.e("申请状态 = " + response);
         ApplyStateBean applyStateBean = new Gson().fromJson(response, ApplyStateBean.class);
         int statusCode = applyStateBean.getStatusCode();
@@ -721,7 +727,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseCancelOrderData(String response) {
+    private void parseCancelOrderData(String response) throws Exception {
         CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
         int statusCode = codeStatueBean.getStatusCode();
         switch (statusCode) {
@@ -741,7 +747,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parderConfirmOrderData(String response) {
+    private void parderConfirmOrderData(String response) throws Exception {
         SuningOrderConfirmBean suningOrderConfirmBean = new Gson().fromJson(response, SuningOrderConfirmBean.class);
         int statusCode = suningOrderConfirmBean.getStatusCode();
         switch (statusCode) {
@@ -767,6 +773,6 @@ public class SuningOrderDetailActivity extends BaseActivity {
         map = new HashMap<>();
         map.put("order_id", order_id);
         map.put("orderItemId", orderItemId);
-        netUtil.okHttp2Server2(apply_state_url, map);
+        netUtil.okHttp2Server2(SuningOrderDetailActivity.this,apply_state_url, map);
     }
 }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_home_scanner_search"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/x8"
+    android:layout_marginLeft="@dimen/x12"
+    android:layout_marginRight="@dimen/x12"
+    android:layout_marginBottom="@dimen/x8"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/ll_home_sousuo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/home_sousuo_white_shape"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/x6">
+
+        <ImageView
+            android:layout_width="@dimen/x12"
+            android:layout_height="@dimen/x12"
+            android:layout_marginLeft="@dimen/x3"
+            android:src="@drawable/home_search_circle_icon" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x6"
+            android:layout_weight="1"
+            android:text="请输入关键字查询"
+            android:textColor="#999999"
+            android:textSize="@dimen/x12" />
+
+        <LinearLayout
+            android:id="@+id/ll_home_update_scanner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/x3"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/x12"
+                android:layout_height="@dimen/x12"
+                android:src="@drawable/home_scanner_circle_icon" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_home_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x18"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="@dimen/x14"
+                android:layout_height="@dimen/x14"
+                android:src="@drawable/home_msg_circle_icon" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/x2"
+            android:text="消息"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x8" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

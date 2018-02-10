@@ -191,7 +191,6 @@ public class SuningOrderAdapter extends RecyclerView.Adapter<SuningOrderAdapter.
             }
         } catch (Exception e) {
             LogUtil.e("SuningOrderAdapter error");
-            Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
         }
     }
 

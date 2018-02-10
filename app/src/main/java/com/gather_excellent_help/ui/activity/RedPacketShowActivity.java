@@ -23,6 +23,7 @@ import com.gather_excellent_help.bean.TaoWordBean;
 import com.gather_excellent_help.ui.activity.shop.WhichJoinActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.SharePopupwindow;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -116,7 +117,7 @@ public class RedpacketShowActivity extends BaseActivity {
         map.put("convert_url", redpacket_url);
         map.put("img_url", "http://app.juyob.com/hbback.jpg");
         map.put("title", "每天都有红包，最高1111元！快分享给小伙伴一起来抢吧！");
-        netUtil.okHttp2Server2(get_url, map);
+        netUtil.okHttp2Server2(RedpacketShowActivity.this,get_url, map);
         netUtil.setOnServerResponseListener(new OnServerResponseListener());
     }
 
@@ -324,6 +325,7 @@ public class RedpacketShowActivity extends BaseActivity {
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "-" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(RedpacketShowActivity.this);
         }
     }
 

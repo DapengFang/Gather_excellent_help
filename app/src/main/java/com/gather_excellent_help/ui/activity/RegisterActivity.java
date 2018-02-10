@@ -21,6 +21,7 @@ import com.gather_excellent_help.bean.CodeBean;
 import com.gather_excellent_help.bean.SmsCodeBean;
 import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
 import com.gather_excellent_help.utils.Check;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -104,6 +105,7 @@ public class RegisterActivity extends Activity {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "," + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(RegisterActivity.this);
             }
         });
     }
@@ -175,7 +177,7 @@ public class RegisterActivity extends Activity {
         hashMap = new HashMap<>();
         hashMap.put("sms_code", phone);
         hashMap.put("type", "1");
-        netUtils.okHttp2Server2(sms_url, hashMap);
+        netUtils.okHttp2Server2(RegisterActivity.this,sms_url, hashMap);
         if(countDownTimer!=null) {
             countDownTimer.start();
         }
@@ -230,7 +232,7 @@ public class RegisterActivity extends Activity {
                     getUserInputParams();
                     if (smscode.equals(sms_code_s)) {
                         whick = "register";
-                        netUtils.okHttp2Server2(url, hashMap);
+                        netUtils.okHttp2Server2(RegisterActivity.this,url, hashMap);
                     } else {
                         Toast.makeText(RegisterActivity.this, "短信验证码不正确，请从新输入！", Toast.LENGTH_SHORT).show();
                     }

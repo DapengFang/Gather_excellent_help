@@ -17,6 +17,7 @@ import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningDetailActivity;
 import com.gather_excellent_help.ui.widget.CarouselImageView;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.imageutils.ImageLoader;
@@ -53,7 +54,7 @@ public class BannerPresenter extends BasePresenter {
 
     @Override
     public void initData() {
-        netUtils.okHttp2Server2(banner_url, null);
+        netUtils.okHttp2Server2(context,banner_url, null);
         netUtils.setOnServerResponseListener(new MyOnServerResponseListener());
     }
 
@@ -62,14 +63,19 @@ public class BannerPresenter extends BasePresenter {
 
         @Override
         public void getSuccessResponse(String response) {
-            parseData(response, civHomeGanner);
-            onStopRefreshListener.stopSuccessRefresh();
+            try {
+                parseData(response, civHomeGanner);
+                onStopRefreshListener.stopSuccessRefresh();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "----" + e.getMessage());
             onStopRefreshListener.stopFailRefresh();
+            EncryptNetUtil.startNeterrorPage(context);
         }
     }
 
@@ -79,7 +85,7 @@ public class BannerPresenter extends BasePresenter {
      * @param response
      * @param civHomeGanner
      */
-    private void parseData(String response, CarouselImageView civHomeGanner) {
+    private void parseData(String response, CarouselImageView civHomeGanner) throws Exception{
         LogUtil.e("banner-------" + response);
         Gson gson = new Gson();
         HomeBannerBean homeBannerBean = gson.fromJson(response, HomeBannerBean.class);

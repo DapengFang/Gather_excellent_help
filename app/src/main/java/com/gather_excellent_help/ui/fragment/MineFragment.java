@@ -61,15 +61,19 @@ import com.gather_excellent_help.ui.activity.credits.ShopDetailActivity;
 import com.gather_excellent_help.ui.activity.shop.WhichJoinActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningOrderActivity;
 import com.gather_excellent_help.ui.activity.taosearch.TaoSearchActivity;
+import com.gather_excellent_help.ui.activity.test.TestActivity_l02;
+import com.gather_excellent_help.ui.activity.test.TestActivity_l04;
 import com.gather_excellent_help.ui.base.LazyLoadFragment;
 import com.gather_excellent_help.ui.lisetener.MyTextWatcher;
 import com.gather_excellent_help.ui.widget.CircularImage;
 import com.gather_excellent_help.ui.widget.MyToggleButton;
 import com.gather_excellent_help.utils.CacheUtils;
 import com.gather_excellent_help.utils.Check;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
+import com.gather_excellent_help.utils.enctry.Des2;
 import com.google.gson.Gson;
 
 import java.math.RoundingMode;
@@ -81,6 +85,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.EventBusException;
 import okhttp3.Call;
 
 /**
@@ -285,7 +290,6 @@ public class MineFragment extends LazyLoadFragment {
         iv_apply_ad_show = (ImageView) inflate.findViewById(R.id.iv_apply_ad_show);
 
         ll_mine_content_show = (LinearLayout) inflate.findViewById(R.id.ll_mine_content_show);
-
         return inflate;
     }
 
@@ -446,7 +450,7 @@ public class MineFragment extends LazyLoadFragment {
             which = "userinfo";
             map = new HashMap<>();
             map.put("Id", userLogin);
-            netUtils.okHttp2Server2(url, map);
+            netUtils.okHttp2Server2(getContext(), url, map);
         } else {
             rl_mine_head_login.setVisibility(View.VISIBLE);
             rl_mine_head_userinfo.setVisibility(View.GONE);
@@ -481,21 +485,26 @@ public class MineFragment extends LazyLoadFragment {
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                LogUtil.e("userinfo = " + response);
-                if (which.equals("userinfo")) {
-                    parseData(response);
-                } else if (which.equals("bind_taobao")) {
-                    parseBindTaobaoData(response);
-                } else if (which.equals("sms")) {
-                    parseSmsData(response);
-                } else if (which.equals("bind_pay")) {
-                    parseBindPayData(response);
+                try {
+                    LogUtil.e("userinfo = " + response);
+                    if (which.equals("userinfo")) {
+                        parseData(response);
+                    } else if (which.equals("bind_taobao")) {
+                        parseBindTaobaoData(response);
+                    } else if (which.equals("sms")) {
+                        parseSmsData(response);
+                    } else if (which.equals("bind_pay")) {
+                        parseBindPayData(response);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "==" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(getContext());
             }
         });
         if (tbnMineControl != null) {
@@ -518,7 +527,11 @@ public class MineFragment extends LazyLoadFragment {
                 int statusCode = codeStatueBean.getStatusCode();
                 switch (statusCode) {
                     case 1:
-                        parseHelpData(response);
+                        try {
+                            parseHelpData(response);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         break;
                     case 0:
                         Toast.makeText(getContext(), codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
@@ -529,6 +542,7 @@ public class MineFragment extends LazyLoadFragment {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "-" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(getContext());
             }
         });
     }
@@ -536,7 +550,7 @@ public class MineFragment extends LazyLoadFragment {
     /**
      * @param response 解析绑定支付宝数据
      */
-    private void parseBindPayData(String response) {
+    private void parseBindPayData(String response) throws Exception {
         CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
         int statusCode = codeStatueBean.getStatusCode();
         switch (statusCode) {
@@ -572,7 +586,7 @@ public class MineFragment extends LazyLoadFragment {
      *
      * @param response
      */
-    private void parseHelpData(String response) {
+    private void parseHelpData(String response) throws Exception {
         HelpRuleBean helpRuleBean = new Gson().fromJson(response, HelpRuleBean.class);
         List<HelpRuleBean.DataBean> data = helpRuleBean.getData();
         String app_help_url = data.get(0).getApp_help_url();
@@ -622,7 +636,7 @@ public class MineFragment extends LazyLoadFragment {
      *
      * @param response
      */
-    private void parseData(String response) {
+    private void parseData(String response) throws Exception {
         LogUtil.e(response);
         Gson gson = new Gson();
         MineBean mineBean = gson.fromJson(response, MineBean.class);
@@ -851,7 +865,7 @@ public class MineFragment extends LazyLoadFragment {
                     } else {
                         //跳帮助
                         which = "help";
-                        netUtils2.okHttp2Server2(help_url, null);
+                        netUtils2.okHttp2Server2(getContext(), help_url, null);
                     }
                     break;
                 case R.id.ll_mine_find_friends:
@@ -886,12 +900,12 @@ public class MineFragment extends LazyLoadFragment {
                 case R.id.ll_mine_huiyuan_statis:
                     //条帮助
                     which = "help";
-                    netUtils2.okHttp2Server2(help_url, null);
+                    netUtils2.okHttp2Server2(getContext(), help_url, null);
                     break;
                 case R.id.ll_mine_fanyong_rule:
                     //跳返佣规则
                     which = "rule";
-                    netUtils2.okHttp2Server2(rule_url, null);
+                    netUtils2.okHttp2Server2(getContext(), rule_url, null);
                     break;
                 case R.id.civ_me_head_icon:
                     if (login) {
@@ -952,7 +966,7 @@ public class MineFragment extends LazyLoadFragment {
      * 跳转到苏宁购物车
      */
     private void toSuningGoodscart() {
-        Intent intent = new Intent(getContext(), TaoSearchActivity.class);
+        Intent intent = new Intent(getContext(), TestActivity_l04.class);
         startActivity(intent);
     }
 
@@ -1152,7 +1166,7 @@ public class MineFragment extends LazyLoadFragment {
                 nick = AlibcLogin.getInstance().getSession().nick;
                 uploadUserInfo(s);
                 which = "bind_taobao";
-                netUtils.okHttp2Server2(bind_url, map);
+                netUtils.okHttp2Server2(getContext(), bind_url, map);
             }
 
             @Override
@@ -1186,7 +1200,7 @@ public class MineFragment extends LazyLoadFragment {
      *
      * @param response
      */
-    private void parseBindTaobaoData(String response) {
+    private void parseBindTaobaoData(String response) throws Exception {
         CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
         int statusCode = codeStatueBean.getStatusCode();
         switch (statusCode) {
@@ -1301,9 +1315,10 @@ public class MineFragment extends LazyLoadFragment {
         };
         which = "sms";
         map = new HashMap<>();
+        map.put("Id", userLogin);
         map.put("sms_code", userPhone);
         map.put("type", "3");
-        netUtils.okHttp2Server2(sms_url, map);
+        netUtils.okHttp2Server2(getContext(), sms_url, map);
         if (countDownTimer != null) {
             countDownTimer.start();
         }
@@ -1314,7 +1329,7 @@ public class MineFragment extends LazyLoadFragment {
      *
      * @param response
      */
-    private void parseSmsData(String response) {
+    private void parseSmsData(String response) throws Exception {
         LogUtil.e(response);
         SmsCodeBean smsCodeBean = new Gson().fromJson(response, SmsCodeBean.class);
         int statusCode = smsCodeBean.getStatusCode();
@@ -1345,7 +1360,7 @@ public class MineFragment extends LazyLoadFragment {
                 map.put("alipay", account);
                 map.put("alipayName", name);
                 which = "bind_pay";
-                netUtils.okHttp2Server2(pay_url, map);
+                netUtils.okHttp2Server2(getContext(), pay_url, map);
             } else {
                 toLogin();
             }

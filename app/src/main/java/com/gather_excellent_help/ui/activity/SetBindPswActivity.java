@@ -15,6 +15,7 @@ import com.gather_excellent_help.R;
 import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.EncryptUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
@@ -109,7 +110,7 @@ public class SetBindPswActivity extends BaseActivity {
             map = new HashMap<>();
             map.put("userName", user);
             map.put("newPassword", psw);
-            netUtil.okHttp2Server2(url,map);
+            netUtil.okHttp2Server2(SetBindPswActivity.this,url,map);
         }
 
     }
@@ -136,7 +137,8 @@ public class SetBindPswActivity extends BaseActivity {
         @Override
         public void getFailResponse(Call call, Exception e) {
             tv_bind_setpsw_submit.setClickable(true);
-            LogUtil.e(e.getMessage());
+            LogUtil.e(call.toString() + "-" +e.getMessage());
+            EncryptNetUtil.startNeterrorPage(SetBindPswActivity.this);
         }
     }
 

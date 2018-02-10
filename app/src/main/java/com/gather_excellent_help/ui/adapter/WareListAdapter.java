@@ -95,6 +95,7 @@ public class WareListAdapter extends BaseAdapter {
             holder.ll_activity_list_ware_zhuan = (LinearLayout) convertView.findViewById(R.id.ll_activity_list_ware_zhuan);
             holder.iv_activity_list_vip = (ImageView) convertView.findViewById(R.id.iv_activity_list_vip);
             holder.rl_activity_rexiao_share = (RelativeLayout) convertView.findViewById(R.id.rl_activity_rexiao_share);
+            holder.ll_activity_lsit_coupon = (LinearLayout) convertView.findViewById(R.id.ll_activity_lsit_coupon);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -126,10 +127,10 @@ public class WareListAdapter extends BaseAdapter {
 
         if (exclusive == 1) {
             holder.iv_activity_list_vip.setVisibility(View.VISIBLE);
-            holder.tv_rush_ware_coupons.setVisibility(View.GONE);
+            holder.ll_activity_lsit_coupon.setVisibility(View.GONE);
         } else {
             holder.iv_activity_list_vip.setVisibility(View.GONE);
-            holder.tv_rush_ware_coupons.setVisibility(View.VISIBLE);
+            holder.ll_activity_lsit_coupon.setVisibility(View.VISIBLE);
         }
 
         if (holder.tv_home_type_aprice != null) {
@@ -159,14 +160,14 @@ public class WareListAdapter extends BaseAdapter {
                         .into(holder.home_type_photo);//请求成功后把图片设置到的控件
             }
             if (load_type.equals("isVip")) {
-                holder.tv_rush_ware_coupons.setVisibility(View.INVISIBLE);
+                holder.ll_activity_lsit_coupon.setVisibility(View.INVISIBLE);
                 holder.tv_rush_ware_second_coupons.setVisibility(View.GONE);
             } else {
                 if (couponsPrice > 0) {
-                    holder.tv_rush_ware_coupons.setVisibility(View.VISIBLE);
-                    holder.tv_rush_ware_coupons.setText("券" + couponsPrice);
+                    holder.ll_activity_lsit_coupon.setVisibility(View.VISIBLE);
+                    holder.tv_rush_ware_coupons.setText("" + couponsPrice);
                 } else {
-                    holder.tv_rush_ware_coupons.setVisibility(View.INVISIBLE);
+                    holder.ll_activity_lsit_coupon.setVisibility(View.INVISIBLE);
                 }
                 if (secondCouponsUrl != null && !TextUtils.isEmpty(secondCouponsUrl)) {
                     holder.tv_rush_ware_second_coupons.setVisibility(View.VISIBLE);
@@ -216,8 +217,8 @@ public class WareListAdapter extends BaseAdapter {
                 holder.rl_activity_rexiao_share.setVisibility(View.GONE);
             }
 
-            if (holder.tv_rush_ware_coupons != null) {
-                holder.tv_rush_ware_coupons.setVisibility(View.GONE);
+            if (holder.ll_activity_lsit_coupon != null) {
+                holder.ll_activity_lsit_coupon.setVisibility(View.GONE);
             }
             if (holder.tv_rush_ware_second_coupons != null) {
                 holder.tv_rush_ware_second_coupons.setVisibility(View.GONE);
@@ -261,6 +262,7 @@ public class WareListAdapter extends BaseAdapter {
         LinearLayout ll_activity_list_ware_zhuan;     //赚和成本
         ImageView iv_activity_list_vip;    //专享价
         RelativeLayout rl_activity_rexiao_share; //分享
+        LinearLayout ll_activity_lsit_coupon;
     }
 
     private OnShareClickListener onShareClickListener;

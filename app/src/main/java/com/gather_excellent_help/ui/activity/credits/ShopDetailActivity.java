@@ -34,6 +34,7 @@ import com.gather_excellent_help.bean.ShopDetailBean;
 import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.EditTextPopupwindow;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.PhotoUtils;
@@ -146,8 +147,9 @@ public class ShopDetailActivity extends BaseActivity {
             return;
         }
         map = new HashMap<>();
+        map.put("Id",loginId);
         map.put("seller_id", loginId);
-        netUtil.okHttp2Server2(see_shop_url, map);
+        netUtil.okHttp2Server2(ShopDetailActivity.this,see_shop_url, map);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -220,6 +222,7 @@ public class ShopDetailActivity extends BaseActivity {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "--" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(ShopDetailActivity.this);
             }
         });
         tvTopTitleName.setText("商家信息");
@@ -295,6 +298,7 @@ public class ShopDetailActivity extends BaseActivity {
         new Thread(){
             public void run(){
                 HashMap<String, String> map = new HashMap<>();
+                map.put("Id",loginId);
                 map.put("seller_id", loginId);
                 map.put("name", shopName);
                 map.put("telephone", telephone);
@@ -303,7 +307,7 @@ public class ShopDetailActivity extends BaseActivity {
                 map.put("business_time", startTime + "a" + endTime);
                 map.put("bussiness", shopYewu);
                 map.put("file", upload.trim());
-                netUtil.okHttp2Server2(update_shop_url, map);
+                netUtil.okHttp2Server2(ShopDetailActivity.this,update_shop_url, map);
             }
         }.start();
 

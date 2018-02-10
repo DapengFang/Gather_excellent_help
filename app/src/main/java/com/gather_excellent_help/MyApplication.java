@@ -113,7 +113,7 @@ public class MyApplication extends Application {
                 userLogin = Tools.getUserLogin(application);
                 map = new HashMap<>();
                 map.put("id", userLogin);
-                netUtil.okHttp2Server2(url, map);
+                netUtil.okHttp2Server2(this,url, map);
             }
         } catch (Error e) {
             LogUtil.e("程序发生未知错误！");

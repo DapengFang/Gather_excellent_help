@@ -42,6 +42,7 @@ import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.fragment.TaobaoFragment;
 import com.gather_excellent_help.ui.widget.TaobaoShaixuanPopupwindow;
 import com.gather_excellent_help.ui.widget.TaobaoZonghePopupwindow;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -95,8 +96,6 @@ public class TaoSearchActivity extends BaseActivity {
     LinearLayout llTaobaoLoadmore;
     @Bind(R.id.activity_ware_list)
     LinearLayout activityWareList;
-    @Bind(R.id.rl_news_search_before)
-    RelativeLayout rlNewsSearchBefore;
     @Bind(R.id.tv_news_edit_search)
     TextView tvNewsEditSearch;
     @Bind(R.id.ll_news_search_after)
@@ -175,7 +174,7 @@ public class TaoSearchActivity extends BaseActivity {
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case CHECK_NULL:
-                        if (rlNewsSearchBefore != null && llNewsSearchAfter != null
+                        if (llNewsSearchAfter != null
                                 && rlEditTextExit != null && llTaobaoLoadmore != null
                                 && gvTaobaoList != null) {
                             loadTaobaoData();
@@ -188,7 +187,7 @@ public class TaoSearchActivity extends BaseActivity {
             }
         };
         if (handler != null) {
-            handler.sendEmptyMessageDelayed(CHECK_NULL, 600);
+            handler.sendEmptyMessageDelayed(CHECK_NULL, 200);
         }
         setupSwipeRefresh(swip_taobao_refresh);
     }
@@ -249,9 +248,8 @@ public class TaoSearchActivity extends BaseActivity {
             keyword = search_words;
         }
         if (TextUtils.isEmpty(keyword)) {
-            initSearchBefore();
+            etTaobaoSearchContent.setText("");
         } else {
-            initSearch();
             etTaobaoSearchContent.setText(keyword);
         }
         showLoading();
@@ -320,13 +318,13 @@ public class TaoSearchActivity extends BaseActivity {
                                                 if (couponsPrice > 0) {
                                                     whick_share = 1;
                                                     map = new HashMap<>();
-                                                    map = ShareUtil.getChangeWareParam(map, goods_id, adverId);
-                                                    ShareUtil.getCouponChangeUrl(netUtil2, map);
+                                                    map = ShareUtil.getChangeWareParam(map, goods_id, adverId,userLogin);
+                                                    ShareUtil.getCouponChangeUrl(TaoSearchActivity.this,netUtil2, map);
                                                 } else {
                                                     whick_share = 2;
                                                     map = new HashMap<>();
-                                                    map = ShareUtil.getChangeWareParam(map, goods_id, adverId);
-                                                    ShareUtil.getWareChangeUrl(netUtil2, map);
+                                                    map = ShareUtil.getChangeWareParam(map, goods_id, adverId,userLogin);
+                                                    ShareUtil.getWareChangeUrl(TaoSearchActivity.this,netUtil2, map);
                                                 }
                                             }
                                         }
@@ -430,13 +428,13 @@ public class TaoSearchActivity extends BaseActivity {
                     @Override
                     public void getFailResponse(Call call, Exception e) {
                         LogUtil.e(call.toString() + "--" + e.getMessage());
-                        Toast.makeText(TaoSearchActivity.this, "网络连接出现问题~", Toast.LENGTH_SHORT).show();
                         if (llTaobaoLoadmore != null) {
                             llTaobaoLoadmore.setVisibility(View.GONE);
                         }
                         if (swip_taobao_refresh != null && swip_taobao_refresh.isRefreshing()) {
                             swip_taobao_refresh.setRefreshing(false);
                         }
+                        EncryptNetUtil.startNeterrorPage(TaoSearchActivity.this);
                     }
 
                 }
@@ -446,19 +444,25 @@ public class TaoSearchActivity extends BaseActivity {
                 new NetUtil.OnServerResponseListener() {
                     @Override
                     public void getSuccessResponse(String response) {
-                        if (whick.equals("changeurl")) {
-                            parseChangeData(response);
-                        } else if (whick.equals("getwords")) {
-                            parseChangeWordsData(response);
+                        try {
+                            if (whick.equals("changeurl")) {
+                                parseChangeData(response);
+                            } else if (whick.equals("getwords")) {
+                                parseChangeWordsData(response);
+                            }
+                            hindBoardInput();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 
                     @Override
                     public void getFailResponse(Call call, Exception e) {
                         LogUtil.e(call.toString() + "-" + e.getMessage());
+                        hindBoardInput();
+                        EncryptNetUtil.startNeterrorPage(TaoSearchActivity.this);
                     }
                 }
-
         );
         rl_exit.setOnClickListener(new MyOnclickListener());
         rlTaobaoSousuo.setOnClickListener(new MyOnclickListener());
@@ -466,7 +470,6 @@ public class TaoSearchActivity extends BaseActivity {
         llTaobaoXiaoliang.setOnClickListener(new MyOnclickListener());
         llTaobaoPrice.setOnClickListener(new MyOnclickListener());
         llTaobaoShaixuan.setOnClickListener(new MyOnclickListener());
-        rlNewsSearchBefore.setOnClickListener(new MyOnclickListener());
         rlEditTextExit.setOnClickListener(new MyOnclickListener());
         etTaobaoSearchContent.addTextChangedListener(watcher);
         etTaobaoSearchContent.setOnEditorActionListener
@@ -476,15 +479,12 @@ public class TaoSearchActivity extends BaseActivity {
                          if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                              String sousuoStr = etTaobaoSearchContent.getText().toString().trim();
                              if (TextUtils.isEmpty(sousuoStr)) {
-                                 rlNewsSearchBefore.setVisibility(View.VISIBLE);
                                  llNewsSearchAfter.setVisibility(View.GONE);
                                  return true;
                              }
                              initChoice();
                              Toast.makeText(TaoSearchActivity.this, "正在搜索中，请稍后！", Toast.LENGTH_SHORT).show();
-                             InputMethodManager imm = (InputMethodManager) getSystemService(
-                                     Context.INPUT_METHOD_SERVICE);
-                             imm.hideSoftInputFromWindow(etTaobaoSearchContent.getWindowToken(), 0);
+                             hindBoardInput();
                              keyword = sousuoStr;
                              isLoadmore = -1;
                              page_no = "1";
@@ -503,9 +503,16 @@ public class TaoSearchActivity extends BaseActivity {
                          return false;
                      }
                  }
-
-
                 );
+    }
+
+    /**
+     * 隐藏软键盘
+     */
+    private void hindBoardInput() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(etTaobaoSearchContent.getWindowToken(), 0);
     }
 
     private void toLogin() {
@@ -518,29 +525,26 @@ public class TaoSearchActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseChangeData(String response) {
-        try {
-            LogUtil.e("click_url = " + response);
-            ChangeUrlBean changeUrlBean = new Gson().fromJson(response, ChangeUrlBean.class);
-            int statusCode = changeUrlBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    List<ChangeUrlBean.DataBean> data = changeUrlBean.getData();
-                    if (data != null && data.size() > 0) {
-                        click_url = changeUrlBean.getData().get(0).getClick_url();
-                        LogUtil.e("click_url = " + click_url);
-                        whick = "getwords";
-                        map = new HashMap<>();
-                        map = ShareUtil.getChangeWordsParam(map, userLogin, click_url, goods_img, goods_title);
-                        ShareUtil.getChangeWordUrl(netUtil2, map);
-                    }
-                    break;
-                case 0:
-                    Toast.makeText(TaoSearchActivity.this, changeUrlBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        } catch (Exception e) {
-            Toast.makeText(TaoSearchActivity.this, "系统服务出现异常，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+    private void parseChangeData(String response) throws Exception {
+
+        LogUtil.e("click_url = " + response);
+        ChangeUrlBean changeUrlBean = new Gson().fromJson(response, ChangeUrlBean.class);
+        int statusCode = changeUrlBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                List<ChangeUrlBean.DataBean> data = changeUrlBean.getData();
+                if (data != null && data.size() > 0) {
+                    click_url = changeUrlBean.getData().get(0).getClick_url();
+                    LogUtil.e("click_url = " + click_url);
+                    whick = "getwords";
+                    map = new HashMap<>();
+                    map = ShareUtil.getChangeWordsParam(map, userLogin, click_url, goods_img, goods_title);
+                    ShareUtil.getChangeWordUrl(TaoSearchActivity.this,netUtil2, map);
+                }
+                break;
+            case 0:
+                Toast.makeText(TaoSearchActivity.this, changeUrlBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -549,29 +553,27 @@ public class TaoSearchActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseChangeWordsData(String response) {
-        try {
-            TaoWordBean taoWordBean = new Gson().fromJson(response, TaoWordBean.class);
-            int statusCode = taoWordBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    taoWord = taoWordBean.getData();
-                    LogUtil.e(taoWord);
-                    if (whick_share == 1) {
-                        share_content = "商品名称:" + goods_title + "\n商品价格 ¥" + goods_price + "\n优惠券" + goods_coupon + "元" + "\n复制这条消息:" + taoWord + "\n去打开手机淘宝";
-                    } else if (whick_share == 2) {
-                        share_content = "商品名称:" + goods_title + "\n商品价格 ¥" + goods_price + "\n复制这条消息:" + taoWord + "\n去打开手机淘宝";
-                    }
-                    ShareUtil.showCopyDialog(TaoSearchActivity.this, whick_share, share_content, goods_price, shareListener, goods_img,
-                            goods_title, dialog);
-                    break;
-                case 0:
-                    Toast.makeText(TaoSearchActivity.this, taoWordBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        } catch (Exception e) {
-            Toast.makeText(TaoSearchActivity.this, "系统服务出现异常，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+    private void parseChangeWordsData(String response) throws Exception {
+
+        TaoWordBean taoWordBean = new Gson().fromJson(response, TaoWordBean.class);
+        int statusCode = taoWordBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                taoWord = taoWordBean.getData();
+                LogUtil.e(taoWord);
+                if (whick_share == 1) {
+                    share_content = "商品名称:" + goods_title + "\n商品价格 ¥" + goods_price + "\n优惠券" + goods_coupon + "元" + "\n复制这条消息:" + taoWord + "\n去打开手机淘宝";
+                } else if (whick_share == 2) {
+                    share_content = "商品名称:" + goods_title + "\n商品价格 ¥" + goods_price + "\n复制这条消息:" + taoWord + "\n去打开手机淘宝";
+                }
+                ShareUtil.showCopyDialog(TaoSearchActivity.this, whick_share, share_content, goods_price, shareListener, goods_img,
+                        goods_title, dialog);
+                break;
+            case 0:
+                Toast.makeText(TaoSearchActivity.this, taoWordBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
         }
+
     }
 
     private UMShareListener shareListener = new UMShareListener() {
@@ -621,30 +623,6 @@ public class TaoSearchActivity extends BaseActivity {
             }
         }
     };
-
-    /**
-     * 初始化搜索控件
-     */
-    private void initSearch() {
-        if (rlNewsSearchBefore != null) {
-            rlNewsSearchBefore.setVisibility(View.GONE);
-        }
-        if (llNewsSearchAfter != null) {
-            llNewsSearchAfter.setVisibility(View.VISIBLE);
-        }
-        if (rlEditTextExit != null) {
-            rlEditTextExit.setVisibility(View.GONE);
-        }
-    }
-
-    private void initSearchBefore() {
-        if (rlNewsSearchBefore != null) {
-            rlNewsSearchBefore.setVisibility(View.VISIBLE);
-        }
-        if (llNewsSearchAfter != null) {
-            llNewsSearchAfter.setVisibility(View.GONE);
-        }
-    }
 
 
     /**
@@ -772,12 +750,8 @@ public class TaoSearchActivity extends BaseActivity {
                     break;
                 case R.id.rl_taobao_sousuo:
                     String sousuoStr = etTaobaoSearchContent.getText().toString().trim();
-                    InputMethodManager imm = (InputMethodManager) getSystemService(
-                            Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(etTaobaoSearchContent.getWindowToken(), 0);
+                    hindBoardInput();
                     if (TextUtils.isEmpty(sousuoStr)) {
-                        rlNewsSearchBefore.setVisibility(View.VISIBLE);
-                        llNewsSearchAfter.setVisibility(View.GONE);
                         return;
                     }
                     initChoice();
@@ -798,7 +772,6 @@ public class TaoSearchActivity extends BaseActivity {
                     searchTaobaoWare(keyword, city, type, is_tmall, start_price, end_price, page_no);
                     break;
                 case R.id.rl_news_search_before:
-                    rlNewsSearchBefore.setVisibility(View.GONE);
                     llNewsSearchAfter.setVisibility(View.VISIBLE);
                     // 获取编辑框焦点
                     etTaobaoSearchContent.setFocusable(true);
@@ -812,9 +785,7 @@ public class TaoSearchActivity extends BaseActivity {
                     etTaobaoSearchContent.setText("");
                     break;
                 case R.id.rl_exit:
-                    InputMethodManager imm2 = (InputMethodManager) getSystemService(
-                            Context.INPUT_METHOD_SERVICE);
-                    imm2.hideSoftInputFromWindow(etTaobaoSearchContent.getWindowToken(), 0);
+                    hindBoardInput();
                     finish();
                     break;
             }
@@ -835,7 +806,7 @@ public class TaoSearchActivity extends BaseActivity {
         map.put("end_price", end_price);
         map.put("page_no", page_no);
         map.put("page_size", page_size);
-        netUtil.okHttp2Server2(search_url, map);
+        netUtil.okHttp2Server2(TaoSearchActivity.this,search_url, map);
     }
 
     /**

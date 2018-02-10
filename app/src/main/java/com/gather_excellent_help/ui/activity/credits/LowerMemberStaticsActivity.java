@@ -33,6 +33,7 @@ import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.MyNestedScrollView;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
@@ -280,6 +281,7 @@ public class LowerMemberStaticsActivity extends BaseActivity {
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "--" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(LowerMemberStaticsActivity.this);
         }
     }
 
@@ -295,7 +297,7 @@ public class LowerMemberStaticsActivity extends BaseActivity {
         map.put("start_time", start_time);
         map.put("end_time", end_time);
         map.put("user_name", user_name);
-        netUtil.okHttp2Server2(url, map);
+        netUtil.okHttp2Server2(LowerMemberStaticsActivity.this,url, map);
     }
 
     public class MyOnclikListener implements View.OnClickListener {

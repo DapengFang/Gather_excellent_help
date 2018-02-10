@@ -32,6 +32,7 @@ import com.gather_excellent_help.ui.adapter.sale.TuihuanAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.TuihuoMenuPopWindow;
 import com.gather_excellent_help.utils.Check;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
@@ -223,7 +224,7 @@ public class BackMoneyActivity extends BaseActivity {
         map.put("article_id", article_id);
         map.put("apply_reason", apply_reason);
         map.put("apply_type", String.valueOf(apply_type));
-        netUtil.okHttp2Server2(apply_url, map);
+        netUtil.okHttp2Server2(BackMoneyActivity.this,apply_url, map);
     }
 
     /**
@@ -326,6 +327,7 @@ public class BackMoneyActivity extends BaseActivity {
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "-" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(BackMoneyActivity.this);
         }
     }
 }

@@ -24,8 +24,10 @@ import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.activity.LoginActivity;
 import com.gather_excellent_help.ui.activity.SetActivity;
+import com.gather_excellent_help.ui.activity.error.SuccessActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -102,11 +104,17 @@ public class ExtractCreditsActivity extends BaseActivity {
                     case 1:
                         EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "提取成功！"));
                         getExtractCredits();
-                        Toast.makeText(ExtractCreditsActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(ExtractCreditsActivity.this, SuccessActivity.class);
+                        intent.putExtra("extract_type", "1");
+                        intent.putExtra("extract_message", "提现成功");
+                        startActivity(intent);
                         finish();
                         break;
                     case 0:
-                        Toast.makeText(ExtractCreditsActivity.this, codeStatueBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                        Intent intent2 = new Intent(ExtractCreditsActivity.this, SuccessActivity.class);
+                        intent2.putExtra("extract_type", "0");
+                        intent2.putExtra("extract_message", codeStatueBean.getStatusMessage());
+                        startActivity(intent2);
                         break;
                 }
 
@@ -116,6 +124,7 @@ public class ExtractCreditsActivity extends BaseActivity {
             public void getFailResponse(Call call, Exception e) {
                 tvExtractCreditsCommit.setClickable(true);
                 LogUtil.e(call.toString() + "--" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(ExtractCreditsActivity.this);
             }
         });
         rlExit.setOnClickListener(new MyOnClickListener());
@@ -177,7 +186,7 @@ public class ExtractCreditsActivity extends BaseActivity {
         }
         map = new HashMap<>();
         map.put("Id", userLogin);
-        netUtil2.okHttp2Server2(mine_url, map);
+        netUtil2.okHttp2Server2(ExtractCreditsActivity.this, mine_url, map);
         netUtil2.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -209,6 +218,7 @@ public class ExtractCreditsActivity extends BaseActivity {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "-" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(ExtractCreditsActivity.this);
             }
         });
     }
@@ -266,10 +276,11 @@ public class ExtractCreditsActivity extends BaseActivity {
                 String userLogin = Tools.getUserLogin(this);
                 boolean bindAlipay = Tools.isBindAlipay(this);
                 map = new HashMap<>();
+                map.put("Id", userLogin);
                 map.put("id", userLogin);
                 map.put("extract_count", etCredits);
                 if (bindAlipay) {
-                    netUtil.okHttp2Server2(extract_url, map);
+                    netUtil.okHttp2Server2(ExtractCreditsActivity.this, extract_url, map);
                 } else {
                     tvExtractCreditsCommit.setClickable(true);
                     toBindAlipay();
@@ -384,7 +395,7 @@ public class ExtractCreditsActivity extends BaseActivity {
             map.put("alipay", account);
             map.put("alipayName", name);
             which = "pay";
-            netUtil3.okHttp2Server2(pay_url, map);
+            netUtil3.okHttp2Server2(ExtractCreditsActivity.this, pay_url, map);
         }
     }
 
@@ -410,9 +421,10 @@ public class ExtractCreditsActivity extends BaseActivity {
         };
         which = "sms";
         map = new HashMap<>();
+        map.put("Id",userLogin);
         map.put("sms_code", userPhone);
         map.put("type", "3");
-        netUtil3.okHttp2Server2(sms_url, map);
+        netUtil3.okHttp2Server2(ExtractCreditsActivity.this, sms_url, map);
         countDownTimer.start();
     }
 
@@ -440,7 +452,8 @@ public class ExtractCreditsActivity extends BaseActivity {
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-            Toast.makeText(ExtractCreditsActivity.this, "网络连接出现问题。", Toast.LENGTH_SHORT).show();
+            LogUtil.e(call.toString() + "-" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(ExtractCreditsActivity.this);
         }
     }
 

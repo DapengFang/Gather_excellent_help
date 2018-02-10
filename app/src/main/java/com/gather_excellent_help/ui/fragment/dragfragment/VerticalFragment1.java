@@ -52,6 +52,7 @@ import com.gather_excellent_help.ui.widget.SharePopupwindow;
 import com.gather_excellent_help.ui.widget.SuningStandardPopupwindow;
 import com.gather_excellent_help.ui.widget.SuningWarenumPopupwindow;
 import com.gather_excellent_help.utils.DensityUtil;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -201,7 +202,7 @@ public class VerticalFragment1 extends Fragment {
             if (msg.what == 0) {
                 int item = (vp_top_home.getCurrentItem() + 1) % img_urls.size();
                 vp_top_home.setCurrentItem(item);
-                myhandler.sendEmptyMessageDelayed(0,4000);
+                myhandler.sendEmptyMessageDelayed(0, 4000);
             } else if (msg.what == 1) {
                 if (!TextUtils.isEmpty(response)) {
                     myhandler.removeMessages(1);
@@ -236,7 +237,7 @@ public class VerticalFragment1 extends Fragment {
         userLogin = Tools.getUserLogin(context);
         map = new HashMap<>();
         map.put("user_id", userLogin);
-        netUtil3.okHttp2Server2(address_url, map);
+        netUtil3.okHttp2Server2(getContext(), address_url, map);
     }
 
     @Override
@@ -260,7 +261,7 @@ public class VerticalFragment1 extends Fragment {
         netUtil3 = new NetUtil();
 
         //购物车数据相关
-        netCartUtil = new NetCartUtil();
+        netCartUtil = new NetCartUtil(getContext());
         OnCartResponseListener onCartResponseListener = new OnCartResponseListener();
         netCartUtil.setOnCartResponseListener(onCartResponseListener);
         userLogin = Tools.getUserLogin(context);
@@ -283,8 +284,12 @@ public class VerticalFragment1 extends Fragment {
         netUtil2.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                if (whick.equals("limit_num")) {
-                    parseLimitData(response);
+                try {
+                    if (whick.equals("limit_num")) {
+                        parseLimitData(response);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -296,7 +301,11 @@ public class VerticalFragment1 extends Fragment {
         netUtil3.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
-                parseDefaultAddressData(response);
+                try {
+                    parseDefaultAddressData(response);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -323,41 +332,38 @@ public class VerticalFragment1 extends Fragment {
      *
      * @param response
      */
-    private void parseDefaultAddressData(String response) {
-        try {
-            AddressDetailBean addressDetailBean = new Gson().fromJson(response, AddressDetailBean.class);
-            int statusCode = addressDetailBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    List<AddressDetailBean.DataBean> data = addressDetailBean.getData();
-                    if (data != null && data.size() > 0) {
-                        AddressDetailBean.DataBean dataBean = data.get(0);
-                        String area = dataBean.getArea();
-                        String area_id = dataBean.getArea_id();
-                        if (area != null && area.length() > 0) {
-                            String[] split = area.split(",");
-                            if (split.length > 2) {
-                                address = split[0] + " " + split[1] + " " + split[2];
-                                tv_vertical_address.setText(address);
-                            }
+    private void parseDefaultAddressData(String response) throws Exception {
+
+        AddressDetailBean addressDetailBean = new Gson().fromJson(response, AddressDetailBean.class);
+        int statusCode = addressDetailBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                List<AddressDetailBean.DataBean> data = addressDetailBean.getData();
+                if (data != null && data.size() > 0) {
+                    AddressDetailBean.DataBean dataBean = data.get(0);
+                    String area = dataBean.getArea();
+                    String area_id = dataBean.getArea_id();
+                    if (area != null && area.length() > 0) {
+                        String[] split = area.split(",");
+                        if (split.length > 2) {
+                            address = split[0] + " " + split[1] + " " + split[2];
+                            tv_vertical_address.setText(address);
                         }
-                        if (area_id != null && !TextUtils.isEmpty(area_id)) {
-                            getCurrentIsHave("2", area_id, "", goods_id);
-                        }
-                    } else {
-                        tv_vertical_address.setText(address);
-                        pcs = address.replace(" ", ",");
-                        getCurrentIsHave("1", "", lalotitude, goods_id);
                     }
-                    break;
-                case 0:
+                    if (area_id != null && !TextUtils.isEmpty(area_id)) {
+                        getCurrentIsHave("2", area_id, "", goods_id);
+                    }
+                } else {
                     tv_vertical_address.setText(address);
                     pcs = address.replace(" ", ",");
                     getCurrentIsHave("1", "", lalotitude, goods_id);
-                    break;
-            }
-        } catch (Exception e) {
-            Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 0:
+                tv_vertical_address.setText(address);
+                pcs = address.replace(" ", ",");
+                getCurrentIsHave("1", "", lalotitude, goods_id);
+                break;
         }
     }
 
@@ -370,9 +376,10 @@ public class VerticalFragment1 extends Fragment {
         }
         whick = "limit_num";
         map = new HashMap<>();
+        map.put("Id", userLogin);
         map.put("user_id", userLogin);
         map.put("article_id", article_id);
-        netUtil2.okHttp2Server2(limit_url, map);
+        netUtil2.okHttp2Server2(getContext(), limit_url, map);
         LogUtil.e("------------------" + article_id);
     }
 
@@ -475,7 +482,7 @@ public class VerticalFragment1 extends Fragment {
                             seeBigImage();
                             break;
                         case MotionEvent.ACTION_CANCEL:
-                            myhandler.sendEmptyMessageDelayed(0,4000);
+                            myhandler.sendEmptyMessageDelayed(0, 4000);
                             break;
                     }
                     return true;
@@ -500,7 +507,7 @@ public class VerticalFragment1 extends Fragment {
             myhandler = new Myhandler();
         }
         myhandler.removeMessages(0);
-        myhandler.sendEmptyMessageDelayed(0,4000);
+        myhandler.sendEmptyMessageDelayed(0, 4000);
     }
 
     private boolean isDrager = false;
@@ -538,7 +545,7 @@ public class VerticalFragment1 extends Fragment {
                     if (isDrager) {
                         isDrager = false;
                         myhandler.removeCallbacksAndMessages(0);
-                        myhandler.sendEmptyMessageDelayed(0,4000);
+                        myhandler.sendEmptyMessageDelayed(0, 4000);
                     }
                     break;
                 case ViewPager.SCROLL_STATE_DRAGGING:
@@ -549,7 +556,7 @@ public class VerticalFragment1 extends Fragment {
                     if (isDrager) {
                         isDrager = false;
                         myhandler.removeMessages(0);
-                        myhandler.sendEmptyMessageDelayed(0,4000);
+                        myhandler.sendEmptyMessageDelayed(0, 4000);
                     }
                     break;
             }
@@ -886,7 +893,7 @@ public class VerticalFragment1 extends Fragment {
         map.put("lnglat", lnglat);
         map.put("ProductId", productId);
         map.put("num", String.valueOf(ware_num));
-        netUtil.okHttp2Server2(pcs_url, map);
+        netUtil.okHttp2Server2(getContext(), pcs_url, map);
     }
 
     /**
@@ -996,7 +1003,7 @@ public class VerticalFragment1 extends Fragment {
         map = new HashMap<>();
         map.put("article_id", article_id);
         map.put("specs_id", "," + spec_ids + ",");
-        netUtil.okHttp2Server2(specsid_url, map);
+        netUtil.okHttp2Server2(getContext(), specsid_url, map);
     }
 
     /**
@@ -1013,7 +1020,7 @@ public class VerticalFragment1 extends Fragment {
         map.put("ProductId", productId);
         map.put("lnglat", lalotitude);
         map.put("num", num);
-        netUtil.okHttp2Server2(pcs_url, map);
+        netUtil.okHttp2Server2(getContext(), pcs_url, map);
     }
 
     /**
@@ -1207,7 +1214,7 @@ public class VerticalFragment1 extends Fragment {
         whick = "spec";
         map = new HashMap<>();
         map.put("goods_id", goods_id);
-        netUtil.okHttp2Server2(spec_url, map);
+        netUtil.okHttp2Server2(getContext(), spec_url, map);
     }
 
 
@@ -1226,7 +1233,7 @@ public class VerticalFragment1 extends Fragment {
      *
      * @param response
      */
-    private void parseSpecData(String response) {
+    private void parseSpecData(String response) throws Exception {
         SuningSpecBean suningSpecBean = new Gson().fromJson(response, SuningSpecBean.class);
         data = suningSpecBean.getData();
         if (data != null) {
@@ -1247,15 +1254,19 @@ public class VerticalFragment1 extends Fragment {
 
         @Override
         public void getSuccessResponse(String response) {
-            LogUtil.e(whick + "--" + response);
-            if (whick.equals("spec")) {
-                parseSpecData(response);
-            } else if (whick.equals("isHaveGoods")) {
-                parseIsHaveGoodsData(response);
-            } else if (whick.equals("checkIsHave")) {
-                parseCheckIshavaData(response);
-            } else if (whick.equals("specids")) {
-                parseSpecidData(response);
+            try {
+                LogUtil.e(whick + "--" + response);
+                if (whick.equals("spec")) {
+                    parseSpecData(response);
+                } else if (whick.equals("isHaveGoods")) {
+                    parseIsHaveGoodsData(response);
+                } else if (whick.equals("checkIsHave")) {
+                    parseCheckIshavaData(response);
+                } else if (whick.equals("specids")) {
+                    parseSpecidData(response);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -1270,46 +1281,41 @@ public class VerticalFragment1 extends Fragment {
      *
      * @param response
      */
-    private void parseLimitData(String response) {
+    private void parseLimitData(String response) throws Exception {
         LogUtil.e("限购 = " + response);
-        try {
-            SuningLimitBean suningLimitBean = new Gson().fromJson(response, SuningLimitBean.class);
-            int statusCode = suningLimitBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    List<SuningLimitBean.DataBean> data = suningLimitBean.getData();
-                    if (data != null && data.size() > 0) {
-                        SuningLimitBean.DataBean dataBean = data.get(0);
-                        limit_num = dataBean.getLimit_num();
-                        if (limit_num <= 0) {
-                            tv_good_detail_limit.setText("");
-                            limit_num = 100000;
-                            sale_num = 100000;
-                        } else {
-                            cancel_order_num = dataBean.getCancel_order_num();
-                            purchased_num = dataBean.getPurchased_num();
-                            sale_num = limit_num - purchased_num + cancel_order_num;
-                            if (sale_num <= 0) {
-                                rl_vertical_see_spec.setClickable(false);
-                                rl_vertical_see_ware_num.setClickable(false);
-                                if (onLimitNumListener != null) {
-                                    onLimitNumListener.onLimitResult();
-                                }
-                                tv_good_detail_limit.setText("限购0件");
-                            } else {
-                                limit_num = sale_num;
-                                tv_good_detail_limit.setText("限购" + limit_num + "件");
+        SuningLimitBean suningLimitBean = new Gson().fromJson(response, SuningLimitBean.class);
+        int statusCode = suningLimitBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                List<SuningLimitBean.DataBean> data = suningLimitBean.getData();
+                if (data != null && data.size() > 0) {
+                    SuningLimitBean.DataBean dataBean = data.get(0);
+                    limit_num = dataBean.getLimit_num();
+                    if (limit_num <= 0) {
+                        tv_good_detail_limit.setText("");
+                        limit_num = 100000;
+                        sale_num = 100000;
+                    } else {
+                        cancel_order_num = dataBean.getCancel_order_num();
+                        purchased_num = dataBean.getPurchased_num();
+                        sale_num = limit_num - purchased_num + cancel_order_num;
+                        if (sale_num <= 0) {
+                            rl_vertical_see_spec.setClickable(false);
+                            rl_vertical_see_ware_num.setClickable(false);
+                            if (onLimitNumListener != null) {
+                                onLimitNumListener.onLimitResult();
                             }
+                            tv_good_detail_limit.setText("限购0件");
+                        } else {
+                            limit_num = sale_num;
+                            tv_good_detail_limit.setText("限购" + limit_num + "件");
                         }
                     }
-                    break;
-                case 0:
-                    Toast.makeText(context, suningLimitBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        } catch (Exception e) {
-            LogUtil.e("VerticalFragment1 parseLimitData error");
-            Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 0:
+                Toast.makeText(context, suningLimitBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -1318,7 +1324,7 @@ public class VerticalFragment1 extends Fragment {
      *
      * @param response
      */
-    private void parseSpecidData(String response) {
+    private void parseSpecidData(String response) throws Exception {
         LogUtil.e("产品规格返回的id = " + response);
         SuningSpecidBackBean suningSpecidBackBean = new Gson().fromJson(response, SuningSpecidBackBean.class);
         int statusCode = suningSpecidBackBean.getStatusCode();
@@ -1350,44 +1356,40 @@ public class VerticalFragment1 extends Fragment {
      *
      * @param response
      */
-    private void parseCheckIshavaData(String response) {
+    private void parseCheckIshavaData(String response) throws Exception {
         LogUtil.e(response);
-        try {
-            SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
-            int statusCode = suningStockBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    List<SuningStockBean.DataBean> data = suningStockBean.getData();
-                    SuningStockBean.DataBean dataBean = data.get(0);
-                    store_status = dataBean.getStore_status();
-                    store_text = dataBean.getStore_text();
-                    if (store_status == 0) {
-                        if (what_buy == 1) {
-                            String buyInfo = getBuyInfo();
-                            LogUtil.e("buyInfo = " + buyInfo);
-                            Intent intent = new Intent(context, OrderConfirmActivity.class);
-                            intent.putExtra("ware_json", buyInfo);
-                            intent.putExtra("goods_img", goods_img);
-                            intent.putExtra("goods_title", goods_title);
-                            intent.putExtra("goods_price", goods_price);
-                            intent.putExtra("product_id", goods_id);
-                            intent.putExtra("c_price", c_price);
-                            intent.putExtra("spec_content", spec_titel);
-                            startActivity(intent);
-                        } else if (what_buy == 2) {
-                            getSpecId();
-                        }
-                    } else {
-                        Toast.makeText(context, store_text, Toast.LENGTH_SHORT).show();
+
+        SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
+        int statusCode = suningStockBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                List<SuningStockBean.DataBean> data = suningStockBean.getData();
+                SuningStockBean.DataBean dataBean = data.get(0);
+                store_status = dataBean.getStore_status();
+                store_text = dataBean.getStore_text();
+                if (store_status == 0) {
+                    if (what_buy == 1) {
+                        String buyInfo = getBuyInfo();
+                        LogUtil.e("buyInfo = " + buyInfo);
+                        Intent intent = new Intent(context, OrderConfirmActivity.class);
+                        intent.putExtra("ware_json", buyInfo);
+                        intent.putExtra("goods_img", goods_img);
+                        intent.putExtra("goods_title", goods_title);
+                        intent.putExtra("goods_price", goods_price);
+                        intent.putExtra("product_id", goods_id);
+                        intent.putExtra("c_price", c_price);
+                        intent.putExtra("spec_content", spec_titel);
+                        startActivity(intent);
+                    } else if (what_buy == 2) {
+                        getSpecId();
                     }
-                    break;
-                case 0:
-                    Toast.makeText(context, suningStockBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        } catch (Exception e) {
-            LogUtil.e("Vertical parseCheckIshavaData error");
-            Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, store_text, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 0:
+                Toast.makeText(context, suningStockBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -1396,30 +1398,26 @@ public class VerticalFragment1 extends Fragment {
      *
      * @param response
      */
-    private void parseIsHaveGoodsData(String response) {
+    private void parseIsHaveGoodsData(String response) throws Exception {
         LogUtil.e(response);
-        try {
-            SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
-            int statusCode = suningStockBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    List<SuningStockBean.DataBean> data = suningStockBean.getData();
-                    if (data != null && data.size() > 0) {
-                        SuningStockBean.DataBean dataBean = data.get(0);
-                        store_status = dataBean.getStore_status();
-                        store_text = dataBean.getStore_text();
-                        tv_vertical_ishave_quarity.setText(store_text);
-                        isHave = "1";
-                    }
-                    break;
-                case 0:
-                    tv_vertical_ishave_quarity.setText("获取库存失败");
-                    isHave = "0";
-                    break;
-            }
-        } catch (Exception e) {
-            LogUtil.e("VerticalFragment1 parseIsHaveGoodsData error");
-            Toast.makeText(context, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+
+        SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
+        int statusCode = suningStockBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                List<SuningStockBean.DataBean> data = suningStockBean.getData();
+                if (data != null && data.size() > 0) {
+                    SuningStockBean.DataBean dataBean = data.get(0);
+                    store_status = dataBean.getStore_status();
+                    store_text = dataBean.getStore_text();
+                    tv_vertical_ishave_quarity.setText(store_text);
+                    isHave = "1";
+                }
+                break;
+            case 0:
+                tv_vertical_ishave_quarity.setText("获取库存失败");
+                isHave = "0";
+                break;
         }
     }
 
@@ -1623,9 +1621,13 @@ public class VerticalFragment1 extends Fragment {
 
         @Override
         public void onCartResponse(String response, String whick) {
-            LogUtil.e(whick + "=" + response);
-            if (whick.equals(NetCartUtil.WHICH_ADD)) {
-                parseAddCartData(response);
+            try {
+                LogUtil.e(whick + "=" + response);
+                if (whick.equals(NetCartUtil.WHICH_ADD)) {
+                    parseAddCartData(response);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -1640,7 +1642,7 @@ public class VerticalFragment1 extends Fragment {
      *
      * @param response
      */
-    private void parseAddCartData(String response) {
+    private void parseAddCartData(String response) throws Exception {
 
         NetGoodscartAddBean netGoodscartAddBean = new Gson().fromJson(response, NetGoodscartAddBean.class);
         int statusCode = netGoodscartAddBean.getStatusCode();

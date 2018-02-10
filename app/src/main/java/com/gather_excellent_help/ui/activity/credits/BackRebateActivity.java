@@ -24,6 +24,7 @@ import com.gather_excellent_help.ui.adapter.BackRebateAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
@@ -217,6 +218,7 @@ public class BackRebateActivity extends BaseActivity {
             @Override
             public void getFailResponse(Call call, Exception e) {
                 LogUtil.e(call.toString() + "-" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(BackRebateActivity.this);
             }
         });
 
@@ -290,7 +292,7 @@ public class BackRebateActivity extends BaseActivity {
         map.put("pageSize", pageSize);
         map.put("pageIndex", pageIndex);
         map.put("type", type);
-        netUtil.okHttp2Server2(back_url, map);
+        netUtil.okHttp2Server2(BackRebateActivity.this,back_url, map);
     }
 
     /**

@@ -101,10 +101,10 @@ public class TypeWareAdapter2 extends RecyclerView.Adapter<TypeWareAdapter2.Type
 
         if (exclusive == 1) {
             holder.iv_activity_list_vip.setVisibility(View.VISIBLE);
-            holder.tv_rush_ware_coupons.setVisibility(View.GONE);
+            holder.ll_activity_lsit_coupon.setVisibility(View.GONE);
         } else {
             holder.iv_activity_list_vip.setVisibility(View.GONE);
-            holder.tv_rush_ware_coupons.setVisibility(View.VISIBLE);
+            holder.ll_activity_lsit_coupon.setVisibility(View.VISIBLE);
         }
 
         if (holder.tv_home_type_aprice != null) {
@@ -135,10 +135,10 @@ public class TypeWareAdapter2 extends RecyclerView.Adapter<TypeWareAdapter2.Type
             }
 
             if (couponsPrice > 0) {
-                holder.tv_rush_ware_coupons.setVisibility(View.VISIBLE);
-                holder.tv_rush_ware_coupons.setText("券" + couponsPrice);
+                holder.ll_activity_lsit_coupon.setVisibility(View.VISIBLE);
+                holder.tv_rush_ware_coupons.setText("" + couponsPrice);
             } else {
-                holder.tv_rush_ware_coupons.setVisibility(View.INVISIBLE);
+                holder.ll_activity_lsit_coupon.setVisibility(View.INVISIBLE);
             }
             if (secondCouponsUrl != null && !TextUtils.isEmpty(secondCouponsUrl)) {
                 holder.tv_rush_ware_second_coupons.setVisibility(View.VISIBLE);
@@ -168,7 +168,6 @@ public class TypeWareAdapter2 extends RecyclerView.Adapter<TypeWareAdapter2.Type
             } else {
                 holder.ll_activity_list_ware_zhuan.setVisibility(View.INVISIBLE);
             }
-
             if (zhuan == 0) {
                 holder.ll_activity_list_ware_zhuan.setVisibility(View.INVISIBLE);
             }
@@ -239,6 +238,7 @@ public class TypeWareAdapter2 extends RecyclerView.Adapter<TypeWareAdapter2.Type
         LinearLayout ll_activity_list_ware_zhuan;     //赚和成本
         ImageView iv_activity_list_vip;    //专享价
         RelativeLayout rl_activity_rexiao_share; //分享
+        LinearLayout ll_activity_lsit_coupon; //优惠券隐藏
 
         public TypeWareViewHolder(View itemView) {
             super(itemView);
@@ -252,6 +252,7 @@ public class TypeWareAdapter2 extends RecyclerView.Adapter<TypeWareAdapter2.Type
             ll_activity_list_ware_zhuan = (LinearLayout) itemView.findViewById(R.id.ll_activity_list_ware_zhuan);
             iv_activity_list_vip = (ImageView) itemView.findViewById(R.id.iv_activity_list_vip);
             rl_activity_rexiao_share = (RelativeLayout) itemView.findViewById(R.id.rl_activity_rexiao_share);
+            ll_activity_lsit_coupon = (LinearLayout) itemView.findViewById(R.id.ll_activity_lsit_coupon);
         }
     }
 

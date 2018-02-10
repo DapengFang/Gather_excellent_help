@@ -15,6 +15,7 @@ import com.gather_excellent_help.ui.adapter.LogisticsInfoAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.ui.widget.WanRecycleView;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -107,7 +108,7 @@ public class LogisticsInfoActivity extends BaseActivity {
         map.put("user_id",userLogin);
         map.put("order_id", String.valueOf(order_id));
         map.put("article_id",String.valueOf(article_id));
-        netUtil.okHttp2Server2(logistics_url, map);
+        netUtil.okHttp2Server2(LogisticsInfoActivity.this,logistics_url, map);
     }
 
     /**
@@ -154,6 +155,7 @@ public class LogisticsInfoActivity extends BaseActivity {
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "-" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(LogisticsInfoActivity.this);
         }
     }
 }

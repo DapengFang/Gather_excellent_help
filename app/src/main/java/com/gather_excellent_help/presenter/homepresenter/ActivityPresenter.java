@@ -12,6 +12,7 @@ import com.gather_excellent_help.ui.widget.DividerItemDecoration;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
 import com.gather_excellent_help.update.HomeActivityAdapter;
 import com.gather_excellent_help.update.HomeActivityListAdapter;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.google.gson.Gson;
@@ -47,36 +48,39 @@ public class ActivityPresenter extends BasePresenter {
     public void initData() {
         FullyLinearLayoutManager layoutManager = new FullyLinearLayoutManager(context);
         rcvHomeActivity.setLayoutManager(layoutManager);
-        netUtil.okHttp2Server2(rush_url,null);
+        netUtil.okHttp2Server2(context,rush_url, null);
         netUtil.setOnServerResponseListener(new MyOnServerResponseListener());
     }
 
-    public class MyOnServerResponseListener implements NetUtil.OnServerResponseListener{
+    public class MyOnServerResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override
         public void getSuccessResponse(String response) {
-            if(context!=null) {
-                LogUtil.e("activity_presenter === "+response);
+            try {
+                LogUtil.e("activity_presenter === " + response);
                 parseData(response);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
         }
 
         @Override
         public void getFailResponse(Call call, Exception e) {
-               if(context!=null) {
-                   Toast.makeText(context, "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
-               }
+            if (context != null) {
+                EncryptNetUtil.startNeterrorPage(context);
+            }
         }
     }
 
-    private void parseData(String response) {
+    private void parseData(String response) throws Exception {
         LogUtil.e("活动版块数据" + response);
         HomeWareBean homeWareBean = new Gson().fromJson(response, HomeWareBean.class);
         int statusCode = homeWareBean.getStatusCode();
         switch (statusCode) {
-            case 1 :
+            case 1:
                 rushData = homeWareBean.getData();
-                HomeActivityAdapter homeActivityAdapter = new HomeActivityAdapter(context,rushData);
+                HomeActivityAdapter homeActivityAdapter = new HomeActivityAdapter(context, rushData);
                 rcvHomeActivity.setAdapter(homeActivityAdapter);
                 break;
             case 0:

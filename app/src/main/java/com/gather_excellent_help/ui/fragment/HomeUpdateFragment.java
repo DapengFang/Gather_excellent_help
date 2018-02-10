@@ -1,6 +1,8 @@
 package com.gather_excellent_help.ui.fragment;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +13,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
@@ -83,20 +86,27 @@ public class HomeUpdateFragment extends LazyLoadFragment {
     MyNestedScrollView mynested_scrollview;
     @Bind(R.id.iv_home_back_top)
     ImageView iv_home_back_top;
-    @Bind(R.id.ll_home_sousuo)
-    LinearLayout ll_home_sousuo;
+
     @Bind(R.id.ll_home_loadmore)
     LinearLayout ll_home_loadmore;
     @Bind(R.id.tv_item_home_title)
     TextView tv_item_home_title;
     @Bind(R.id.tv_item_home_more)
     TextView tv_item_home_more;
-    @Bind(R.id.ll_home_update_scanner)
-    LinearLayout ll_home_update_scanner;
+
 
     private LinearLayout ll_home_msg;
-    private RelativeLayout rl_home_banner;
+    private LinearLayout ll_home_sousuo;
+    private LinearLayout ll_home_update_scanner;
+    private View v_home_top_titlebar;
+
     private RelativeLayout rl_item_laod_more;
+    private LinearLayout ll_home_scanner_search;
+
+    private RelativeLayout rl_home_banner;
+    private LinearLayout ll_home_container_l01;
+    private LinearLayout ll_home_container_l02;
+
 
     private boolean mIsRequestDataRefresh = false;
     public static final int TIME_DOWN = 1; //倒计时显示的标识
@@ -107,23 +117,28 @@ public class HomeUpdateFragment extends LazyLoadFragment {
     private boolean typeRefresh = false;
     private long time;
 
-    private RushDownTimer rushDownTimer;
     private Handler handler;
 
-    private QiangPresenter qiangPresenter;
     private VipPresenter vipPresenter;
     private TypePresenter typePresenter;
     private BannerPresenter bannerPresenter;
     private GroupPresenter groupPresenter;
     private ActivityPresenter activityPresenter;
     private ActivityListPresenter activityListPresenter;
+    private int mHeight;
 
     @Override
     public View initView() {
         View inflate = View.inflate(getContext(), R.layout.home_update_fragment, null);
-        ll_home_msg = (LinearLayout) inflate.findViewById(R.id.ll_home_msg);
         rl_home_banner = (RelativeLayout) inflate.findViewById(R.id.rl_home_banner);
+        ll_home_container_l01 = (LinearLayout) inflate.findViewById(R.id.ll_home_container_l01);
+        ll_home_container_l02 = (LinearLayout) inflate.findViewById(R.id.ll_home_container_l02);
         rl_item_laod_more = (RelativeLayout) inflate.findViewById(R.id.rl_item_laod_more);
+        ll_home_scanner_search = (LinearLayout) inflate.findViewById(R.id.ll_home_scanner_search);
+        ll_home_sousuo = (LinearLayout) inflate.findViewById(R.id.ll_home_sousuo);
+        ll_home_update_scanner = (LinearLayout) inflate.findViewById(R.id.ll_home_update_scanner);
+        ll_home_msg = (LinearLayout) inflate.findViewById(R.id.ll_home_msg);
+        v_home_top_titlebar = inflate.findViewById(R.id.v_home_top_titlebar);
         return inflate;
     }
 
@@ -134,18 +149,6 @@ public class HomeUpdateFragment extends LazyLoadFragment {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what) {
-                    case TIME_DOWN:
-                        time -= 1000;
-                        rushDownTimer.calcuteDownTimer(time);
-                        qiangPresenter.setRushDownTimer(rushDownTimer);
-                        if (time <= 0) {
-                            handler.removeMessages(TIME_DOWN);
-                            return;
-                        }
-                        if (handler != null) {
-                            handler.sendEmptyMessageDelayed(TIME_DOWN, 1000);
-                        }
-                        break;
                     case STOP_REFRESH:
                         if (bannerRefresh == false && typeRefresh == false) {
                             if (mIsRequestDataRefresh == true) {
@@ -192,10 +195,38 @@ public class HomeUpdateFragment extends LazyLoadFragment {
         }
     }
 
+
     /**
      * 加载首页数据
      */
     private void loadHomeUpdateData() {
+        ViewTreeObserver viewTreeObserver = ll_home_scanner_search.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onGlobalLayout() {
+                ll_home_scanner_search.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                mHeight = ll_home_scanner_search.getTop();
+            }
+        });
+        mynested_scrollview.setOnObservableScrollViewScrollChanged(new MyNestedScrollView.OnObservableScrollViewScrollChanged() {
+            @Override
+            public void onObservableScrollViewScrollChanged(int l, int t, int oldl, int oldt) {
+                if (t >= mHeight) {
+                    if (ll_home_scanner_search.getParent() != ll_home_container_l02) {
+                        ll_home_container_l01.removeView(ll_home_scanner_search);
+                        ll_home_container_l02.addView(ll_home_scanner_search);
+                        v_home_top_titlebar.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    if (ll_home_scanner_search.getParent() != ll_home_container_l01) {
+                        ll_home_container_l02.removeView(ll_home_scanner_search);
+                        ll_home_container_l01.addView(ll_home_scanner_search);
+                        v_home_top_titlebar.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
         bannerPresenter = new BannerPresenter(getActivity(), civHomeGanner, rl_home_banner);
         bannerPresenter.initData();
 
@@ -205,31 +236,6 @@ public class HomeUpdateFragment extends LazyLoadFragment {
         vipPresenter = new VipPresenter(getActivity(), llHomeVipZera);
         vipPresenter.initData();
 
-        qiangPresenter = new QiangPresenter(getActivity(), llHomeQiangZera);
-        qiangPresenter.initData();
-
-        qiangPresenter.setOnLoadSuccessListener(new QiangPresenter.OnLoadSuccessListener() {
-            @Override
-            public void onSuccessResponse(long t) {
-                if (llHomeQiangZera != null) {
-                    llHomeQiangZera.setVisibility(View.GONE);
-                }
-//                time = t;
-//                rushDownTimer = new RushDownTimer(getContext());
-//                if(handler!=null) {
-//                    handler.removeMessages(TIME_DOWN);
-//                    handler.sendEmptyMessage(TIME_DOWN);
-//                }
-            }
-
-            @Override
-            public void onResponseNoData() {
-                if (llHomeQiangZera != null) {
-                    llHomeQiangZera.setVisibility(View.GONE);
-                }
-            }
-        });
-
         groupPresenter = new GroupPresenter(getActivity(), llHomeGroupZera);
         groupPresenter.initData();
         activityPresenter = new ActivityPresenter(getContext(), rcvHomeActivity);
@@ -237,6 +243,7 @@ public class HomeUpdateFragment extends LazyLoadFragment {
         activityListPresenter = new ActivityListPresenter(getContext(), rcvHomeActivityList, mynested_scrollview, ll_home_loadmore);
         activityListPresenter.initData();
         refreshCallBack(bannerPresenter, typePresenter);
+
         iv_home_back_top.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

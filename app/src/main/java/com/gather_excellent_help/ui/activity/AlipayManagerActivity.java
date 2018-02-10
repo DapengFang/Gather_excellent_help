@@ -29,6 +29,7 @@ import com.gather_excellent_help.bean.CodeStatueBean;
 import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -117,7 +118,7 @@ public class AlipayManagerActivity extends BaseActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-                Toast.makeText(AlipayManagerActivity.this, "网络请求出错！", Toast.LENGTH_SHORT).show();
+                EncryptNetUtil.startNeterrorPage(AlipayManagerActivity.this);
             }
         });
     }
@@ -267,7 +268,7 @@ public class AlipayManagerActivity extends BaseActivity {
     @JavascriptInterface
     public void toPay() {
         which = "money";
-        netUtil.okHttp2Server2(money_url, null);
+        netUtil.okHttp2Server2(AlipayManagerActivity.this,money_url, null);
     }
 
     @SuppressLint("HandlerLeak")
@@ -312,7 +313,7 @@ public class AlipayManagerActivity extends BaseActivity {
                         map.put("user_id", user_login);
                         map.put("pay_status", pay_status);
                         which = "extract";
-                        netUtil.okHttp2Server2(extract_url, map);
+                        netUtil.okHttp2Server2(AlipayManagerActivity.this,extract_url, map);
                     }
                     break;
                 }

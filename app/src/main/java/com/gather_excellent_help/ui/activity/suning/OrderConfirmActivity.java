@@ -35,6 +35,7 @@ import com.gather_excellent_help.ui.activity.address.PersonAddressActivity;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.NumberAddSubView;
 import com.gather_excellent_help.utils.DensityUtil;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
@@ -366,7 +367,7 @@ public class OrderConfirmActivity extends BaseActivity {
         map = new HashMap<>();
         map.put("article_id", goods_id);
         map.put("specs_id", "," + spec_id + ",");
-        netUtil.okHttp2Server2(specsid_url, map);
+        netUtil.okHttp2Server2(OrderConfirmActivity.this, specsid_url, map);
     }
 
     /**
@@ -375,12 +376,13 @@ public class OrderConfirmActivity extends BaseActivity {
     private void getFree() {
         whick = "free";
         map = new HashMap<>();
+        map.put("Id", userLogin);
         map.put("user_id", userLogin);
         map.put("area_id", area_id);
         map.put("address", address);
         map.put("ProductId", product_id);
         map.put("num", ware_num);
-        netUtil.okHttp2Server2(free_url, map);
+        netUtil.okHttp2Server2(OrderConfirmActivity.this, free_url, map);
     }
 
 
@@ -471,8 +473,9 @@ public class OrderConfirmActivity extends BaseActivity {
     private void getAddressDefault() {
         whick = "getaddress";
         map = new HashMap<>();
+        map.put("Id", userLogin);
         map.put("user_id", userLogin);
-        netUtil.okHttp2Server2(address_url, map);
+        netUtil.okHttp2Server2(OrderConfirmActivity.this, address_url, map);
     }
 
     /**
@@ -489,19 +492,23 @@ public class OrderConfirmActivity extends BaseActivity {
 
         @Override
         public void getSuccessResponse(String response) {
-            hindCatView();
-            if (whick.equals("pushorder")) {
-                tv_order_create_confirm.setClickable(true);
-                parseOrderData(response);
-            } else if (whick.equals("getaddress")) {
-                tv_order_create_confirm.setClickable(true);
-                parseAddressData(response);
-            } else if (whick.equals("specids")) {
-                parseSpecidData(response);
-            } else if (whick.equals("checkIsHave")) {
-                parseCheckIshavaData(response);
-            } else if (whick.equals("free")) {
-                parseFreeData(response);
+            try {
+                hindCatView();
+                if (whick.equals("pushorder")) {
+                    tv_order_create_confirm.setClickable(true);
+                    parseOrderData(response);
+                } else if (whick.equals("getaddress")) {
+                    tv_order_create_confirm.setClickable(true);
+                    parseAddressData(response);
+                } else if (whick.equals("specids")) {
+                    parseSpecidData(response);
+                } else if (whick.equals("checkIsHave")) {
+                    parseCheckIshavaData(response);
+                } else if (whick.equals("free")) {
+                    parseFreeData(response);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -511,37 +518,33 @@ public class OrderConfirmActivity extends BaseActivity {
             hindCatView();
             tv_order_create_confirm.setClickable(true);
             isHavaGoods = false;
+            EncryptNetUtil.startNeterrorPage(OrderConfirmActivity.this);
         }
     }
 
     /**
      * 解析运费数据
      */
-    private void parseFreeData(String response) {
+    private void parseFreeData(String response) throws Exception {
         LogUtil.e("free = " + response);
-        try {
-            SuningFreeBean suningFreeBean = new Gson().fromJson(response, SuningFreeBean.class);
-            int statusCode = suningFreeBean.getStatusCode();
-            switch (statusCode) {
-                case 1:
-                    List<SuningFreeBean.DataBean> data = suningFreeBean.getData();
-                    if (data != null && data.size() > 0) {
-                        SuningFreeBean.DataBean dataBean = data.get(0);
-                        if (dataBean != null) {
-                            freightFare = dataBean.getFreightFare();
-                            showTotalprice(freightFare);
-                            mIsRequestDataRefresh = false;
-                            setRefresh(mIsRequestDataRefresh);
-                        }
+        SuningFreeBean suningFreeBean = new Gson().fromJson(response, SuningFreeBean.class);
+        int statusCode = suningFreeBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                List<SuningFreeBean.DataBean> data = suningFreeBean.getData();
+                if (data != null && data.size() > 0) {
+                    SuningFreeBean.DataBean dataBean = data.get(0);
+                    if (dataBean != null) {
+                        freightFare = dataBean.getFreightFare();
+                        showTotalprice(freightFare);
+                        mIsRequestDataRefresh = false;
+                        setRefresh(mIsRequestDataRefresh);
                     }
-                    break;
-                case 0:
-                    Toast.makeText(OrderConfirmActivity.this, "请选择收货地址", Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        } catch (Exception e) {
-            LogUtil.e("OrderConfirmActivity parseFreeData error");
-            Toast.makeText(OrderConfirmActivity.this, "系统出现故障，请退出后重新尝试！", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 0:
+                Toast.makeText(OrderConfirmActivity.this, "请选择收货地址", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -550,7 +553,7 @@ public class OrderConfirmActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseCheckIshavaData(String response) {
+    private void parseCheckIshavaData(String response) throws Exception {
         LogUtil.e(response);
         isHavaGoods = true;
         SuningStockBean suningStockBean = new Gson().fromJson(response, SuningStockBean.class);
@@ -576,7 +579,7 @@ public class OrderConfirmActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseSpecidData(String response) {
+    private void parseSpecidData(String response) throws Exception {
         LogUtil.e("产品规格返回的id = " + response);
         SuningSpecidBackBean suningSpecidBackBean = new Gson().fromJson(response, SuningSpecidBackBean.class);
         int statusCode = suningSpecidBackBean.getStatusCode();
@@ -606,18 +609,7 @@ public class OrderConfirmActivity extends BaseActivity {
                             suningWjsonLists.add(suningWjsonBean);
                             json = new Gson().toJson(suningWjsonLists);
                             LogUtil.e("提交订单 = " + json);
-                            whick = "pushorder";
-                            map = new HashMap<>();
-                            map.put("user_id", userLogin);
-                            map.put("addr_id", addr_id);
-                            map.put("remark", remark);
-                            map.put("orderType", "0");
-                            map.put("goodsJSON", json);
-                            map.put("invoiceState", invoiceState);
-                            map.put("invoiceTitle", invoiceTitle);
-                            map.put("taxNo", taxNo);
-                            map.put("sn_freight", String.valueOf(freightFare));
-                            netUtil.okHttp2Server2(pushorder_url, map);
+                            pushOrder2Server();
                         }
                     } else {
                         Toast.makeText(OrderConfirmActivity.this, "无法获取商品信息！", Toast.LENGTH_SHORT).show();
@@ -631,6 +623,25 @@ public class OrderConfirmActivity extends BaseActivity {
                 Toast.makeText(OrderConfirmActivity.this, suningSpecidBackBean.getStatusMessage(), Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    /**
+     * 提交订单
+     */
+    private void pushOrder2Server() {
+        whick = "pushorder";
+        map = new HashMap<>();
+        map.put("Id", userLogin);
+        map.put("user_id", userLogin);
+        map.put("addr_id", addr_id);
+        map.put("remark", remark);
+        map.put("orderType", "0");
+        map.put("goodsJSON", json);
+        map.put("invoiceState", invoiceState);
+        map.put("invoiceTitle", invoiceTitle);
+        map.put("taxNo", taxNo);
+        map.put("sn_freight", String.valueOf(freightFare));
+        netUtil.okHttp2Server2(OrderConfirmActivity.this, pushorder_url, map);
     }
 
 
@@ -659,7 +670,7 @@ public class OrderConfirmActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseOrderData(String response) {
+    private void parseOrderData(String response) throws Exception {
         LogUtil.e(response);
         SuningCreateBean suningCreateBean = new Gson().fromJson(response, SuningCreateBean.class);
         int statusCode = suningCreateBean.getStatusCode();
@@ -687,7 +698,7 @@ public class OrderConfirmActivity extends BaseActivity {
      *
      * @param response
      */
-    private void parseAddressData(String response) {
+    private void parseAddressData(String response) throws Exception {
         LogUtil.e(response);
         AddressDetailBean addressDetailBean = new Gson().fromJson(response, AddressDetailBean.class);
         int statusCode = addressDetailBean.getStatusCode();
@@ -795,7 +806,7 @@ public class OrderConfirmActivity extends BaseActivity {
             map.put("ProductId", productId);
             map.put("lnglat", "");
             map.put("num", num);
-            netUtil.okHttp2Server2(pcs_url, map);
+            netUtil.okHttp2Server2(OrderConfirmActivity.this, pcs_url, map);
         } else {
             Toast.makeText(OrderConfirmActivity.this, "请选择收货地址", Toast.LENGTH_SHORT).show();
         }

@@ -291,14 +291,14 @@ public class HomeFragment extends LazyLoadFragment {
             map.put("pageIndex","1");
             map.put("start_time",start_time);
             map.put("end_time",end_time);
-            netUtils4.okHttp2Server2(qiang_url,map);
+            netUtils4.okHttp2Server2(getContext(),qiang_url,map);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        netUtils.okHttp2Server2(rush_url, null);
-        netUtils2.okHttp2Server2(group_url,null);
-        netUtils3.okHttp2Server2(type_url,null);
-        netUtils5.okHttp2Server2(vip_url,null);
+        netUtils.okHttp2Server2(getContext(),rush_url, null);
+        netUtils2.okHttp2Server2(getContext(),group_url,null);
+        netUtils3.okHttp2Server2(getContext(),type_url,null);
+        netUtils5.okHttp2Server2(getContext(),vip_url,null);
     }
 
     /**
@@ -463,7 +463,7 @@ public class HomeFragment extends LazyLoadFragment {
                     cleanCache();
                     requestDataRefresh();
                     setRefresh(mIsRequestDataRefresh);
-                    netUtils.okHttp2Server2(rush_url, null);
+                    netUtils.okHttp2Server2(getContext(),rush_url, null);
                 }
             });
         }

@@ -15,6 +15,7 @@ import com.gather_excellent_help.bean.ExractDetailBean;
 import com.gather_excellent_help.ui.adapter.ExtractDetailAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.ui.widget.FullyLinearLayoutManager;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -59,7 +60,7 @@ public class ExtractDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_extract_detail);
-        rl_order_no_zhanwei = (RelativeLayout)findViewById(R.id.rl_order_no_zhanwei);
+        rl_order_no_zhanwei = (RelativeLayout) findViewById(R.id.rl_order_no_zhanwei);
         ButterKnife.bind(this);
         initData();
 
@@ -82,7 +83,7 @@ public class ExtractDetailActivity extends BaseActivity {
         map.put("id", id);
         map.put("pageSize", pageSize);
         map.put("pageIndex", pageIndex);
-        netUtil.okHttp2Server2(url, map);
+        netUtil.okHttp2Server2(ExtractDetailActivity.this,url, map);
         netUtil.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
             @Override
             public void getSuccessResponse(String response) {
@@ -92,7 +93,8 @@ public class ExtractDetailActivity extends BaseActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-
+                LogUtil.e(call.toString() + "-" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(ExtractDetailActivity.this);
             }
         });
     }
@@ -110,10 +112,10 @@ public class ExtractDetailActivity extends BaseActivity {
                 } else {
                     page = 2;
                     currData = exractDetailBean.getData();
-                    if(currData!=null) {
-                        if(currData.size() > 0) {
+                    if (currData != null) {
+                        if (currData.size() > 0) {
                             rl_order_no_zhanwei.setVisibility(View.GONE);
-                        }else{
+                        } else {
                             rl_order_no_zhanwei.setVisibility(View.VISIBLE);
                         }
                     }
@@ -145,7 +147,7 @@ public class ExtractDetailActivity extends BaseActivity {
                                         map.put("id", id);
                                         map.put("pageSize", pageSize);
                                         map.put("pageIndex", pageIndex);
-                                        netUtil.okHttp2Server2(url, map);
+                                        netUtil.okHttp2Server2(ExtractDetailActivity.this,url, map);
                                     }
                                 }, 1000);
                             }

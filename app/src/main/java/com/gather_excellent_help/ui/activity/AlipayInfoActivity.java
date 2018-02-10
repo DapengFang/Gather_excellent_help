@@ -16,6 +16,7 @@ import com.gather_excellent_help.event.AnyEvent;
 import com.gather_excellent_help.event.EventType;
 import com.gather_excellent_help.ui.base.BaseActivity;
 import com.gather_excellent_help.utils.CacheUtils;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -126,7 +127,7 @@ public class AlipayInfoActivity extends BaseActivity {
     private void unBindPay() {
         Map map = new HashMap<String, String>();
         map.put("Id", userLogin);
-        netUtil.okHttp2Server2(unpay_url, map);
+        netUtil.okHttp2Server2(AlipayInfoActivity.this, unpay_url, map);
     }
 
     /**
@@ -143,7 +144,7 @@ public class AlipayInfoActivity extends BaseActivity {
                 case 1:
                     CacheUtils.putBoolean(AlipayInfoActivity.this, CacheUtils.PAY_STATE, false);
                     CacheUtils.putString(AlipayInfoActivity.this, CacheUtils.ALIPAY_ACCOUNT, "");
-                    EventBus.getDefault().post(new AnyEvent(EventType.UNBIND_ALIPAY, "解绑支付宝"));
+                    EventBus.getDefault().post(new AnyEvent(EventType.EVENT_LOGIN, "解绑成功！"));
                     finish();
                     break;
                 case 0:
@@ -155,6 +156,7 @@ public class AlipayInfoActivity extends BaseActivity {
         @Override
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "-" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(AlipayInfoActivity.this);
         }
     }
 }

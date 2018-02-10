@@ -28,6 +28,7 @@ import com.gather_excellent_help.ui.adapter.TaoQiangTimeAdapter;
 import com.gather_excellent_help.ui.adapter.TaobaoWareListAdapter;
 import com.gather_excellent_help.ui.adapter.WareListAdapter;
 import com.gather_excellent_help.ui.base.BaseActivity;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.ScreenUtil;
@@ -305,7 +306,8 @@ public class QiangTaoActivity extends BaseActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-
+                LogUtil.e(call.toString() + "-" + e.getMessage());
+                EncryptNetUtil.startNeterrorPage(QiangTaoActivity.this);
             }
         });
     }
@@ -357,7 +359,7 @@ public class QiangTaoActivity extends BaseActivity {
         map.put("pageIndex", page_no);
         map.put("start_time", start_time);
         map.put("end_time", end_time);
-        netUtils.okHttp2Server2(qiang_url, map);
+        netUtils.okHttp2Server2(QiangTaoActivity.this,qiang_url, map);
     }
 
 //    /**

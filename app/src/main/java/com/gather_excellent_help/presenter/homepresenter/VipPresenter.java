@@ -28,6 +28,7 @@ import com.gather_excellent_help.ui.activity.WareListActivity;
 import com.gather_excellent_help.ui.activity.WebRecordActivity;
 import com.gather_excellent_help.ui.activity.suning.SuningDetailActivity;
 import com.gather_excellent_help.utils.DensityUtil;
+import com.gather_excellent_help.utils.EncryptNetUtil;
 import com.gather_excellent_help.utils.LogUtil;
 import com.gather_excellent_help.utils.NetUtil;
 import com.gather_excellent_help.utils.Tools;
@@ -91,7 +92,7 @@ public class VipPresenter extends BasePresenter {
 
     @Override
     public void initData() {
-        netUtil.okHttp2Server2(vip_url, null);
+        netUtil.okHttp2Server2(context,vip_url, null);
         netUtil.setOnServerResponseListener(new MyOnServerResponserListener());
     }
 
@@ -100,8 +101,10 @@ public class VipPresenter extends BasePresenter {
         @Override
         public void getSuccessResponse(String response) {
             LogUtil.e("专享" + response);
-            if (context != null) {
+            try {
                 parseData(response);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -109,12 +112,12 @@ public class VipPresenter extends BasePresenter {
         public void getFailResponse(Call call, Exception e) {
             LogUtil.e(call.toString() + "-" + e.getMessage());
             if (context != null) {
-                Toast.makeText(context, "请检查你的网络连接是否正常！", Toast.LENGTH_SHORT).show();
+                EncryptNetUtil.startNeterrorPage(context);
             }
         }
     }
 
-    private void parseData(String response) {
+    private void parseData(String response) throws Exception {
         HomeVipBean homeVipBean = new Gson().fromJson(response, HomeVipBean.class);
         int statusCode = homeVipBean.getStatusCode();
         switch (statusCode) {
@@ -138,7 +141,7 @@ public class VipPresenter extends BasePresenter {
      *
      * @param vipData
      */
-    private void loadData(List<HomeVipBean.DataBean> vipData) {
+    private void loadData(List<HomeVipBean.DataBean> vipData) throws Exception{
         llHomeVipZera.setVisibility(View.VISIBLE);
         final DecimalFormat df = new DecimalFormat("#0.00");
         if (vipData != null) {
