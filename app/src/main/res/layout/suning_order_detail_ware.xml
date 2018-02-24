@@ -99,7 +99,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/x8"
         android:background="#eeeeee"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/rl_suning_detail_back"
@@ -112,8 +112,8 @@
             android:id="@+id/tv_item_order_back"
             android:layout_width="@dimen/x80"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/x8"
             android:background="@drawable/order_suning_bg_shape"
             android:gravity="center"
@@ -121,7 +121,8 @@
             android:paddingTop="@dimen/x8"
             android:text="退款"
             android:textColor="#555555"
-            android:textSize="12sp" />
+            android:textSize="@dimen/x10" />
+
         <TextView
             android:id="@+id/tv_item_order_seelogistic"
             android:layout_width="@dimen/x80"
@@ -135,7 +136,22 @@
             android:paddingTop="@dimen/x8"
             android:text="物流详情"
             android:textColor="#555555"
-            android:textSize="12sp" />
+            android:textSize="@dimen/x10" />
+
+        <TextView
+            android:id="@+id/tv_item_order_confirmorder"
+            android:layout_width="@dimen/x80"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x8"
+            android:layout_toLeftOf="@id/tv_item_order_seelogistic"
+            android:background="@drawable/order_suning_bg_shape"
+            android:gravity="center"
+            android:paddingBottom="@dimen/x8"
+            android:paddingTop="@dimen/x8"
+            android:text="确认收货"
+            android:textColor="#555555"
+            android:textSize="@dimen/x10" />
     </RelativeLayout>
 
 </LinearLayout>

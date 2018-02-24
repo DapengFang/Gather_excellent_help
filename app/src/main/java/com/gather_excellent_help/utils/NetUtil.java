@@ -101,6 +101,64 @@ public class NetUtil {
     }
 
     /**
+     * 联网请求服务器（post）
+     *
+     * @return 参数对象
+     */
+    public void okHttp2Server2Current(final Context context, String url, Map<String, Object> map) {
+        PostFormBuilder builder = OkHttpUtils.post().url(url);
+        if (map != null) {
+            try {
+                String data = EncryptNetUtil.getBase64StringCurrent(map);
+                Integer randomNumber = EncryptNetUtil.getRandomNumber();
+                long timesTamp = EncryptNetUtil.getTimesTamp();
+                String token = CacheUtils.getString(context, CacheUtils.LOGIN_TOKEN, "");
+                String userLogin = Tools.getUserLogin(context);
+                String signature = EncryptNetUtil.getMD5EncryptHeader(timesTamp, randomNumber, userLogin, token, data);
+                builder.addHeader("timestamp", String.valueOf(timesTamp));
+                builder.addHeader("nonce", String.valueOf(randomNumber));
+                if (signature != null) {
+                    builder.addHeader("signature", signature);
+                }
+                if (data != null) {
+                    builder.addParams("data", data);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        builder.build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        onServerResponseListener.getFailResponse(call, e);
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        synchronized (NetUtil.this) {
+                            try {
+                                LogUtil.e("加密返回结果= " + response);
+                                response = EncryptNetUtil.getDecryptResponse(response);
+                                LogUtil.e("数据解密后= " + response);
+                                if (response.contains("\"data\":[")) {
+                                    CodeStatueBean codeStatueBean = new Gson().fromJson(response, CodeStatueBean.class);
+                                    int statusCode = codeStatueBean.getStatusCode();
+                                    if (statusCode == 2) {
+                                        toLogin(context);
+                                        return;
+                                    }
+                                }
+                                onServerResponseListener.getSuccessResponse(response);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+    }
+
+    /**
      * 跳转到登录界面
      *
      * @param context

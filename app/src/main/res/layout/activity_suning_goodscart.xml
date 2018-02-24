@@ -4,8 +4,8 @@
     android:id="@+id/activity_suning_goodscart"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#ffffff"
+    android:orientation="vertical"
     tools:context="com.gather_excellent_help.ui.activity.suning.SuningGoodscartActivity">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -41,15 +41,16 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="设置"
-                android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="@dimen/x14" />
+                android:textSize="@dimen/x14"
+                android:textStyle="bold" />
+
             <RelativeLayout
                 android:id="@+id/rl_zhuangtai_right"
                 android:layout_width="@dimen/x40"
                 android:layout_height="@dimen/x40"
-                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:visibility="visible">
 
                 <TextView
@@ -58,10 +59,10 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/x7"
+                    android:src="@drawable/white_point"
                     android:text="编辑"
-                    android:textSize="@dimen/x12"
                     android:textColor="#ffffff"
-                    android:src="@drawable/white_point" />
+                    android:textSize="@dimen/x12" />
             </RelativeLayout>
 
         </RelativeLayout>
@@ -118,7 +119,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:background="#eeeeee"/>
+        android:background="#eeeeee" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -147,8 +148,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end|center_vertical"
-                android:paddingRight="@dimen/x10"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingRight="@dimen/x10">
 
                 <TextView
                     android:id="@+id/tv_goodscart_price_icon"
@@ -163,9 +164,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0.00"
-                    android:textStyle="bold"
                     android:textColor="#ff6600"
-                    android:textSize="@dimen/x12" />
+                    android:textSize="@dimen/x12"
+                    android:textStyle="bold" />
             </LinearLayout>
 
 

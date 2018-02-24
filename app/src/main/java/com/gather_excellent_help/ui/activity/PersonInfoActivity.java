@@ -61,10 +61,6 @@ import okhttp3.Call;
 
 public class PersonInfoActivity extends BaseActivity {
 
-    @Bind(R.id.rl_person_exit)
-    RelativeLayout rlPersonExit;
-    @Bind(R.id.tv_person_infoset_save)
-    TextView tvPersonInfosetSave;
     @Bind(R.id.civ_person_head)
     CircularImage civPersonHead;
     @Bind(R.id.tv_person_phone)
@@ -83,6 +79,9 @@ public class PersonInfoActivity extends BaseActivity {
     ImageView ivRight2;
     @Bind(R.id.rl_person_address)
     RelativeLayout rlPersonAddress;
+
+    private RelativeLayout rl_exit;
+    private TextView tv_top_title_name;
 
     private NetUtil netUtils;
     private Map<String, String> map;
@@ -107,13 +106,23 @@ public class PersonInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_info);
         ButterKnife.bind(this);
+        initView();
         initData();
+    }
+
+    /**
+     * 初始化控件
+     */
+    private void initView() {
+        rl_exit = (RelativeLayout) findViewById(R.id.rl_exit);
+        tv_top_title_name = (TextView) findViewById(R.id.tv_top_title_name);
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
+        tv_top_title_name.setText("个人信息");
         netUtils = new NetUtil();
         getUserInfo();
         netUtils.setOnServerResponseListener(new NetUtil.OnServerResponseListener() {
@@ -134,7 +143,7 @@ public class PersonInfoActivity extends BaseActivity {
             }
         });
         MyOnclickListener myOnclickListener = new MyOnclickListener();
-        rlPersonExit.setOnClickListener(myOnclickListener);
+        rl_exit.setOnClickListener(myOnclickListener);
         civPersonHead.setOnClickListener(myOnclickListener);
         rlPersonAddress.setOnClickListener(myOnclickListener);
     }
@@ -182,7 +191,7 @@ public class PersonInfoActivity extends BaseActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.rl_person_exit:
+                case R.id.rl_exit:
                     finish();
                     break;
                 case R.id.civ_person_head:
@@ -329,7 +338,7 @@ public class PersonInfoActivity extends BaseActivity {
                 map.put("id", userLogin);
                 map.put("file", upload);
                 whick = "head";
-                netUtils.okHttp2Server2(PersonInfoActivity.this,head_url, map);
+                netUtils.okHttp2Server2(PersonInfoActivity.this, head_url, map);
             }
         }
     }
@@ -391,7 +400,7 @@ public class PersonInfoActivity extends BaseActivity {
                             map.put("id", userLogin);
                             map.put("file", upload);
                             whick = "head";
-                            netUtils.okHttp2Server2(PersonInfoActivity.this,head_url, map);
+                            netUtils.okHttp2Server2(PersonInfoActivity.this, head_url, map);
                         }
                     }
                 default:
@@ -445,7 +454,7 @@ public class PersonInfoActivity extends BaseActivity {
             if (!avatar.contains("http")) {
                 avatar = Url.IMG_URL + avatar;
             }
-            if (PersonInfoActivity.this != null && !PersonInfoActivity.this.isFinishing()){
+            if (PersonInfoActivity.this != null && !PersonInfoActivity.this.isFinishing()) {
                 Glide.with(this).load(avatar)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)//图片的缓存
                         .placeholder(R.mipmap.zhanwei_icon)//加载过程中的图片
@@ -473,7 +482,7 @@ public class PersonInfoActivity extends BaseActivity {
             map = new HashMap<>();
             map.put("Id", userLogin);
             whick = "info";
-            netUtils.okHttp2Server2(PersonInfoActivity.this,url, map);
+            netUtils.okHttp2Server2(PersonInfoActivity.this, url, map);
         }
     }
 

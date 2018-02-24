@@ -2,6 +2,7 @@ package com.gather_excellent_help.ui.fragment;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -100,6 +101,9 @@ public class HomeUpdateFragment extends LazyLoadFragment {
     private LinearLayout ll_home_update_scanner;
     private View v_home_top_titlebar;
 
+    private ImageView iv_banner_search_msg_icon;
+    private TextView tv_banner_search_msg_text;
+
     private RelativeLayout rl_item_laod_more;
     private LinearLayout ll_home_scanner_search;
 
@@ -138,6 +142,8 @@ public class HomeUpdateFragment extends LazyLoadFragment {
         ll_home_sousuo = (LinearLayout) inflate.findViewById(R.id.ll_home_sousuo);
         ll_home_update_scanner = (LinearLayout) inflate.findViewById(R.id.ll_home_update_scanner);
         ll_home_msg = (LinearLayout) inflate.findViewById(R.id.ll_home_msg);
+        iv_banner_search_msg_icon = (ImageView) inflate.findViewById(R.id.iv_banner_search_msg_icon);
+        tv_banner_search_msg_text = (TextView) inflate.findViewById(R.id.tv_banner_search_msg_text);
         v_home_top_titlebar = inflate.findViewById(R.id.v_home_top_titlebar);
         return inflate;
     }
@@ -217,12 +223,18 @@ public class HomeUpdateFragment extends LazyLoadFragment {
                         ll_home_container_l01.removeView(ll_home_scanner_search);
                         ll_home_container_l02.addView(ll_home_scanner_search);
                         v_home_top_titlebar.setVisibility(View.VISIBLE);
+                        ll_home_sousuo.setBackgroundResource(R.drawable.home_sousuo_gray_shape);
+                        tv_banner_search_msg_text.setTextColor(Color.parseColor("#999999"));
+                        iv_banner_search_msg_icon.setImageResource(R.drawable.home_msg_circle_icon2);
                     }
                 } else {
                     if (ll_home_scanner_search.getParent() != ll_home_container_l01) {
                         ll_home_container_l02.removeView(ll_home_scanner_search);
                         ll_home_container_l01.addView(ll_home_scanner_search);
                         v_home_top_titlebar.setVisibility(View.GONE);
+                        ll_home_sousuo.setBackgroundResource(R.drawable.home_sousuo_white_shape);
+                        tv_banner_search_msg_text.setTextColor(Color.parseColor("#ffffff"));
+                        iv_banner_search_msg_icon.setImageResource(R.drawable.home_msg_circle_icon);
                     }
                 }
             }

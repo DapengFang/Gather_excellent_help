@@ -80,6 +80,7 @@ public class ExtractDetailActivity extends BaseActivity {
         netUtil = new NetUtil();
         id = Tools.getUserLogin(this);
         map = new HashMap<>();
+        map.put("Id",id);
         map.put("id", id);
         map.put("pageSize", pageSize);
         map.put("pageIndex", pageIndex);

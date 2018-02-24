@@ -132,6 +132,7 @@ public class OrderConfirmActivity extends BaseActivity {
     private boolean mIsRequestDataRefresh;
     private AlertDialog alertDialog;
     private double freightFare;
+    private ArrayList<SuningWjsonBean> suningWjsonLists;
 
 
     @Override
@@ -599,8 +600,9 @@ public class OrderConfirmActivity extends BaseActivity {
                                 Toast.makeText(OrderConfirmActivity.this, "请选择收货地址！！！", Toast.LENGTH_SHORT).show();
                                 tv_order_create_confirm.setClickable(true);
                                 return;
+
                             }
-                            ArrayList<SuningWjsonBean> suningWjsonLists = new ArrayList<>();
+                            suningWjsonLists = new ArrayList<>();
                             SuningWjsonBean suningWjsonBean = new SuningWjsonBean();
                             suningWjsonBean.setArticle_id(goods_id);
                             suningWjsonBean.setChannel_id(channel_id);
@@ -630,18 +632,18 @@ public class OrderConfirmActivity extends BaseActivity {
      */
     private void pushOrder2Server() {
         whick = "pushorder";
-        map = new HashMap<>();
-        map.put("Id", userLogin);
-        map.put("user_id", userLogin);
-        map.put("addr_id", addr_id);
-        map.put("remark", remark);
-        map.put("orderType", "0");
-        map.put("goodsJSON", json);
-        map.put("invoiceState", invoiceState);
-        map.put("invoiceTitle", invoiceTitle);
-        map.put("taxNo", taxNo);
-        map.put("sn_freight", String.valueOf(freightFare));
-        netUtil.okHttp2Server2(OrderConfirmActivity.this, pushorder_url, map);
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("Id", userLogin);
+        map2.put("user_id", userLogin);
+        map2.put("addr_id", addr_id);
+        map2.put("remark", remark);
+        map2.put("orderType", "0");
+        map2.put("goodsJSON", suningWjsonLists);
+        map2.put("invoiceState", invoiceState);
+        map2.put("invoiceTitle", invoiceTitle);
+        map2.put("taxNo", taxNo);
+        map2.put("sn_freight", String.valueOf(freightFare));
+        netUtil.okHttp2Server2Current(OrderConfirmActivity.this, pushorder_url, map2);
     }
 
 

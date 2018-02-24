@@ -262,6 +262,11 @@
         </LinearLayout>
     </com.gather_excellent_help.ui.widget.MyNestedScrollView>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="#eeeeee"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/x40"

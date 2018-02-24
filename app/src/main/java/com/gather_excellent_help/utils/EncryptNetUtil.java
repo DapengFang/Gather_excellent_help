@@ -72,6 +72,20 @@ public class EncryptNetUtil {
     }
 
     /**
+     * 获取请求参数des加密后的字符串
+     *
+     * @param map
+     * @return
+     */
+    public static String getBase64StringCurrent(Map<String, Object> map) throws Exception {
+        String json = new Gson().toJson(map);
+        LogUtil.e("请求参数 = " + json);
+        String desData = Des2.EncryptAsDoNet(json, DES_KEY);
+        LogUtil.e("desData = " + desData);
+        return desData;
+    }
+
+    /**
      * 联网到Server服务器请求
      *
      * @param map

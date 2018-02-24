@@ -64,12 +64,14 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/iv_banner_search_msg_icon"
                 android:layout_width="@dimen/x14"
                 android:layout_height="@dimen/x14"
                 android:src="@drawable/home_msg_circle_icon" />
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/tv_banner_search_msg_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/x2"

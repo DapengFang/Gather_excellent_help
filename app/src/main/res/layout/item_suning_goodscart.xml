@@ -14,14 +14,14 @@
 
         <RelativeLayout
             android:id="@+id/rl_item_shopcart_check"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/x7">
+            android:layout_width="@dimen/x36"
+            android:layout_height="match_parent">
 
             <CheckBox
                 android:id="@+id/cb_item_shopcart_check"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:button="@drawable/cart_checkbox_selector" />
 
@@ -31,7 +31,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/x120"
-            android:layout_marginLeft="@dimen/x3"
             android:layout_toRightOf="@id/rl_item_shopcart_check"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -46,16 +45,17 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginLeft="@dimen/x3"
                 android:layout_marginTop="@dimen/x10"
                 android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/tv_suning_goodscart_title"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/x32"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:lineSpacingExtra="@dimen/x2"
+                    android:lines="2"
                     android:text=""
                     android:textColor="#555555"
                     android:textSize="@dimen/x12" />
@@ -63,10 +63,11 @@
                 <TextView
                     android:id="@+id/tv_suning_goodscart_spec"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/x14"
+                    android:layout_height="wrap_content"
                     android:layout_below="@id/tv_suning_goodscart_title"
                     android:layout_centerVertical="true"
                     android:layout_marginTop="@dimen/x3"
+                    android:singleLine="true"
                     android:text=""
                     android:textColor="#aaaaaa"
                     android:textSize="@dimen/x10" />
@@ -82,14 +83,14 @@
                     android:id="@+id/tv_goodscart_complete"
                     android:layout_width="@dimen/x40"
                     android:layout_height="@dimen/x20"
-                    android:text="完成"
-                    android:gravity="center"
-                    android:textColor="#ffffff"
                     android:layout_alignBottom="@id/nas_goodscart_num"
-                    android:layout_toRightOf="@id/nas_goodscart_num"
                     android:layout_marginLeft="@dimen/x6"
-                    android:textSize="@dimen/x10"
-                    android:background="@drawable/suning_goodscart_num_complete_shape"/>
+                    android:layout_toRightOf="@id/nas_goodscart_num"
+                    android:background="@drawable/suning_goodscart_num_complete_shape"
+                    android:gravity="center"
+                    android:text="完成"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/x10" />
 
             </RelativeLayout>
 

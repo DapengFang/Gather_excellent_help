@@ -186,7 +186,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                     public void onResponse(String response, int id) {
                         LogUtil.e(response);
                         wechat_response = response;
-                        //Toast.makeText(WXEntryActivity.this, response, Toast.LENGTH_SHORT).show();
                         map = new HashMap<>();
                         map.put("wechat_json",response);
                         netUtil.okHttp2Server2(WXEntryActivity.this,wex_url,map);

@@ -6,8 +6,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -60,6 +63,8 @@ public class ExtractCreditsActivity extends BaseActivity {
     @Bind(R.id.tv_extract_credits_commit)
     TextView tvExtractCreditsCommit;
 
+    private TextView tv_exteact_money_all;
+
     private String sms_url = Url.BASE_URL + "GetRandom.aspx";
     private String pay_url = Url.BASE_URL + "BindAlipay.aspx";
     private String extract_url = Url.BASE_URL + "ExtractPoints.aspx";
@@ -80,6 +85,7 @@ public class ExtractCreditsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_extract_credits);
+        tv_exteact_money_all = (TextView) findViewById(R.id.tv_exteact_money_all);
         ButterKnife.bind(this);
         initData();
     }
@@ -115,6 +121,8 @@ public class ExtractCreditsActivity extends BaseActivity {
                         intent2.putExtra("extract_type", "0");
                         intent2.putExtra("extract_message", codeStatueBean.getStatusMessage());
                         startActivity(intent2);
+                        tv_exteact_money_all.setClickable(true);
+                        tvExtractCreditsCommit.setClickable(true);
                         break;
                 }
 
@@ -122,7 +130,6 @@ public class ExtractCreditsActivity extends BaseActivity {
 
             @Override
             public void getFailResponse(Call call, Exception e) {
-                tvExtractCreditsCommit.setClickable(true);
                 LogUtil.e(call.toString() + "--" + e.getMessage());
                 EncryptNetUtil.startNeterrorPage(ExtractCreditsActivity.this);
             }
@@ -130,6 +137,7 @@ public class ExtractCreditsActivity extends BaseActivity {
         rlExit.setOnClickListener(new MyOnClickListener());
         tvExtractCreditsCommit.setOnClickListener(new MyOnClickListener());
         llExtractRule.setOnClickListener(new MyOnClickListener());
+        tv_exteact_money_all.setOnClickListener(new MyOnClickListener());
         /**
          * 第一种方法
          */
@@ -244,10 +252,21 @@ public class ExtractCreditsActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.tv_extract_credits_commit:
-                    commitExtractCredits();
+                    //commitExtractCredits(0);
+                    boolean canExtract0 = checkExtractCredits(0);
+                    if (canExtract0) {
+                        showBindAlipayRemaind(0);
+                    }
                     break;
                 case R.id.ll_extract_rule:
                     showExtractRule();
+                    break;
+                case R.id.tv_exteact_money_all:
+                    //commitExtractCredits(1);
+                    boolean canExtract = checkExtractCredits(1);
+                    if (canExtract) {
+                        showBindAlipayRemaind(1);
+                    }
                     break;
             }
         }
@@ -261,42 +280,131 @@ public class ExtractCreditsActivity extends BaseActivity {
         startActivity(intent);
     }
 
+
+    /**
+     * 检查提现
+     */
+    private boolean checkExtractCredits(int which) {
+        if (amount <= 0) {
+            Toast.makeText(ExtractCreditsActivity.this, "提现数量不足！", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        String etCredits = etExtractCash.getText().toString().trim();
+        if (which == 0) {
+            if (TextUtils.isEmpty(etCredits)) {
+                Toast.makeText(ExtractCreditsActivity.this, "请输入提取数量！", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * 提取积分
+     *
+     * @param which
      */
-    private void commitExtractCredits() {
-        tvExtractCreditsCommit.setClickable(false);
+    private void commitExtractCredits(int which) {
         String etCredits = etExtractCash.getText().toString().trim();
-        if (TextUtils.isEmpty(etCredits)) {
-            Toast.makeText(ExtractCreditsActivity.this, "请输入提取数量！", Toast.LENGTH_SHORT).show();
-            tvExtractCreditsCommit.setClickable(true);
+        tvExtractCreditsCommit.setClickable(false);
+        tv_exteact_money_all.setClickable(false);
+        double cret = 0;
+        if (which == 0) {
+            cret = Double.valueOf(etCredits);
         } else {
-            double cret = Double.valueOf(etCredits);
-            if (cret >= 2 && cret <= amount) {
-                String userLogin = Tools.getUserLogin(this);
-                boolean bindAlipay = Tools.isBindAlipay(this);
-                map = new HashMap<>();
-                map.put("Id", userLogin);
-                map.put("id", userLogin);
-                map.put("extract_count", etCredits);
-                if (bindAlipay) {
-                    netUtil.okHttp2Server2(ExtractCreditsActivity.this, extract_url, map);
-                } else {
-                    tvExtractCreditsCommit.setClickable(true);
-                    toBindAlipay();
-                }
-            } else {
-                Toast.makeText(ExtractCreditsActivity.this, "提现金额需要不低于最小额度并且不能高于可提取现金数量！！！", Toast.LENGTH_SHORT).show();
-                tvExtractCreditsCommit.setClickable(true);
+            cret = amount;
+        }
+        if (cret >= 2 && cret <= amount) {
+            if (which == 1) {
+                etCredits = String.valueOf(amount);
             }
+            String userLogin = Tools.getUserLogin(this);
+            boolean bindAlipay = Tools.isBindAlipay(this);
+            map = new HashMap<>();
+            map.put("Id", userLogin);
+            map.put("id", userLogin);
+            map.put("extract_count", etCredits);
+            if (bindAlipay) {
+                netUtil.okHttp2Server2(ExtractCreditsActivity.this, extract_url, map);
+            } else {
+                tvExtractCreditsCommit.setClickable(true);
+                tv_exteact_money_all.setClickable(true);
+                toBindAlipay();
+            }
+        } else {
+            Toast.makeText(ExtractCreditsActivity.this, "提现金额需要不低于最小额度并且不能高于可提取现金数量！！！", Toast.LENGTH_SHORT).show();
+            tvExtractCreditsCommit.setClickable(true);
+            tv_exteact_money_all.setClickable(true);
         }
     }
 
     /**
+     * 展示绑定支付宝信息
+     */
+    private void showBindAlipayRemaind(final int whick) {
+        DecimalFormat df = new DecimalFormat("#0.00");
+        String extractMoney;
+        if (whick == 0) {
+            String etCredits = etExtractCash.getText().toString().trim();
+            double currCredits = Double.parseDouble(etCredits);
+            extractMoney = df.format(currCredits);
+        } else {
+            extractMoney = df.format(amount);
+        }
+        View inflate = View.inflate(this, R.layout.apply_credit_cash_remind, null);
+        TextView tv_credit_account = (TextView) inflate.findViewById(R.id.tv_credit_account);
+        TextView tv_credit_name = (TextView) inflate.findViewById(R.id.tv_credit_name);
+        TextView tv_credit_money = (TextView) inflate.findViewById(R.id.tv_credit_money);
+        TextView tv_cerdit_remark = (TextView) inflate.findViewById(R.id.tv_cerdit_remark);
+        setPartTextColor(tv_credit_account, "支付宝账号：" + "", 6, "#333333");
+        setPartTextColor(tv_credit_name, "相应姓名：" + "", 5, "#333333");
+        setPartTextColor(tv_credit_money, "提现金额：" + extractMoney, 5, "#333333");
+        setPartTextColor(tv_cerdit_remark, "备\t\t\t\t注：" + "", 7, "#ff6600");
+
+        TextView tv_credit_remind_update = (TextView) inflate.findViewById(R.id.tv_credit_remind_update);
+        TextView tv_credit_remind_confirm = (TextView) inflate.findViewById(R.id.tv_credit_remind_confirm);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog alertDialog = builder.setView(inflate).create();
+        alertDialog.show();
+        tv_credit_remind_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (alertDialog != null && alertDialog.isShowing()) {
+                    alertDialog.dismiss();
+                }
+                toBindAlipay();
+            }
+        });
+        tv_credit_remind_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (alertDialog != null && alertDialog.isShowing()) {
+                    alertDialog.dismiss();
+                }
+                commitExtractCredits(whick);
+            }
+        });
+    }
+
+    /**
+     * 设置部分字体的颜色
      *
+     * @param tv
+     * @param content
+     * @param start
+     * @param color
+     */
+    private void setPartTextColor(TextView tv, String content, int start, String color) {
+        SpannableString spannableString = new SpannableString(content);
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor(color));
+        spannableString.setSpan(colorSpan, start, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        tv.setText(spannableString);
+    }
+
+    /**
+     * 绑定支付宝账号
      */
     private void toBindAlipay() {
-        Toast.makeText(ExtractCreditsActivity.this, "请先绑定支付宝账号！", Toast.LENGTH_SHORT).show();
         View inflate = View.inflate(this, R.layout.bind_alipay_dailog, null);
         final EditText etAccount = (EditText) inflate.findViewById(R.id.et_pay_account);
         final EditText etName = (EditText) inflate.findViewById(R.id.et_pay_name);
@@ -390,7 +498,7 @@ public class ExtractCreditsActivity extends BaseActivity {
         if (TextUtils.isEmpty(account) || TextUtils.isEmpty(name)) {
             Toast.makeText(ExtractCreditsActivity.this, "支付宝账号和密码不能为空！", Toast.LENGTH_SHORT).show();
         } else {
-            Map map = new HashMap<String, String>();
+            Map<String, String> map = new HashMap();
             map.put("Id", userLogin);
             map.put("alipay", account);
             map.put("alipayName", name);
@@ -421,13 +529,16 @@ public class ExtractCreditsActivity extends BaseActivity {
         };
         which = "sms";
         map = new HashMap<>();
-        map.put("Id",userLogin);
+        map.put("Id", userLogin);
         map.put("sms_code", userPhone);
         map.put("type", "3");
         netUtil3.okHttp2Server2(ExtractCreditsActivity.this, sms_url, map);
         countDownTimer.start();
     }
 
+    /**
+     * 监听页面联网的回调
+     */
     public class OnNetutilResponseListener implements NetUtil.OnServerResponseListener {
 
         @Override

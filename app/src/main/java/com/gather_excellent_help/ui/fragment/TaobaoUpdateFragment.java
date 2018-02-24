@@ -8,13 +8,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.gather_excellent_help.R;
+import com.gather_excellent_help.api.Url;
 import com.gather_excellent_help.bean.soutao.SouTaobaoHelpBean;
 import com.gather_excellent_help.ui.activity.taosearch.TaoSearchActivity;
 import com.gather_excellent_help.ui.adapter.soutao.SouTaobaoHelpAdapter;
 import com.gather_excellent_help.ui.base.LazyLoadFragment;
+import com.gather_excellent_help.utils.EncryptNetUtil;
+import com.gather_excellent_help.utils.LogUtil;
+import com.gather_excellent_help.utils.NetUtil;
+import com.gather_excellent_help.utils.Tools;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import okhttp3.Call;
 
 /**
  * Created by Dapeng Fang on 2018/1/24.
@@ -26,6 +35,13 @@ public class TaobaoUpdateFragment extends LazyLoadFragment {
     private List<SouTaobaoHelpBean> data;
     private EditText et_test_search_content;
     private TextView tv_test_tao_search;
+    private NetUtil netUtil;
+    private Map<String, String> map;
+    private String taobao_url = Url.BASE_URL + "suning/submit_help_tool.ashx?action=GetSearchTBJC";
+    private String channel_id = "11";
+    private String category_id = "216";
+    private String userLogin;
+
 
     @Override
     protected View initView() {
@@ -38,6 +54,11 @@ public class TaobaoUpdateFragment extends LazyLoadFragment {
 
     @Override
     protected void initData() {
+        netUtil = new NetUtil();
+        userLogin = Tools.getUserLogin(getContext());
+        OnServerResponseListener onServerResponseListener = new OnServerResponseListener();
+        netUtil.setOnServerResponseListener(onServerResponseListener);
+        loadTaoData();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         rcv_sou_taobao_help.setLayoutManager(layoutManager);
         data = new ArrayList<>();
@@ -51,6 +72,16 @@ public class TaobaoUpdateFragment extends LazyLoadFragment {
         rcv_sou_taobao_help.setAdapter(souTaobaoHelpAdapter);
         MyonclickListener myonclickListener = new MyonclickListener();
         tv_test_tao_search.setOnClickListener(myonclickListener);
+    }
+
+    /**
+     * 获取淘宝图文数据
+     */
+    private void loadTaoData() {
+        map = new HashMap();
+        map.put("channel_id", channel_id);
+        map.put("category_id", category_id);
+        netUtil.okHttp2Server2(getContext(), taobao_url, map);
     }
 
     public class MyonclickListener implements View.OnClickListener {
@@ -73,5 +104,29 @@ public class TaobaoUpdateFragment extends LazyLoadFragment {
         Intent intent = new Intent(getContext(), TaoSearchActivity.class);
         intent.putExtra("search_words", search_words);
         startActivity(intent);
+    }
+
+    /**
+     * 联网监听的回调
+     */
+    public class OnServerResponseListener implements NetUtil.OnServerResponseListener {
+
+        @Override
+        public void getSuccessResponse(String response) {
+            parseTaobaoData(response);
+        }
+
+        @Override
+        public void getFailResponse(Call call, Exception e) {
+            LogUtil.e(call.toString() + "-" + e.getMessage());
+            EncryptNetUtil.startNeterrorPage(getContext());
+        }
+    }
+
+    /**
+     * 解析淘宝的数据
+     */
+    private void parseTaobaoData(String response) {
+        LogUtil.e("淘宝图文数据 = " + response);
     }
 }

@@ -112,6 +112,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
     private boolean mIsRequestDataRefresh;
     private AlertDialog alertDialog;
     private double freightFare;
+    private ArrayList<SuningWjsonBean> suningWjsonLists;
 
 
     @Override
@@ -286,12 +287,12 @@ public class OrderCartConfirmActivity extends BaseActivity {
     public void getFreeData() {
         whick = "free";
         map = new HashMap<>();
-        map.put("Id",userLogin);
+        map.put("Id", userLogin);
         map.put("user_id", userLogin);
         map.put("area_id", area_id);
         map.put("address", address);
         map.put("cart_ids", cart_ids);
-        netUtil.okHttp2Server2(OrderCartConfirmActivity.this,free_url, map);
+        netUtil.okHttp2Server2(OrderCartConfirmActivity.this, free_url, map);
     }
 
     /**
@@ -362,7 +363,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
     /**
      * 跳转到收银台
      */
-    private void toCheckStand(double pay_price, String order_num, int orderId) throws Exception{
+    private void toCheckStand(double pay_price, String order_num, int orderId) throws Exception {
         EventBus.getDefault().post(new AnyEvent(EventType.GOODS_PAY_LIMIT, "更新限购数量！"));
         LogUtil.e(pay_price + "--" + order_num);
         EventBus.getDefault().post(new AnyEvent(EventType.CLEAR_ALL_GOODSCART, "清空购物车"));
@@ -380,9 +381,9 @@ public class OrderCartConfirmActivity extends BaseActivity {
     private void getAddressDefault() {
         whick = "getaddress";
         map = new HashMap<>();
-        map.put("Id",userLogin);
+        map.put("Id", userLogin);
         map.put("user_id", userLogin);
-        netUtil.okHttp2Server2(OrderCartConfirmActivity.this,address_url, map);
+        netUtil.okHttp2Server2(OrderCartConfirmActivity.this, address_url, map);
     }
 
     /**
@@ -396,7 +397,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
             return;
         }
         showCatView();
-        ArrayList<SuningWjsonBean> suningWjsonLists = new ArrayList<>();
+        suningWjsonLists = new ArrayList<>();
         if (cartData != null && cartData.size() > 0) {
             for (int i = 0; i < cartData.size(); i++) {
                 SuningGoodscartBean.DataBean dataBean = cartData.get(i);
@@ -411,8 +412,8 @@ public class OrderCartConfirmActivity extends BaseActivity {
                 suningWjsonLists.add(suningWjsonBean);
             }
         }
-        json = new Gson().toJson(suningWjsonLists);
-        LogUtil.e("提交订单 = " + json);
+//        json = new Gson().toJson(suningWjsonLists);
+//        LogUtil.e("提交订单 = " + json);
         pushOrder2Server();
     }
 
@@ -421,18 +422,18 @@ public class OrderCartConfirmActivity extends BaseActivity {
      */
     private void pushOrder2Server() {
         whick = "pushorder";
-        map = new HashMap<>();
-        map.put("Id",userLogin);
-        map.put("user_id", userLogin);
-        map.put("addr_id", addr_id);
-        map.put("remark", remark);
-        map.put("orderType", "0");
-        map.put("goodsJSON", json);
-        map.put("invoiceState", invoiceState);
-        map.put("invoiceTitle", invoiceTitle);
-        map.put("taxNo", taxNo);
-        map.put("sn_freight", String.valueOf(freightFare));
-        netUtil.okHttp2Server2(OrderCartConfirmActivity.this,pushorder_url, map);
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("Id", userLogin);
+        map2.put("user_id", userLogin);
+        map2.put("addr_id", addr_id);
+        map2.put("remark", remark);
+        map2.put("orderType", "0");
+        map2.put("goodsJSON", suningWjsonLists);
+        map2.put("invoiceState", invoiceState);
+        map2.put("invoiceTitle", invoiceTitle);
+        map2.put("taxNo", taxNo);
+        map2.put("sn_freight", String.valueOf(freightFare));
+        netUtil.okHttp2Server2Current(OrderCartConfirmActivity.this, pushorder_url, map2);
     }
 
     /**
@@ -685,7 +686,7 @@ public class OrderCartConfirmActivity extends BaseActivity {
         map.put("ProductId", productId);
         map.put("lnglat", "");
         map.put("num", num);
-        netUtil.okHttp2Server2(OrderCartConfirmActivity.this,pcs_url, map);
+        netUtil.okHttp2Server2(OrderCartConfirmActivity.this, pcs_url, map);
     }
 
 

@@ -160,7 +160,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/x20"
-        android:background="#33000000"
+        android:background="#ffffff"
         android:orientation="vertical">
 
     </LinearLayout>

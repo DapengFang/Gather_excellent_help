@@ -80,6 +80,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
 
     private String cancel_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=DeletSingerOrder";//取消订单
     private String confrim_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=recive_myProduct";//确认订单
+    private String confrim_child_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=recive_mySNProduct";//确认子订单
     private String apply_state_url = Url.BASE_URL + "suning/SNbusinessHandler.ashx?action=GetApplyStatus";//检查申请状态
     private int order_id;//订单id
     private String order_no;
@@ -92,6 +93,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
     private int quantity;
     private int w_order_id;
     private int w_itemId;
+    private int w_article_id;
     private int article_id;
     private DecimalFormat df;
     private int goods_id;
@@ -329,6 +331,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
                     RelativeLayout rl_suning_detail_back = (RelativeLayout) inflate.findViewById(R.id.rl_suning_detail_back);
                     TextView tv_item_order_back = (TextView) inflate.findViewById(R.id.tv_item_order_back);
                     TextView tv_item_order_seelogistic = (TextView) inflate.findViewById(R.id.tv_item_order_seelogistic);
+                    TextView tv_item_order_confirmorder = (TextView) inflate.findViewById(R.id.tv_item_order_confirmorder);
                     goodListBean = goodList.get(i);
                     if (goodListBean != null) {
                         article_id = goodListBean.getArticle_id();
@@ -368,19 +371,35 @@ public class SuningOrderDetailActivity extends BaseActivity {
                         tv_suning_order_number.setText("x" + quantity);
                         if (status == 1) {
                             rl_suning_detail_back.setVisibility(View.GONE);
+                            tv_item_order_confirmorder.setVisibility(View.GONE);
                         } else if (status == 2) {
                             rl_suning_detail_back.setVisibility(View.VISIBLE);
                             tv_item_order_back.setText("退款");
+                            tv_item_order_confirmorder.setVisibility(View.GONE);
                         } else if (status == 3) {
                             rl_suning_detail_back.setVisibility(View.VISIBLE);
                             tv_item_order_back.setText("退款");
+                            tv_item_order_confirmorder.setVisibility(View.VISIBLE);
                         } else if (status == 4) {
                             rl_suning_detail_back.setVisibility(View.VISIBLE);
                             tv_item_order_back.setText("申请售后");
+                            tv_item_order_confirmorder.setVisibility(View.GONE);
                         } else {
                             rl_suning_detail_back.setVisibility(View.GONE);
+                            tv_item_order_confirmorder.setVisibility(View.GONE);
                         }
                         final int finalI = i;
+                        tv_item_order_confirmorder.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                goodListBean = goodList.get(finalI);
+                                if (goodListBean != null) {
+                                    w_order_id = goodListBean.getOrder_id();
+                                    w_article_id = goodListBean.getArticle_id();
+                                }
+                                confirmChildOrder(String.valueOf(w_order_id), String.valueOf(w_article_id));
+                            }
+                        });
                         tv_item_order_back.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -614,7 +633,7 @@ public class SuningOrderDetailActivity extends BaseActivity {
         map = new HashMap<>();
         map.put("user_id", userLogin);
         map.put("order_id", order_id);
-        netUtil.okHttp2Server2(SuningOrderDetailActivity.this,cancel_url, map);
+        netUtil.okHttp2Server2(SuningOrderDetailActivity.this, cancel_url, map);
     }
 
 
@@ -651,7 +670,20 @@ public class SuningOrderDetailActivity extends BaseActivity {
         map.put("user_id", userLogin);
         map.put("order_id", order_id);
         map.put("order_status", "3");
-        netUtil.okHttp2Server2(SuningOrderDetailActivity.this,confrim_url, map);
+        netUtil.okHttp2Server2(SuningOrderDetailActivity.this, confrim_url, map);
+    }
+
+    /**
+     * 确认订单
+     */
+    private void confirmChildOrder(String order_id, String article_id) {
+        whick = "confirm_child_order";
+        map = new HashMap<>();
+        map.put("user_id", userLogin);
+        map.put("order_id", order_id);
+        map.put("article_id", article_id);
+        map.put("order_status", "3");
+        netUtil.okHttp2Server2(SuningOrderDetailActivity.this, confrim_child_url, map);
     }
 
 
@@ -667,6 +699,8 @@ public class SuningOrderDetailActivity extends BaseActivity {
                     parseCancelOrderData(response);
                 } else if (whick.equals("confirm_order")) {
                     parderConfirmOrderData(response);
+                } else if (whick.equals("confirm_child_order")) {
+                    parseConfirmChildOrderData(response);
                 } else if (whick.equals("apply_state")) {
                     parseApplyState(response);
                 }
@@ -763,6 +797,25 @@ public class SuningOrderDetailActivity extends BaseActivity {
     }
 
     /**
+     * 解析确认子订单数据
+     *
+     * @param response
+     */
+    private void parseConfirmChildOrderData(String response) throws Exception {
+        SuningOrderConfirmBean suningOrderConfirmBean = new Gson().fromJson(response, SuningOrderConfirmBean.class);
+        int statusCode = suningOrderConfirmBean.getStatusCode();
+        switch (statusCode) {
+            case 1:
+                Toast.makeText(SuningOrderDetailActivity.this, "确认订单成功。", Toast.LENGTH_SHORT).show();
+                finish();
+                break;
+            case 0:
+                Toast.makeText(SuningOrderDetailActivity.this, "确认订单失败！", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    /**
      * 检查申请状态
      */
     private void checkApplyState(String order_id, String orderItemId) {
@@ -773,6 +826,6 @@ public class SuningOrderDetailActivity extends BaseActivity {
         map = new HashMap<>();
         map.put("order_id", order_id);
         map.put("orderItemId", orderItemId);
-        netUtil.okHttp2Server2(SuningOrderDetailActivity.this,apply_state_url, map);
+        netUtil.okHttp2Server2(SuningOrderDetailActivity.this, apply_state_url, map);
     }
 }
